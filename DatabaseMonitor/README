@@ -1,0 +1,16 @@
+Esta pasta contém o código do "mantenedor" e "atualizador" de LOGS do banco de dados
+
+
+Pra esse código funcionar, precisaremos de alguns "gem" no ruby.
+
+Antes de instalar qualquer GEM, instale o RUBY
+
+
+→ Detalhes de instalação on arch
+	→ Adicionar ao .bashrc a seguinte linha:
+		→PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
+
+→ Comando:
+	→ $ gem install mysql2
+
+

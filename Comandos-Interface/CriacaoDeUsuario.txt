@@ -1,0 +1,32 @@
+Criando um usuário anonimo à partir da aplicação Android
+
+	→ Dados hipotéticos utilizados no exemplo:
+		→ Login aleatorio gerado: "alGumLoGiNalEatoRio"
+		→ Senha padrão: "nulo"
+
+		→ Login para cadastro; interface@servidor
+		→ Senha para cadastro: senatauri
+		→ Chave PHP = "MIGqAgEAAiEArPXCV6pZjBh+OKNVEM/+eIb5KgGZw24jX2mfu2GzFPcCAwEAAQIgCx8KTgTAGUgB5bZq49fb7tzxlVPJya47G9dtFcNrZ7ECEQDgJPU9398P6I0R5MCV+SeVAhEAxYqPkCR6yJ2YuCUZI903WwIRAMmp9swYo8TYYjP7MBq+9JECECeNYMVZqIP2mhd0xh3aMzUCEBGnaCJnmYNciQfqIT1vmws="
+
+
+	→ Passo 1: Logar com usuario de cadastro padrão
+		→ APP 1 interface@servidor senatauri
+
+		Sintaxe: CHAVE_APLICACAO COMANDO_LOGIN loginInformado senhaInformada
+		(retorno esperado: "OK")
+
+	→ Passo 2: Quando logado com usuario padrão, solicitar adicao de usuario à interface
+		→ Para criar usuario Anonimo:
+			→ APP 2 1 2 MIGqAgEAAiEArPXCV6pZjBh+OKNVEM/+eIb5KgGZw24jX2mfu2GzFPcCAwEAAQIgCx8KTgTAGUgB5bZq49fb7tzxlVPJya47G9dtFcNrZ7ECEQDgJPU9398P6I0R5MCV+SeVAhEAxYqPkCR6yJ2YuCUZI903WwIRAMmp9swYo8TYYjP7MBq+9JECECeNYMVZqIP2mhd0xh3aMzUCEBGnaCJnmYNciQfqIT1vmws= 7 alGumLoGiNalEatoRio 9 nulo
+
+			Sintaxe:  CHAVE_APLICACAO COMANDO_ADICIONAR TIPO_USUARIO TIPO_USUARIO_ANONIMO CHAVE_DE_SEGURANCA TIPO_LOGIN loginInformado TIPO_SENHA senhaInformada
+			(retorno esperado: OK)
+
+		→ Para criar usuario Cadastrado (ainda indisponivel totalmente):
+			→ APP 2 1 1
+
+
+	→ Passo 3: Desconectar-se de usuario de cadastro
+		→ APP sair
+
+	→ Ao fim do passo 2, o usuario já foi criado, então a partir de agora, deve-se seguir para outro arquivo "guia"

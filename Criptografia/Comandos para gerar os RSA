@@ -1,0 +1,34 @@
+1).GENERATE RSA KEYS WITH OPENSSL
+Use the below command to generate RSA keys with length of 2048.
+
+→  openssl genrsa -out private.pem 2048
+
+Extract public key from private.pem with the following command.
+
+→  openssl rsa -in private.pem -outform PEM -pubout -out public.pem
+
+
+public.pem is RSA public key in PEM format.
+private.pem is RSA private key in PEM format.
+
+
+
+
+int RSA_public_encrypt(int flen, unsigned char *from,
+   unsigned char *to, RSA *rsa, int padding);
+ 
+int RSA_private_decrypt(int flen, unsigned char *from,
+    unsigned char *to, RSA *rsa, int padding);
+
+
+
+
+
+RSA_PKCS1_PADDING
+	PKCS #1 v1.5 padding. This currently is the most widely used mode.
+RSA_PKCS1_OAEP_PADDING
+	EME-OAEP as defined in PKCS #1 v2.0 with SHA-1, MGF1 and an empty encoding parameter. This mode is recommended for all new applications.
+RSA_SSLV23_PADDING
+	PKCS #1 v1.5 padding with an SSL-specific modification that denotes that the server is SSL3 capable.
+RSA_NO_PADDING
+	Raw RSA encryption. This mode should only be used to implement cryptographically sound padding modes in the application code. Encrypting user data directly with RSA is insecure.
