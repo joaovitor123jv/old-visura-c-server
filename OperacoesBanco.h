@@ -1841,6 +1841,154 @@ char *obterTop10NovosProdutosDoBanco()
 }
 
 
+char *obterDescricaoProdutoDoBanco(char *idProduto)
+{
+	if (conexao == NULL)
+	{
+		printf(" Warning: Conexao perdida com o banco de dados em OperacoesBanco.h obterDescricaoProdutoDoBanco() 4e5b11eea\n");
+		return NULL;
+	}
+	else if(idProduto == NULL)
+	{
+		printf(" Warning: Id de produto nulo em OperacoesBanco.h obterDescricaoProdutoDoBanco() veqf45\n");
+		return NULL;
+	}
+	else
+	{
+		char *query = NULL;
+		//int tamanho = 55 + TAMANHO_ID_PRODUTO + 1;// Usando TAMANHO_ID_PRODUTO para otimização
+		int tamanho = 66;// Usando TAMANHO_ID_PRODUTO para otimização
+
+		query = malloc(sizeof(char) * tamanho);
+		if(query == NULL)
+		{
+			printf(" Warning: nao foi possível alocar memoria para query em OperacoesBanco.h obterDescricaoProdutoDoBanco()\n");
+			return false;
+		}
+
+		snprintf(query, tamanho, "SELECT P.descricao FROM produto P WHERE P.idproduto=\'%s\';", idProduto);
+
+		if(query == NULL)
+		{
+			printf(" Warning: nao foi possível formatar query em OperacoesBanco.h obterDescricaoProdutoDoBanco() cqhkhbjvr\n");
+			return false;
+		}
+
+		if(mysql_query(conexao, query))
+		{
+			printf(" Warning: falha ao executar query em OperacoesBanco.h obterDescricaoProdutoDoBanco() kjelkzj\n");
+			free(query);
+			query = NULL;
+			return NULL;
+		}
+
+		MYSQL_RES *resultado = mysql_store_result(conexao);
+
+		if(resultado == NULL)
+		{
+			printf(" Warning: Consulta não realizada em OperacoesBanco.h obterDescricaoProdutoDoBanco() nao houve conexao\n");
+			free(query);
+			query = NULL;
+			return NULL;
+		}
+
+		if(mysql_num_fields(resultado) == 0)
+		{
+			printf(" Warning: Nao houve resultados na pesquisa em OperacoesBanco.h obterDescricaoProdutoDoBanco() bnje\n");
+			free(query);
+			mysql_free_result(resultado);
+			resultado = NULL;
+			query = NULL;
+			return RETORNO_NOT_FOUND;
+		}
+
+		MYSQL_ROW linha = NULL;
+		char *retorno = NULL;
+
+		linha = mysql_fetch_row(resultado);
+		if(linha == NULL)
+		{
+			printf(" Warning: Resposta Nula em OperacoesBanco.h obterDescricaoProdutoDoBanco()\n");
+			free(query);
+			mysql_free_result(resultado);
+			resultado = NULL;
+			query = NULL;
+			return NULL;
+		}
+		else
+		{
+			if(strlen(linha[0]) > 1)
+			{
+
+				printf(" LOG: Retorno obtido com sucesso em OperacoesBanco.h obterDescricaoProdutoDoBanco() kjh3as\n");
+
+			}
+			else
+			{
+
+				printf(" Warning: Produto nao possui descrição cadastrada no banco de dados em OperacoesBanco.h obterDescricaoProdutoDoBanco() kejhqkfge3\n");
+				free(query);
+				mysql_free_result(resultado);
+				resultado = NULL;
+				query = NULL;
+				return RETORNO_NOT_FOUND;
+
+			}
+
+			int tamanho = strlen(linha[0]) + 1;
+			retorno = malloc(sizeof(char) * tamanho);
+
+			if(retorno == NULL)
+			{
+
+				printf(" Warning: Nao foi possivel alocar memoria para retorno em OperacoesBanco.h obterDescricaoProdutoDoBanco() sakdjhjkredf\n");
+				free(query);
+				mysql_free_result(resultado);
+				resultado = NULL;
+				query = NULL;
+				return NULL;
+
+			}
+
+			memset(retorno, '\0', tamanho);
+
+			strcpy(retorno, linha[0]);
+
+			if(retorno == NULL)
+			{
+
+				printf(" Warning: Nao foi possivel copiar memoria para retorno em OperacoesBanco.h obterDescricaoProdutoDoBanco() sakdjhjkredf\n");
+				free(query);
+				mysql_free_result(resultado);
+				resultado = NULL;
+				query = NULL;
+				return NULL;
+
+			}
+			else
+			{
+
+				printf(" LOG: Operação concluida com sucesso em OperacoesBanco.h obterDescricaoProdutoDoBanco() ckjahjksd\n");
+				free(query);
+				mysql_free_result(resultado);
+				resultado = NULL;
+				query = NULL;
+				return retorno;
+
+			}
+
+
+		}
+
+	}
+	printf(" ERRO: erro Desconhecido chave: ew54b510530fv8qw em OperacoesBanco.h obterDescricaoProdutoDoBanco()\n");
+	return NULL;
+}
+
+
+
+
+
 
 
 

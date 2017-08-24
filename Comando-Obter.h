@@ -186,21 +186,66 @@ char *obterTop10NovosProdutos()// APP 4 J
 
 char *obterDescricaoProduto()// APP 4 Q
 {
+	/*
+	*	Retorna descricao do produto caso sucesso, ou "ERRO" caso algo dê errado
+	*/
 	char *token;
-	token = strtok(NULL, " ");// APP 4 Q idProdutoInformado
+	token = strtok(NULL, " ");// APP 4 Q *
 	if(token == NULL)
 	{
-		printf(" Comando muito pequeno em Comando-Obter.h obterDescricaoProduto() \n");
+		printf(" Warning: Comando muito pequeno em Comando-Obter.h obterDescricaoProduto() eqde\n");
+		return NULL;
+	}
+	else if(strlen(token) > TAMANHO_TIPO)
+	{
+		printf(" Warning: comando exageradamente grande detectado em Comando-Obter.h obterDescricaoProduto() eqjkh\n");
 		return NULL;
 	}
 	else if(strcmp(token, TIPO_ID_PRODUTO) == 0)
 	{
-		printf(" Cliente informou ID do produto\n");
-		//TODO
+		printf(" LOG: Cliente informou ID do produto em Comando-Obter.h obterDescricaoProduto() bqwt\n");
+
+		token = strtok(NULL, " ");// APP 4 Q * idProdutoInformado
+		if(token == NULL)
+		{
+			printf(" Warning: comando insuficiente em Comando-Obter.h obterDescricaoProduto() 4f51q\n");
+			return NULL;
+		}
+		else if(strlen(token) != TAMANHO_ID_PRODUTO)
+		{
+			printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterDescricaoProduto()  44h5w11c\n");
+			return NULL;
+		}
+		else
+		{
+			char *idProduto = NULL;
+			idProduto = malloc(sizeof(char) * (TAMANHO_ID_PRODUTO + 1));
+
+			if(idProduto == NULL)
+			{
+				printf(" Warning: Falha ao alocar memoria para idProduto em Comando-Obter.h obterIdCidade() hjk4ba72\n");
+				return NULL;
+			}
+			else
+			{
+				strcpy(idProduto, token);
+				if(idProduto == NULL)
+				{
+					printf(" Warning: Falha ao copiar de token para idProduto em Comando-Obter.h obterIdCidade() eqkuhjgbvt120\n");
+					return NULL;
+				}
+				return obterDescricaoProdutoDoBanco(idProduto);
+			}
+
+			printf(" ERRO: Desconhecido 45652022200018448974113 em Comando-Obter.h obterDescricaoProduto()\n");
+			return NULL;
+		}
+		printf(" ERRO: Desconhecido rb1625f0j66 em Comando-Obter.h obterDescricaoProduto()\n");
 		return NULL;// TEMP
 	}
 	else// Se der PAU
 	{
+		printf(" ERRO: Comando incorreto em Comando-Obter.h obterDescricaoProduto()\n");
 		return NULL;
 	}
 }
