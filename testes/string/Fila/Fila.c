@@ -70,6 +70,8 @@ bool free_Fila(struct Fila *fila)
 			fila->inicio = NULL;
 			fila->inicio = elementoAux;
 		}
+		free(fila);
+		fila = NULL;
 
 		return true;
 	}
@@ -146,7 +148,7 @@ bool fila_remover(struct Fila *fila, char *retorno)// TODO
 {
 	if(fila == NULL)
 	{
-		retorno = NULL;
+//		retorno = NULL;
 		return false;
 	}
 	else if(fila->inicio == fila->fim)
@@ -163,6 +165,7 @@ bool fila_remover(struct Fila *fila, char *retorno)// TODO
 		if(fila->quantidadeDeCaracteres == 2)
 		{
 			printf(" Warning: 2 caracteres na fila !!!!!!!!!\n");
+//			retorno = NULL;
 			*retorno = fila->inicio->item;
 			free(fila->inicio);
 			fila->inicio = fila->fim;
@@ -172,6 +175,7 @@ bool fila_remover(struct Fila *fila, char *retorno)// TODO
 		{
 			Elemento_Fila *elementoAux;
 			elementoAux = fila->inicio->proximo;
+//			retorno = NULL;
 			*retorno = fila->inicio->item;
 			free(fila->inicio);
 			fila->inicio = elementoAux;

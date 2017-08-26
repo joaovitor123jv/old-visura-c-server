@@ -29,13 +29,24 @@ int main()
 	fila_mostraFila(fila);
 
 	printf("\n\n\n");
-	char *retorno;
+	char retorno = 'F';
 
 	printf(" Quantidade de caracteres = %d\n", fila_getQuantidadeDeCaracteres(fila));
-	fila_remover(fila, retorno);
+	fila_remover(fila, &retorno);
 
 	printf(" Retorno = %c\n", retorno);
 	fila_mostraFila(fila);
+	printf(" Quantidade de caracteres = %d\n", fila_getQuantidadeDeCaracteres(fila));
+
+
+
+	printf("\n\n\n");
+	fila_remover(fila, &retorno);
+	fila_mostraFila(fila);
+	printf(" Quantidade de caracteres = %d\n", fila_getQuantidadeDeCaracteres(fila));
+	printf(" Retorno = %c\n", retorno);
+
+	free_Fila(fila);
 
 	return 0;
 }

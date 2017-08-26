@@ -1,3 +1,3 @@
 all:
-	gcc -c Fila/Fila.c
-	gcc -o executavel main.c Fila.o
+	gcc -c -g Fila/Fila.c
+	gcc -g -o executavel main.c Fila.o
