@@ -184,7 +184,7 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 {
 	printf("\n*********************addUsuarioAnonimo()********************\n");
 	char *token = strtok(NULL, " ");
-	if(token == NULL)
+	if(token == NULL)// APP 2 1 2 sakjdhsa 7
 	{
 		printf(" Warning: Comando \"Insuficiente\" Comando-Adicao.h addUsuarioAnonimo()\n");
 		return false;
@@ -192,7 +192,7 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 	if(strcmp(token, TIPO_LOGIN) == 0)// APP 2 1 2 sakdhasjkdn 7
 	{
 		printf(" LOG: Cliente informando login Comando-Adicao.h addUsuarioAnonimo()\n");
-		token = strtok(NULL, " ");
+		token = strtok(NULL, " ");//APP 2 1 2 askjdhhh1127868c 7 logindousuario
 		if(token == NULL)// APP 2 1 2 askdjsakd 7 logindousuario
 		{
 			printf(" Warning: Comando insuficiente Comando-Adicao.h addUsuarioAnonimo() (1)\n");

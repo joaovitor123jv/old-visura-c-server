@@ -82,6 +82,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 			interpretando = false;
 			*autorizado = false;
 			// return REQUISITANDO_LOGIN;
+			*resultado = ERRO;
 			return NULL;
 		}
 		printf("FALHA FATAL (interpretadorDeComandos.h)\n");

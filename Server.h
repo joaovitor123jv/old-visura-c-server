@@ -247,7 +247,7 @@ void *Servidor(void *arg)
 						// mensagem = calloc(strlen("Adição requisitada mas não atendida\0"), sizeof(char));
 						// strcpy(mensagem, "Adição requisitada mas não atendida\0");
 						mensagem = NULL;
-						mensagem = "Adicao Recusada\0";
+						mensagem = "Adição recusada\0";
 						write( *(int *)arg, mensagem, strlen(mensagem) +1);
 						break;
 						
