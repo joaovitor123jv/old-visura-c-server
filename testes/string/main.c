@@ -1,9 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Fila/Fila.h"
+#include "AdaptadorDeString.h"
 
 int main()
 {
+	char *retorno;
+	char original[] = { "Eu\testou\ntestando\nisso\\aqui\'porque\"sim\"\'\ncontra\r\aminha\tvontade\nsoqn"};
+
+	printf(" ****** original = \n|%s|\n", original);
+	padronizarString(retorno, original);
+//	printf(" ****** modificada = \n|%s|\n", retorno);
+	return 0;
+
+
+
+
+
+	/* 
 	Fila *fila;
 	fila = new_Fila();
 
@@ -49,4 +63,5 @@ int main()
 	free_Fila(fila);
 
 	return 0;
+	*/
 }
