@@ -53,18 +53,18 @@ bool free_Fila(struct Fila *fila)
 
 	if(fila->quantidadeDeCaracteres == 0)
 	{
+		printf(" LOG: Nada a resolver, simplesmente liberando fila em Fila.c free_Fila()\n");
 		free(fila);
 		fila = NULL;
 		return true;
 	}
 	else
 	{
-
 		struct Elemento_Fila *elementoAux;
 
 		while(fila->inicio != NULL)
 		{
-			printf(" Limpou !\n");
+			printf(" LOG: Limpou ! em Fila.c free_Fila()\n");
 			elementoAux = fila->inicio->proximo;
 			free(fila->inicio);
 			fila->inicio = NULL;
@@ -144,7 +144,7 @@ bool fila_inserir(struct Fila *fila, char item)//Insere item no fim da fila
 	}
 }
 
-bool fila_remover(struct Fila *fila, char *retorno)// TODO
+bool fila_remover(struct Fila *fila, char *retorno)// Funcionando !
 {
 	if(fila == NULL)
 	{
@@ -161,17 +161,7 @@ bool fila_remover(struct Fila *fila, char *retorno)// TODO
 	}
 	else
 	{
-		fila->quantidadeDeCaracteres = fila->quantidadeDeCaracteres - 1;
-		if(fila->quantidadeDeCaracteres == 2)
-		{
-			printf(" Warning: 2 caracteres na fila !!!!!!!!!\n");
-//			retorno = NULL;
-			*retorno = fila->inicio->item;
-			free(fila->inicio);
-			fila->inicio = fila->fim;
-			return true;
-		}
-		else if(fila->quantidadeDeCaracteres > 2)
+		if(fila->quantidadeDeCaracteres > 1)
 		{
 			Elemento_Fila *elementoAux;
 			elementoAux = fila->inicio->proximo;
@@ -179,6 +169,17 @@ bool fila_remover(struct Fila *fila, char *retorno)// TODO
 			*retorno = fila->inicio->item;
 			free(fila->inicio);
 			fila->inicio = elementoAux;
+			fila->quantidadeDeCaracteres = fila->quantidadeDeCaracteres - 1;
+			return true;
+		}
+		else if(fila->quantidadeDeCaracteres == 1)
+		{
+			printf(" Warning: 2 caracteres na fila !!!!!!!!!\n");
+//			retorno = NULL;
+			*retorno = fila->inicio->item;
+			free(fila->inicio);
+			fila->inicio = fila->fim;
+			fila->quantidadeDeCaracteres = fila->quantidadeDeCaracteres - 1;
 			return true;
 		}
 		else
@@ -214,6 +215,7 @@ bool fila_mostraFila(struct Fila *fila)
 			contador++;
 			elementoAux = elementoAux->proximo;
 		}
+		printf(" Total de caracteres = %d\n", fila->quantidadeDeCaracteres);
 		printf("***  FIM DA FILA ***\n");
 		return true;
 	}

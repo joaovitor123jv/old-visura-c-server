@@ -12,12 +12,12 @@
 #define false 0
 #endif
 
-bool padronizarString(char *resposta, char *original)
+char *padronizarString(char *original)
 {
+	char *resposta = NULL;
 	if(original == NULL)
 	{
-		resposta = NULL;
-		return false;
+		return NULL;
 	}
 	else
 	{
@@ -25,8 +25,7 @@ bool padronizarString(char *resposta, char *original)
 		if(fila == NULL)
 		{
 			printf(" Warning: Falha ao padronizar string em AdaptadorDeString.h padronizarString(char *resposta char *original)\n");
-			resposta = NULL;
-			return false;
+			return NULL;
 		}
 		else
 		{
@@ -74,18 +73,21 @@ bool padronizarString(char *resposta, char *original)
 				}
 				i = i + 1;
 			}
-			fila_mostraFila(fila);
+//			fila_mostraFila(fila);
 			int tamanho = fila_getQuantidadeDeCaracteres(fila);
 			resposta = malloc(sizeof(char) * (tamanho + 1));/* +1 por causa d \0 */
-			for(i = 0; i < tamanho-1; i++)
+			for(i = 0; i < tamanho; i++)
 			{
-				printf(" \t\tTentando remover\n");
 				fila_remover(fila, &resposta[i]);
-				fila_mostraFila(fila);
+//				fila_mostraFila(fila);
 			}
+//			i = i + 1;
+//			resposta[i] = '\0';
 			free_Fila(fila);
-			printf(" resposta = |%s| \n", resposta);
-			return true;
+/*			printf(" resposta = |%s| \n", resposta);
+			printf(" Endereco de resposta = %ld\n", &resposta);
+			printf(" Endereco de valor de resposta = %ld\n", &(*resposta));*/
+			return resposta;
 		}
 	}
 }

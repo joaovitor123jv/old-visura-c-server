@@ -5,63 +5,20 @@
 
 int main()
 {
-	char *retorno;
+	char *retorno = NULL;
 	char original[] = { "Eu\testou\ntestando\nisso\\aqui\'porque\"sim\"\'\ncontra\r\aminha\tvontade\nsoqn"};
 
 	printf(" ****** original = \n|%s|\n", original);
-	padronizarString(retorno, original);
-//	printf(" ****** modificada = \n|%s|\n", retorno);
-	return 0;
-
-
-
-
-
-	/* 
-	Fila *fila;
-	fila = new_Fila();
-
-	if(fila == NULL)
+	retorno = padronizarString(original);
+	if(retorno != NULL)
 	{
-		printf(" DEU PAU !\n");
+		printf(" DEU CERTO PORRA!\n");
+		printf(" Retorno = |%s|\n", retorno);
 	}
-
-	fila_inserir(fila, 'c');
-	fila_mostraFila(fila);
-
-	printf(" QUantidade de caracteres = %d\n", fila_getQuantidadeDeCaracteres(fila));
-
-	fila_inserir(fila, 'o');
-	fila_inserir(fila, 'c');
-	fila_inserir(fila, 'a');
-	fila_inserir(fila, ' ');
-	fila_inserir(fila, 'c');
-	fila_inserir(fila, 'o');
-	fila_inserir(fila, 'l');
-	fila_inserir(fila, 'a');
-	fila_inserir(fila, '!');
-	fila_mostraFila(fila);
-
-	printf("\n\n\n");
-	char retorno = 'F';
-
-	printf(" Quantidade de caracteres = %d\n", fila_getQuantidadeDeCaracteres(fila));
-	fila_remover(fila, &retorno);
-
-	printf(" Retorno = %c\n", retorno);
-	fila_mostraFila(fila);
-	printf(" Quantidade de caracteres = %d\n", fila_getQuantidadeDeCaracteres(fila));
-
-
-
-	printf("\n\n\n");
-	fila_remover(fila, &retorno);
-	fila_mostraFila(fila);
-	printf(" Quantidade de caracteres = %d\n", fila_getQuantidadeDeCaracteres(fila));
-	printf(" Retorno = %c\n", retorno);
-
-	free_Fila(fila);
-
+	else
+	{
+		printf(" Que caralhos ta acontecendo aqui ?\n");
+	}
 	return 0;
-	*/
+
 }
