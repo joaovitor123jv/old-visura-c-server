@@ -7,6 +7,7 @@ char *obterIdCidade();//APP 4 $
 char *obterIdContratante();// APP 4 ;
 char *obterTop10NovosProdutos();//APP 4 J
 char *obterDescricaoProduto();// APP 4 Q
+char *obterNomeProduto();
 
 char *obterDados()// APP 4 algumaCoisa
 {
@@ -34,10 +35,15 @@ char *obterDados()// APP 4 algumaCoisa
 				return top10;
 			}
 		}
-		else if(strcmp(token, TIPO_DESCRICAO_PRODUTO) == 0)
+		else if(strcmp(token, TIPO_DESCRICAO_PRODUTO) == 0)// APP 4 Q
 		{
 			printf(" LOG: Requisitando descricao de produto em Comando-Obter.h obterDados()\n");
 			return obterDescricaoProduto();
+		}
+		else if(strcmp(token, TIPO_NOME_PRODUTO) == 0)// APP 4 1.
+		{
+			printf(" LOG: Requisitando nome de produto em Comando-Obter.h obterDados()\n");
+			return obterNomeProduto();
 		}
 		printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterIdCidade() rbjak\n");
 		return NULL;
@@ -251,4 +257,46 @@ char *obterDescricaoProduto()// APP 4 Q
 }
 
 
+
+char *obterNomeProduto()
+{
+	char *token  = NULL;
+	printf(" LOG: Iniciando interpretação em obterNomeProduto() Comando-Obter.h\n");
+
+	token = strtok(NULL, " ");// APP 4 1. idProdutoInformado
+
+	if(token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em obterNomeProduto() Comando-Obter.h akjbbe\n");
+		return NULL;
+	}
+	if(strlen(token) != TAMANHO_ID_PRODUTO)
+	{
+		printf(" Warning: Comando incorreto em obterNomeProduto() Comando-Obter.h ohrbbzzk\n");
+		return NULL;
+	}
+
+	char *idProduto = NULL;
+	idProduto = malloc(sizeof(char) * (TAMANHO_ID_PRODUTO + 1));
+
+	if(idProduto == NULL)
+	{
+		printf(" Warning: Falha ao alocar memoria para idProduto em obterNomeProduto() Comando-Obter.h n4oi2d\n");
+		return NULL;
+	}
+
+	strcpy(idProduto, token);
+
+	if(idProduto == NULL)
+	{
+		printf(" Warning: Ocorreu um erro ao tentar copiar string de token para idProduto em obterNomeProduto() Comando-Obter.h\n");
+		return NULL;
+	}
+
+	char *nomeProduto = NULL;
+	//TODO obterNomeProdutoDoBanco(idProduto)
+	nomeProduto = obterNomeProdutoDoBanco(idProduto);
+	free(idProduto);
+	return nomeProduto;
+}
 

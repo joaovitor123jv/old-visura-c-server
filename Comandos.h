@@ -98,6 +98,7 @@
 #define TIPO_CONTRATANTE "$C"
 
 #define TIPO_PRODUTO "+"
+#define TIPO_NOME_PRODUTO "1."
 #define TIPO_DESCRICAO_PRODUTO "Q"
 
 

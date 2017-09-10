@@ -8,7 +8,7 @@ bool addVisualizacao(char *email, bool usuarioAnonimo);
 // bool addIndice(char *nomearquivo);
 
 bool addUsuarioAnonimo();
-//bool addUsuario();
+bool addUsuario();
 
 bool addContratante();
 
@@ -108,11 +108,19 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 				printf(" Warning: Comando incorreto(4) Comando-Adicao.h comandoAdicionar()\n");
 				return false;
 			}
-			if(strcmp(token, CHAVE_DE_SEGURANCA_PHP) == 0)/* APP 2 1 1 asdkjhasdjdkjhsjkad Solicitação de usuário não-anonimo, informando chave */
+			if(addUsuario())
+			{
+				printf(" LOG: Adicao executada com sucesso em Comando-Adicao.h comandoAdicionar()\n");
+				return true;
+			}
+			else
+			{
+				printf(" Warning: Ocorreram erros e o usuario não pôde ser adicionado em Comando-Adicao.h comandoAdicionar()\n");
+				return false;
+			}
+/*			if(strcmp(token, CHAVE_DE_SEGURANCA_PHP) == 0) // APP 2 1 1 asdkjhasdjdkjhsjkad Solicitação de usuário não-anonimo, informando chave 
 			{
 				printf(" LOG: Cliente PHP identificado Comando-Adicao.h comandoAdicionar()\n");
-
-				//TODO
 
 				return true;
 			}
@@ -120,7 +128,7 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 			{
 				printf(" LOG: Não autorizado Comando-Adicao.h comandoAdicionar()\n");
 				return false;
-			}
+			}*/
 		}
 		else
 		{
@@ -828,7 +836,6 @@ bool addLocalizacao()/* APP 2 l0 */
 		return false;
 	}
 
-	//TODO
 	token = strtok(NULL, " ");// APP 2 l0 $ idCidade L CEP R      ou     APP 2 l0 $ idCidade L CEP RN
 	if(token == NULL)
 	{
@@ -860,7 +867,6 @@ bool addLocalizacao()/* APP 2 l0 */
 		if(strcmp(token, TIPO_NUMERO) == 0)// APP 2 l0 $ idCidade L CEP RN n
 		{
 			printf(" LOG: Usuario informou Numero em Comando-Adicao.h addLocalizacao()\n");
-			//TODO
 			token = strtok(NULL, " ");// APP 2 l0 $ idCidade L CEP Rn n numero
 			if(token == NULL)
 			{
@@ -920,6 +926,7 @@ bool addLocalizacao()/* APP 2 l0 */
 			if(strcmp(token, TIPO_BAIRRO) == 0)// APP 2 l0 $ idCidade L CEP Rn n numero b
 			{
 				//TODO
+				return false; // porque não está pronto ainda
 			}
 			else if(strcmp(token, TIPO_BAIRRO_NULO) == 0)// APP 2 l0 $ idCidade L CEP Rn n numero bN
 			{
@@ -1749,8 +1756,7 @@ bool addContratante()// APP 2 $C
 			return false;
 		}
 
-		//TODO
-		token = strtok(NULL, " ");
+		token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP # nome cnpj plano email > telefone idCidadeInformado
 		if(token == NULL)
 		{
 			printf(" Warning: Comando insuficiente em addContratante() Comando-Adicao.h mankchru\n");
@@ -1886,7 +1892,7 @@ bool addContratante()// APP 2 $C
 		}
 		*/
 
-		token = strtok(NULL, " ");
+		token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP # nome cnpj plano email >N idCidadeInformado
 		if(token == NULL)
 		{
 			printf(" Warning: Comando insuficiente em addContratante() Comando-Adicao.h 13qjcxd \n");
@@ -2307,6 +2313,83 @@ bool addProduto()
 
 
 
+bool addUsuario()//TODO  APP 2 1 1
+{
+	char *token = NULL;
+	token = strtok(NULL, " ");// APP 2 1 1 7            (7 == TIPO_LOGIN)
+
+	if(token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() e14d5r2v\n");
+		return false;
+	}
+	else if(strlen(token) > TAMANHO_TIPO)
+	{
+		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() wekbjjw\n");
+		return false;
+	}
+	else if(strcmp(token, TIPO_LOGIN) != 0)
+	{
+		printf(" Warning: Comando incorreto em Comando-Adicao.h addUsuario() saasdjkh \n");
+		return false;
+	}
+
+	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado
+	if(token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() kkqhhasbnv\n");
+		return false;
+	}
+	else if( strlen(token) > TAMANHO_LOGIN)
+	{
+		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() sakjv31sx0\n");
+		return false;
+	}
+
+	char *email = NULL;
+	email = malloc(sizeof(char) * (strlen(token) + 1));// Esse +1 é o do maldito \0
+
+	if(email == NULL)
+	{
+		printf(" Warning: Falha ao alocar memoria para email em Comando-Adicao.h addUsuario() sajhbr15550ddsr\n");
+		return false;
+	}
+
+	strcpy(email, token);
+	if(email == NULL)
+	{
+		printf(" Warning: falha ao copiar de token para email em Comando-Adicao.h addUsuario() asd45r6v1sd0\n");
+		return false;
+	}
+
+	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado 9    (9 == TIPO_SENHA)
+	if(token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() chj3wds140g5qaw\n");
+		free(email);
+		email = NULL;
+		return false;
+	}
+	else if(strlen(token) > TAMANHO_TIPO)
+	{
+		printf(" Warning: Comando exageradamente grande em Comand-Adicao.h addUsuario()\n");
+		free(email);
+		email = NULL;
+		return false;
+	}
+	else if(strcmp(token, TIPO_SENHA) != 0)
+	{
+		printf(" Warning: Comando incorreto em Comand-Adicao.h addUsuario()\n");
+		free(email);
+		email = NULL;
+		return false;
+	}
+
+	// APP 2 1 1 7 emailInformado 9 senhaCriptografadaAqui     IT's SHOW TIME !
+	//TODO
+
+	return false;
+}
 
 
 
