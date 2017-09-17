@@ -1,8 +1,11 @@
 #include <string.h>
-#include "interpretadorDeComandos.h"
 #include <unistd.h>//sleep
 
 #define BUFFER_CLIENTE 1024//ANTERIOR 256 (aceitou 1024*1024 (1MB))
+
+#include "interpretadorDeComandos.h"
+
+
 #define PORTA 7420
 
 #define QTD_CLIENTE 5 /* Quantidade de clientes máxima aceita */
@@ -123,7 +126,10 @@ void *Servidor(void *arg)
 	int resultado;
 	bool usuarioAnonimo = true;
 	// int auxImediata = 0;
-
+	//
+	
+	memset(bufferCliente, '\0', BUFFER_CLIENTE);
+	memset(mensagemAnterior, '\0', BUFFER_CLIENTE);
 
 	printf(" Aguardando por mensagens\n");
 	while(true)

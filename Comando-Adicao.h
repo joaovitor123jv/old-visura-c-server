@@ -2263,7 +2263,7 @@ bool addProduto()
 
 
 	//NAO CHECANDO COPIA DE DURACAO, POSSIVEL ERRO
-	if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto))
+	if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto))//TODO Adicionar descrição de produto
 	{
 		printf(" LOG: Produto adicionado com sucesso ao banco de dados em addProdutoAoBanco() Comando-Adicao.h\n");
 		free(duracao);

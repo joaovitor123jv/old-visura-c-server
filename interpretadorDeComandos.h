@@ -30,6 +30,8 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 	int tipoComando;
 	char *login = NULL;
 
+	char *comandoADividir = NULL;
+
 	// printf("EMAIL APONTA PARA (6) : %x\n", email);
 	
 
@@ -50,7 +52,25 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 		return NULL;
 	}
 
+//	comandoADividir = malloc(sizeof(char) * BUFFER_CLIENTE);
+//	if(comandoADividir == NULL)
+//	{
+//		printf(" Warning: Falha ao alocar comando para ser dividido em interpretadorDeComandos.h interpretaComando()\n");
+//		interpretando = false;
+//		*resultado = ERRO;
+//		return NULL;
+//	}
+
 	nomeAplicacao = strtok(comando, " ");/* Separa a primeira palavra */
+//	strcpy(comandoADividir, comando);
+//	if(comandoADividir == NULL)
+//	{
+//		printf(" Warning: Falha ao copiar comando para dividir em interpretadorDeComandos.h interpretaComando()\n");
+//	}
+//	nomeAplicacao = strtok(comandoADividir, " ");/* Separa a primeira palavra */
+//
+//	free(comandoADividir);
+//	comandoADividir = NULL;
 
 	if(strcmp(nomeAplicacao, CHAVE_APLICACAO) != 0)/* CHAVE DE Aplicacao */
 	{
