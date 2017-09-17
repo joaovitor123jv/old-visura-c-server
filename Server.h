@@ -172,7 +172,10 @@ void *Servidor(void *arg)
 				}
 
 				printf(" \tAguardando liberacao para interpretacao\n");
-				while(interpretando){}//Aguarda
+				while(interpretando)
+				{
+					pthread_yield();/* Causa um warning, mas nada demais */
+				}//Aguarda, liberando cpu para outros trabalhos (senão fica fazendo coisa a toa até ser interrompida pelo SO)
 				printf("\n\n \t*********************Inicio de Interpretação *************\n");
 
 
