@@ -6,8 +6,8 @@
 char *obterIdCidade();//APP 4 $
 char *obterIdContratante();// APP 4 ;
 char *obterTop10NovosProdutos();//APP 4 J
-char *obterDescricaoProduto();// APP 4 Q
-char *obterNomeProduto();
+char *obterDescricaoProduto();// APP 4 Q * idProduto
+char *obterNomeProduto();// APP 4 1. idProduto
 
 char *obterDados()// APP 4 algumaCoisa
 {
@@ -295,7 +295,7 @@ char *obterNomeProduto()
 	}
 
 	char *nomeProduto = NULL;
-	//TODO obterNomeProdutoDoBanco(idProduto)
+//	obterNomeProdutoDoBanco(idProduto);
 	nomeProduto = obterNomeProdutoDoBanco(idProduto);
 	free(idProduto);
 	return nomeProduto;
