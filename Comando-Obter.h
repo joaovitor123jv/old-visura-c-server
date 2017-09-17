@@ -226,6 +226,7 @@ char *obterDescricaoProduto()// APP 4 Q
 		{
 			char *idProduto = NULL;
 			idProduto = malloc(sizeof(char) * (TAMANHO_ID_PRODUTO + 1));
+			printf(" LOG: Memoria para produto alocada em Comando-Obter.h obterDescricaoProduto() eb19cc7\n");
 
 			if(idProduto == NULL)
 			{

@@ -29,7 +29,8 @@ all: Fila_Objeto
 	$(COMPILE) $(WARNINGS) $(USE_OTIMIZACAO) $(STANDARD) $(MAIN_FILE) $(DEFINE_OUTPUT_FILE_NAME) $(OUTPUT_FILE) $(LINKERS) $(FILA_OBJ)
 	rm *.o
 
-debug: Fila.o
+debug: 
+	$(COMPILE) $(DEBUGGER) $(LIKE_A_LIBRARY) Fila/Fila.c
 	$(COMPILE) $(DEBUGGER) $(WARNINGS) $(STANDARD) $(MAIN_FILE) $(DEFINE_OUTPUT_FILE_NAME) $(OUTPUT_FILE) $(LINKERS) $(FILA_OBJ)
 	valgrind --leak-check=full --track-origins=yes ./server
 

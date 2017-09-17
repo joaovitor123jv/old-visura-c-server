@@ -1917,11 +1917,19 @@ char *obterDescricaoProdutoDoBanco(char *idProduto)
 		}
 		else
 		{
+			if(linha[0] == NULL)/* EDITADO */
+			{
+				printf(" Warning: Pesquisa por linha não retornou nada em OperacoesBanco.h obterDescricaoProdutoDoBanco() 38ahah1kkj\n");
+				printf(" \tQuery utilizada: |%s|\n", query);
+				free(query);
+				mysql_free_result(resultado);
+				resultado = NULL;
+				query = NULL;
+				return NULL;
+			}
 			if(strlen(linha[0]) > 1)
 			{
-
 				printf(" LOG: Retorno obtido com sucesso em OperacoesBanco.h obterDescricaoProdutoDoBanco() kjh3as\n");
-
 			}
 			else
 			{
