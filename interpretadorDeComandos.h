@@ -30,7 +30,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 	int tipoComando;
 	char *login = NULL;
 
-	char *comandoADividir = NULL;
+//	char *comandoADividir = NULL;
 
 	// printf("EMAIL APONTA PARA (6) : %x\n", email);
 	
@@ -112,12 +112,12 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 	}
 	else
 	{
-		printf(" Cliente Já logado, continuando\n");
+		printf(" LOG: Cliente Já logado, continuando em interpretadorDeComandos.h interpretaComando()\n");
 	}
 
 	if(email == NULL)
 	{
-		printf("FALHA FATAL (email == NULL)\n");
+		printf(" ERRO: FALHA FATAL (email == NULL) em interpretadorDeComandos.h interpretaComando()\n");
 		exit(1);
 		interpretando = false;
 		// return ERRO;
@@ -126,7 +126,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 	}
 	else
 	{
-		printf(" EMAIL NÂO NULO |%s| !!!\n", email);
+		printf(" LOG: EMAIL NÂO NULO |%s| !!! em interpretadorDeComandos.h interpretaComando()\n", email);
 	}
 
 
@@ -135,7 +135,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 	if(strlen(nomeAplicacao) > TAMANHO_COMANDO)/* checa se há mais de uma letra na segunda "palavra" */
 	{
 		interpretando = false;
-		printf(" ERRO, Aplicação contem informação excessiva (interpretadorDeComandos.h)\n");
+		printf(" ERRO: Aplicação contem informação excessiva (interpretadorDeComandos.h) interpretaComando()\n");
 		// return ERRO;
 		*resultado = ERRO;
 		return NULL;
@@ -146,7 +146,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 	if(tipoComando>9 || tipoComando < 0)/* Define " Alcance dos comandos " (de 0 a 9) */
 	{
 		interpretando = false;
-		printf(" TIPO DE COMANDO NÂO GERENCIADO: %d (interpretadorDeComandos.h)\n", tipoComando);
+		printf(" Warning: TIPO DE COMANDO NÂO GERENCIADO: %d (interpretadorDeComandos.h) interpretaComando()\n", tipoComando);
 		// return ERRO;
 		*resultado = ERRO;
 		return NULL;

@@ -33,6 +33,19 @@ MYSQL *conexao;
 // bool conectarBanco(MYSQL *conexao)
 bool conectarBanco()//OK
 {
+	if(conexao != NULL)
+	{
+		mysql_close(conexao);
+		free(conexao);
+		conexao = NULL;
+	}
+	conexao = malloc(sizeof(MYSQL));
+	if(conexao == NULL)
+	{
+		printf(" Warning: Memoria insuficiente para conectar-se ao banco de dados em OperacoesBanco.h conectarBanco()\n");
+		return false;
+	}
+
 	printf("\r Configurando servidor.............Inicializando cliente SQL");
 
 	if( mysql_init(conexao) == NULL )
@@ -71,17 +84,34 @@ bool checarSeVoltaAlgumaCoisaDaQuery(char *query)
 {
 	if(query == NULL)
 	{
-		printf(" ERRO: Query recebida igual a NULL (OperacoesBanco.h) rodarQuery()\n");
+		printf(" ERRO: Query recebida igual a NULL (OperacoesBanco.h) checarSeVoltaAlgumaCoisaDaQuery()\n");
 		return false;
 	}
 
 	if(mysql_query(conexao, query))//Se ocorrer algum erro
 	{
-		printf(" ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (rodarQuery)\n");
+		printf(" ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) checarSeVoltaAlgumaCoisaDaQuery()\n");
 		printf(" ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
 		printf(" Query executada: |%s|\n", query);
 		free(query);
 		query = NULL;
+
+		if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+		{
+			printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h checarSeVoltaAlgumaCoisaDaQuery()\n");
+			if(conectarBanco())
+			{
+				printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h checarSeVoltaAlgumaCoisaDaQuery()\n");
+			}
+			else
+			{
+				conexao = NULL;
+				mysql_close(conexao);
+				mysql_thread_end();
+		free(conexao);
+				printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h checarSeVoltaAlgumaCoisaDaQuery()\n");
+			}
+		}
 		return false;
 	}
 
@@ -161,7 +191,16 @@ bool checarLogin(char *email)//OK
 	if(conexao == NULL)
 	{
 		printf("ERRO DE CONEXÃO (OperacoesBanco.h) (checarLogin)\n");
-		return false;
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
 	}
 	if(email == NULL)
 	{
@@ -197,7 +236,16 @@ bool checarIdProduto(char *id)//OK
 	if(conexao == NULL)
 	{
 		printf("ERRO DE CONEXÃO (OperacoesBanco.h) (checarIdProduto())\n");
-		return false;
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
 	}
 	if(id == NULL)
 	{
@@ -248,7 +296,16 @@ int checaExistenciaDeVisualizacaoDeProdutoComPessoa(char *idproduto, char *email
 	if(conexao == NULL)
 	{
 		printf("conexao == NULL em OperacoesBanco.h, checaExistenciaDeVisualizacaoDeProdutoComPessoa()\n");
-		return RETORNO_ERRO_DE_CONEXAO;
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return RETORNO_ERRO_DE_CONEXAO;
+		}
 	}
 	if(strlen(idproduto) != 10)
 	{
@@ -372,7 +429,16 @@ bool addVisualizacoesAoBanco(char *id, int quantidade, char *email, bool usuario
 	if(conexao == NULL)
 	{
 		printf("ERRO DE CONEXÃO (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-		return false;
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
 	}
 	
 	if(quantidade < 0  || quantidade > 9999)
@@ -418,6 +484,22 @@ bool addVisualizacoesAoBanco(char *id, int quantidade, char *email, bool usuario
 			printf("\t Query enviada =  |%s|\n", query);
 			free(query);
 			query = NULL;
+			if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+			{
+				printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addVisualizacoesAoBanco()\n");
+				if(conectarBanco())
+				{
+					printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addVisualizacoesAoBanco()\n");
+				}
+				else
+				{
+					conexao = NULL;
+					mysql_close(conexao);
+					mysql_thread_end();
+		free(conexao);
+					printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addVisualizacoesAoBanco()\n");
+				}
+			}
 			return false;
 		}
 		else
@@ -457,6 +539,22 @@ bool addVisualizacoesAoBanco(char *id, int quantidade, char *email, bool usuario
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+						if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addVisualizacoesAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -491,6 +589,22 @@ bool addVisualizacoesAoBanco(char *id, int quantidade, char *email, bool usuario
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+						if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addVisualizacoesAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -549,6 +663,22 @@ bool addVisualizacoesAoBanco(char *id, int quantidade, char *email, bool usuario
 			printf("\t Query enviada =  |%s|\n", query);
 			free(query);
 			query = NULL;
+			if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+			{
+				printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() 1qa5456dasd\n");
+				if(conectarBanco())
+				{
+					printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addVisualizacoesAoBanco() asd456\n");
+				}
+				else
+				{
+					conexao = NULL;
+					mysql_close(conexao);
+					mysql_thread_end();
+		free(conexao);
+					printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() as4d5asd\n");
+				}
+			}
 			return false;
 		}
 		else
@@ -590,6 +720,22 @@ bool addVisualizacoesAoBanco(char *id, int quantidade, char *email, bool usuario
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+						if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addVisualizacoesAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -624,6 +770,22 @@ bool addVisualizacoesAoBanco(char *id, int quantidade, char *email, bool usuario
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+						if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addVisualizacoesAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -668,7 +830,16 @@ bool addUsuarioAnonimoAoBanco(char *email, char *senha)
 	if(conexao == NULL)
 	{
 		printf(" ERRO: Não há conexao com o banco de dados OperacoesBanco.h addUsuarioAnonimoAoBanco()\n");
-		return false;
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
 	}
 	printf(" LOG: Chegou com sucesso até a adição de usuario ao banco (anonimo) OperacoesBanco.h addUsuarioAnonimoAoBanco()\n");
 
@@ -696,6 +867,22 @@ bool addUsuarioAnonimoAoBanco(char *email, char *senha)
 		printf("\t Query enviada =  |%s|\n", query);
 		free(query);
 		query = NULL;
+		if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+		{
+			printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addUsuarioAnonimoAoBanco() 1qa5456dasd\n");
+			if(conectarBanco())
+			{
+				printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addUsuarioAnonimoAoBanco() asd456\n");
+			}
+			else
+			{
+				conexao = NULL;
+				mysql_close(conexao);
+				mysql_thread_end();
+		free(conexao);
+				printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addUsuarioAnonimoAoBanco() as4d5asd\n");
+			}
+		}
 		return false;
 	}
 	free(query);
@@ -703,8 +890,27 @@ bool addUsuarioAnonimoAoBanco(char *email, char *senha)
 	return true;
 }
 
-bool addUsuarioAoBanco(char *email, char *senha, int idade, int sexo, char *dataNascimento)
+bool addUsuarioAoBanco(char *emailAnterior, char *email, char *senha, char* sexo, char *dataNascimento)
 {
+	if(conexao == NULL)
+	{
+		printf(" Warning: Conexao com o banco de dados é NULA em OperacoesBanco.h addUsuarioAoBanco() cviuhqwenmkxz\n");
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
+	}
+	if(emailAnterior == NULL)
+	{
+		printf(" ERRO: email anterior não foi informado devidamente em OperacoesBanco.h addUsuarioAoBanco() 456q5w1c\n");
+		return false;
+	}
 	if(email == NULL)
 	{
 		printf(" ERRO: email == NULL em OperacoesBanco.h addUsuarioAoBanco(char *email, char *senha, int idade, int sexo, char *dataNascimento)\n");
@@ -715,13 +921,23 @@ bool addUsuarioAoBanco(char *email, char *senha, int idade, int sexo, char *data
 		printf(" ERRO: senha == NULL em OperacoesBanco.h addUsuarioAoBanco(char *email, char *senha, int idade, int sexo, char *dataNascimento)\n");
 		return false;
 	}
+	if(sexo == NULL)
+	{
+		printf(" ERRO: sexo == NULL em OperacoesBanco.h addUsuarioAoBanco() 544qwe654b89a32d\n");
+		return false;
+	}
 	if(dataNascimento == NULL)
 	{
 		printf(" ERRO: email == NULL em OperacoesBanco.h addUsuarioAoBanco(char *email, char *senha, int idade, int sexo, char *dataNascimento)\n");
 		return false;
 	}
 	//TODO
-	printf(" LOG: Ainda não implementado OperacoesBanco.h addUsuarioAoBanco()\n");
+	printf(" LOG: Operação em testes → OperacoesBanco.h addUsuarioAoBanco()\n");
+
+
+
+
+	printf(" ERRO: O pior erro aconteceu, todos os ifs falharam em OperacoesBanco.h addUsuarioAoBanco() cqebhuy8u4bhajskybt7c8onhyauxis4f\n");
 	return false;
 }
 
@@ -742,7 +958,16 @@ bool addCidadeAoBanco(char *nomeDoEstado, char *nomeCidade)
 	if(conexao == NULL)
 	{
 		printf(" ERRO: Não há conexao com o banco de dados em OperacoesBanco.h addCidadeAoBanco()\n");
-		return false;
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
 	}
 
 	char *query = NULL;
@@ -790,6 +1015,22 @@ bool addCidadeAoBanco(char *nomeDoEstado, char *nomeCidade)
 				printf("\t Query enviada =  |%s|\n", query);
 				free(query);
 				query = NULL;
+				if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+				{
+					printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addCidadeAoBanco() 1qa5456dasd\n");
+					if(conectarBanco())
+					{
+						printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addCidadeAoBanco() asd456\n");
+					}
+					else
+					{
+						conexao = NULL;
+						mysql_close(conexao);
+						mysql_thread_end();
+		free(conexao);
+						printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addCidadeAoBanco() as4d5asd\n");
+					}
+				}
 				return false;
 			}
 			free(query);
@@ -816,7 +1057,16 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 	if(conexao == NULL)
 	{
 		printf(" Warning: Conexao nula com banco de dados (OperacoesBanco.h addLocalizacaoAoBanco())\n");
-		return false;
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
 	}
 	if(idCidade == NULL)
 	{
@@ -856,6 +1106,22 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+						if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addLocalizacaoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -884,6 +1150,22 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+							if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addLocalizacaoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -915,6 +1197,22 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+							if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addLocalizacaoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -943,6 +1241,22 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+							if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addLocalizacaoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -977,6 +1291,22 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+							if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addLocalizacaoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -1005,6 +1335,22 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+							if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addLocalizacaoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -1036,6 +1382,22 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+							if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addLocalizacaoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -1064,6 +1426,22 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+							if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addLocalizacaoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -1101,6 +1479,22 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+							if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addLocalizacaoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -1129,6 +1523,22 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+							if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addLocalizacaoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -1160,6 +1570,22 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+							if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addLocalizacaoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -1188,6 +1614,22 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+							if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addLocalizacaoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -1222,6 +1664,22 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+							if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addLocalizacaoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -1250,6 +1708,22 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+							if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addLocalizacaoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -1281,6 +1755,22 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+							if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addLocalizacaoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -1309,6 +1799,22 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 						printf("\t Query enviada =  |%s|\n", query);
 						free(query);
 						query = NULL;
+							if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addLocalizacaoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addLocalizacaoAoBanco() as4d5asd\n");
+							}
+						}
 						return false;
 					}
 					free(query);
@@ -1328,7 +1834,16 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 	if(conexao == NULL)
 	{
 		printf(" Warning: conexão nula em addContratanteAoBanco() OperacoesBanco.h\n");
-		return false;
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
 	}
 
 	if(idLocalizacao == NULL)
@@ -1477,7 +1992,23 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 		printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
 		printf("\t Query enviada =  |%s|\n", query);
 		free(query);
-		query = NULL;
+		query = NULL;	
+		if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addContratanteAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addContratanteAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addContratanteAoBanco() as4d5asd\n");
+							}
+						}
 		return false;
 	}
 	free(query);
@@ -1491,7 +2022,16 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 	if(conexao == NULL)
 	{
 		printf(" Warning: Conexao nula em addProdutoAoBanco() OperacoesBanco.h 68sg2\n");
-		return false;
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
 	}
 
 	if(idContratante == NULL)
@@ -1580,6 +2120,22 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 		printf("\t Query enviada =  |%s|\n", query);
 		free(query);
 		query = NULL;
+			if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+						{
+							printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addProdutoAoBanco() 1qa5456dasd\n");
+							if(conectarBanco())
+							{
+								printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addProdutoAoBanco() asd456\n");
+							}
+							else
+							{
+								conexao = NULL;
+								mysql_close(conexao);
+								mysql_thread_end();
+		free(conexao);
+								printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addProdutoAoBanco() as4d5asd\n");
+							}
+						}
 		return false;
 	}
 	free(query);
@@ -1594,7 +2150,16 @@ char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)// APP 4 CHAVE_DE_
 	if(conexao == NULL)
 	{
 		printf(" ERRO: Conexao nula em OperacoesBanco.h obterIdCidadeDoBanco() !!!\n");
-		return NULL;
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return NULL;
+		}
 	}
 	
 	if(nomeCidade == NULL)
@@ -1725,7 +2290,16 @@ char *obterTop10NovosProdutosDoBanco()
 	if(conexao == NULL)
 	{
 		printf(" ERRO: conexao nula em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n");
-		return NULL;
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return NULL;
+		}
 	}
 
 	int tamanho = 65 + 1;
@@ -2001,7 +2575,16 @@ char *obterNomeProdutoDoBanco(char *idProduto)
 	if(conexao == NULL)
 	{
 		printf(" Warning: Conexao nula com o banco de dados em obterNomeProdutoDoBanco() OperacoesBanco.h \n");
-		return NULL;
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return NULL;
+		}
 	}
 	if(idProduto == NULL)
 	{

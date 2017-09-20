@@ -89,7 +89,7 @@ TENTAR_DENOVO:
 		exit(1);
 	}
 	printf(".");
-	conexao = malloc(sizeof(MYSQL));
+	
 	printf(".");
 	if(conectarBanco())
 	{
@@ -151,6 +151,8 @@ void *Servidor(void *arg)
 			printf("\t\t*************BUFFER_CLIENTE Limpo****************\n\n");
 			// printf("COMECO DE TUDO →→→→→→→→→→→→→→→→→→→→→→→→→→→→→→  EMAIL = %s\n", email);
 		}
+
+		//OTIMIZAR AQUI !!!!
 
 		read(sockEntrada, bufferCliente, sizeof(bufferCliente));
 		printf(" RECEBIDO: |%s|\n", bufferCliente);

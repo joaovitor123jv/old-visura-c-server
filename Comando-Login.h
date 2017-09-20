@@ -82,7 +82,16 @@ char *comandoLogin(char *comando, bool *usuarioAnonimo)/* APP 1 login senha */
 			{
 				// printf(" Falha ao tentar alocar memória para conexao (Comando-Login.h) comandoLogin()\n");
 				printf("Conexão com o banco de dados é NULA (Comando-Login.h) (comandoLogin())\n");
-				return NULL;
+				printf(" LOG: Tentando reconexão com banco de dados \n");
+				if(conectarBanco())
+				{
+					printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+				}
+				else
+				{
+					printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+					return NULL;
+				}
 			}
 
 			// if(!conectarBanco(conexao))
