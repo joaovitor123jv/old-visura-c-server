@@ -35,7 +35,7 @@
 
 /********************************************************************/
 #define LOGIN_DE_CADASTRO "interface@servidor"
-#define SENHA_DE_CADASTRO "algumaSenhaAi"
+#define SENHA_DE_CADASTRO "senatauri"
 
 
 #define TAMANHO_LOGIN 64

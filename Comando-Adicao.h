@@ -86,15 +86,15 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 				return false;
 			}
 		}
-		else if(strcmp(token, TIPO_USUARIO) == 0)/* APP 2 1 1 Solicitação de criação de usuário não-anônimo */
+		else if( (strcmp(token, TIPO_USUARIO) == 0) && usuarioAnonimo)/* APP 2 1 1 Solicitação de criação de usuário não-anônimo */
 		{
 			printf("------------>regular Comando-Adicao.h comandoAdicionar()\n");
-			token = strtok(NULL, " ");
-			if(token == NULL)
-			{
-				printf(" Warning: Comando incorreto(4) Comando-Adicao.h comandoAdicionar()\n");
-				return false;
-			}
+			// token = strtok(NULL, " ");
+			// if(token == NULL)
+			// {
+			// 	printf(" Warning: Comando incorreto(4) Comando-Adicao.h comandoAdicionar()\n");
+			// 	return false;
+			// }
 			if(addUsuario(email))
 			{
 				printf(" LOG: Adicao executada com sucesso em Comando-Adicao.h comandoAdicionar()\n");
@@ -2332,6 +2332,7 @@ bool addUsuario(char *emailAnterior)//TODO  APP 2 1 1
 	else if(strlen(token) > TAMANHO_TIPO)
 	{
 		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() wekbjjw\n");
+		printf(" \t TOKEN = |%s|\n", token);
 		return false;
 	}
 	else if(strcmp(token, TIPO_LOGIN) != 0)
@@ -2539,6 +2540,7 @@ bool addUsuario(char *emailAnterior)//TODO  APP 2 1 1
 	}
 	else
 	{
+		printf(" Warning: Falha ao adicionar usuario ao banco de dados em Comando-Adicao.h addUsuario() qh38v9q2ubhd\n");
 		free(email);
 		free(senha);
 		free(sexo);

@@ -10,25 +10,25 @@ char *comandoLogin(char *comando, bool *usuarioAnonimo)/* APP 1 login senha */
 	token = strtok(NULL, " ");
 	if(comando == NULL)
 	{
-		printf("ERRO FATAL (interpretadorDeComandos.h) (comandoLogin)\n");
+		printf(" Warning: comando == NULL em (interpretadorDeComandos.h) (comandoLogin)\n");
 		exit(1);
 	}
 	if(token != NULL)
 	{
 		if(strcmp(token, "1") == 0)/* Cliente solicitou Login (APP 1) */
 		{
-			printf("CLIENTE SOLICITANDO LOGIN (interpretadorDeComandos.h) (comandoLogin)\n");
+			printf(" LOG: cliente solicitando login (interpretadordecomandos.h) (comandoLogin)\n");
 			token = strtok(NULL, " ");
 			// token = "email";
 			if(token == NULL)
 			{
-				printf(" Token NULO (comandoLogin) (Comando-Login.h)\n");
+				printf(" Warning: Token NULO (comandoLogin) (Comando-Login.h)\n");
 				return NULL;
 			}
 			senha = strtok(NULL, "\0");
 			if(senha == NULL)
 			{
-				printf(" Senha NULA (comandoLogin) (Comando-Login.h)\n");
+				printf(" Warning: Senha NULA (comandoLogin) (Comando-Login.h)\n");
 				return NULL;
 			}
 
@@ -103,9 +103,9 @@ char *comandoLogin(char *comando, bool *usuarioAnonimo)/* APP 1 login senha */
 
 
 			// if(!checarLogin(conexao, token))
-			if(!checarLogin(token))
+			if(!checarLogin(token, senha))// APP 1 login senha
 			{
-				printf("Erro ao conectar (Comando-Login.h) (comandoLogin)\n");
+				printf(" Warning: Erro ao conectar ou de autenticação em (Comando-Login.h) (comandoLogin)\n");
 				printf("\tFalha ao checar login\n");
 				printf("\t\tEncerrando Conexão\n");
 				
@@ -122,22 +122,22 @@ char *comandoLogin(char *comando, bool *usuarioAnonimo)/* APP 1 login senha */
 			// free(conexao);
 			// conexao = NULL;
 
-			printf("CONEXÃO ENCERRADA\n");
-			printf(" TOKEN = %s\n", token);
+			printf(" log: conexão encerrada em Comando-Login.h comandoLogin()\n");
+			printf(" log: token = |%s| em Comando-Login.h comandoLogin()\n", token);
 			return token;
 		}
 		else
 		{
-			printf("CLIENTE PRECISA SOLICITAR LOGIN PARA REALIZAR QUALQUER OPERACAO\n");
+			printf(" Warning: cliente precisa solicitar login para realizar qualquer operacao Comando-Login.h comandoLogin()\n");
 			return NULL;
 		}
 	}
 	else
 	{
-		printf("POUCOS ARGUMENTOS PARA CONTINUAR (interpretadorDeComandos.h) (comandoLogin)\n");
+		printf(" Warning; poucos argumentos para continuar (Comando-Login].h) (comandoLogin)\n");
 		return NULL;
 	}
-	printf("ERRO INDECIFRAVEL (interpretadorDeComandos.h) (comandoLogin)\n");
+	printf(" Warning: erro indecifravel (Comando-Login.h) (comandoLogin)\n");
 	return NULL;// APAGAR DEPOIS
 	exit(1);
 }
