@@ -134,7 +134,8 @@ void *Servidor(void *arg)
 	printf(" Aguardando por mensagens\n");
 	while(true)
 	{
-		if(strlen(bufferCliente) > 0)
+		//if(strlen(bufferCliente) > 0)
+		if(bufferCliente[0] != '\0')// tentativa de otimização
 		{
 			strcpy(mensagemAnterior, bufferCliente);
 			memset(bufferCliente, '\0', BUFFER_CLIENTE);

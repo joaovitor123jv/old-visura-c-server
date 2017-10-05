@@ -23,7 +23,7 @@ MYSQL *conexao;
 #define DATABASE_HOST "127.0.0.1"//TESTES
 // #define DATABASE_HOST "35.186.190.243"//GOOGLE CLOUD
 #define DATABASE_USER "interface"
-#define DATABASE_PASSWORD "senha"
+#define DATABASE_PASSWORD "essaSenhaEsoPraInteFaCeSaBeRPorQuESiM"
 #define DATABASE_SCHEMA "teste"
 #define DATABASE_PORT 0
 #define DATABASE_DEFAULT_SOCKET NULL
