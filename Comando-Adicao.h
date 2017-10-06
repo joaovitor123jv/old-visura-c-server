@@ -119,6 +119,7 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 		}
 		else if(strcmp(token, TIPO_PRODUTO) == 0)/* APP 2 +    -> Solicita criação de produto na base de dados */
 		{
+			printf(" LOG: Solicitando a adição de Produto em Comando-Adicao.h comandoAdicionar() qqpjah1\n");
 			if(addProduto())
 			{
 				printf(" LOG: Produto adicionado com sucesso em comandoAdicionar() Comando-Adicao.h\n");
@@ -183,7 +184,7 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 	}
 	else
 	{
-		printf(" ERRO: TIPO DE ADIÇÂO DESCONHECIDA (Comando-Adicao.h) comandoAdicionar()\n");
+		printf(" ERRO: TIPO DE ADIÇAO DESCONHECIDA (Comando-Adicao.h) comandoAdicionar()\n");
 		return false;
 	}
 }
