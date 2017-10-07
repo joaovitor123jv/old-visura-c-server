@@ -3,6 +3,8 @@
 #include "Comandos.h"
 #include "OperacoesBanco.h"
 
+#include "Comando-Obter_Visualizacoes.h"
+
 char *obterIdCidade();//APP 4 $
 char *obterIdContratante();// APP 4 ;
 char *obterTop10NovosProdutos();//APP 4 J
@@ -44,6 +46,54 @@ char *obterDados()// APP 4 algumaCoisa
 		{
 			printf(" LOG: Requisitando nome de produto em Comando-Obter.h obterDados()\n");
 			return obterNomeProduto();
+		}
+		else if(strcmp(token, TIPO_VISUALIZACAO) == 0)// APP 4 2
+		{
+			// IMPORTANTE: Leia isso como "Desejo obter ALGO relacionado a visualizações"
+			// 		A pergunta que surge com isso: "O que ?"
+
+			token = strtok(NULL, " ");
+			if(token == NULL)
+			{
+				printf(" Warning: Comando insuficiente em Comando-Obter.h obterDados() 45a654q8e\n");
+				return false;
+			}
+			if (strcmp(token, TIPO_QUANTIDADE) == 0)// APP 4 2 @
+			{
+				// DESEJA obter a QUANTIDADE de algo relacionado a visualizações
+				token = strtok(NULL, " ");
+				if(token == NULL)
+				{
+					printf(" Warning: Comando insuficiente em Comando-Obter.h obterDados() 5q68r87s\n");
+					return false;
+				}
+				if (strcmp(token, TIPO_VISUALIZACAO) == 0)// APP 4 2 @ 2
+				{
+					// DESEJA obter a QUANTIDADE de VISUALIZACOES (NÃO ANONIMAS)
+					printf(" LOG: Solicitando Obtenção de quantidade de visualizações de usuario não anonimos em Comando-Obter.h obterDados()\n");
+					printf(" Warning: Comando incompleto em Comando-Obter.h obterDados()\n");
+					return false;
+				}
+				else if(strcmp(token, TIPO_VISUALIZACAO_ANONIMA_CHAR) == 0)// APP 4 2 @ 3
+				{
+					// DESEJA obter a QUANTIDADE de VISUALIZACOES ANONIMAS
+					printf(" LOG: Solicitando Obtenção de quantidade de visualizações anonimas em Comando-Obter.h obterDados()\n");
+					printf(" Warning: Comando incompleto em Comando-Obter.h obterDados()\n");
+					return false;
+				}
+				else if(strcmp(token, TIPO_ESPECIFICO) == 0)// APP 4 2 @ =
+				{
+					//DESEJA obter QUANTIDADE de VISUALIZACOES de ALGO ESPECIFICO
+					printf(" LOG: Solicitando Obtenção de quantidade de visualizações de algo específico em Comando-Obter.h obterDados()\n");
+					printf(" Warning: Comando incompleto em Comando-Obter.h obterDados()\n");
+					return false;
+				}
+			}
+			else
+			{
+				printf(" Warning: Comando não compreendido (%s) em Comando-Obter.h obterDados() aq468e7ca\n", token);
+				return false;
+			}
 		}
 		printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterIdCidade() rbjak\n");
 		return NULL;

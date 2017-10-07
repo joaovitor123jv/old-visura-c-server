@@ -249,7 +249,7 @@ bool checarIdContratante(char *idContratante)
 		}
 		else
 		{
-			printf(" Warning: Não existe empresa com esse id (contratante) no banco de dados, encerrando operacao em addProdutoAoBanco() OperacoesBanco.h jcvkdhkc\n");
+			printf(" Warning: Não existe empresa com esse id (%s)(contratante) no banco de dados, encerrando operacao em addProdutoAoBanco() OperacoesBanco.h jcvkdhkc\n", idContratante);
 			return false;
 		}
 }

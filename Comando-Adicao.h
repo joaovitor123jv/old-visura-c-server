@@ -32,6 +32,9 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 		printf(" ERRO: Comando incorreto (Comando-Adicao.h) comandoAdicionar()\n");
 		return false;
 	}
+
+	printf(" LOG: TOKEN = |%s| em Comando-Adicao.h comandoAdicionar()\n", token);
+
 	if(strcmp(token, TIPO_VISUALIZACAO) == 0)/* APP 2 2  (Solicitação de adicao de Visualizacao)*/
 	{
 		printf(" LOG: Solicitando adição de visualizacao de produto (Comando-Adicao.h) comandoAdicionar()\n");
@@ -95,6 +98,8 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 			// 	printf(" Warning: Comando incorreto(4) Comando-Adicao.h comandoAdicionar()\n");
 			// 	return false;
 			// }
+
+			// Colocar aqui mais tarde suporte a autenticação (TALVEZ)
 			if(addUsuario(email))
 			{
 				printf(" LOG: Adicao executada com sucesso em Comando-Adicao.h comandoAdicionar()\n");
@@ -105,35 +110,24 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 				printf(" Warning: Ocorreram erros e o usuario não pôde ser adicionado em Comando-Adicao.h comandoAdicionar()\n");
 				return false;
 			}
-/*			if(strcmp(token, CHAVE_DE_SEGURANCA_PHP) == 0) // APP 2 1 1 asdkjhasdjdkjhsjkad Solicitação de usuário não-anonimo, informando chave 
-			{
-				printf(" LOG: Cliente PHP identificado Comando-Adicao.h comandoAdicionar()\n");
-
-				return true;
-			}
-			else
-			{
-				printf(" LOG: Não autorizado Comando-Adicao.h comandoAdicionar()\n");
-				return false;
-			}*/
-		}
-		else if(strcmp(token, TIPO_PRODUTO) == 0)/* APP 2 +    -> Solicita criação de produto na base de dados */
-		{
-			printf(" LOG: Solicitando a adição de Produto em Comando-Adicao.h comandoAdicionar() qqpjah1\n");
-			if(addProduto())
-			{
-				printf(" LOG: Produto adicionado com sucesso em comandoAdicionar() Comando-Adicao.h\n");
-				return true;
-			}
-			else
-			{
-				printf(" Warning: Não foi possivel adicionar produto ao banco de dados em comandoAdicionar() Comando-Adicao.h\n");
-				return false;
-			}
 		}
 		else
 		{
-			printf(" Warning: Comando incorreto(3) Comando-Adicao.h comandoAdicionar()\n");
+			printf(" LOG: Usuario não é anonimo ou operação desconhecida em Comando-Adicao.h comandoAdicionar()\n");
+			return false;
+		}
+	}
+	else if(strcmp(token, TIPO_PRODUTO) == 0)/* APP 2 +    -> Solicita criação de produto na base de dados */
+	{
+		printf(" LOG: Solicitando a adição de Produto em Comando-Adicao.h comandoAdicionar() qqpjah1\n");
+		if(addProduto())
+		{
+			printf(" LOG: Produto adicionado com sucesso em comandoAdicionar() Comando-Adicao.h\n");
+			return true;
+		}
+		else
+		{
+			printf(" Warning: Não foi possivel adicionar produto ao banco de dados em comandoAdicionar() Comando-Adicao.h\n");
 			return false;
 		}
 	}
@@ -187,6 +181,8 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 		printf(" ERRO: TIPO DE ADIÇAO DESCONHECIDA (Comando-Adicao.h) comandoAdicionar()\n");
 		return false;
 	}
+	printf(" ERRO: Algum erro desconhecido ocorreu em Comando-Adicao.h comandoAdicionar()\n");
+	return false;
 }
 
 bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
@@ -2262,30 +2258,109 @@ bool addProduto()
 		return false;
 	}
 
-
-	//NAO CHECANDO COPIA DE DURACAO, POSSIVEL ERRO
-	if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto))//TODO Adicionar descrição de produto
+	token = strtok(NULL, " ");
+	if(token == NULL)
 	{
-		printf(" LOG: Produto adicionado com sucesso ao banco de dados em addProdutoAoBanco() Comando-Adicao.h\n");
-		free(duracao);
-		free(idProduto);
-		free(idContratante);
-		idContratante = NULL;
-		idProduto = NULL;
-		duracao = NULL;
-		return true;
+		if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, NULL))//TODO Adicionar descrição de produto
+		{
+			printf(" LOG: Produto adicionado com sucesso ao banco de dados em addProdutoAoBanco() Comando-Adicao.h\n");
+			free(duracao);
+			free(idProduto);
+			free(idContratante);
+			idContratante = NULL;
+			idProduto = NULL;
+			duracao = NULL;
+			return true;
+		}
+		else
+		{
+			printf(" Warning: Não foi possivel adicionar produto ao banco de dadoe em addProduto() Comando-Adicao.h bcejqk\n");
+			free(duracao);
+			free(idProduto);
+			free(idContratante);
+			idContratante = NULL;
+			idProduto = NULL;
+			duracao = NULL;
+			return false;
+		}
 	}
 	else
 	{
-		printf(" Warning: Não foi possivel adicionar produto ao banco de dadoe em addProduto() Comando-Adicao.h bcejqk\n");
-		free(duracao);
-		free(idProduto);
-		free(idContratante);
-		idContratante = NULL;
-		idProduto = NULL;
-		duracao = NULL;
-		return false;
+		// Se o usuario informar descricao de produto
+		if(strlen(token) > TAMANHO_DESCRICAO_PRODUTO)
+		{
+			printf(" Warning: Tamanho de descricao informada é exageradamente grande para produto em Comando-Adicao.h addProduto() q45w687vw\n");
+			free(idProduto);
+			free(idContratante);
+			free(duracao);
+			duracao = NULL;
+			idContratante = NULL;
+			idProduto = NULL;
+			return false;
+		}
+		char *descricao = NULL;
+		descricao = malloc(sizeof(char) * (strlen(token) + 1));
+		if(descricao == NULL)
+		{
+			printf(" Warning: Não foi possível alocar memoria para descricao em Comando-Adicao.h addProduto() 13121215454q\n");
+			free(duracao);
+			free(idProduto);
+			free(idContratante);
+			idContratante = NULL;
+			idProduto = NULL;
+			duracao = NULL;
+			return false;
+		}
+		strcpy(descricao, token);
+
+		if(descricao == NULL)
+		{
+			printf(" Warning: Falha ao copiar de token para descricao em Comando-Adicao.h addProduto() q4r84t32saw\n");
+			free(duracao);
+			free(idProduto);
+			free(idContratante);
+			idContratante = NULL;
+			idProduto = NULL;
+			duracao = NULL;
+			return false;
+		}
+
+		if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, descricao))//TODO Adicionar descrição de produto
+		{
+			printf(" LOG: Produto adicionado com sucesso ao banco de dados em addProdutoAoBanco() Comando-Adicao.h\n");
+			free(duracao);
+			free(idProduto);
+			free(idContratante);
+			free(descricao);
+			descricao = NULL;
+			idContratante = NULL;
+			idProduto = NULL;
+			duracao = NULL;
+			return true;
+		}
+		else
+		{
+			printf(" Warning: Não foi possivel adicionar produto ao banco de dadoe em addProduto() Comando-Adicao.h bcejqk\n");
+			free(duracao);
+			free(idProduto);
+			free(idContratante);
+			free(descricao);
+			descricao = NULL;
+			idContratante = NULL;
+			idProduto = NULL;
+			duracao = NULL;
+			return false;
+		}
+
+		if(descricao != NULL)
+		{
+			free(descricao);
+			descricao = NULL;
+			return false;
+		}
 	}
+
+	//NAO CHECANDO COPIA DE DURACAO, POSSIVEL ERRO
 
 	printf(" Warning: Erro desconhecido em addProduto() Comando-Adicao.h chagsjkchsajk\n");
 
@@ -2308,11 +2383,7 @@ bool addProduto()
 	}
 
 	return false;
-
 }
-
-
-
 
 bool addUsuario(char *emailAnterior)//TODO  APP 2 1 1
 {
@@ -2557,11 +2628,4 @@ bool addUsuario(char *emailAnterior)//TODO  APP 2 1 1
 	return false;
 	// return false;  // Teoricamente nunca vai chegar aqui, mas vai que...
 }
-
-
-
-
-
-
-
 

@@ -1816,16 +1816,14 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 					}
 					else
 					{
-						printf(" Warning: Localizacao informada é inexistente, encerrando operacao em addContratanteAoBanco() OperacoesBanco.h");
+						printf(" Warning: Localizacao informada é inexistente (%s), encerrando operacao em addContratanteAoBanco() OperacoesBanco.h", idLocalizacao);
 						query = NULL;
 						return false;
 					}
 				}
 			}
-			
-			printf(" \t Continuando adição ao banco\n");
+			printf(" \t LOG: Continuando adição ao banco em OperacoesBanco.h addContratanteAoBanco() e8q77aa456w5q1c52s\n");
 		}
-
 	}
 
 	if(telefone == NULL)
@@ -1908,7 +1906,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 }
 
 
-bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char *nomeProduto)
+bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char *nomeProduto, char *descricao)
 {
 	if(conexao == NULL)
 	{
@@ -1958,63 +1956,114 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 		printf(" Warning: Não foi encontrado tal contratante na base de dados em addProdutoAoBanco() OperacoesBanco.h asd156eq\n");
 		return false;
 	}
-	
+
 	int tamanho;
-	char *query;
+	char *query = NULL;
 
-	query = NULL;
-	tamanho = 0;
-
-
-
-	tamanho = 93 + 1 + strlen(idContratante) + strlen(idProduto) + strlen(duracao) + strlen(nomeProduto);
-	query = malloc(sizeof(char) * tamanho);
-
-	if(query == NULL)
+	if(descricao == NULL)
 	{
-		printf(" Warning: Não foi possivel alocar memoria para query em addProdutoAoBanco() OperacoesBanco.h 3kjhv73b\n");
-		return false;
-	}
-
-	snprintf(query, tamanho, "INSERT INTO produto(idproduto,nomeproduto,duracao,contratante_idcontratante) VALUES(\'%s\',\'%s\',%s,%s);", idProduto, nomeProduto, duracao, idContratante);
-
-	if(query == NULL)
-	{
-		printf(" Warning: Não foi possivel formatar query em addProdutoAoBanco() OperacoesBanco.h c3jjhvr87jh\n");
-		return false;
-	}
-
-	if(mysql_query(conexao, query))//Se ocorrer algum erro
-	{
-		printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addProdutoAoBanco())\n");
-		printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
-		printf("\t Query enviada =  |%s|\n", query);
-		free(query);
-		query = NULL;
-			if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
-			{
-				printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addProdutoAoBanco() 1qa5456dasd\n");
-				if(conectarBanco())
-				{
-					printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addProdutoAoBanco() asd456\n");
-				}
-				else
-				{
-					conexao = NULL;
-					mysql_close(conexao);
-					mysql_thread_end();
-					free(conexao);
-					printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addProdutoAoBanco() as4d5asd\n");
-				}
-			}
+		tamanho = 93 + 1 + strlen(idContratante) + strlen(idProduto) + strlen(duracao) + strlen(nomeProduto);
+		query = malloc(sizeof(char) * tamanho);
+	
+		if(query == NULL)
+		{
+			printf(" Warning: Não foi possivel alocar memoria para query em addProdutoAoBanco() OperacoesBanco.h 3kjhv73b\n");
 			return false;
 		}
-		free(query);
-		query = NULL;
-
-		return true;
-
+	
+		snprintf(query, tamanho, "INSERT INTO produto(idproduto,nomeproduto,duracao,contratante_idcontratante) VALUES(\'%s\',\'%s\',%s,%s);", idProduto, nomeProduto, duracao, idContratante);
+	
+		if(query == NULL)
+		{
+			printf(" Warning: Não foi possivel formatar query em addProdutoAoBanco() OperacoesBanco.h c3jjhvr87jh\n");
+			return false;
+		}
+	
+		if(mysql_query(conexao, query))//Se ocorrer algum erro
+		{
+			printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addProdutoAoBanco())\n");
+			printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
+			printf("\t Query enviada =  |%s|\n", query);
+			free(query);
+			query = NULL;
+				if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+				{
+					printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addProdutoAoBanco() 1qa5456dasd\n");
+					if(conectarBanco())
+					{
+						printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addProdutoAoBanco() asd456\n");
+					}
+					else
+					{
+						conexao = NULL;
+						mysql_close(conexao);
+						mysql_thread_end();
+						free(conexao);
+						printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addProdutoAoBanco() as4d5asd\n");
+					}
+				}
+				return false;
+			}
+			free(query);
+			query = NULL;
+	
+			return true;
 	}
+	else
+	{
+		// Se a descricao for informada
+		//tamanho = 106 + 1 + strlen(idContratante) + strlen(idProduto) + strlen(duracao) + strlen(nomeProduto) + strlen(descricao);
+		tamanho = 117 + strlen(idContratante) + strlen(duracao) + strlen(nomeProduto) + strlen(descricao);
+		query = malloc(sizeof(char) * tamanho);
+	
+		if(query == NULL)
+		{
+			printf(" Warning: Não foi possivel alocar memoria para query em addProdutoAoBanco() OperacoesBanco.h 3kjhv73b\n");
+			return false;
+		}
+	
+		snprintf(query, tamanho, "INSERT INTO produto(idproduto,nomeproduto,duracao,contratante_idcontratante,descricao) VALUES(\'%s\',\'%s\',%s,%s,\'%s\');", idProduto, nomeProduto, duracao, idContratante, descricao);
+	
+		if(query == NULL)
+		{
+			printf(" Warning: Não foi possivel formatar query em addProdutoAoBanco() OperacoesBanco.h c3jjhvr87jh\n");
+			return false;
+		}
+		
+		if(mysql_query(conexao, query))//Se ocorrer algum erro
+		{
+			printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addProdutoAoBanco())\n");
+			printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
+			printf("\t Query enviada =  |%s|\n", query);
+			free(query);
+			query = NULL;
+				if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+				{
+					printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addProdutoAoBanco() 1qa5456dasd\n");
+					if(conectarBanco())
+					{
+						printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addProdutoAoBanco() asd456\n");
+					}
+					else
+					{
+						conexao = NULL;
+						mysql_close(conexao);
+						mysql_thread_end();
+						free(conexao);
+						printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addProdutoAoBanco() as4d5asd\n");
+					}
+				}
+				return false;
+			}
+			free(query);
+			query = NULL;
+	
+			return true;
+	}
+
+	
+
+}
 
 char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)// APP 4 CHAVE_DE_SEGURANCA_PHP $ { nomeCidadeInformada nomeEstadoInformado
 	{
