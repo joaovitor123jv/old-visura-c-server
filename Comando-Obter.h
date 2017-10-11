@@ -56,7 +56,7 @@ char *obterDados()// APP 4 algumaCoisa
 			if(token == NULL)
 			{
 				printf(" Warning: Comando insuficiente em Comando-Obter.h obterDados() 45a654q8e\n");
-				return false;
+				return NULL;
 			}
 			if (strcmp(token, TIPO_QUANTIDADE) == 0)// APP 4 2 @
 			{
@@ -65,28 +65,27 @@ char *obterDados()// APP 4 algumaCoisa
 				if(token == NULL)
 				{
 					printf(" Warning: Comando insuficiente em Comando-Obter.h obterDados() 5q68r87s\n");
-					return false;
+					return NULL;
 				}
 				if (strcmp(token, TIPO_VISUALIZACAO) == 0)// APP 4 2 @ 2
 				{
 					// DESEJA obter a QUANTIDADE de VISUALIZACOES (NÃO ANONIMAS)
 					printf(" LOG: Solicitando Obtenção de quantidade de visualizações de usuario não anonimos em Comando-Obter.h obterDados()\n");
 					printf(" Warning: Comando incompleto em Comando-Obter.h obterDados()\n");
-					return false;
+					return NULL;
 				}
 				else if(strcmp(token, TIPO_VISUALIZACAO_ANONIMA_CHAR) == 0)// APP 4 2 @ 3
 				{
 					// DESEJA obter a QUANTIDADE de VISUALIZACOES ANONIMAS
 					printf(" LOG: Solicitando Obtenção de quantidade de visualizações anonimas em Comando-Obter.h obterDados()\n");
-					printf(" Warning: Comando incompleto em Comando-Obter.h obterDados()\n");
-					return false;
+					return obterQuantidadeDeVisualizacoesAnonimas();
 				}
 				else if(strcmp(token, TIPO_ESPECIFICO) == 0)// APP 4 2 @ =
 				{
 					//DESEJA obter QUANTIDADE de VISUALIZACOES de ALGO ESPECIFICO
 					printf(" LOG: Solicitando Obtenção de quantidade de visualizações de algo específico em Comando-Obter.h obterDados()\n");
 					printf(" Warning: Comando incompleto em Comando-Obter.h obterDados()\n");
-					return false;
+					return NULL;
 				}
 			}
 			else

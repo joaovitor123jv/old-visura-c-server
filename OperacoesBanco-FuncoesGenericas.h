@@ -46,6 +46,7 @@ bool conectarBanco()//OK
 		printf("\t|ERRO: %d : %s\n", mysql_errno(conexao), mysql_error(conexao));
 		if(conexao != NULL)
 		{
+			printf("\t|LOG: conexão diferente de NULL em OperacoesBanco-FuncoesGenericas.h conectarBanco() a16q55q8e84\n");
 			mysql_close(conexao);
 			mysql_thread_end();
 			free(conexao);
