@@ -5,8 +5,6 @@
 #include <string.h>
 #include <mysql/mysql.h>
 //#include <stdarg.h>
-MYSQL *conexao;
-
 
 #ifndef bool
 #define bool char
@@ -20,614 +18,12 @@ MYSQL *conexao;
 #define false 0
 #endif
 
-#define DATABASE_HOST "127.0.0.1"//TESTES
-// #define DATABASE_HOST "35.186.190.243"//GOOGLE CLOUD
-#define DATABASE_USER "interface"
-#define DATABASE_PASSWORD "essaSenhaEsoPraInteFaCeSaBeRPorQuESiM"
-#define DATABASE_SCHEMA "teste"
-#define DATABASE_PORT 0
-#define DATABASE_DEFAULT_SOCKET NULL
-#define DATABASE_DEFAULT_FLAGS 0
-
 #include "OperacoesBanco-FuncoesGenericas.h"
 #include "OperacoesBanco-Visualizacoes.h"
 
 //Retorna TRUE se o login estiver correto
 //bool checarLogin(MYSQL *conexao, char *email)//Funcional
 //bool checarLogin(char *email)//OK
-bool checarLogin(char *email, char *senha)
-{
-	if(conexao == NULL)
-	{
-		printf("ERRO DE CONEXÃO (OperacoesBanco.h) (checarLogin)\n");
-		printf(" LOG: Tentando reconexão com banco de dados \n");
-		if(conectarBanco())
-		{
-			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
-		}
-		else
-		{
-			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return false;
-		}
-	}
-	if(email == NULL)
-	{
-		printf(" ERRO: Não há login para checar (email == NULL) (OperacoesBanco.h) (checarLogin)\n");
-		return false;
-	}
-	if(senha == NULL)
-	{
-		printf(" ERRO: Senha não foi informada em OperacoesBanco.h checarLogin() asbiv3888wq2\n");
-		return false;
-	}
-	
-	char *query = NULL;
-	//size_t tamanho = strlen(email) + strlen(senha) + 66 + 1;
-	size_t tamanho = strlen(email) + strlen(senha) + 67;
-	
-	
-	query = malloc(sizeof(char) * tamanho);
-	if(query == NULL)
-	{
-		printf(" ERRO: não foi possível alocar memória para a query (OperacoesBanco.h) (checarLogin)\n");
-		return false;
-	}
-	
-	snprintf(query, sizeof(char) * tamanho, "SELECT C.idcliente from cliente C WHERE C.email=\'%s\' AND C.senha=\'%s\';", email, senha);
-	
-	
-	if(query == NULL)
-	{
-		printf(" ERRO: não foi possível alocar memória para a query (2) (OperacoesBanco.h) (checarLogin)\n");
-		return false;
-	}
-	
-	bool retorno = checarSeVoltaAlgumaCoisaDaQuery(query);
-	if(retorno)
-	{
-		printf(" LOG: Foi encontrado um ID para cliente que satisfaça as seguintes comparações: (em OperacoesBanco.h checarLogin())\n");
-		printf(" \t\tcliente.email = |%s|\n", email);
-		printf(" \t\tcliente.senha = |%s|\n", senha);
-	}
-	query = NULL;
-	return retorno;
-}
-
-int checaExistenciaDeVisualizacaoDeProdutoComPessoa(char *idproduto, char *email)//Se retorna RETORNO_OK, existe algo ali, se retornar RETORNO_NULO, não existe
-{
-	if(idproduto == NULL)
-	{
-		printf("Produto com id nulo em OperacoesBanco.h,  checaExistenciaDeVisualizacaoDeProdutoComPessoa()\n");
-		return RETORNO_ERRO_DE_PARAMETRO;
-	}
-	if(email == NULL)
-	{
-		printf("Pessoa com id nulo em OperacoesBanco.h,  checaExistenciaDeVisualizacaoDeProdutoComPessoa()\n");
-		return RETORNO_ERRO_DE_PARAMETRO;
-	}
-	if(conexao == NULL)
-	{
-		printf("conexao == NULL em OperacoesBanco.h, checaExistenciaDeVisualizacaoDeProdutoComPessoa()\n");
-		printf(" LOG: Tentando reconexão com banco de dados \n");
-		if(conectarBanco())
-		{
-			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
-		}
-		else
-		{
-			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return RETORNO_ERRO_DE_CONEXAO;
-		}
-	}
-	if(strlen(idproduto) != 10)
-	{
-		printf("ERRO: Id de produto informado contém quantidade incorreta de caracteres (OperacoesBanco.h) checaExistenciaDeVisualizacaoDeProdutoComPessoa()\n");
-		return RETORNO_ERRO_DE_PARAMETRO;
-	}
-	
-	char *query = NULL;
-	int tamanho = sizeof(char) * ( strlen(idproduto) + strlen(email) + 180);
-	
-	query = malloc(tamanho);
-	if(query == NULL)
-	{
-		printf(" ERRO: não foi possível alocar memória para a query (OperacoesBanco.h) (checaExistenciaDeVisualizacaoDeProdutoComPessoa())\n");
-		return RETORNO_ERRO_FALTA_DE_MEMORIA;
-	}
-	
-	snprintf(query, tamanho, "SELECT quantidade FROM visualizacaoDeUsuario JOIN cliente ON cliente.email=\'%s\' JOIN produto ON produto.idproduto=visualizacaoDeUsuario.produto_idproduto WHERE produto.idproduto=\'%s\';", email, idproduto );
-	
-	if(query == NULL)
-	{
-		printf(" ERRO: não foi possível alocar memória para a query (2) (OperacoesBanco.h) (checarIdProduto())\n");
-		return RETORNO_ERRO_FALTA_DE_MEMORIA;
-	}
-	
-	if(mysql_query(conexao, query))//Se ocorrer algum erro
-	{
-		printf(" Ocorreram erros durante a execução da query (OperacoesBanco.h) (checaExistenciaDeVisualizacaoDeProdutoComPessoa())\n");
-		printf(" ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
-		printf(" Query enviada =  |%s|\n", query);
-		free(query);
-		query = NULL;
-		return RETORNO_ERRO_DE_CONEXAO;
-	}
-	
-	MYSQL_RES *resposta = NULL;
-	// MYSQL_ROW *linhas = NULL;
-	MYSQL_FIELD *campos = NULL;
-	
-	resposta = mysql_store_result(conexao);
-	
-	if(resposta)//Se houver resposta
-	{
-		// printf(" \tResposta recebida do banco de dados\n");
-		campos = mysql_fetch_fields(resposta);
-		if(campos != NULL)
-		{
-			// printf(" \tExistem campos na resposta\n");
-			if(mysql_num_fields(resposta) >= 1)
-			{
-				// printf(" \tObteve %d respostas\n", mysql_num_fields(resposta));
-				
-				if(mysql_fetch_row(resposta) != NULL)
-				{
-					// printf("Obteve uma ou mais respostas\n");
-					mysql_free_result(resposta);
-					resposta = NULL;
-					free(query);
-					query = NULL;
-					// printf(" EMAIL (OperacoesBanco.h) = %s\n",email);
-					// printf(" POSICAO DE MEMORIA DE EMAIL (OperacoesBanco.h) = %x\n", &email );
-					return RETORNO_OK;
-				}
-				else
-				{
-					mysql_free_result(resposta);
-					resposta = NULL;
-					free(query);
-					query = NULL;
-					return RETORNO_NULO;
-				}
-			}
-			else
-			{
-				mysql_free_result(resposta);
-				resposta = NULL;
-				free(query);
-				query = NULL;
-				return RETORNO_NULO;
-			}
-		}	
-		else
-		{
-			mysql_free_result(resposta);
-			resposta = NULL;
-			free(query);
-			query = NULL;
-			return RETORNO_NULO;
-		}
-		// return true;
-	}
-	else
-	{
-		if(resposta != NULL)
-		{
-			mysql_free_result(resposta);
-			resposta = NULL;			
-		}
-		free(query);
-		query = NULL;
-		return RETORNO_ERRO;
-	}
-}
-
-// bool addVisualizacoesAoBanco(MYSQL *conexao, char *id, int quantidade)
-bool addVisualizacoesAoBanco(char *id, int quantidade, char *email, bool usuarioAnonimo)
-{
-	/*UPDATE produto SET produto.visualizacaoanom = 0 WHERE produto.idproduto = 'cocacolavc';*/
-	if(email == NULL)
-	{
-		printf("ERRO: Email == NULL OperacoesBanco.h (addVisualizacoesAoBanco())\n");
-		return false;
-	}
-	
-	if(id == NULL)
-	{
-		printf("ERRO: Não há login para checar (id == NULL) (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-		return false;
-	}
-	
-	if(conexao == NULL)
-	{
-		printf("ERRO DE CONEXÃO (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-		printf(" LOG: Tentando reconexão com banco de dados \n");
-		if(conectarBanco())
-		{
-			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
-		}
-		else
-		{
-			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return false;
-		}
-	}
-	
-	if(quantidade < 0  || quantidade > 9999)
-	{
-		printf("ERRO: Quantidade informada é inválida (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-		return false;
-	}
-	
-	if(strlen(id) != 10)
-	{
-		printf("ERRO: Id informado contém quantidade incorreta de caracteres (OperacoesBanco.h) addVisualizacoesAoBanco())\n");
-		return false;
-	}
-	
-	
-	if(usuarioAnonimo)
-	{
-		printf(" LOG: USUARIO ANONIMO DETECTADO\n");
-		char *query = NULL;
-		
-		int tamanhoDaQuery = sizeof(char) * (strlen(id) + 107 + 2 + 1);
-		
-		query = malloc(tamanhoDaQuery);
-		if(query == NULL)
-		{
-			printf(" ERRO: não foi possível alocar memória para a query (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-			return false;
-		}
-		memset(query, '\0', tamanhoDaQuery);
-		
-		snprintf(query, tamanhoDaQuery, "UPDATE produto SET produto.visualizacaoanom = produto.visualizacaoanom + %d WHERE produto.idproduto = \'%s\';", quantidade, id );
-		
-		if(query == NULL)
-		{
-			printf(" ERRO: não foi possível alocar memória para a query (2) (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-			return false;
-		}
-		
-		if(mysql_query(conexao, query))//Se ocorrer algum erro
-		{
-			printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-			printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
-			printf("\t Query enviada =  |%s|\n", query);
-			free(query);
-			query = NULL;
-			if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
-			{
-				printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addVisualizacoesAoBanco()\n");
-				if(conectarBanco())
-				{
-					printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addVisualizacoesAoBanco()\n");
-				}
-				else
-				{
-					conexao = NULL;
-					mysql_close(conexao);
-					mysql_thread_end();
-					free(conexao);
-					printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addVisualizacoesAoBanco()\n");
-				}
-			}
-			return false;
-		}
-		else
-		{
-			
-			
-			free(query);
-			query = NULL;
-			
-			switch(checaExistenciaDeVisualizacaoDeProdutoComPessoa(id, email))
-			{
-				case RETORNO_OK://Se já tiver criado a tabela de visualizacaDeUsuario
-				//Usar update para atualizar dados já existentes
-				printf(" LOG: Informações já existem\n");
-				tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + 301);
-				
-				query = malloc(tamanhoDaQuery);
-				if(query == NULL)
-				{
-					printf(" ERRO: não foi possível alocar memória para a query(3) (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-					return false;
-				}
-				memset(query, '\0', tamanhoDaQuery);
-				
-				snprintf(query, tamanhoDaQuery, "UPDATE visualizacaoDeUsuario JOIN cliente ON cliente.idcliente=visualizacaoDeUsuario.cliente_idcliente JOIN produto ON produto.idproduto=visualizacaoDeUsuario.produto_idproduto SET visualizacaoDeUsuario.quantidade=visualizacaoDeUsuario.quantidade+%d WHERE produto.idproduto=\'%s\' AND cliente.email=\'%s\';", quantidade, id, email );
-				
-				if(query == NULL)
-				{
-					printf(" ERRO: não foi possível alocar memória para a query (4) (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-					return false;
-				}
-				
-				if(mysql_query(conexao, query))//Se ocorrer algum erro
-				{
-					printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-					printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
-					printf("\t Query enviada =  |%s|\n", query);
-					free(query);
-					query = NULL;
-					if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
-					{
-						printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() 1qa5456dasd\n");
-						if(conectarBanco())
-						{
-							printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addVisualizacoesAoBanco() asd456\n");
-						}
-						else
-						{
-							conexao = NULL;
-							mysql_close(conexao);
-							mysql_thread_end();
-							free(conexao);
-							printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() as4d5asd\n");
-						}
-					}
-					return false;
-				}
-				free(query);
-				query = NULL;
-				return true;
-				break;
-				case RETORNO_NULO:
-				//Usar Insert para inserir dados
-				printf(" LOG: Informações NÃO existem ainda\n");
-				tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + 204);
-				
-				query = malloc(tamanhoDaQuery);
-				if(query == NULL)
-				{
-					printf(" ERRO: não foi possível alocar memória para a query(5) (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-					return false;
-				}
-				memset(query, '\0', tamanhoDaQuery);
-				
-				snprintf(query, tamanhoDaQuery, "INSERT INTO visualizacaoDeUsuario(quantidade,cliente_idcliente,produto_idproduto) SELECT %d,cliente.idcliente,produto.idproduto FROM cliente JOIN produto ON produto.idproduto=\'%s\' WHERE cliente.email=\'%s\';", quantidade, id, email);
-				
-				if(query == NULL)
-				{
-					printf(" ERRO: não foi possível alocar memória para a query(6) (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-					return false;
-				}
-				
-				if(mysql_query(conexao, query))//Se ocorrer algum erro
-				{
-					printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-					printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
-					printf("\t Query enviada =  |%s|\n", query);
-					free(query);
-					query = NULL;
-					if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
-					{
-						printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() 1qa5456dasd\n");
-						if(conectarBanco())
-						{
-							printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addVisualizacoesAoBanco() asd456\n");
-						}
-						else
-						{
-							conexao = NULL;
-							mysql_close(conexao);
-							mysql_thread_end();
-							free(conexao);
-							printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() as4d5asd\n");
-						}
-					}
-					return false;
-				}
-				free(query);
-				query = NULL;
-				return true;
-				break;
-				case RETORNO_ERRO_DE_PARAMETRO:
-				printf(" ERRO: Parametros incorretos foram passados, OperacoesBanco.h addVisualizacoesAoBanco()\n");
-				return false;
-				break;
-				case RETORNO_ERRO_DE_CONEXAO:
-				printf(" ERRO: Não foi possível estabelecer conexão com o banco de dados OperacoesBanco.h addVisualizacoesAoBanco()\n");
-				return false;
-				break;
-				case RETORNO_ERRO_FALTA_DE_MEMORIA:
-				printf(" ERRO: Falta de memória em OperacoesBanco.h addVisualizacoesAoBanco()\n");
-				return false;
-				break;
-				case RETORNO_ERRO:
-				printf(" ERRO: Desconhecido em OperacoesBanco.h,  addVisualizacoesAoBanco()\n");
-				return false;
-				break;
-			}
-			return false;
-		}
-		return false;
-	}
-	else
-	{
-		printf("USUARIO NÃO É ANONIMO\n");
-		
-		char *query = NULL;
-		
-		int tamanhoDaQuery = sizeof(char) * (strlen(id) + 102);
-		
-		query = malloc(tamanhoDaQuery);
-		if(query == NULL)
-		{
-			printf(" ERRO: não foi possível alocar memória para a query(7) (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-			return false;
-		}
-		memset(query, '\0', tamanhoDaQuery);
-		
-		snprintf(query, tamanhoDaQuery, "UPDATE produto SET produto.visualizacoes=produto.visualizacoes + %d WHERE produto.idproduto=\'%s\';", quantidade, id );
-		
-		if(query == NULL)
-		{
-			printf(" ERRO: não foi possível alocar memória para a query (8) (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-			return false;
-		}
-		
-		if(mysql_query(conexao, query))//Se ocorrer algum erro
-		{
-			printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-			printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
-			printf("\t Query enviada =  |%s|\n", query);
-			free(query);
-			query = NULL;
-			if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
-			{
-				printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() 1qa5456dasd\n");
-				if(conectarBanco())
-				{
-					printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addVisualizacoesAoBanco() asd456\n");
-				}
-				else
-				{
-					conexao = NULL;
-					mysql_close(conexao);
-					mysql_thread_end();
-					free(conexao);
-					printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() as4d5asd\n");
-				}
-			}
-			return false;
-		}
-		else
-		{
-			
-			free(query);
-			query = NULL;
-			
-			// int existencia = checaExistenciaDeVisualizacaoDeProdutoComPessoa(id, email);
-			
-			// switch(existencia)
-			switch(checaExistenciaDeVisualizacaoDeProdutoComPessoa(id, email))
-			{
-				case RETORNO_OK://Se já tiver criado a tabela de visualizacaDeUsuario
-				//Usar update para atualizar dados já existentes
-				printf(" LOG: Informações já existem\n");
-				tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + 301);
-				
-				query = malloc(tamanhoDaQuery);
-				if(query == NULL)
-				{
-					printf(" ERRO: não foi possível alocar memória para a query(9) (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-					return false;
-				}
-				memset(query, '\0', tamanhoDaQuery);
-				
-				snprintf(query, tamanhoDaQuery, "UPDATE visualizacaoDeUsuario JOIN cliente ON cliente.idcliente=visualizacaoDeUsuario.cliente_idcliente JOIN produto ON produto.idproduto=visualizacaoDeUsuario.produto_idproduto SET visualizacaoDeUsuario.quantidade=visualizacaoDeUsuario.quantidade+%d WHERE produto.idproduto=\'%s\' AND cliente.email=\'%s\';", quantidade, id, email );
-				
-				if(query == NULL)
-				{
-					printf(" ERRO: não foi possível alocar memória para a query (10) (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-					return false;
-				}
-				
-				if(mysql_query(conexao, query))//Se ocorrer algum erro
-				{
-					printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-					printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
-					printf("\t Query enviada =  |%s|\n", query);
-					free(query);
-					query = NULL;
-					if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
-					{
-						printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() 1qa5456dasd\n");
-						if(conectarBanco())
-						{
-							printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addVisualizacoesAoBanco() asd456\n");
-						}
-						else
-						{
-							conexao = NULL;
-							mysql_close(conexao);
-							mysql_thread_end();
-							free(conexao);
-							printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() as4d5asd\n");
-						}
-					}
-					return false;
-				}
-				free(query);
-				query = NULL;
-				return true;
-				break;
-				case RETORNO_NULO:
-				//Usar Insert para inserir dados
-				printf(" LOG: Informações NÃO existem ainda\n");
-				tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + 204);
-				
-				query = malloc(tamanhoDaQuery);
-				if(query == NULL)
-				{
-					printf(" ERRO: não foi possível alocar memória para a query(11) (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-					return false;
-				}
-				memset(query, '\0', tamanhoDaQuery);
-				
-				snprintf(query, tamanhoDaQuery, "INSERT INTO visualizacaoDeUsuario(quantidade,cliente_idcliente,produto_idproduto) SELECT %d,cliente.idcliente,produto.idproduto FROM cliente JOIN produto ON produto.idproduto=\'%s\' WHERE cliente.email=\'%s\';", quantidade, id, email);
-				
-				if(query == NULL)
-				{
-					printf(" ERRO: não foi possível alocar memória para a query(12) (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-					return false;
-				}
-				
-				if(mysql_query(conexao, query))//Se ocorrer algum erro
-				{
-					printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addVisualizacoesAoBanco())\n");
-					printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
-					printf("\t Query enviada =  |%s|\n", query);
-					free(query);
-					query = NULL;
-					if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
-					{
-						printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() 1qa5456dasd\n");
-						if(conectarBanco())
-						{
-							printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addVisualizacoesAoBanco() asd456\n");
-						}
-						else
-						{
-							conexao = NULL;
-							mysql_close(conexao);
-							mysql_thread_end();
-							free(conexao);
-							printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addVisualizacoesAoBanco() as4d5asd\n");
-						}
-					}
-					return false;
-				}
-				free(query);
-				query = NULL;
-				return true;
-				break;
-				case RETORNO_ERRO_DE_PARAMETRO:
-				printf(" ERRO: Parametros incorretos foram passados, OperacoesBanco.h addVisualizacoesAoBanco()\n");
-				return false;
-				break;
-				case RETORNO_ERRO_DE_CONEXAO:
-				printf(" ERRO: Não foi possível estabelecer conexão com o banco de dados OperacoesBanco.h addVisualizacoesAoBanco()\n");
-				return false;
-				break;
-				case RETORNO_ERRO_FALTA_DE_MEMORIA:
-				printf(" ERRO: Falta de memória em OperacoesBanco.h addVisualizacoesAoBanco()\n");
-				return false;
-				break;
-				case RETORNO_ERRO:
-				printf(" ERRO: Desconhecido em OperacoesBanco.h,  addVisualizacoesAoBanco()\n");
-				return false;
-				break;
-			}
-			return false;
-		}
-		return false;	
-	}
-	return false;
-}
 
 bool addUsuarioAnonimoAoBanco(char *email, char *senha)
 {
@@ -735,16 +131,16 @@ bool addUsuarioAoBanco(char *emailAnterior, char *email, char *senha, char* sexo
 		printf(" ERRO: senha == NULL em OperacoesBanco.h addUsuarioAoBanco(char *email, char *senha, int idade, int sexo, char *dataNascimento)\n");
 		return false;
 	}
-	if(sexo == NULL)
-	{
-		printf(" ERRO: sexo == NULL em OperacoesBanco.h addUsuarioAoBanco() 544qwe654b89a32d\n");
-		return false;
-	}
-	if(dataNascimento == NULL)
-	{
-		printf(" ERRO: email == NULL em OperacoesBanco.h addUsuarioAoBanco(char *email, char *senha, int idade, int sexo, char *dataNascimento)\n");
-		return false;
-	}
+	// if(sexo == NULL)
+	// {
+	// 	printf(" ERRO: sexo == NULL em OperacoesBanco.h addUsuarioAoBanco() 544qwe654b89a32d\n");
+	// 	return false;
+	// }
+	// if(dataNascimento == NULL)
+	// {
+	// 	printf(" ERRO: email == NULL em OperacoesBanco.h addUsuarioAoBanco(char *email, char *senha, int idade, int sexo, char *dataNascimento)\n");
+	// 	return false;
+	// }
 	
 	printf(" LOG: Operação em testes → OperacoesBanco.h addUsuarioAoBanco()\n");
 	
@@ -780,62 +176,118 @@ bool addUsuarioAoBanco(char *emailAnterior, char *email, char *senha, char* sexo
 		//TODO (leia a proxima linha)
 		/* Fazer tratamento de erros pra caso tenha algum problema aqui, senão usuario vai ficar com a senha trocada e o email não :/ */
 		
-		query = NULL;
-		// tamanho = 113 + strlen(senha) + strlen(dataNascimento) + strlen(sexo) + strlen(email) + strlen(emailAnterior) + 1;
-		tamanho = strlen(senha) + strlen(dataNascimento) + strlen(sexo) + strlen(email) + strlen(emailAnterior) + 114;
-		
-		query = malloc(sizeof(char) * tamanho);
-		
-		if(query == NULL)
+		if(sexo != NULL && dataNascimento != NULL)
 		{
-			printf(" Warning: Não foi possível alocar memoria para query em OperacoesBanco.h addUsuarioAoBanco() sadjhk3b78vwiuy\n");
-			return false;
-		}
-		
-		snprintf(query, tamanho, "UPDATE cliente C SET C.datanascimento=STR_TO_DATE(\'%s\',\'%%d/%%m/%%Y\'),C.sexo=%s,C.senha=\'%s\',C.email=\'%s\' WHERE C.email=\'%s\';", dataNascimento, sexo, senha, email, emailAnterior);
-		
-		
-		if(query == NULL)
-		{
-			printf(" Warning: Não foi possível formatar string para query em OperacoesBanco.h addUsuarioAoBanco() qjbv9438ts82l\n");
-			return false;
-		}
-		
-		if(mysql_query(conexao, query))//Se ocorrer algum erro
-		{
-			printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addUsuarioAoBanco()) c1q658r04s\n");
-			printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
-			printf("\t Query enviada =  |%s|\n", query);
+			query = NULL;
+			// tamanho = 113 + strlen(senha) + strlen(dataNascimento) + strlen(sexo) + strlen(email) + strlen(emailAnterior) + 1;
+			tamanho = strlen(senha) + strlen(dataNascimento) + strlen(sexo) + strlen(email) + strlen(emailAnterior) + 114;
+			
+			query = malloc(sizeof(char) * tamanho);
+			
+			if(query == NULL)
+			{
+				printf(" Warning: Não foi possível alocar memoria para query em OperacoesBanco.h addUsuarioAoBanco() sadjhk3b78vwiuy\n");
+				return false;
+			}
+			
+			snprintf(query, tamanho, "UPDATE cliente C SET C.datanascimento=STR_TO_DATE(\'%s\',\'%%d/%%m/%%Y\'),C.sexo=%s,C.senha=\'%s\',C.email=\'%s\' WHERE C.email=\'%s\';", dataNascimento, sexo, senha, email, emailAnterior);
+			
+			
+			if(query == NULL)
+			{
+				printf(" Warning: Não foi possível formatar string para query em OperacoesBanco.h addUsuarioAoBanco() qjbv9438ts82l\n");
+				return false;
+			}
+			
+			if(mysql_query(conexao, query))//Se ocorrer algum erro
+			{
+				printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addUsuarioAoBanco()) c1q658r04s\n");
+				printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
+				printf("\t Query enviada =  |%s|\n", query);
+				free(query);
+				query = NULL;
+				if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+				{
+					printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addUsuarioAoBanco() 1rwv66dasd\n");
+					if(conectarBanco())
+					{
+						printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addUsuarioAoBanco() asd414q6e8e56\n");
+					}
+					else
+					{
+						conexao = NULL;
+						mysql_close(conexao);
+						mysql_thread_end();
+						free(conexao);
+						printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addUsuarioAoBanco() 4dsad4qasd\n");
+					}
+				}
+				return false;
+			}
 			free(query);
 			query = NULL;
-			if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
-			{
-				printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addUsuarioAoBanco() 1rwv66dasd\n");
-				if(conectarBanco())
-				{
-					printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addUsuarioAoBanco() asd414q6e8e56\n");
-				}
-				else
-				{
-					conexao = NULL;
-					mysql_close(conexao);
-					mysql_thread_end();
-					free(conexao);
-					printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addUsuarioAoBanco() 4dsad4qasd\n");
-				}
-			}
-			return false;
+			return true;
 		}
-		free(query);
-		query = NULL;
-		return true;
+		else
+		{
+			query = NULL;
+			// tamanho = 60 + strlen(senha) +  strlen(sexo) + strlen(email) + strlen(emailAnterior) + 1;
+			tamanho = strlen(senha) + strlen(email) + strlen(emailAnterior) + 61;
+			
+			query = malloc(sizeof(char) * tamanho);
+			
+			if(query == NULL)
+			{
+				printf(" Warning: Não foi possível alocar memoria para query em OperacoesBanco.h addUsuarioAoBanco() sadjhk3b78vwiuy\n");
+				return false;
+			}
+			
+			snprintf(query, tamanho, "UPDATE cliente C SET C.senha=\'%s\',C.email=\'%s\' WHERE C.email=\'%s\';", senha, email, emailAnterior);
+			
+			
+			if(query == NULL)
+			{
+				printf(" Warning: Não foi possível formatar string para query em OperacoesBanco.h addUsuarioAoBanco() qjbv9438ts82l\n");
+				return false;
+			}
+			
+			if(mysql_query(conexao, query))//Se ocorrer algum erro
+			{
+				printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addUsuarioAoBanco()) c1q658r04s\n");
+				printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
+				printf("\t Query enviada =  |%s|\n", query);
+				free(query);
+				query = NULL;
+				if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+				{
+					printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addUsuarioAoBanco() 1rwv66dasd\n");
+					if(conectarBanco())
+					{
+						printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addUsuarioAoBanco() asd414q6e8e56\n");
+					}
+					else
+					{
+						conexao = NULL;
+						mysql_close(conexao);
+						mysql_thread_end();
+						free(conexao);
+						printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addUsuarioAoBanco() 4dsad4qasd\n");
+					}
+				}
+				return false;
+			}
+			free(query);
+			query = NULL;
+			return true;
+		}
+
+		
 	}
 	
 	
 	printf(" ERRO: O pior erro aconteceu, todos os ifs falharam em OperacoesBanco.h addUsuarioAoBanco() cqebhuy8u4bhajskybt7c8onhyauxis4f\n");
 	return false;
 }
-
 
 
 bool addCidadeAoBanco(char *nomeDoEstado, char *nomeCidade)
@@ -1722,7 +1174,6 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 }
 
 
-
 bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, char *telefone, char *idLocalizacao)
 {
 	if(conexao == NULL)
@@ -1877,14 +1328,14 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 		printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addContratanteAoBanco() (sakdjhjkhq)\n");
 		return false;
 	}
-	
+
 	if(mysql_query(conexao, query))//Se ocorrer algum erro
 	{
 		printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addContratanteAoBanco())\n");
 		printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
 		printf("\t Query enviada =  |%s|\n", query);
 		free(query);
-		query = NULL;	
+		query = NULL;
 		if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
 		{
 			printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addContratanteAoBanco() 1qa5456dasd\n");
@@ -2492,7 +1943,6 @@ char *obterDescricaoProdutoDoBanco(char *idProduto)
 }
 
 
-
 char *obterNomeProdutoDoBanco(char *idProduto)
 {
 	if(conexao == NULL)
@@ -2647,8 +2097,235 @@ char *obterNomeProdutoDoBanco(char *idProduto)
 }
 
 
+bool addNomeDeUsuarioAoBanco(char *email, char *nome)// TESTAR        APP 2 & # nome
+{
+	if(nome == NULL)
+	{
+		printf(" Warning: Nome recebido é nulo em OperacoesBanco.h addNomeDeUsuarioAoBanco() 4654egg\n");
+		return false;
+	}
+	if (conexao == NULL)
+	{
+		printf(" Warning: Conexao nula detectada em OperacoesBanco.h addNomeDeUsuarioAoBanco() 56456q489b87ts\n");
+		printf(" LOG: Tentando reconexão com banco de dados em OperacoesBanco.h addNomeDeUsuarioAoBanco()\n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
+	}
+	
 
+	char *query = NULL;
+	// int tamanho = strlen(email) + strlen(nome) + 48 +1;
+	int tamanho = strlen(email) + strlen(nome) + 49;
+	query = malloc(sizeof(char) * tamanho);
+	if(query == NULL)
+	{
+		printf(" Warning: nao foi possível alocar memoria para query em OperacoesBanco.h addNomeDeUsuarioAoBanco()\n");
+		return false;
+	}
+	
+	snprintf(query, tamanho, "UPDATE cliente C SET C.nome=\'%s\' WHERE C.email=\'%s\';", nome, email);
+	
+	if(query == NULL)
+	{
+		printf(" Warning: nao foi possível formatar query em OperacoesBanco.h addNomeDeUsuarioAoBanco() cqhkhbjvr\n");
+		return false;
+	}
+	
+	if(mysql_query(conexao, query))
+	{
 
+		printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addNomeDeUsuarioAoBanco())\n");
+		printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
+		printf("\t Query enviada =  |%s|\n", query);
+		free(query);
+		query = NULL;
+		if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+		{
+			printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addNomeDeUsuarioAoBanco() 1qa5456dasd\n");
+			if(conectarBanco())
+			{
+				printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addNomeDeUsuarioAoBanco() asd456\n");
+			}
+			else
+			{
+				conexao = NULL;
+				mysql_close(conexao);
+				mysql_thread_end();
+				free(conexao);
+				printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addNomeDeUsuarioAoBanco() as4d5asd\n");
+			}
+		}
+		return false;
+	}
+	else
+	{
+		printf(" LOG: Nome %s adicionado ao usuario %s com sucesso em Comando-Adicao.h addNomeDeUsuarioAoBanco\n", nome, email);
+		free(query);
+		query = NULL;
+		return true;
+	}
 
+}
+
+bool addSobrenomeDeUsuarioAoBanco(char *email, char *sobrenome)//TESTAR          APP 2 & Y sobrenome
+{
+	if(sobrenome == NULL)
+	{
+		printf(" Warning: Nome recebido é nulo em OperacoesBanco.h addSobrenomeDeUsuarioAoBanco() 4654egg\n");
+		return false;
+	}
+	if (conexao == NULL)
+	{
+		printf(" Warning: Conexao nula detectada em OperacoesBanco.h addSobrenomeDeUsuarioAoBanco() 56456q489b87ts\n");
+		printf(" LOG: Tentando reconexão com banco de dados em OperacoesBanco.h addSobrenomeDeUsuarioAoBanco()\n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
+	}
+	
+
+	char *query = NULL;
+	// int tamanho = strlen(email) + strlen(sobrenome) + 53 +1;
+	int tamanho = strlen(email) + strlen(sobrenome) + 54;
+	query = malloc(sizeof(char) * tamanho);
+	if(query == NULL)
+	{
+		printf(" Warning: nao foi possível alocar memoria para query em OperacoesBanco.h addSobrenomeDeUsuarioAoBanco()\n");
+		return false;
+	}
+	
+	snprintf(query, tamanho, "UPDATE cliente C SET C.sobrenome=\'%s\' WHERE C.email=\'%s\';", sobrenome, email);
+	
+	if(query == NULL)
+	{
+		printf(" Warning: nao foi possível formatar query em OperacoesBanco.h addSobrenomeDeUsuarioAoBanco() cqhkhbjvr\n");
+		return false;
+	}
+	
+	if(mysql_query(conexao, query))
+	{
+
+		printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addSobrenomeDeUsuarioAoBanco())\n");
+		printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
+		printf("\t Query enviada =  |%s|\n", query);
+		free(query);
+		query = NULL;
+		if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+		{
+			printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addSobrenomeDeUsuarioAoBanco() 1qa5456dasd\n");
+			if(conectarBanco())
+			{
+				printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addSobrenomeDeUsuarioAoBanco() asd456\n");
+			}
+			else
+			{
+				conexao = NULL;
+				mysql_close(conexao);
+				mysql_thread_end();
+				free(conexao);
+				printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addSobrenomeDeUsuarioAoBanco() as4d5asd\n");
+			}
+		}
+		return false;
+	}
+	else
+	{
+		printf(" LOG: sobrenome %s adicionado ao usuario %s com sucesso em Comando-Adicao.h addSobrenomeDeUsuarioAoBanco\n", sobrenome, email);
+		free(query);
+		query = NULL;
+		return true;
+	}
+
+}
+
+bool addSexoDeUsuarioAoBanco(char *email, char *sexo)// TESTAR        APP 2 & SQ sexo
+{
+	if(sexo == NULL)
+	{
+		printf(" Warning: Nome recebido é nulo em OperacoesBanco.h addSexoDeUsuarioAoBanco() 4654egg\n");
+		return false;
+	}
+	if (conexao == NULL)
+	{
+		printf(" Warning: Conexao nula detectada em OperacoesBanco.h addSexoDeUsuarioAoBanco() 56456q489b87ts\n");
+		printf(" LOG: Tentando reconexão com banco de dados em OperacoesBanco.h addSexoDeUsuarioAoBanco()\n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
+	}
+	
+
+	char *query = NULL;
+	// int tamanho = strlen(email) + strlen(sobrenome) + 48 +1;
+	int tamanho = strlen(email) + strlen(sexo) + 49;
+	query = malloc(sizeof(char) * tamanho);
+	if(query == NULL)
+	{
+		printf(" Warning: nao foi possível alocar memoria para query em OperacoesBanco.h addSexoDeUsuarioAoBanco()\n");
+		return false;
+	}
+	
+	snprintf(query, tamanho, "UPDATE cliente C SET C.sexo=\'%s\' WHERE C.email=\'%s\';", sexo, email);
+	
+	if(query == NULL)
+	{
+		printf(" Warning: nao foi possível formatar query em OperacoesBanco.h addSexoDeUsuarioAoBanco() cqhkhbjvr\n");
+		return false;
+	}
+	
+	if(mysql_query(conexao, query))
+	{
+
+		printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addSexoDeUsuarioAoBanco())\n");
+		printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
+		printf("\t Query enviada =  |%s|\n", query);
+		free(query);
+		query = NULL;
+		if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+		{
+			printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addSexoDeUsuarioAoBanco() 1qa5456dasd\n");
+			if(conectarBanco())
+			{
+				printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addSexoDeUsuarioAoBanco() asd456\n");
+			}
+			else
+			{
+				conexao = NULL;
+				mysql_close(conexao);
+				mysql_thread_end();
+				free(conexao);
+				printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addSexoDeUsuarioAoBanco() as4d5asd\n");
+			}
+		}
+		return false;
+	}
+	else
+	{
+		printf(" LOG: sexo %s adicionado ao usuario %s com sucesso em Comando-Adicao.h addSexoDeUsuarioAoBanco\n", sexo, email);
+		free(query);
+		query = NULL;
+		return true;
+	}
+
+}
 
 #endif

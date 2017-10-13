@@ -8,7 +8,7 @@ bool addVisualizacao(char *email, bool usuarioAnonimo);
 // bool addIndice(char *nomearquivo);
 
 bool addUsuarioAnonimo();
-bool addUsuario();
+bool addUsuario(char *emailAnterior);
 
 bool addContratante();
 
@@ -16,6 +16,8 @@ bool addProduto();//Fazendo
 
 bool addCidade();
 bool addLocalizacao();
+
+bool addInformacoesAUsuario(char *email);
 
 
 bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
@@ -114,6 +116,20 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 		else
 		{
 			printf(" LOG: Usuario não é anonimo ou operação desconhecida em Comando-Adicao.h comandoAdicionar()\n");
+			return false;
+		}
+	}
+	else if(strcmp(token, TIPO_INFORMACAO) == 0)/* APP 2 & */
+	{
+		printf(" LOG: Cliente requisita adicao de informação a usuario em Comando-Adicao.h comandoAdicionar()\n");
+		if(addInformacoesAUsuario(email))
+		{
+			printf(" LOG: Informações adicionadas com sucesso ao banco em Comand-Adicao.h comandoAdicionar()\n");
+			return true;
+		}
+		else
+		{
+			printf(" Warning: Falha ao adicionar informações a usuario em Comando-Adicao.h comandoAdicionar()\n");
 			return false;
 		}
 	}
@@ -490,6 +506,271 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 	}
 }
 
+bool addUsuario(char *emailAnterior)//TODO  APP 2 1 1
+{
+	if(emailAnterior == NULL)
+	{
+		printf(" Warning: Email informado é nulo, não será possivel converter usuario anonimo em usuario registrado dessa forma, abortando em Comando-Adicao.h addUsuario()\n");
+		return false;
+	}
+
+	char *token = NULL;
+	token = strtok(NULL, " ");// APP 2 1 1 7            (7 == TIPO_LOGIN)
+
+	if(token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() e14d5r2v\n");
+		return false;
+	}
+	else if(strlen(token) > TAMANHO_TIPO)
+	{
+		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() wekbjjw\n");
+		printf(" \t TOKEN = |%s|\n", token);
+		return false;
+	}
+	else if(strcmp(token, TIPO_LOGIN) != 0)
+	{
+		printf(" Warning: Comando incorreto em Comando-Adicao.h addUsuario() saasdjkh \n");
+		return false;
+	}
+
+	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado
+	if(token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() kkqhhasbnv\n");
+		return false;
+	}
+	else if( strlen(token) > TAMANHO_LOGIN)
+	{
+		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() sakjv31sx0\n");
+		return false;
+	}
+
+	char *email = NULL;
+	email = malloc(sizeof(char) * (strlen(token) + 1));// Esse +1 é o do maldito \0
+
+	if(email == NULL)
+	{
+		printf(" Warning: Falha ao alocar memoria para email em Comando-Adicao.h addUsuario() sajhbr15550ddsr\n");
+		return false;
+	}
+
+	strcpy(email, token);
+	if(email == NULL)
+	{
+		printf(" Warning: falha ao copiar de token para email em Comando-Adicao.h addUsuario() asd45r6v1sd0\n");
+		return false;
+	}
+
+	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado 9    (9 == TIPO_SENHA)
+	if(token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() chj3wds140g5qaw\n");
+		free(email);
+		email = NULL;
+		return false;
+	}
+	else if(strlen(token) > TAMANHO_TIPO)
+	{
+		printf(" Warning: Comando exageradamente grande em Comand-Adicao.h addUsuario()\n");
+		free(email);
+		email = NULL;
+		return false;
+	}
+	else if(strcmp(token, TIPO_SENHA) != 0)
+	{
+		printf(" Warning: Comando incorreto em Comand-Adicao.h addUsuario()\n");
+		free(email);
+		email = NULL;
+		return false;
+	}
+
+	// AINDA NÃO IMPLEMENTADO DESSA FORMA → APP 2 1 1 7 emailInformado 9 senhaCriptografadaAqui     IT's SHOW TIME ! //TODO
+	// ALTERNATIVA EM USO → APP 2 1 1 7 emailInformado 9 senhaCruaInformada
+	
+	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado 9 senhaCruaInformada
+
+	if(token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() 5a1e55q\n");
+		free(email);
+		email = NULL;
+		return false;
+	}
+	else if(strlen(token) > TAMANHO_SENHA)
+	{
+		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() 1q54r2s\n");
+		free(email);
+		email = NULL;
+		return false;
+	}
+
+	char *senha = malloc(sizeof(char) * (strlen(token) + 1));// + 1 é do \0
+
+	if(senha == NULL)
+	{
+		printf(" Warning: Não foi possivel alocar memoria para senha em Comando-Adicao.h addUsuario() q45e8c1aaqeh\n");
+		free(email);
+		email = NULL;
+		return false;
+	}
+
+	strcpy(senha, token);
+
+	if(senha == NULL)
+	{
+		printf(" Warning: Falha ao copiar de token para senha em Comando-Adicao.h addUsuario()  qe848vrw\n");
+		free(email);
+		email = NULL;
+		return false;
+	}
+
+	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado 9 senhaCruaInformada sexoInformado
+	if(token == NULL)
+	{
+		printf(" LOG: Comando de adição de usuario informou somente Login e Senha\n");
+		if(addUsuarioAoBanco(emailAnterior, email, senha, NULL, NULL))
+		{
+			printf(" LOG: Usuario adicionado com sucesso ao banco de dados em Comando-Adicao.h addUsuario() a654q87e\n");
+			emailAnterior = NULL;
+			emailAnterior = email;
+			free(email);
+			free(senha);
+			senha = NULL;
+			email = NULL;
+			return true;
+		}
+		else
+		{
+			printf(" Warning: falha ao adicionar usuario ao banco de dados em Comand-Adicao.h addUsuario() (sexo não informado)\n");
+			free(email);
+			free(senha);
+			senha = NULL;
+			email = NULL;
+			return false;
+		}
+		/* printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() 4q8e1h058\n");
+		free(email);
+		free(senha);
+		senha = NULL;
+		email = NULL;
+		return false; */
+	}
+
+	if(strlen(token) > TAMANHO_SEXO_CLIENTE)
+	{
+		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() vqe5489wer20\n");
+		free(email);
+		free(senha);
+		senha = NULL;
+		email = NULL;
+		return false;
+	}
+
+	char *sexo = malloc(sizeof(char) * (strlen(token) + 1));
+	if(sexo == NULL)
+	{
+		printf(" Warning: Não foi possivel alocar memoria para sexo em Comando-Adicao.h addUsuario() qef48fsw\n");
+		free(email);
+		free(senha);
+		senha = NULL;
+		email = NULL;
+		return false;
+	}
+
+	strcpy(sexo, token);
+	if(sexo == NULL)
+	{
+		printf(" Warning: Erro ao copiar de token para sexo em Comando-Adicao.h addUsuario()  cqeewf48v92q0\n");
+		free(email);
+		free(senha);
+		senha = NULL;
+		email = NULL;
+		return false;
+	}
+
+	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado 9 senhaCruaInformada sexoInformado dataNascimentoInformada
+	if(token == NULL)
+	{
+		free(email);
+		free(senha);
+		free(sexo);
+		sexo = NULL;
+		senha = NULL;
+		email = NULL;
+		return false;
+	}
+
+	if(strlen(token) > TAMANHO_DATA)
+	{
+		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() asd15e9q8x\n");
+		free(email);
+		free(senha);
+		free(sexo);
+		sexo = NULL;
+		senha = NULL;
+		email = NULL;
+		return false;
+	}
+
+	char *dataNascimento = malloc(sizeof(char) * (strlen(token) + 1));
+	if(dataNascimento == NULL)
+	{
+		printf(" Warning: Falha ao alocar memoria para dataNascimento em Comando-Adicao.h addUsuario() eq54v89qc\n");
+		free(email);
+		free(senha);
+		free(sexo);
+		sexo = NULL;
+		senha = NULL;
+		email = NULL;
+		return false;
+	}
+
+	strcpy(dataNascimento, token);
+	if(dataNascimento == NULL)
+	{
+		printf(" Warning: Falha ao copiar de token para dataNascimento em Comando-Adicao.h addUsuario() jhqiujbcx983\n");
+		free(email);
+		free(senha);
+		free(sexo);
+		sexo = NULL;
+		senha = NULL;
+		email = NULL;
+		return false;
+	}
+
+	if(addUsuarioAoBanco(emailAnterior, email, senha, sexo, dataNascimento))
+	{
+		printf(" LOG: Usuario adicionado com sucesso ao banco de dados em Comando-Adicao.h addUsuario()  qbu39sad87\n");
+		free(email);
+		free(senha);
+		free(sexo);
+		free(dataNascimento);
+		dataNascimento = NULL;
+		sexo = NULL;
+		senha = NULL;
+		email = NULL;
+		return true;
+	}
+	else
+	{
+		printf(" Warning: Falha ao adicionar usuario ao banco de dados em Comando-Adicao.h addUsuario() qh38v9q2ubhd\n");
+		free(email);
+		free(senha);
+		free(sexo);
+		free(dataNascimento);
+		dataNascimento = NULL;
+		sexo = NULL;
+		senha = NULL;
+		email = NULL;
+		return false;		
+	}
+
+	printf(" ERRO: DEU MERDA em Comando-Adicao.h addUsuario()\n");
+	return false;
+	// return false;  // Teoricamente nunca vai chegar aqui, mas vai que...
+}
+
 
 bool addVisualizacao(char *email, bool usuarioAnonimo)/* APP 2 2*/
 {
@@ -500,7 +781,7 @@ bool addVisualizacao(char *email, bool usuarioAnonimo)/* APP 2 2*/
 	}
 	printf("*************************COMANDO ADICAO ********************\n");
 	
-	char* token = strtok(NULL, " ");
+	char* token = strtok(NULL, " ");// APP 2 2 idProduto
 	
 	if(token == NULL)
 	{
@@ -554,7 +835,7 @@ bool addVisualizacao(char *email, bool usuarioAnonimo)/* APP 2 2*/
 	// Calcula a quantidade de cliques informada no quinto argumento
 	token = NULL;
 
-	token = strtok(NULL, " ");
+	token = strtok(NULL, " ");// APP 2 2 idProduto quantidade
 	if(token == NULL)/* APP 2 2 idProduto quantidade */
 	{
 		printf(" ERRO: Comando incompleto  (2)  addVisualizacao() (Comando-Adicao.h)\n");
@@ -568,59 +849,72 @@ bool addVisualizacao(char *email, bool usuarioAnonimo)/* APP 2 2*/
 		return false;
 	}
 
-	//Converte quantidade dada em string para quantidade dada em inteiro
-	int quantidade = 0;
-	if(token[0] - '0' < 10 && token[0] - '0' >= 0)
-	{
-		quantidade = token[0] - '0';
+	// //Converte quantidade dada em string para quantidade dada em inteiro
+	// int quantidade = 0;
+	// if(token[0] - '0' < 10 && token[0] - '0' >= 0)
+	// {
+	// 	quantidade = token[0] - '0';
 
-		// printf(" primeira quantidade → %d\n", quantidade);
-	}
-	else
-	{
-		printf(" Warning: Comando incorreto (addVisualizacao) (Comando-Adicao.h)\n");
+	// 	// printf(" primeira quantidade → %d\n", quantidade);
+	// }
+	// else
+	// {
+	// 	printf(" Warning: Comando incorreto (addVisualizacao) (Comando-Adicao.h)\n");
 		
+	// 	free(id);
+	// 	id = NULL;
+	// 	return false;
+	// }
+
+	// int i = 1;
+
+	// while(token[i] != '\0')
+	// {
+	// 	if(token[i] - '0' < 10 && token[i] - '0' >= 0)
+	// 	{
+	// 		quantidade = quantidade * 10;
+	// 		quantidade = (token[i] - '0') + quantidade;
+	// 	}
+	// 	else
+	// 	{
+	// 		printf(" ERRO: Comando incorreto (dentro do while) (%d vez)  addVisualizacao() (Comando-Adicao.h)\n", i);
+			
+	// 		free(id);
+	// 		id = NULL;
+	// 		return false;
+	// 	}
+	// 	i++;
+	// }
+	// //FIM Converte quantidade dada em string para quantidade dada em inteiro
+
+	char *quantidade = strdup(token);
+
+	if(quantidade == NULL)
+	{
+		printf(" Warning: Não foi possível duplicar token para quantidade em Comando-Adicao.h addVisualizacao()\n");
 		free(id);
 		id = NULL;
 		return false;
 	}
 
-	int i = 1;
-
-	while(token[i] != '\0')
-	{
-		if(token[i] - '0' < 10 && token[i] - '0' >= 0)
-		{
-			quantidade = quantidade * 10;
-			quantidade = (token[i] - '0') + quantidade;
-		}
-		else
-		{
-			printf(" ERRO: Comando incorreto (dentro do while) (%d vez)  addVisualizacao() (Comando-Adicao.h)\n", i);
-			
-			free(id);
-			id = NULL;
-			return false;
-		}
-		i++;
-	}
-	//FIM Converte quantidade dada em string para quantidade dada em inteiro
-
 	//Quandidade de cliques calculada corretamente
 
+	//CONDIÇÕES PARA GERAR LOG, SOMENTE
 	if(!addVisualizacoesAoBanco(id, quantidade, email, usuarioAnonimo))
 	{
 		printf(" ERRO: Não foi possível atualizar a base de dados addVisualizacao() (Comando-Adicao.h)\n");
-		
 		free(id);
+		free(quantidade);
+		quantidade = NULL;
 		id = NULL;
 		return false;
 	}
 	else
 	{
 		printf(" LOG: Dados atualizados Comando-Adicao.h addVisualizacao()\n");
-		
 		free(id);
+		free(quantidade);
+		quantidade = NULL;
 		id = NULL;
 		return true;
 	}
@@ -2385,247 +2679,152 @@ bool addProduto()
 	return false;
 }
 
-bool addUsuario(char *emailAnterior)//TODO  APP 2 1 1
+bool addInformacoesAUsuario(char *email)// DOING
 {
-	if(emailAnterior == NULL)
-	{
-		printf(" Warning: Email informado é nulo, não será possivel converter usuario anonimo em usuario registrado dessa forma, abortando em Comando-Adicao.h addUsuario()\n");
-		return false;
-	}
-
-	char *token = NULL;
-	token = strtok(NULL, " ");// APP 2 1 1 7            (7 == TIPO_LOGIN)
-
-	if(token == NULL)
-	{
-		printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() e14d5r2v\n");
-		return false;
-	}
-	else if(strlen(token) > TAMANHO_TIPO)
-	{
-		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() wekbjjw\n");
-		printf(" \t TOKEN = |%s|\n", token);
-		return false;
-	}
-	else if(strcmp(token, TIPO_LOGIN) != 0)
-	{
-		printf(" Warning: Comando incorreto em Comando-Adicao.h addUsuario() saasdjkh \n");
-		return false;
-	}
-
-	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado
-	if(token == NULL)
-	{
-		printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() kkqhhasbnv\n");
-		return false;
-	}
-	else if( strlen(token) > TAMANHO_LOGIN)
-	{
-		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() sakjv31sx0\n");
-		return false;
-	}
-
-	char *email = NULL;
-	email = malloc(sizeof(char) * (strlen(token) + 1));// Esse +1 é o do maldito \0
-
 	if(email == NULL)
 	{
-		printf(" Warning: Falha ao alocar memoria para email em Comando-Adicao.h addUsuario() sajhbr15550ddsr\n");
+		printf(" Warning: email não informado em Comando-Adicao.h addInformacoesAUsuario()\n");
 		return false;
 	}
-
-	strcpy(email, token);
-	if(email == NULL)
-	{
-		printf(" Warning: falha ao copiar de token para email em Comando-Adicao.h addUsuario() asd45r6v1sd0\n");
-		return false;
-	}
-
-	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado 9    (9 == TIPO_SENHA)
-	if(token == NULL)
-	{
-		printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() chj3wds140g5qaw\n");
-		free(email);
-		email = NULL;
-		return false;
-	}
-	else if(strlen(token) > TAMANHO_TIPO)
-	{
-		printf(" Warning: Comando exageradamente grande em Comand-Adicao.h addUsuario()\n");
-		free(email);
-		email = NULL;
-		return false;
-	}
-	else if(strcmp(token, TIPO_SENHA) != 0)
-	{
-		printf(" Warning: Comando incorreto em Comand-Adicao.h addUsuario()\n");
-		free(email);
-		email = NULL;
-		return false;
-	}
-
-	// AINDA NÃO IMPLEMENTADO DESSA FORMA → APP 2 1 1 7 emailInformado 9 senhaCriptografadaAqui     IT's SHOW TIME ! //TODO
-	// ALTERNATIVA EM USO → APP 2 1 1 7 emailInformado 9 senhaCruaInformada
 	
-	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado 9 senhaCruaInformada
+	char *token = strtok(NULL, " ");//APP 2 & tipoInformacao
 
-	if(token == NULL)
+	if (token == NULL)
 	{
-		printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() 5a1e55q\n");
-		free(email);
-		email = NULL;
-		return false;
-	}
-	else if(strlen(token) > TAMANHO_SENHA)
-	{
-		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() 1q54r2s\n");
-		free(email);
-		email = NULL;
+		printf(" Warning: Comando insuficiente em Comando-Adicao.h addInformacoesAUsuario() qkjrbbc\n");
 		return false;
 	}
 
-	char *senha = malloc(sizeof(char) * (strlen(token) + 1));// + 1 é do \0
-
-	if(senha == NULL)
+	if (strlen(token) > TAMANHO_TIPO)
 	{
-		printf(" Warning: Não foi possivel alocar memoria para senha em Comando-Adicao.h addUsuario() q45e8c1aaqeh\n");
-		free(email);
-		email = NULL;
+		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addInformacoesAUsuario() qjkhbht\n");
 		return false;
 	}
 
-	strcpy(senha, token);
-
-	if(senha == NULL)
+	if (strcmp(token, TIPO_NOME) == 0)// APP 2 & # nomeInformado
 	{
-		printf(" Warning: Falha ao copiar de token para senha em Comando-Adicao.h addUsuario()  qe848vrw\n");
-		free(email);
-		email = NULL;
-		return false;
+		printf(" LOG: cliente solicitando adição de informação: NOME em Comando-Adicao.h addInformacoesAUsuario()\n");
+		token = strtok(NULL, " ");
+		if (token == NULL)
+		{
+			printf(" Warning: Comando insuficiente em Comando-Adicao.h addInformacoesAUsuario() 654q898fgf\n");
+			return false;
+		}
+		if(strlen(token) > TAMANHO_NOME)
+		{
+			printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addInformacoesAUsuario() cjhkjhjekqaweg\n");
+			return false;
+		}
+
+		char *nome = strdup(token);
+		if(nome == NULL)
+		{
+			printf(" Warning: Falha ao duplicar string em Comando-Adicao.h addInformacoesAUsuario() qkujhjfge\n");
+			return false;
+		}
+		else
+		{
+			if(addNomeDeUsuarioAoBanco(email, nome))
+			{
+				printf(" LOG: Informação de nome adicionada com sucesso ao banco de dados em Comando-Adicao.h addInformacoesAUsuario() 546q\n");
+				free(nome);
+				nome = NULL;
+				return true;
+			}
+			else
+			{
+				printf(" Warning: Falha ao adicionar nome de usuario ao banco de dados em Comando-Adicao.h addInformacoesAUsuario() qkjhkebr\n");
+				free(nome);
+				nome = NULL;
+				return false;
+			}
+		}
+		return false;	
 	}
-
-	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado 9 senhaCruaInformada sexoInformado
-	if(token == NULL)
+	else if(strcmp(token, TIPO_SOBRENOME) == 0)// APP 2 & Y sobrenomeInformado
 	{
-		printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() 4q8e1h058\n");
-		free(email);
-		free(senha);
-		senha = NULL;
-		email = NULL;
-		return false;
+		printf(" LOG: cliente solicitando adição de informação: SOBRENOME em Comando-Adicao.h addInformacoesAUsuario()\n");
+		token = strtok(NULL, " ");
+		if (token == NULL)
+		{
+			printf(" Warning: Comando insuficiente em Comando-Adicao.h addInformacoesAUsuario() 654q898fgf\n");
+			return false;
+		}
+		if(strlen(token) > TAMANHO_SOBRENOME)
+		{
+			printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addInformacoesAUsuario() cjhkjhjekqaweg\n");
+			return false;
+		}
+
+		char *sobrenome = strdup(token);
+		if(sobrenome == NULL)
+		{
+			printf(" Warning: Falha ao duplicar string em Comando-Adicao.h addInformacoesAUsuario() qkujhjfge\n");
+			return false;
+		}
+		else
+		{
+			if(addSobrenomeDeUsuarioAoBanco(email, sobrenome))
+			{
+				printf(" LOG: Informação de nome adicionada com sucesso ao banco de dados em Comando-Adicao.h addInformacoesAUsuario() 546q\n");
+				free(sobrenome);
+				sobrenome = NULL;
+				return true;
+			}
+			else
+			{
+				printf(" Warning: Falha ao adicionar nome de usuario ao banco de dados em Comando-Adicao.h addInformacoesAUsuario() qkjhkebr\n");
+				free(sobrenome);
+				sobrenome = NULL;
+				return false;
+			}
+		}
+		return false;	
 	}
-
-	if(strlen(token) > TAMANHO_SEXO_CLIENTE)
+	else if(strcmp(token, TIPO_SEXO) == 0)// APP 2 & SQ sexoInformado
 	{
-		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() vqe5489wer20\n");
-		free(email);
-		free(senha);
-		senha = NULL;
-		email = NULL;
-		return false;
-	}
+		printf(" LOG: cliente solicitando adição de informação: SEXO em Comando-Adicao.h addInformacoesAUsuario()\n");
+		token = strtok(NULL, " ");
+		if (token == NULL)
+		{
+			printf(" Warning: Comando insuficiente em Comando-Adicao.h addInformacoesAUsuario() 654q898fgf\n");
+			return false;
+		}
+		if(strlen(token) > TAMANHO_SEXO_CLIENTE)
+		{
+			printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addInformacoesAUsuario() cjhkjhjekqaweg\n");
+			return false;
+		}
 
-	char *sexo = malloc(sizeof(char) * (strlen(token) + 1));
-	if(sexo == NULL)
-	{
-		printf(" Warning: Não foi possivel alocar memoria para sexo em Comando-Adicao.h addUsuario() qef48fsw\n");
-		free(email);
-		free(senha);
-		senha = NULL;
-		email = NULL;
-		return false;
-	}
-
-	strcpy(sexo, token);
-	if(sexo == NULL)
-	{
-		printf(" Warning: Erro ao copiar de token para sexo em Comando-Adicao.h addUsuario()  cqeewf48v92q0\n");
-		free(email);
-		free(senha);
-		senha = NULL;
-		email = NULL;
-		return false;
-	}
-
-	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado 9 senhaCruaInformada sexoInformado dataNascimentoInformada
-	if(token == NULL)
-	{
-		free(email);
-		free(senha);
-		free(sexo);
-		sexo = NULL;
-		senha = NULL;
-		email = NULL;
-		return false;
-	}
-
-	if(strlen(token) > TAMANHO_DATA)
-	{
-		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() asd15e9q8x\n");
-		free(email);
-		free(senha);
-		free(sexo);
-		sexo = NULL;
-		senha = NULL;
-		email = NULL;
-		return false;
-	}
-
-	char *dataNascimento = malloc(sizeof(char) * (strlen(token) + 1));
-	if(dataNascimento == NULL)
-	{
-		printf(" Warning: Falha ao alocar memoria para dataNascimento em Comando-Adicao.h addUsuario() eq54v89qc\n");
-		free(email);
-		free(senha);
-		free(sexo);
-		sexo = NULL;
-		senha = NULL;
-		email = NULL;
-		return false;
-	}
-
-	strcpy(dataNascimento, token);
-	if(dataNascimento == NULL)
-	{
-		printf(" Warning: Falha ao copiar de token para dataNascimento em Comando-Adicao.h addUsuario() jhqiujbcx983\n");
-		free(email);
-		free(senha);
-		free(sexo);
-		sexo = NULL;
-		senha = NULL;
-		email = NULL;
-		return false;
-	}
-
-	if(addUsuarioAoBanco(emailAnterior, email, senha, sexo, dataNascimento))
-	{
-		printf(" LOG: Usuario adicionado com sucesso ao banco de dados em Comando-Adicao.h addUsuario()  qbu39sad87\n");
-		free(email);
-		free(senha);
-		free(sexo);
-		free(dataNascimento);
-		dataNascimento = NULL;
-		sexo = NULL;
-		senha = NULL;
-		email = NULL;
-		return true;
+		char *sexo = strdup(token);
+		if(sexo == NULL)
+		{
+			printf(" Warning: Falha ao duplicar string em Comando-Adicao.h addInformacoesAUsuario() qkujhjfge\n");
+			return false;
+		}
+		else
+		{
+			if(addSexoDeUsuarioAoBanco(email, sexo))
+			{
+				printf(" LOG: Informação de nome adicionada com sucesso ao banco de dados em Comando-Adicao.h addInformacoesAUsuario() 546q\n");
+				free(sexo);
+				sexo = NULL;
+				return true;
+			}
+			else
+			{
+				printf(" Warning: Falha ao adicionar nome de usuario ao banco de dados em Comando-Adicao.h addInformacoesAUsuario() qkjhkebr\n");
+				free(sexo);
+				sexo = NULL;
+				return false;
+			}
+		}
+		return false;	
 	}
 	else
 	{
-		printf(" Warning: Falha ao adicionar usuario ao banco de dados em Comando-Adicao.h addUsuario() qh38v9q2ubhd\n");
-		free(email);
-		free(senha);
-		free(sexo);
-		free(dataNascimento);
-		dataNascimento = NULL;
-		sexo = NULL;
-		senha = NULL;
-		email = NULL;
-		return false;		
+		printf(" Warning: Tipo de informação não manipulada em Comando-Adicao.h addInformacoesAUsuario() q548g\n");
+		return false;
 	}
 
-	printf(" ERRO: DEU MERDA em Comando-Adicao.h addUsuario()\n");
-	return false;
-	// return false;  // Teoricamente nunca vai chegar aqui, mas vai que...
 }
-

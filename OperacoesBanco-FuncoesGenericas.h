@@ -12,6 +12,16 @@
 #define bool char
 #endif
 
+#define DATABASE_HOST "127.0.0.1"//TESTES
+// #define DATABASE_HOST "35.186.190.243"//GOOGLE CLOUD
+#define DATABASE_USER "interface"
+#define DATABASE_PASSWORD "essaSenhaEsoPraInteFaCeSaBeRPorQuESiM"
+#define DATABASE_SCHEMA "teste"
+#define DATABASE_PORT 0
+#define DATABASE_DEFAULT_SOCKET NULL
+#define DATABASE_DEFAULT_FLAGS 0
+
+MYSQL *conexao;
 
 //Retorna TRUE se conectar ao banco com sucesso
 // bool conectarBanco(MYSQL *conexao)
@@ -176,7 +186,7 @@ bool checarIdProduto(char *id)//OK
 {
 	if(conexao == NULL)
 	{
-		printf("ERRO DE CONEXÃO (OperacoesBanco.h) (checarIdProduto())\n");
+		printf("ERRO DE CONEXÃO (OperacoesBanco-FuncoesGenericas.h) (checarIdProduto())\n");
 		printf(" LOG: Tentando reconexão com banco de dados \n");
 		if(conectarBanco())
 		{
@@ -190,12 +200,12 @@ bool checarIdProduto(char *id)//OK
 	}
 	if(id == NULL)
 	{
-		printf("ERRO: Não há login para checar (id == NULL) (OperacoesBanco.h) (checarIdProduto())\n");
+		printf("ERRO: Não há login para checar (id == NULL) (OperacoesBanco-FuncoesGenericas.h) (checarIdProduto())\n");
 		return false;
 	}
 	if(strlen(id) != 10)
 	{
-		printf("ERRO: Id informado contém quantidade incorreta de caracteres (OperacoesBanco.h) checarIdProduto())\n");
+		printf("ERRO: Id informado contém quantidade incorreta de caracteres (OperacoesBanco-FuncoesGenericas.h) checarIdProduto())\n");
 		return false;
 	}
 
@@ -204,7 +214,7 @@ bool checarIdProduto(char *id)//OK
 	query = malloc(sizeof(char) * ( strlen(id) + 69));
 	if(query == NULL)
 	{
-		printf(" ERRO: não foi possível alocar memória para a query (OperacoesBanco.h) (checarIdProduto())\n");
+		printf(" ERRO: não foi possível alocar memória para a query (OperacoesBanco-FuncoesGenericas.h) (checarIdProduto())\n");
 		return false;
 	}
 
@@ -212,7 +222,7 @@ bool checarIdProduto(char *id)//OK
 
 	if(query == NULL)
 	{
-		printf(" ERRO: não foi possível alocar memória para a query (2) (OperacoesBanco.h) (checarIdProduto())\n");
+		printf(" ERRO: não foi possível alocar memória para a query (2) (OperacoesBanco-FuncoesGenericas.h) (checarIdProduto())\n");
 		return false;
 	}
 
@@ -230,7 +240,7 @@ bool checarIdContratante(char *idContratante)
 	
 		if(query == NULL)
 		{
-			printf(" Warning: falha ao alocar memoria para query em addProdutoAoBanco() OperacoesBanco.h ijhvbhsd87vbe\n");
+			printf(" Warning: falha ao alocar memoria para query em checarIdContratante() OperacoesBanco-FuncoesGenericas.h ijhvbhsd87vbe\n");
 			return false;
 		}
 	
@@ -238,19 +248,78 @@ bool checarIdContratante(char *idContratante)
 	
 		if(query == NULL)
 		{
-			printf(" Warning: Falha ao formatar query para checagem de dados em addProdutoAoBanco() OperacoesBanco.h dvksjbkj\n");
+			printf(" Warning: Falha ao formatar query para checagem de dados em checarIdContratante() OperacoesBanco-FuncoesGenericas.h dvksjbkj\n");
 			return false;
 		}
 	
 		if(checarSeVoltaAlgumaCoisaDaQuery(query))
 		{
 			//Se voltar algo da query
-			printf(" LOG: Existe empresa com esse ID no banco de dados, continuando com a adição do produto em addProdutoAoBanco() OperacoesBanco.h\n");
+			printf(" LOG: Existe empresa com esse ID no banco de dados em checarIdContratante() OperacoesBanco-FuncoesGenericas.h\n");
 			return true;
 		}
 		else
 		{
-			printf(" Warning: Não existe empresa com esse id (%s)(contratante) no banco de dados, encerrando operacao em addProdutoAoBanco() OperacoesBanco.h jcvkdhkc\n", idContratante);
+			printf(" Warning: Não existe empresa com esse id (%s)(contratante) no banco de dados, encerrando operacao em checarIdContratante() OperacoesBanco-FuncoesGenericas.h jcvkdhkc\n", idContratante);
 			return false;
 		}
+}
+
+bool checarLogin(char *email, char *senha)
+{
+	if(conexao == NULL)
+	{
+		printf("ERRO DE CONEXÃO (OperacoesBanco-FuncoesGenericas.h) (checarLogin)\n");
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação em OperacoesBanco-FuncoesGenericas.h checarLogin()\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
+	}
+	if(email == NULL)
+	{
+		printf(" ERRO: Não há login para checar (email == NULL) em OperacoesBanco-FuncoesGenericas.h checarLogin()\n");
+		return false;
+	}
+	if(senha == NULL)
+	{
+		printf(" ERRO: Senha não foi informada em OperacoesBanco.h checarLogin() asbiv3888wq2\n");
+		return false;
+	}
+	
+	char *query = NULL;
+	//size_t tamanho = strlen(email) + strlen(senha) + 66 + 1;
+	size_t tamanho = strlen(email) + strlen(senha) + 67;
+	
+	
+	query = malloc(sizeof(char) * tamanho);
+	if(query == NULL)
+	{
+		printf(" ERRO: não foi possível alocar memória para a query em OperacoesBanco-FuncoesGenericas.h checarLogin()\n");
+		return false;
+	}
+	
+	snprintf(query, sizeof(char) * tamanho, "SELECT C.idcliente from cliente C WHERE C.email=\'%s\' AND C.senha=\'%s\';", email, senha);
+	
+	
+	if(query == NULL)
+	{
+		printf(" ERRO: não foi possível alocar memória para a query (2) em OperacoesBanco-FuncoesGenericas.h checarLogin()\n");
+		return false;
+	}
+	
+	bool retorno = checarSeVoltaAlgumaCoisaDaQuery(query);
+	if(retorno)
+	{
+		printf(" LOG: Foi encontrado um ID para cliente que satisfaça as seguintes comparações: em OperacoesBanco-FuncoesGenericas.h checarLogin()\n");
+		printf(" \t\tcliente.email = |%s|\n", email);
+		printf(" \t\tcliente.senha = |%s|\n", senha);
+	}
+	query = NULL;
+	return retorno;
 }
