@@ -5,11 +5,12 @@
 
 #include "Comando-Obter_Visualizacoes.h"
 
-char *obterIdCidade();//APP 4 $
-char *obterIdContratante();// APP 4 ;
-char *obterTop10NovosProdutos();//APP 4 J
-char *obterDescricaoProduto();// APP 4 Q * idProduto
-char *obterNomeProduto();// APP 4 1. idProduto
+char *obterIdCidade(void);//APP 4 $
+char *obterIdContratante(void);// APP 4 ;
+char *obterTop10NovosProdutos(void);//APP 4 J
+char *obterDescricaoProduto(void);// APP 4 Q * idProduto
+char *obterNomeProduto(void);// APP 4 1. idProduto
+char *obterAvaliacaoProduto(void);// APP 4 kW * idProduto                       (Retorna NULL quando ocorre algum erro)
 
 char *obterDados()// APP 4 algumaCoisa
 {
@@ -46,6 +47,20 @@ char *obterDados()// APP 4 algumaCoisa
 		{
 			printf(" LOG: Requisitando nome de produto em Comando-Obter.h obterDados()\n");
 			return obterNomeProduto();
+		}
+		else if(strcmp(token, TIPO_AVALIACAO) == 0)// APP 4 kW * idProduto
+		{
+			char *retorno;
+			if((retorno = obterAvaliacaoProduto()) != NULL)
+			{
+				printf(" LOG: Obtenção de produto realizada com sucesso em Comando-Obter.h obterDados() 1q654f8tgsd\n");
+				return retorno;
+			}
+			else
+			{
+				printf(" Warning: Ocorreu um erro durante a realização do comando de obtenção em Comando-Obter.h obterDados() asdkjhjbtffs\n");
+				return NULL;
+			}
 		}
 		else if(strcmp(token, TIPO_VISUALIZACAO) == 0)// APP 4 2
 		{
@@ -94,7 +109,7 @@ char *obterDados()// APP 4 algumaCoisa
 				return false;
 			}
 		}
-		printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterIdCidade() rbjak\n");
+		printf(" Warning: Comando exageradamente grande: |%s| em Comando-Obter.h obterIdCidade() rbjak\n", token);
 		return NULL;
 	}
 	// INICIO REFORMA
@@ -307,7 +322,6 @@ char *obterDescricaoProduto()// APP 4 Q
 }
 
 
-
 char *obterNomeProduto()
 {
 	char *token  = NULL;
@@ -344,9 +358,72 @@ char *obterNomeProduto()
 	}
 
 	char *nomeProduto = NULL;
-//	obterNomeProdutoDoBanco(idProduto);
+	//	obterNomeProdutoDoBanco(idProduto);
 	nomeProduto = obterNomeProdutoDoBanco(idProduto);
 	free(idProduto);
 	return nomeProduto;
 }
 
+
+/* Obtema avaliação do produto e retorna da seguinte forma:  "numeroDeAvaliacoesPositivas NumeroDeAvaliacoesNegativas" */
+char *obterAvaliacaoProduto()// APP 4 kW * idProduto                       (Retorna NULL quando ocorre algum erro)
+{
+	char *token = strtok(NULL, " ");// APP 4 kW *
+	if(token == NULL)
+	{
+		printf(" Warning: Comando insuficiente com Comando-Obter.h obterAvaliacaoProduto() 41q5v8r\n");
+		return NULL;
+	}
+	// if(token[0] != '*' || token[1] != '\0')// Comparação otimizada
+	// {
+	// 	printf(" Warning: Comando incorreto detectado em Comando-Obter.h obterAvaliacaoProduto() qhjkves\n");
+	// 	return NULL;
+	// }
+	if(strlen(token) > TAMANHO_TIPO)
+	{
+		printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterAvaliacaoProduto() q1568dsaed\n");
+		return NULL;
+	}
+	if (strcmp(token, TIPO_ID_PRODUTO) != 0)
+	{
+		printf(" Warning: Comando incorreto detectado em Comando-Obter.h obterAvaliacaoProduto() qhjkves\n");
+		return NULL;
+	}
+
+	token = strtok(NULL, " ");// APP 4 kW * idProduto
+	if(token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em Comando-Obter.h obterAvaliacaoProduto() sadkjhjvrsad\n");
+		return NULL;
+	}
+	if(strlen(token) != TAMANHO_ID_PRODUTO)
+	{
+		printf(" Warning: Comando incorreto detectado em Comando-Obter.h obterAvaliacaoProduto() asdhjkvrsdf\n");
+		return NULL;
+	}
+
+	char *idProduto = strdup(token);
+	if(idProduto == NULL)
+	{
+		printf(" Warning: Não foi possível duplicar token em Comando-Obter.h obterAvaliacaoProduto() qhjjvrsad\n");
+		return NULL;
+	}
+
+	char *retorno;
+	if((retorno = obterAvaliacaoProdutoDoBanco(idProduto)) != NULL)
+	{
+		printf(" LOG: Produto obtido do banco de dados com sucesso em Comando-Obter.h obterAvaliacaoProduto() chjksdf\n");
+		free(idProduto);
+		idProduto = NULL;
+		return retorno;
+	}
+	else
+	{
+		printf(" Warning: Não foi possível obter obter avaliacao do produto do banco em Comando-Obter.h obterAvaliacaoProduto() qw65b41df\n");
+		free(idProduto);
+		idProduto = NULL;
+		return NULL;
+	}
+	printf(" ERRO: Erro desconhecido em Comando-Obter.h obterAvaliacaoProduto() askjhgvrdf\n");
+	return NULL;
+}

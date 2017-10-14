@@ -52,7 +52,7 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 			return false;
 		}
 	}
-	else if(strcmp(token, TIPO_AVALIACAO) == 0)/* APP 2 kW */
+	else if(strcmp(token, TIPO_AVALIACAO) == 0)/* APP 2 kW * idProduto avaliacaoProduto */
 	{
 		if(addAvaliacaoAProduto(email))
 		{
@@ -133,7 +133,7 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 			return false;
 		}
 	}
-	else if(strcmp(token, TIPO_INFORMACAO) == 0)/* APP 2 & */
+	else if(strcmp(token, TIPO_INFORMACAO) == 0)/* APP 2 & TIPO_DE_INFORMACAO */
 	{
 		printf(" LOG: Cliente requisita adicao de informação a usuario em Comando-Adicao.h comandoAdicionar()\n");
 		if(addInformacoesAUsuario(email))
@@ -2876,7 +2876,12 @@ bool addInformacoesAUsuario(char *email)// DOING
 
 }
 
-bool addAvaliacaoAProduto(char *email)
+
+/* A avaliação do usuario é dada por um caracter:
+		1  → para avaliação positiva
+		0  → para avaliacao negativa
+*/
+bool addAvaliacaoAProduto(char *email)//DONE       APP 2 kW * idProduto avaliacaoDoUsuario
 {
 	if (email == NULL)
 	{
@@ -2919,7 +2924,7 @@ bool addAvaliacaoAProduto(char *email)
 		return false;
 	}
 
-	token = strtok(NULL, " ");
+	token = strtok(NULL, " ");// APP 2 kW * idProduto avaliacaoDoUsuario
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addAvaliacaoAProduto() jklsadve\n");

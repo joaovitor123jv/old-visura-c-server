@@ -180,7 +180,7 @@ bool checarSeVoltaAlgumaCoisaDaQuery(char *query)
 	}
 }
 
-bool executaQuery(char *query)// retorna false se der algum problema
+bool executaQuery(char *query)// retorna false se der algum problema, true se der certo (Não libera a query, como o checarSeVoltaAlgumaCoisaDaQuery())
 {
 	if(query == NULL)
 	{

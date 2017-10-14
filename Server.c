@@ -11,20 +11,19 @@
 #include <pthread.h>
 #include "Server.h"
 
+void limpaBuffers(void) __attribute__ ((destructor));
 
-
-
-int main()
+int main(void)
 {
 	system("clear");
 	int x =0;
-	printf(" Iniciando servidor\n");
+	printf(" LOG: Iniciando servidor em Server.c main()\n");
 
-	printf(" Configurando servidor.");
+	printf(" LOG: Configurando servidor.");
 	int sockfd = configuraServidor();
-	printf("\r Configurando servidor..................... OK");
+	printf("\r LOG: Configurando servidor............................ OK em Server.c main()");
 
-	printf(" Aguardando conexão\n");
+	printf(" LOG: Aguardando conexão em Server.c main()\n");
 
 	while(true)
 	{
@@ -39,19 +38,34 @@ int main()
 		if((clienteSockfd = accept(sockfd, (struct sockaddr *)&clienteAddr, &clntLen)) < 0)
 		{
 			printf(" Erro ao aceitar cliente\n");
-			exit(1);
+			return 0;
 		}
 
 		if(pthread_create(&thread, NULL, Servidor, (void *)&clienteSockfd) != 0)
 		{
 			printf(" Falha ao tentar criar Thread\n");
 			printf(" Provavel limite de threads simultâneas atingido\n");
-			exit(1);
+			return 0;
 		}
 		x++;
-		printf("\t\t\t\t\t\t\t\t\t\t\t\t Cliente %d aceito\n", x);
+		printf(" LOG:\t\t\t\t\t\t\t\t\t\t\t\t Cliente %d aceito em Server.c main(void)\n", x);
 		pthread_detach(thread);/* Procurar o que essa função faz depois */
 	}
-	exit(0);
+	return 0;
 }
 
+
+void limpaBuffers(void)// Nunca foi chamada, mas vai que...
+{
+	printf(" LOG: Liberando memoria residual utilizada em Server.h limpaBuffers() \n");
+	if(conexao != NULL)
+	{
+		printf(" LOG: Liberando conexão com o banco de dados em Server.c limpaBuffers()\n");
+		mysql_close(conexao);
+		mysql_thread_end();
+		free(conexao);
+		conexao = NULL;
+		printf(" LOG: Conexão com o banco de dados liberada em Server.c limpaBuffers()\n");
+	}
+	printf(" LOG: Buffers Limpos com sucesso em Server.c void limpaBuffers(void) __attribute__ ((destructor));\n");
+}

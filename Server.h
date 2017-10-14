@@ -61,7 +61,7 @@ TENTAR_DENOVO:
 	if( bind(sockfd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0 )
 	{
 		printf("\r Configurando servidor.......");
-		fflush(stdout);
+		//fflush(stdout);
 		while(contAux < contador)
 		{
 			fflush(stdout);
@@ -70,11 +70,11 @@ TENTAR_DENOVO:
 		}
 		contAux = 0;
 		printf("Erro ao fazer BIND (%d)", contador+1);
-		if(contador < 9)
+		if(contador < 99)
 		{
 			contador++;
 			//printf("Tentando novamente\n");
-			sleep(10);
+			sleep(1);
 			goto TENTAR_DENOVO;
 		}
 		printf("\r Não foi possível iniciar o servidor, (ERRO AO FAZER BIND) Encerrando\n");
@@ -98,7 +98,7 @@ TENTAR_DENOVO:
 	else
 	{
 		printf("Erro ao conectar-se ao banco de dados\n");
-		exit(1);
+		return ERRO;
 	}
 
 	return sockfd;
