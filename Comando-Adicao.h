@@ -865,10 +865,12 @@ bool addVisualizacao(char *email, bool usuarioAnonimo)/* APP 2 2*/
 
 	// //Converte quantidade dada em string para quantidade dada em inteiro
 	// int quantidade = 0;
-	// if(token[0] - '0' < 10 && token[0] - '0' >= 0)
+	// if(token[0] - '0' < 10 && token[0] - '0' >= 0)// seleciona somente numeros (a faixa na tabela ASC de 0 a 9)
 	// {
 	// 	quantidade = token[0] - '0';
-
+	// 	// printf("CARACTER %c\n", 160);
+	// 	// char caracter = 'c';
+	// 	// printf("O caracter %c equivale ao numero %d na tabela asc\n", caracter, caracter);
 	// 	// printf(" primeira quantidade → %d\n", quantidade);
 	// }
 	// else

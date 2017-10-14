@@ -1,4 +1,8 @@
+#include<stdlib.h>
+#include<stdio.h>
+#include<string.h>
 #include "Fila/Fila.h"
+
 
 #ifndef bool
 #define bool char
@@ -75,7 +79,7 @@ char *padronizarString(char *original)
 			}
 //			fila_mostraFila(fila);
 			int tamanho = fila_getQuantidadeDeCaracteres(fila);
-			resposta = malloc(sizeof(char) * (tamanho + 1));/* +1 por causa d \0 */
+			resposta = (char *)malloc(sizeof(char) * (tamanho + 1));/* +1 por causa d \0 */
 			for(i = 0; i < tamanho; i++)
 			{
 				fila_remover(fila, &resposta[i]);
@@ -90,4 +94,38 @@ char *padronizarString(char *original)
 			return resposta;
 		}
 	}
+}
+
+void adaptadorDeString_REVERSE(char s[])
+{
+    int i, j;
+    char c;
+
+	for (i = 0, j = strlen(s)-1; i<j; i++, j--) 
+	{
+        c = s[i];
+        s[i] = s[j];
+        s[j] = c;
+    }
+}
+
+char *intToString(int n)
+{
+	int i=0, sign;
+	char *s = (char *)malloc(sizeof(char) * 12);
+    if ((sign = n) < 0)  /* record sign */
+    {
+        n = -n;          /* make n positive */
+    }
+    do 
+    {       /* generate digits in reverse order */
+        s[i++] = n % 10 + '0';   /* get next digit */
+    } while ((n /= 10) > 0);     /* delete it */
+    if (sign < 0)
+    {
+        s[i++] = '-';
+    }
+    s[i] = '\0';
+	adaptadorDeString_REVERSE(s);
+	return s;
 }

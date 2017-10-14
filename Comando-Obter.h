@@ -86,8 +86,8 @@ char *obterDados()// APP 4 algumaCoisa
 				{
 					// DESEJA obter a QUANTIDADE de VISUALIZACOES (NÃO ANONIMAS)
 					printf(" LOG: Solicitando Obtenção de quantidade de visualizações de usuario não anonimos em Comando-Obter.h obterDados()\n");
-					printf(" Warning: Comando incompleto em Comando-Obter.h obterDados()\n");
-					return NULL;
+					// printf(" Warning: Comando incompleto em Comando-Obter.h obterDados()\n");
+					return obterQuantidadeDeVisualizacoesGerais();
 				}
 				else if(strcmp(token, TIPO_VISUALIZACAO_ANONIMA_CHAR) == 0)// APP 4 2 @ 3
 				{
@@ -206,7 +206,6 @@ char *obterIdCidade()
 	printf(" ERRO: Deu Ruim em Comando-Obter.h obterIdCidade()jhdsagjhdsaghjjhgjhgq\n");
 	return NULL;
 }
-
 
 
 char *obterIdContratante()// APP 4 ;
