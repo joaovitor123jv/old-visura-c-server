@@ -5,7 +5,6 @@
 #include <mysql/mysql.h>
 
 
-//TODO ERRO !!!!!
 int checaExistenciaDeVisualizacaoDeProdutoComPessoa(char *idproduto, char *email)//Se retorna RETORNO_OK, existe algo ali, se retornar RETORNO_NULO, não existe
 {
 	if(idproduto == NULL)

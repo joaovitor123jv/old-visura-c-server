@@ -2,22 +2,23 @@
 #include <string.h>
 #include "Comandos.h"
 
-bool comandoAdicionar(char *email, bool usuarioAnonimo);
+bool comandoAdicionar(char *email, bool usuarioAnonimo);//Retorna true se adicionado com sucesso
 // bool addVisualizacao(char *comando);
-bool addVisualizacao(char *email, bool usuarioAnonimo);
+bool addVisualizacao(char *email, bool usuarioAnonimo);//Retorna true se adicionado com sucesso
 // bool addIndice(char *nomearquivo);
 
-bool addUsuarioAnonimo();
-bool addUsuario(char *emailAnterior);
+bool addUsuarioAnonimo();//Retorna true se adicionado com sucesso
+bool addUsuario(char *emailAnterior);//Retorna true se adicionado com sucesso
 
-bool addContratante();
+bool addContratante();//Retorna true se adicionado com sucesso
 
-bool addProduto();//Fazendo
+bool addProduto();//Retorna true se adicionado com sucesso
 
-bool addCidade();
-bool addLocalizacao();
+bool addCidade();//Retorna true se adicionado com sucesso
+bool addLocalizacao();//Retorna true se adicionado com sucesso
 
-bool addInformacoesAUsuario(char *email);
+bool addInformacoesAUsuario(char *email);//Retorna true se adicionado com sucesso
+bool addAvaliacaoAProduto(char *email);//Retorna TRUE se adicionado com sucesso
 
 
 bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
@@ -48,6 +49,19 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 		else
 		{
 			printf(" LOG: Passou pelo ELSE Comando-Adicao.h comandoAdicionar()\n");
+			return false;
+		}
+	}
+	else if(strcmp(token, TIPO_AVALIACAO) == 0)/* APP 2 kW */
+	{
+		if(addAvaliacaoAProduto(email))
+		{
+			printf(" LOG: Avaliação cadastrada com sucesso em Comando-Adicao.h comandoAdicionar()\n");
+			return true;
+		}
+		else
+		{
+			printf(" Warning: Falha ao adicionar avaliação ao produto requisitado em Comando-Adicao.h comandoAdicionar()\n");
 			return false;
 		}
 	}
@@ -123,7 +137,7 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 	{
 		printf(" LOG: Cliente requisita adicao de informação a usuario em Comando-Adicao.h comandoAdicionar()\n");
 		if(addInformacoesAUsuario(email))
-		{
+		{	
 			printf(" LOG: Informações adicionadas com sucesso ao banco em Comand-Adicao.h comandoAdicionar()\n");
 			return true;
 		}
@@ -2320,7 +2334,7 @@ bool addContratante()// APP 2 $C
 }
 
 
-bool addProduto()
+bool addProduto()//DONE
 {
 	char *token = NULL;
 	token = strtok(NULL, " ");//APP 2 + CHAVE_DE_SEGURANCA_PHP
@@ -2821,10 +2835,136 @@ bool addInformacoesAUsuario(char *email)// DOING
 		}
 		return false;	
 	}
+	else if(strcmp(token, TIPO_DATA) == 0)// APP 2 & T dataInformada
+	{
+		printf(" LOG: Cliente solicitando adição de data de nascimento a usuario em Comando-Adicao.h addInformacoesAUsuario()\n");
+		token = strtok(NULL, " ");
+		if(token == NULL)
+		{
+			printf(" Warning: Comando insuficiente em Comando-Adicao.h addInformacoesAUsuario() 65q48t1y0bsd.\n");
+			return false;
+		}
+		char *dataNascimento = strdup(token);
+		if(dataNascimento == NULL)
+		{
+			printf(" Warning: Falha ao duplicar token para dataNascimento em Comando-Adicao.h addInformacoesAUsuario()\n");
+			return false;
+		}
+		else
+		{
+			if(addDataNascimentoDeUsuarioAoBanco(email, dataNascimento))
+			{
+				printf(" LOG: Data de nascimento adicionada com sucesso em Comando-Adicao.h addInformacoesAUsuario()\n");
+				free(dataNascimento);
+				dataNascimento = NULL;
+				return true;
+			}
+			else
+			{
+				printf(" Warning: Falha ao adicionar data de nascimento de usuario ao banco de dados em Comano-Adicao.h addInformacoesAUsuario()\n");
+				free(dataNascimento);
+				dataNascimento = NULL;
+				return false;
+			}
+		}
+	}
 	else
 	{
 		printf(" Warning: Tipo de informação não manipulada em Comando-Adicao.h addInformacoesAUsuario() q548g\n");
 		return false;
 	}
 
+}
+
+bool addAvaliacaoAProduto(char *email)
+{
+	if (email == NULL)
+	{
+		printf(" Warning: Email nulo em Comando-Adicao.h addAvaliacaoAProduto()\n");
+		return false;
+	}
+	char *token = strtok(NULL, " ");// APP 2 kW * idProduto
+
+	if(token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em Comando-Adicao.h addAvaliacaoAProduto() q654t88y77q9f2\n");
+		return false;
+	}
+	if (token[1] != '\0' && token[2] != '\0')
+	{
+		printf(" Warning: Comando exageradamente grande detectado em Comando-Adicao.h addAvaliacaoAProduto() 46487871121a\n");
+		return false;
+	}
+	if (strcmp(token, TIPO_ID_PRODUTO) != 0)
+	{
+		printf(" Warning: Comando incorreto detectado em Comando-Adicao.h addAvaliacaoAProduto() 41q54r8bw\n");
+		return false;
+	}
+
+	token = strtok(NULL, " ");// APP 2 kW * idProduto
+	if(token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em Comando-Adicao.h addAvaliacaoAProduto() qkjh4uhuasd\n");
+		return false;
+	}
+	if(strlen(token) == TAMANHO_ID_PRODUTO)
+	{
+		printf(" Warning: Argumento invalido detectado em Comando-Adicao.h addAvaliacaoAProduto() qkjhewjkvaw\n");
+		return false;
+	}
+	char *idProduto = strdup(token);
+	if(idProduto == NULL)
+	{
+		printf(" Warning: Falha ao duplicar token para idProduto em Comando-Adicao.h addAvaliacaoAProduto() qjwkhjkbve\n");
+		return false;
+	}
+
+	token = strtok(NULL, " ");
+	if(token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em Comando-Adicao.h addAvaliacaoAProduto() jklsadve\n");
+		free(idProduto);
+		idProduto = NULL;
+		return false;
+	}
+	if (token[1] != '\0')
+	{
+		printf(" Warning: Comando incorreto em Comando-Adicao.h addAvaliacaoAProduto() ckjergbry\n");
+		free(idProduto);
+		idProduto = NULL;
+		return false;
+	}
+	if(token[0] != '0' || token[0] != '1')//OTIMIZANDO !!!
+	{
+		printf(" Warning: Comando incorreto em (argumento invalido) Comando-Adicao.h addAvaliacaoAProduto().\n");
+		free(idProduto);
+		idProduto = NULL;
+		return false;
+	}
+
+	char *avaliacao = malloc(sizeof(char) * 2);// o caracter e o \0
+	if (avaliacao == NULL)
+	{
+		printf(" Warning: Falha a alocar memoria para avaliacao em Comando-Adicao.h addAvaliacaoAProduto() c3qw45f89yt87j5sd\n");
+		free(idProduto);
+		idProduto = NULL;
+		return false;
+	}
+	avaliacao[0] = token[0];
+	avaliacao[1] = token[1];
+
+	if(addAvaliacaoAProdutoAoBanco(email, idProduto, avaliacao))
+	{
+		printf(" LOG: Avaliacao adicionada ao banco com sucesso em Comando-Adicao.h addAvaliacaoAProduto() 46q5w4vb\n");
+		free(idProduto);
+		idProduto = NULL;
+		return true;
+	}
+	else
+	{
+		printf(" Warning: Falha ao adicionar avaliação ao banco de dados em Comando-Adicao.h addAvaliacaoAProduto() kjqhjkhve\n");
+		free(idProduto);
+		idProduto = NULL;
+		return false;
+	}
 }

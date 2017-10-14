@@ -25,7 +25,7 @@
 //bool checarLogin(MYSQL *conexao, char *email)//Funcional
 //bool checarLogin(char *email)//OK
 
-bool addUsuarioAnonimoAoBanco(char *email, char *senha)
+bool addUsuarioAnonimoAoBanco(char *email, char *senha)//DONE
 {
 	if(email == NULL)
 	{
@@ -54,7 +54,8 @@ bool addUsuarioAnonimoAoBanco(char *email, char *senha)
 	printf(" LOG: Chegou com sucesso até a adição de usuario ao banco (anonimo) OperacoesBanco.h addUsuarioAnonimoAoBanco()\n");
 	
 	char *query = NULL;
-	int tamanho = sizeof(char) * (61 + strlen(email) + TAMANHO_SENHA_PADRAO_USUARIO_ANONIMO + 1);//O +1 é do '/0'
+	//int tamanho = sizeof(char) * (47 + strlen(email) + TAMANHO_SENHA_PADRAO_USUARIO_ANONIMO + 1);//O +1 é do '/0'
+	int tamanho = sizeof(char) * (52 + strlen(email));//otimizado
 	query = malloc(tamanho);
 	
 	if(query == NULL)
@@ -62,7 +63,7 @@ bool addUsuarioAnonimoAoBanco(char *email, char *senha)
 		printf(" Warning: falha ao alocar memoria para query (OperacoesBanco.h) addUsuarioAnonimoAoBanco()\n");
 		return false;
 	}
-	snprintf(query, tamanho, "INSERT INTO cliente(email, senha, anonimo) VALUES(\'%s\', \'%s\', 1);", email, senha);
+	snprintf(query, tamanho, "INSERT INTO cliente(email,senha) VALUES(\'%s\',\'%s\');", email, senha);
 	
 	if(query == NULL)
 	{
@@ -100,7 +101,7 @@ bool addUsuarioAnonimoAoBanco(char *email, char *senha)
 	return true;
 }
 
-bool addUsuarioAoBanco(char *emailAnterior, char *email, char *senha, char* sexo, char *dataNascimento)
+bool addUsuarioAoBanco(char *emailAnterior, char *email, char *senha, char* sexo, char *dataNascimento)//DONE
 {
 	if(conexao == NULL)
 	{
@@ -290,7 +291,7 @@ bool addUsuarioAoBanco(char *emailAnterior, char *email, char *senha, char* sexo
 }
 
 
-bool addCidadeAoBanco(char *nomeDoEstado, char *nomeCidade)
+bool addCidadeAoBanco(char *nomeDoEstado, char *nomeCidade)//DONE
 {
 	if(nomeCidade == NULL)
 	{
@@ -1174,7 +1175,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 }
 
 
-bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, char *telefone, char *idLocalizacao)
+bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, char *telefone, char *idLocalizacao)//DONE
 {
 	if(conexao == NULL)
 	{
@@ -1360,7 +1361,7 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 }
 
 
-bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char *nomeProduto, char *descricao)
+bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char *nomeProduto, char *descricao)//DONE
 {
 	if(conexao == NULL)
 	{
@@ -1660,7 +1661,7 @@ char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)/* APP 4 CHAVE_DE_
 
 
 
-char *obterTop10NovosProdutosDoBanco()
+char *obterTop10NovosProdutosDoBanco()//DONE
 {
 	if(conexao == NULL)
 	{
@@ -1745,13 +1746,13 @@ char *obterTop10NovosProdutosDoBanco()
 	{
 		//		snprintf(retorno, tamanho, "%s %s", retorno, linha);
 		
-		printf(" LINHA OBTIDA = |%s| em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n", linha[0]);
+		printf(" LOG: LINHA OBTIDA = |%s| em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n", linha[0]);
 		if(strlen(linha[0]) > 0)
 		{
 			strcat(retorno, linha[0]);
 		}
 		
-		printf(" Retorno = |%s| até agora em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n", retorno);
+		printf(" LOG: Retorno = |%s| até agora em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n", retorno);
 		
 		if(retorno == NULL)
 		{
@@ -1790,7 +1791,7 @@ char *obterTop10NovosProdutosDoBanco()
 }
 
 
-char *obterDescricaoProdutoDoBanco(char *idProduto)
+char *obterDescricaoProdutoDoBanco(char *idProduto)//DONE
 {
 	if (conexao == NULL)
 	{
@@ -1943,7 +1944,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto)
 }
 
 
-char *obterNomeProdutoDoBanco(char *idProduto)
+char *obterNomeProdutoDoBanco(char *idProduto)//DONE
 {
 	if(conexao == NULL)
 	{
@@ -2326,6 +2327,229 @@ bool addSexoDeUsuarioAoBanco(char *email, char *sexo)// TESTAR        APP 2 & SQ
 		return true;
 	}
 
+}
+
+bool addDataNascimentoDeUsuarioAoBanco(char *email, char *dataNascimento)
+{
+	if(dataNascimento == NULL)
+	{
+		printf(" Warning: Data de nascimento não informada em OperacoesBanco.h addDataNascimentoDeUsuarioAoBanco()\n");
+		return false;
+	}
+	if (conexao == NULL)
+	{
+		printf(" Warning: Conexao nula detectada em OperacoesBanco.h addDataNascimentoDeUsuarioAoBanco() 56456q489b87ts\n");
+		printf(" LOG: Tentando reconexão com banco de dados em OperacoesBanco.h addDataNascimentoDeUsuarioAoBanco()\n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
+	}
+	
+
+	char *query = NULL;
+	// int tamanho = strlen(email) + strlen(dataNascimento) + 82 +1;
+	int tamanho = strlen(email) + strlen(dataNascimento) + 83;
+	query = malloc(sizeof(char) * tamanho);
+	if(query == NULL)
+	{
+		printf(" Warning: nao foi possível alocar memoria para query em OperacoesBanco.h addDataNascimentoDeUsuarioAoBanco()\n");
+		return false;
+	}
+	
+	snprintf(query, tamanho, "UPDATE cliente C SET C.dataNascimento=STR_TO_DATE(\'%s\',\'%%d/%%m/%%Y\') WHERE C.email=\'%s\';", dataNascimento, email);
+	
+	if(query == NULL)
+	{
+		printf(" Warning: nao foi possível formatar query em OperacoesBanco.h addDataNascimentoDeUsuarioAoBanco() cqhkhbjvr\n");
+		return false;
+	}
+	
+	if(mysql_query(conexao, query))
+	{
+
+		printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addDataNascimentoDeUsuarioAoBanco())\n");
+		printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
+		printf("\t Query enviada =  |%s|\n", query);
+		free(query);
+		query = NULL;
+		if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+		{
+			printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addDataNascimentoDeUsuarioAoBanco() 1qa5456dasd\n");
+			if(conectarBanco())
+			{
+				printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addDataNascimentoDeUsuarioAoBanco() asd456\n");
+			}
+			else
+			{
+				conexao = NULL;
+				mysql_close(conexao);
+				mysql_thread_end();
+				free(conexao);
+				printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addDataNascimentoDeUsuarioAoBanco() as4d5asd\n");
+			}
+		}
+		return false;
+	}
+	else
+	{
+		printf(" LOG: data de nascimento %s adicionado ao usuario %s com sucesso em Comando-Adicao.h addDataNascimentoDeUsuarioAoBanco\n", dataNascimento, email);
+		free(query);
+		query = NULL;
+		return true;
+	}
+	return false;
+}
+
+bool addAvaliacaoAProdutoAoBanco(char *email, char *idProduto, char *avaliacao)
+{
+	if (conexao == NULL)
+	{
+		printf(" Warning: Conexao nula detectada em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() 56456q489b87ts\n");
+		printf(" LOG: Tentando reconexão com banco de dados em OperacoesBanco.h addAvaliacaoAProdutoAoBanco()\n");
+		if(conectarBanco())
+		{
+			printf(" \tLOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" \tWarning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
+	}
+	if(email == NULL)
+	{
+		printf(" Warning: email == NULL em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() 65q4w5e\n");
+		return false;
+	}
+	if(idProduto == NULL)
+	{
+		printf(" Warning: idProduto == NULL em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() 1q6w54bve\n");
+		return false;
+	}
+	if(avaliacao == NULL)
+	{
+		printf(" Warning: avaliacao == NULL em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() hkjqwd\n");
+		return false;
+	}
+
+	int checou = checaExistenciaDeVisualizacaoDeProdutoComPessoa(idProduto, email);
+	if(checou == RETORNO_OK)
+	{
+		printf(" LOG: Existe visualização de usuario cadastrada em OperacoesBanco.h addAvaliacaoAProdutoAoBanco()\n");
+	}
+	else if(checou == RETORNO_NULO)
+	{
+		printf(" Warning: não existe visualização para esse usuario em OperacoesBanco.h addAvaliacaoAProdutoAoBanco()\n");
+		return false;
+	}
+	else
+	{
+		printf(" ERRO: Usuario ou produto não existem, ou algum outro erro possível em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() qkjhejcv\n");
+		return false;
+	}
+
+	//int tamanho = 151 + strlen(email) + TAMANHO_ID_PRODUTO + 1;
+	int tamanho = strlen(email) + 162;//otimizado
+	char *query = malloc(sizeof(char) * tamanho);
+
+	if (query == NULL)
+	{
+		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() q648484eas\n");
+		return false;
+	}
+	snprintf(query, tamanho, "UPDATE visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente SET V.avaliacaoDoUsuario=%c WHERE V.produto_idproduto=\'%s\' AND C.email=\'%s\';", avaliacao[0], idProduto, email );
+	if(query == NULL)
+	{
+		printf(" Warning: Falhao ao formatar query para executar em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() qkjhhdjkasd\n");
+		return false;
+	}
+
+	if(!executaQuery(query))
+	{
+		printf(" Warning: problemas foram encontrados durante a execução da query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() q46f874asd\n");
+		free(query);
+		query = NULL;
+		return false;
+	}
+	else
+	{
+		free(query);
+		query = NULL;
+
+		if(avaliacao[0] == '1')
+		{
+			//tamanho = 84+TAMANHO_ID_PRODUTO+1;
+			tamanho = 95;//otimizado
+			query = malloc(sizeof(char) * tamanho);
+			if(query == NULL)
+			{
+				printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() akhkvejjd81779c\n");
+				return false;
+			}
+			snprintf(query, tamanho, "UPDATE produto P SET P.avaliacaoPositiva=P.avaliacaoPositiva+1 WHERE P.idproduto=\'%s\';", idProduto);
+			if (query == NULL)
+			{
+				printf(" Warning: Falha ao formatar query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() qbhbr25300sdf44*-asd\n");
+				return false;
+			}
+			if(!executaQuery(query))
+			{
+				printf(" Warning: Foram encontrados erros na execucao da query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() a646e88bra\n");
+				free(query);
+				query = NULL;
+				return false;
+			}
+			printf(" LOG: Avaliacao adicionada com sucesso ao banco de dados em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() chkah389s9827\n");
+			free(query);
+			query = NULL;
+			return true;
+		}
+		else if(avaliacao[0] == '0')
+		{
+			//tamanho = 84+TAMANHO_ID_PRODUTO+1;
+			tamanho = 95;//otimizado
+			query = malloc(sizeof(char) * tamanho);
+			if(query == NULL)
+			{
+				printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() akhkvejjd81779c\n");
+				return false;
+			}
+			snprintf(query, tamanho, "UPDATE produto P SET P.avaliacaoPositiva=P.avaliacaoNegativa+1 WHERE P.idproduto=\'%s\';", idProduto);
+			if (query == NULL)
+			{
+				printf(" Warning: Falha ao formatar query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() qbhbr25300sdf44*-asd\n");
+				return false;
+			}
+			if(!executaQuery(query))
+			{
+				printf(" Warning: Foram encontrados erros na execucao da query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() a646e88bra\n");
+				free(query);
+				query = NULL;
+				return false;
+			}
+			printf(" LOG: Avaliacao adicionada com sucesso ao banco de dados em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() chkah389s9827\n");
+			free(query);
+			query = NULL;
+			return true;
+		}
+		else
+		{
+			printf(" ERRO: Lógica anterior à inserção FALHOU, DADOS NÃO CONFIÁVEIS DETECTADOS em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() ashdjksarb\n");
+			free(query);
+			query = NULL;
+			return false;
+		}
+	
+	}
+
+	printf(" ERRO: DEU PAU !!!!! em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() qjwhejikhjvs6545 \n");
+	return false;
 }
 
 #endif

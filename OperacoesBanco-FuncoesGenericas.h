@@ -180,6 +180,41 @@ bool checarSeVoltaAlgumaCoisaDaQuery(char *query)
 	}
 }
 
+bool executaQuery(char *query)// retorna false se der algum problema
+{
+	if(query == NULL)
+	{
+		printf(" ERRO: Query recebida igual a NULL (OperacoesBanco.h) checarSeVoltaAlgumaCoisaDaQuery()\n");
+		return false;
+	}
+
+	if(mysql_query(conexao, query))//Se ocorrer algum erro
+	{
+		printf(" ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) checarSeVoltaAlgumaCoisaDaQuery()\n");
+		printf(" ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
+		printf(" Query executada: |%s|\n", query);
+		if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+		{
+			printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h checarSeVoltaAlgumaCoisaDaQuery()\n");
+			if(conectarBanco())
+			{
+				printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h checarSeVoltaAlgumaCoisaDaQuery()\n");
+			}
+			else
+			{
+				conexao = NULL;
+				mysql_close(conexao);
+				mysql_thread_end();
+				free(conexao);
+				printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h checarSeVoltaAlgumaCoisaDaQuery()\n");
+			}
+		}
+		return false;
+	}
+	printf(" LOG: Query |%s| executada com sucesso em OperacoesBanco-FuncoesGenericas.h executaQuery() qkjhjdsa\n", query);
+	return true;
+}
+
 //Retorna TRUE se o produto existe na base de dados
 // bool checarIdProduto(MYSQL *conexao, char *id)
 bool checarIdProduto(char *id)//OK
