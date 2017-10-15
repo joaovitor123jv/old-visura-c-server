@@ -38,7 +38,7 @@ bool conectarBanco()//OK
 		free(conexao);
 		conexao = NULL;
 	}
-	conexao = malloc(sizeof(MYSQL));
+	conexao = (MYSQL *)malloc(sizeof(MYSQL));
 	if(conexao == NULL)
 	{
 		printf(" Warning: Memoria insuficiente para conectar-se ao banco de dados em OperacoesBanco.h conectarBanco()\n");
@@ -251,7 +251,7 @@ bool checarIdProduto(char *id)//OK
 
 	char *query = NULL;
 
-	query = malloc(sizeof(char) * ( strlen(id) + 69));
+	query = (char *)malloc(sizeof(char) * ( strlen(id) + 69));
 	if(query == NULL)
 	{
 		printf(" ERRO: não foi possível alocar memória para a query (OperacoesBanco-FuncoesGenericas.h) (checarIdProduto())\n");
@@ -276,7 +276,7 @@ bool checarIdContratante(char *idContratante)
 {
 	char *query = NULL;
 	int tamanho = 53 + 1 + strlen(idContratante);
-	query = malloc(sizeof(char) * tamanho);
+	query = (char *)malloc(sizeof(char) * tamanho);
 	
 		if(query == NULL)
 		{
@@ -337,7 +337,7 @@ bool checarLogin(char *email, char *senha)
 	size_t tamanho = strlen(email) + strlen(senha) + 67;
 	
 	
-	query = malloc(sizeof(char) * tamanho);
+	query = (char *)malloc(sizeof(char) * tamanho);
 	if(query == NULL)
 	{
 		printf(" ERRO: não foi possível alocar memória para a query em OperacoesBanco-FuncoesGenericas.h checarLogin()\n");
@@ -400,7 +400,7 @@ bool produtoVencido(char *idProduto, char *email)//retorna TRUE se o produto est
 	
 	//int tamanho = 88+strlen(idProduto)+1;
 	int tamanho = 99;//otimizado
-	char *query = malloc(sizeof(char) * tamanho);
+	char *query = (char *)malloc(sizeof(char) * tamanho);
 	if(query == NULL)
 	{
 		printf(" Warning: não foi possível alocar memoria para query em OperacoesBanco-FuncoesGenericas.h produtoVencido() qkjhjvgdf\n");
