@@ -37,6 +37,9 @@
 #define LOGIN_DE_CADASTRO "interface@servidor"
 #define SENHA_DE_CADASTRO "senatauri"
 
+#define LOGIN_DO_SITE "contratante@servidor"
+#define SENHA_DO_SITE "qwertyuiopasdfghjklzxcvbnm"
+
 
 #define TAMANHO_LOGIN 64
 #define TAMANHO_EMAIL 64//Mesma coisa que TAMANHO_LOGIN

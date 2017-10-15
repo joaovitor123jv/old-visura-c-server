@@ -5,7 +5,7 @@
 #include "Comandos.h"
 #include "OperacoesBanco.h"
 
-char *obterQuantidadeDeVisualizacoesAnonimas(void)// APP 4 2 @ 3 * idProduto
+char *obterQuantidadeDeVisualizacoesAnonimas(char *email)// APP 4 2 @ 3 * idProduto
 {
     // Fazer isso aqui !!!
     char *token = strtok(NULL, " ");// APP 4 2 @ 3 *
@@ -53,7 +53,7 @@ char *obterQuantidadeDeVisualizacoesAnonimas(void)// APP 4 2 @ 3 * idProduto
     }
 
     char *retorno;
-    if((retorno = obterQuantidadeDeVisualizacoesAnonimasDoBanco(idProduto)) != NULL)
+    if((retorno = obterQuantidadeDeVisualizacoesAnonimasDoBanco(idProduto, email)) != NULL)
     {
         printf(" LOG: Quantidade de visualizações retornada com sucesso em obterQuantidadeDeVisualizacoesAnonimas() Comando-Obter_Visualizacoes.h\n");
         free(idProduto);
@@ -79,7 +79,7 @@ char *obterQuantidadeDeVisualizacoesAnonimas(void)// APP 4 2 @ 3 * idProduto
     return NULL;
 }
 
-char *obterQuantidadeDeVisualizacoesGerais(void)// APP 4 2 @ 2 * idProduto
+char *obterQuantidadeDeVisualizacoesGerais(char *email)// APP 4 2 @ 2 * idProduto
 {
     char *token = strtok(NULL, " ");// APP 4 2 @ 2 *
     if (token == NULL)
@@ -126,7 +126,7 @@ char *obterQuantidadeDeVisualizacoesGerais(void)// APP 4 2 @ 2 * idProduto
     }
 
     char *qtdVisualAnom;
-    if((qtdVisualAnom = obterQuantidadeDeVisualizacoesAnonimasDoBanco(idProduto)) != NULL)
+    if((qtdVisualAnom = obterQuantidadeDeVisualizacoesAnonimasDoBanco(idProduto, email)) != NULL)
     {
         printf(" LOG: Quantidade de visualizações retornada com sucesso em obterQuantidadeDeVisualizacoesGerais() Comando-Obter_Visualizacoes.h\n");
     }
@@ -140,7 +140,7 @@ char *obterQuantidadeDeVisualizacoesGerais(void)// APP 4 2 @ 2 * idProduto
 
 
     char *qtdVisualNorm;
-    if((qtdVisualNorm = obterQuantidadeDeVisualizacoesGeraisDoBanco(idProduto)) != NULL)
+    if((qtdVisualNorm = obterQuantidadeDeVisualizacoesGeraisDoBanco(idProduto, email)) != NULL)
     {
         printf(" LOG: Quantidade de visualizações retornada com sucesso em obterQuantidadeDeVisualizacoesGerais() Comando-Obter_Visualizacoes.h\n");
     }

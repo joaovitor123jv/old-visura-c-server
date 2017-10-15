@@ -1790,7 +1790,7 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 }
 
 
-char *obterDescricaoProdutoDoBanco(char *idProduto)//DONE
+char *obterDescricaoProdutoDoBanco(char *idProduto, char *email)//DONE
 {
 	if (conexao == NULL)
 	{
@@ -1804,6 +1804,11 @@ char *obterDescricaoProdutoDoBanco(char *idProduto)//DONE
 	}
 	else
 	{
+		if (produtoVencido(idProduto, email))
+		{
+			printf(" Warning: produto vencido em OperacoesBanco.h obterDescricaoProdutoDoBanco\n");
+			return NULL;
+		}
 		char *query = NULL;
 		//int tamanho = 55 + TAMANHO_ID_PRODUTO + 1;// Usando TAMANHO_ID_PRODUTO para otimização
 		int tamanho = 66;// Usando TAMANHO_ID_PRODUTO para otimização
@@ -1943,7 +1948,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto)//DONE
 }
 
 
-char *obterNomeProdutoDoBanco(char *idProduto)//DONE
+char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 {
 	if(conexao == NULL)
 	{
@@ -1966,6 +1971,12 @@ char *obterNomeProdutoDoBanco(char *idProduto)//DONE
 	}
 	else
 	{
+		if(produtoVencido(idProduto, email))
+		{
+			printf(" Warning: produto vencido em OperacoesBanco.h obterNomeProdutoDoBanco()\n");
+			return NULL;
+		}
+
 		char *query = NULL;
 		//int tamanho = 57 + TAMANHO_ID_PRODUTO + 1;// Usando TAMANHO_ID_PRODUTO para otimização
 		int tamanho = 68;// Usando TAMANHO_ID_PRODUTO para otimização
@@ -2097,7 +2108,7 @@ char *obterNomeProdutoDoBanco(char *idProduto)//DONE
 }
 
 
-char *obterAvaliacaoProdutoDoBanco(char *idProduto)// APP 4 kW * idProduto
+char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * idProduto
 {
 	printf(" LOG: iniciando obtenção de avaliação em OperacoesBanco.h obterAvaliacaoProdutoDoBanco()\n");
 	if(conexao == NULL)
@@ -2121,6 +2132,11 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto)// APP 4 kW * idProduto
 	}
 	else
 	{
+		if(produtoVencido(idProduto, email))
+		{
+			printf(" Warning: Produto vencido em OperacoesBanco.h obterAvaliacaoProdutoDoBanco()\n");
+			return NULL;
+		}
 		char *query = NULL;
 		// int tamanho = 79 + 1 + TAMANHO_ID_PRODUTO;
 		int tamanho = 99;// Usando TAMANHO_ID_PRODUTO para otimização
@@ -2599,6 +2615,11 @@ bool addAvaliacaoAProdutoAoBanco(char *email, char *idProduto, char *avaliacao)/
 	if(avaliacao == NULL)
 	{
 		printf(" Warning: avaliacao == NULL em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() hkjqwd\n");
+		return false;
+	}
+	if(produtoVencido(idProduto, email))
+	{
+		printf(" Warning: produto vencido detectado em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() akjhvs\n");
 		return false;
 	}
 

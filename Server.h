@@ -264,7 +264,7 @@ void *Servidor(void *arg)
 						break;
 						
 					case REQUISITANDO_OBTENCAO:
-						mensagem = obterDados();
+						mensagem = obterDados(email);
 						interpretando = false;
 						bool precisaLiberar = true;
 						if(mensagem == NULL)

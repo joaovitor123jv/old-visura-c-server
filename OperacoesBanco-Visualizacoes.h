@@ -200,7 +200,12 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, char *email, bool usuar
 		printf("ERRO: Id informado contém quantidade incorreta de caracteres (OperacoesBanco-Visualizacoes.h) addVisualizacoesAoBanco())\n");
 		return false;
 	}
-	
+    
+    if (produtoVencido(id, email))
+    {
+        printf(" Warning: Produto vencido detectado em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
+        return false;
+    }
 	
 	if(usuarioAnonimo)
 	{
@@ -572,7 +577,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, char *email, bool usuar
 }
 
 
-char *obterQuantidadeDeVisualizacoesAnonimasDoBanco(char *idProduto)// APP 4 2 @ 3 * idProduto
+char *obterQuantidadeDeVisualizacoesAnonimasDoBanco(char *idProduto, char *email)// APP 4 2 @ 3 * idProduto
 {
     if(conexao == NULL)
     {
@@ -593,6 +598,11 @@ char *obterQuantidadeDeVisualizacoesAnonimasDoBanco(char *idProduto)// APP 4 2 @
         return NULL;
     }
 
+    if (produtoVencido(idProduto, email))
+    {
+        printf(" Warning: Produto vencido detectado em OperacoesBanco-Visualizacoes.h obterQuantidadeDeVisualizacoesAnonimasDoBanco()\n");
+        return NULL;
+    }
     // int tamanho = 62 + TAMANHO_ID_PRODUTO + 1;// Jamais esqueça o '\0'
     int tamanho = 73;
     char *query = (char *)malloc(sizeof(char) * tamanho);
@@ -742,7 +752,7 @@ char *obterQuantidadeDeVisualizacoesAnonimasDoBanco(char *idProduto)// APP 4 2 @
     return NULL;
 }
 
-char *obterQuantidadeDeVisualizacoesGeraisDoBanco(char *idProduto)// APP 4 2 @ 2 * idProduto (chama também, essa funcao)
+char *obterQuantidadeDeVisualizacoesGeraisDoBanco(char *idProduto, char *email)// APP 4 2 @ 2 * idProduto (chama também, essa funcao)
 {
     if(conexao == NULL)
     {
@@ -760,6 +770,11 @@ char *obterQuantidadeDeVisualizacoesGeraisDoBanco(char *idProduto)// APP 4 2 @ 2
     if(idProduto == NULL)
     {
         printf(" Warning: idProduto == NULL em obterQuantidadeDeVisualizacoesGeraisDoBanco() OperacoesBanco-Visualizacoes.h\n");
+        return NULL;
+    }
+    if (produtoVencido(idProduto, email))
+    {
+        printf(" Warning: Produto vencido detectado em OperacoesBanco-Visualizacoes.h obterQuantidadeDeVisualizacoesGeraisDoBanco()\n");
         return NULL;
     }
 

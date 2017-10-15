@@ -1,4 +1,9 @@
 //Arquivo que contem os "Scripts" mais genericos usados pelo OperaçõesBanco.h
+#include "Comandos.h"
+#include<string.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<mysql/mysql.h>
 
 #ifndef true
 #define true 1
@@ -357,4 +362,129 @@ bool checarLogin(char *email, char *senha)
 	}
 	query = NULL;
 	return retorno;
+}
+
+bool produtoVencido(char *idProduto, char *email)//retorna TRUE se o produto estiver vencido, false se estiver dentro do prazo de validade
+{
+	if(conexao == NULL)
+	{
+		printf("ERRO DE CONEXÃO (OperacoesBanco-FuncoesGenericas.h) (produtoVencido())\n");
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação em OperacoesBanco-FuncoesGenericas.h produtoVencido()()\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return true;
+		}
+	}
+	if (idProduto == NULL)
+	{
+		printf(" Warning: idProduto == NULL em OperacoesBanco-FuncoesGenericas.h produtoVencido() 16q54cfr\n");
+		return true;
+	}
+	if (email == NULL)
+	{
+		printf(" Warning: email == NULL em OperacoesBanco-FuncoesGenericas.h produtoVencido() chjkjtrtds54\n");
+		// return true;
+	}
+	else
+	{
+		if (strcmp(email, LOGIN_DO_SITE) == 0)
+		{
+			return false;//PODE ACESSAR INFORMAÇÕES DE PRODUTO
+		}
+	}
+	
+	//int tamanho = 88+strlen(idProduto)+1;
+	int tamanho = 99;//otimizado
+	char *query = malloc(sizeof(char) * tamanho);
+	if(query == NULL)
+	{
+		printf(" Warning: não foi possível alocar memoria para query em OperacoesBanco-FuncoesGenericas.h produtoVencido() qkjhjvgdf\n");
+		return true;
+	}
+	snprintf(query, tamanho, "SELECT DATEDIFF(CURDATE(), P.datacriacao)+P.duracao FROM produto P WHERE P.idproduto=\'%s\';", idProduto);
+	if(query == NULL)
+	{
+		printf(" Warning: não foi possível formatar query em OperacoesBanco-FuncoesGenericas.h produtoVencido() sajkdhjbr\n");
+		return true;
+	}
+
+	if(!executaQuery(query))
+	{
+		printf(" Warning: Houveram erros ao executar a query desejada |%s| em OperacoesBanco-FuncoesGenericas.h produtoVencido() wsd456ngh\n", query);
+		free(query);
+		query = NULL;
+		return true;
+	}
+
+	MYSQL_RES *resultado = mysql_store_result(conexao);
+	
+	if(resultado == NULL)
+	{
+		printf(" Warning: Consulta não realizada em OperacoesBanco-FuncoesGenericas.h produtoVencido() nao houve conexao\n");
+		free(query);
+		query = NULL;
+		return true;
+	}
+	
+	if(mysql_num_fields(resultado) == 0)
+	{
+		printf(" Warning: Nao houve resultados na pesquisa em OperacoesBanco-FuncoesGenericas.h produtoVencido() bnje\n");
+		free(query);
+		mysql_free_result(resultado);
+		resultado = NULL;
+		query = NULL;
+		return true;
+	}
+	
+	MYSQL_ROW linha = NULL;
+	// char *retorno = NULL;
+	
+	linha = mysql_fetch_row(resultado);
+	if(linha == NULL)
+	{
+		printf(" Warning: Resposta Nula em OperacoesBanco-FuncoesGenericas.h produtoVencido()\n");
+		free(query);
+		mysql_free_result(resultado);
+		resultado = NULL;
+		query = NULL;
+		return true;
+	}
+	else
+	{
+		if(strlen(linha[0]) > 0)
+		{
+			printf(" LOG: Retorno obtido com sucesso em OperacoesBanco-FuncoesGenericas.h produtoVencido() kjh3as\n"); 
+			free(query);
+			query = NULL;
+			if(atoi(linha[0])>=0)
+			{
+				printf(" LOG: Produto não está vencido ainda em OperacoesBanco-FuncoesGenericas.h produtoVencido() asddf456br\n");
+				mysql_free_result(resultado);
+				resultado = NULL;
+				return false;
+			}
+			else
+			{
+				printf(" LOG: produto está vencido, impedindo execução do código seguinte em OperacoesBanco-FuncoesGenericas.h produtoVencido() sadsa455br\n");
+				mysql_free_result(resultado);
+				resultado = NULL;
+				return true;
+			}
+		}
+		else
+		{
+			printf(" Warning: Produto nao possui visualizações anonimas cadastradas no banco de dados em OperacoesBanco-FuncoesGenericas.h produtoVencido() kejhqkfge3\n");
+			free(query);
+			mysql_free_result(resultado);
+			resultado = NULL;
+			query = NULL;
+			return true;
+		}
+	}
+
 }

@@ -36,7 +36,7 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 		return false;
 	}
 
-	printf(" LOG: TOKEN = |%s| em Comando-Adicao.h comandoAdicionar()\n", token);
+	// printf(" LOG: TOKEN = |%s| em Comando-Adicao.h comandoAdicionar()\n", token);
 
 	if(strcmp(token, TIPO_VISUALIZACAO) == 0)/* APP 2 2  (Solicitação de adicao de Visualizacao)*/
 	{
