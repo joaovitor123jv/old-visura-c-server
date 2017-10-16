@@ -158,6 +158,7 @@
 
 #define TIPO_AVALIACAO "kW"
 #define TIPO_FEEDBACK "tr"
+#define TIPO_PONTO "Dj"
 
 
 #define SENHA_PADRAO_USUARIO_ANONIMO "nulo"

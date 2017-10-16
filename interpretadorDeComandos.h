@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include "Comandos.h"
+
+
+bool usuarioRoot(char *email);
+
+
+
 #include "OperacoesBanco.h"
 #include "Comando-Login.h"
 #include "Comando-Adicao.h"
@@ -221,4 +227,23 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 	// return ERRO;
 	*resultado = ERRO;
 	return NULL;
+}
+
+
+
+bool usuarioRoot(char *email)
+{
+	if(email == NULL)
+	{
+		return false;
+	}
+	if(strcmp(email, LOGIN_DE_CADASTRO) == 0)
+	{
+		return true;
+	}
+	if(strcmp(email, LOGIN_DO_SITE) == 0)
+	{
+		return true;
+	}
+	return false;
 }

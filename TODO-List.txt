@@ -1,0 +1,12 @@
+
+Cliente:
+	addPontosCliente → Feito
+	obterPontosCliente
+	obterTopXProdutosEmAlta
+
+
+Contratante:
+	addPlano/updatePlano
+	obterPlano
+
+

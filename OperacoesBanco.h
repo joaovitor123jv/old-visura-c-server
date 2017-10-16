@@ -2869,6 +2869,64 @@ bool addFeedBackDeProdutoAoBanco(char *email, char *idProduto, char *titulo, cha
 	return false;
 }
 
+
+bool addPontosDeUsuarioAoBanco(char *email, char *quantidade)
+{
+	if (conexao == NULL)
+	{
+		printf(" Warning: Conexao nula detectada em OperacoesBanco.h addPontosDeUsuarioAoBanco() 56456q489b87ts\n");
+		printf(" LOG: Tentando reconexão com banco de dados em OperacoesBanco.h addPontosDeUsuarioAoBanco()\n");
+		if(conectarBanco())
+		{
+			printf(" \tLOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" \tWarning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
+	}
+	if(email == NULL)
+	{
+		printf(" Warning: email == NULL em OperacoesBanco.h addPontosDeUsuarioAoBanco() cqufh20nasdi\n");
+		return false;
+	}
+	if(quantidade == NULL)
+	{
+		printf(" Warning: quantidade == NULL em OperacoesBanco.h addPontosDeUsuarioAoBanco() cqufh20nasdi\n");
+		return false;
+	}
+
+	// int tamanho =  57 + strlen(email) + strlen(quantidade) + 1;
+	int tamanho = 58 + strlen(email) + strlen(quantidade);// que merda de otimizacao hein ?
+	char *query = (char *)malloc(sizeof(char) * tamanho);
+	if (query == NULL)
+	{
+		printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addPontosDeUsuarioAoBanco() vq4b0s8sq\n");
+		return false;
+	}
+	snprintf(query, tamanho, "UPDATE cliente C SET C.pontos=C.pontos+%s WHERE C.email=\'%s\';", quantidade, email);
+	if (query == NULL)
+	{
+		printf(" Warning: falha ao formatar query em OperacoesBanco.h addPontosDeUsuarioAoBanco() ab4iua13tb\n");
+		return false;
+	}
+	if(executaQuery(query))
+	{
+		printf(" LOG: Pontos atualizados com sucesso em OperacoesBanco.h addPontosDeUsuarioAoBanco() qbv98hqf\n");
+		free(query);
+		query = NULL;
+		return true;
+	}
+	else
+	{
+		printf(" Warning: Falha ao atualizar pontos no banco de dados em OperacoesBanco.h addPontosDeUsuarioAoBanco() ahr8q9888xxai1b\n");
+		free(query);
+		query = NULL;
+		return false;
+	}
+}
+
 #endif
 
 

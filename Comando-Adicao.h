@@ -2773,6 +2773,44 @@ bool addInformacoesAUsuario(char *email)// DOING
 		}
 		return false;	
 	}
+	else if(strcmp(token, TIPO_PONTO) == 0)// APP 2 & Dj quantidadeDePontos
+	{
+		token = strtok(NULL, " ");
+		if(token == NULL)
+		{
+			printf(" Warning: Comando insuficiente detectado em Comando-Adicao.h addInformacoesAUsuario() sabruioxjk:w\n");
+			return false;
+		}
+		if(strlen(token) > TAMANHO_DE_INTEIRO_EM_BANCO_DE_DADOS)
+		{
+			printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addInformacoesAUsuario() aibvruiuouge\n");
+			return false;
+		}
+		char *quantidade = strdup(token);
+		if(quantidade == NULL)
+		{
+			printf(" Warning: falha ao duplicar token para quantidade em Comando-Adicao.h addInformacoesAUsuario() eiuabruioaisdr\n");
+			return false;
+		}
+		else
+		{
+			if(addPontosDeUsuarioAoBanco(email, quantidade))
+			{
+				printf(" LOG: Pontos adicionados com sucesso a usuario em Comando-Adicao.h addInformacoesAUsuario() cnqiunasd\n");
+				free(quantidade);
+				quantidade = NULL;
+				return true;
+			}
+			else
+			{
+				printf(" Warning: Falha ao adicionar pontos ao banco de dados detectada em Comando-Adicao.h addInformacoesAUsuario() qi44h1898dn\n");
+				free(quantidade);
+				quantidade = NULL;
+				return false;
+			}
+		}
+		
+	}
 	else if(strcmp(token, TIPO_SOBRENOME) == 0)// APP 2 & Y sobrenomeInformado
 	{
 		printf(" LOG: cliente solicitando adição de informação: SOBRENOME em Comando-Adicao.h addInformacoesAUsuario()\n");

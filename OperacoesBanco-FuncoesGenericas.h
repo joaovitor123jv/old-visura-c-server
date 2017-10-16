@@ -392,9 +392,13 @@ bool produtoVencido(char *idProduto, char *email)//retorna TRUE se o produto est
 	}
 	else
 	{
-		if (strcmp(email, LOGIN_DO_SITE) == 0)
+		// if (strcmp(email, LOGIN_DO_SITE) == 0)
+		// {
+		// 	return false;//PODE ACESSAR INFORMAÇÕES DE PRODUTO
+		// }
+		if(usuarioRoot(email))
 		{
-			return false;//PODE ACESSAR INFORMAÇÕES DE PRODUTO
+			return false;
 		}
 	}
 	
