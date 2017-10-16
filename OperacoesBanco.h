@@ -2730,7 +2730,6 @@ bool addAvaliacaoAProdutoAoBanco(char *email, char *idProduto, char *avaliacao)/
 			query = NULL;
 			return false;
 		}
-	
 	}
 
 	printf(" ERRO: DEU PAU !!!!! em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() qjwhejikhjvs6545 \n");
@@ -2738,3 +2737,77 @@ bool addAvaliacaoAProdutoAoBanco(char *email, char *idProduto, char *avaliacao)/
 }
 
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+while( !personIsDead( (struct person*) me) )
+{
+	if ( !personIsHappy( (struct person*) me) )
+	{
+		printf("%s, be happy !\n", getPersonName(me));
+		startListenMusic();
+		startPlaySomething();
+		startCodeSomething();
+		startWatchSomeAnime();
+		startTalkToGirlfriend();
+		me->emotionalState = "Happy";
+	}
+	else
+	{
+		startListenMusic();
+		startPlaySomething();
+		startCodeSomething();
+		startWatchSomeAnime();
+		startTalkToGirlfriend();
+	}
+
+	me->emotionalState = getEmotionalState( RNG_GODS_RESPONSE );
+}
+
+return OH_SHIT;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
