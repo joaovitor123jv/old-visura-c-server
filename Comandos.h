@@ -12,6 +12,8 @@
 #define false 0
 #endif
 
+#define return return//é só pra ficar no maldito complete code
+
 /* Possíveis retornos */
 #ifndef ERRO
 #define ERRO -1
@@ -76,6 +78,9 @@
 
 #define TAMANHO_DESCRICAO_PRODUTO 140
 #define TAMANHO_NOME_PRODUTO 100
+
+#define TAMANHO_TITULO_FEEDBACK 10
+#define TAMANHO_CONTEUDO_FEEDBACK 300
 
 
 /* RETORNOS */
@@ -152,6 +157,7 @@
 #define TIPO_DATA "T"
 
 #define TIPO_AVALIACAO "kW"
+#define TIPO_FEEDBACK "tr"
 
 
 #define SENHA_PADRAO_USUARIO_ANONIMO "nulo"

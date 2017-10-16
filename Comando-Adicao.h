@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include<stdlib.h>
 #include <string.h>
 #include "Comandos.h"
 
@@ -19,6 +20,8 @@ bool addLocalizacao();//Retorna true se adicionado com sucesso
 
 bool addInformacoesAUsuario(char *email);//Retorna true se adicionado com sucesso
 bool addAvaliacaoAProduto(char *email);//Retorna TRUE se adicionado com sucesso
+
+bool addFeedbackAProduto(char *email);//Retorna TRUE se adicionado com sucesso
 
 
 bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
@@ -62,6 +65,19 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 		else
 		{
 			printf(" Warning: Falha ao adicionar avaliação ao produto requisitado em Comando-Adicao.h comandoAdicionar()\n");
+			return false;
+		}
+	}
+	else if(strcmp(token, TIPO_FEEDBACK) == 0)// APP 2 tr * idProduto textoDoFeedBack
+	{
+		if(addFeedbackAProduto(email))
+		{
+			printf(" LOG: Feedback adicionado com sucesso ao banco de dados em Comando-Adicao.h comandoAdicionar() 4a68easd\n");
+			return true;
+		}
+		else
+		{
+			printf(" Warning: Feedback não foi adicionado ao banco de dados em Comando-Adicao.h comandoAdicionar() asdkhjkvr\n");
 			return false;
 		}
 	}
@@ -239,7 +255,7 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 			printf(" LOG: Tamanho de email exageradamente grande Comando-Adicao.h addUsuarioAnonimo()\n");
 			return false;
 		}
-		char *email = malloc(sizeof(char) * (strlen(token) + 1));//Não esquecer do +1 (é o /0)
+		char *email = (char *)malloc(sizeof(char) * (strlen(token) + 1));//Não esquecer do +1 (é o /0)
 		if(email == NULL)
 		{
 			printf(" ERRO: Falha ao alocar memória para email Comando-Adicao.h addUsuarioAnonimo()\n");
@@ -293,7 +309,7 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 			if(strcmp(token, SENHA_PADRAO_USUARIO_ANONIMO) == 0)//se senha informada for igual à senha padrao de usuario anonimo
 			{
 				printf(" LOG: alocando memoria para senha Comando-Adicao.h addUsuarioAnonimo()\n");
-				char *senha = malloc(sizeof(char) * (strlen(token) + 1));
+				char *senha = (char *)malloc(sizeof(char) * (strlen(token) + 1));
 				if(senha != NULL)
 				{
 					strcpy(senha, token);
@@ -786,7 +802,7 @@ bool addUsuario(char *emailAnterior)//TODO  APP 2 1 1
 }
 
 
-bool addVisualizacao(char *email, bool usuarioAnonimo)/* APP 2 2*/
+bool addVisualizacao(char *email, bool usuarioAnonimo)/* APP 2 2 idProduto quantidade*/
 {
 	if(email == NULL)
 	{
@@ -2914,9 +2930,9 @@ bool addAvaliacaoAProduto(char *email)//DONE       APP 2 kW * idProduto avaliaca
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addAvaliacaoAProduto() qkjh4uhuasd\n");
 		return false;
 	}
-	if(strlen(token) == TAMANHO_ID_PRODUTO)
+	if(strlen(token) != TAMANHO_ID_PRODUTO)
 	{
-		printf(" Warning: Argumento invalido detectado em Comando-Adicao.h addAvaliacaoAProduto() qkjhewjkvaw\n");
+		printf(" Warning: Argumento invalido (%s) detectado em Comando-Adicao.h addAvaliacaoAProduto() qkjhewjkvaw\n", token);
 		return false;
 	}
 	char *idProduto = strdup(token);
@@ -2941,7 +2957,7 @@ bool addAvaliacaoAProduto(char *email)//DONE       APP 2 kW * idProduto avaliaca
 		idProduto = NULL;
 		return false;
 	}
-	if(token[0] != '0' || token[0] != '1')//OTIMIZANDO !!!
+	if(!(token[0] == '0' || token[0] == '1') || token[1]!= '\0')//OTIMIZANDO !!!
 	{
 		printf(" Warning: Comando incorreto em (argumento invalido) Comando-Adicao.h addAvaliacaoAProduto().\n");
 		free(idProduto);
@@ -2964,6 +2980,8 @@ bool addAvaliacaoAProduto(char *email)//DONE       APP 2 kW * idProduto avaliaca
 	{
 		printf(" LOG: Avaliacao adicionada ao banco com sucesso em Comando-Adicao.h addAvaliacaoAProduto() 46q5w4vb\n");
 		free(idProduto);
+		free(avaliacao);
+		avaliacao = NULL;
 		idProduto = NULL;
 		return true;
 	}
@@ -2971,7 +2989,135 @@ bool addAvaliacaoAProduto(char *email)//DONE       APP 2 kW * idProduto avaliaca
 	{
 		printf(" Warning: Falha ao adicionar avaliação ao banco de dados em Comando-Adicao.h addAvaliacaoAProduto() kjqhjkhve\n");
 		free(idProduto);
+		free(avaliacao);
+		avaliacao = NULL;
 		idProduto = NULL;
 		return false;
 	}
+}
+
+bool addFeedbackAProduto(char *email)// APP 2 tr * idProduto tituloDoFeedback textoDoFeedBack
+{
+	if(email == NULL)
+	{
+		printf(" Warning: email == NULL em addFeedbackAProduto() Comando-Adicao.h qq654nn");
+		return false;
+	}
+	char *token = strtok(NULL, " ");// APP 2 tr *
+	if(token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em addFeedBackAProduto() Comando-Adicao.h q195dh65s\n");
+		return false;
+	}
+	// if(strlen(token) > TAMANHO_TIPO)
+	// {
+	// 	printf(" Warning: Comando exageradamente grande em addFeedBackAProduto() Comando-Adicao.h vbkjbdg\n");
+	// 	return false;
+	// }
+	// if(strcmp(token, TIPO_ID_PRODUTO) != 0)
+	// {
+	// 	printf(" Warning: Comando incorreto detectado em addFeedBackAProduto() Comando-Adicao.h askjhbrdr5\n");
+	// 	return false;
+	// }
+	if (token[0] != '*' || token[1] != '\0')// OTIMIZADO
+	{
+		printf(" Warning: Comando incorreto detectado em addFeedbackAProduto() Comando-Adicao.h akjhbvrd\n");
+		return false;
+	}
+
+	token = strtok(NULL, " ");// APP 2 tr * idProduto
+	if(token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em addFeedbackAProduto() Comando-Adicao.h asdkjbvd\n");
+		return false;
+	}
+	if(strlen(token) != TAMANHO_ID_PRODUTO)
+	{
+		printf(" Warning: Comando incorreto detectado em addFeedBackAProduto() Comando-Adicao.h asfbjrdf\n");
+		return false;
+	}
+	char *idProduto = strdup(token);
+	if(idProduto == NULL)
+	{
+		printf(" Warning: Não foi possível duplicar token para idProduto em addFeedbackAProduto() Comando-Adicao.h asfdhjkr\n");
+		return false;
+	}
+
+	token = strtok(NULL, " ");// APP 2 tr * idProduto tituloFeedBack
+	if(token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em Comando-Adicao.h addFeedbackAProduto() sv489s51hrd\n");
+		free(idProduto);
+		idProduto = NULL;
+		return false;
+	}
+	if(strlen(token) > TAMANHO_TITULO_FEEDBACK)
+	{
+		printf(" Warning: Comando exageradamente grande detectado em addFeedbackAProduto() Comando-Adicao.h sahjkr\n");
+		free(idProduto);
+		idProduto = NULL;
+		return false;
+	}
+	char *titulo = strdup(token);
+	if(titulo == NULL)
+	{
+		printf(" Warning: Falha ao duplicar token para titulo em addFeedbackAProduto() Comando-Adicao,h asgjhrs\n");
+		free(idProduto);
+		idProduto = NULL;
+		return false;
+	}
+	token = strtok(NULL, " ");// APP 2 tr * idproduto tituloFeedBack conteudoFeedback
+	if (token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em Comando-Adicao.h addFeedBackAProduto() shgjvrsd\n");
+		free(idProduto);
+		free(titulo);
+		titulo = NULL;
+		idProduto = NULL;
+		return false;
+	}
+	if (strlen(token) > TAMANHO_CONTEUDO_FEEDBACK)
+	{
+		printf(" Warning: Comando exageradamente grande detectado em Comando-Adicao.h addFeedbackAProduto() gjhrh4aq32j0d\n");
+		free(idProduto);
+		free(titulo);
+		titulo = NULL;
+		idProduto = NULL;
+		return false;
+	}
+	char *conteudo = strdup(token);
+	if(conteudo == NULL)
+	{
+		printf(" Warning: Falha ao duplicar conteudo de token para conteudo em Comando-Adicao.h addFeedBackAProduto() askhjgv5rd0f15\n");
+		free(idProduto);
+		free(titulo);
+		titulo = NULL;
+		idProduto = NULL;
+		return false;
+	}
+
+	if (addFeedBackDeProdutoAoBanco(email, idProduto, titulo, conteudo))
+	{
+		printf(" LOG: Feedback adicionado ao banco de dados com sucesso em Comando-Adicao.h addFeedbackAProduto() vhjkfdg\n");
+		free(idProduto);
+		free(titulo);
+		free(conteudo);
+		conteudo = NULL;
+		idProduto = NULL;
+		titulo = NULL;
+		return true;
+	}
+	else
+	{
+		printf(" Warning: Feedback não foi adicionado ao banco de dados em Comando-Adicao.h addFeedBackAProduto() asjkghjkvbrds\n");
+		free(idProduto);
+		free(titulo);
+		free(conteudo);
+		conteudo = NULL;
+		idProduto = NULL;
+		titulo = NULL;
+		return false;
+	}
+	printf(" ERRO: erro desconhecido detectado em Comando-Adicao.h addFeedBackAProduto() ashjgvrsafrh41586210bvds\n");
+	return false;
 }

@@ -56,7 +56,7 @@ bool addUsuarioAnonimoAoBanco(char *email, char *senha)//DONE
 	char *query = NULL;
 	//int tamanho = sizeof(char) * (47 + strlen(email) + TAMANHO_SENHA_PADRAO_USUARIO_ANONIMO + 1);//O +1 é do '/0'
 	int tamanho = sizeof(char) * (52 + strlen(email));//otimizado
-	query = malloc(tamanho);
+	query = (char *)malloc(tamanho);
 	
 	if(query == NULL)
 	{
@@ -150,7 +150,7 @@ bool addUsuarioAoBanco(char *emailAnterior, char *email, char *senha, char* sexo
 	size_t tamanho = 0;
 	tamanho = 51 + strlen(emailAnterior) + 1;
 	
-	query = malloc(sizeof(char) * tamanho);
+	query = (char *)malloc(sizeof(char) * tamanho);
 	
 	if(query == NULL)
 	{
@@ -183,7 +183,7 @@ bool addUsuarioAoBanco(char *emailAnterior, char *email, char *senha, char* sexo
 			// tamanho = 113 + strlen(senha) + strlen(dataNascimento) + strlen(sexo) + strlen(email) + strlen(emailAnterior) + 1;
 			tamanho = strlen(senha) + strlen(dataNascimento) + strlen(sexo) + strlen(email) + strlen(emailAnterior) + 114;
 			
-			query = malloc(sizeof(char) * tamanho);
+			query = (char *)malloc(sizeof(char) * tamanho);
 			
 			if(query == NULL)
 			{
@@ -235,7 +235,7 @@ bool addUsuarioAoBanco(char *emailAnterior, char *email, char *senha, char* sexo
 			// tamanho = 60 + strlen(senha) +  strlen(sexo) + strlen(email) + strlen(emailAnterior) + 1;
 			tamanho = strlen(senha) + strlen(email) + strlen(emailAnterior) + 61;
 			
-			query = malloc(sizeof(char) * tamanho);
+			query = (char *)malloc(sizeof(char) * tamanho);
 			
 			if(query == NULL)
 			{
@@ -320,7 +320,7 @@ bool addCidadeAoBanco(char *nomeDoEstado, char *nomeCidade)//DONE
 	
 	char *query = NULL;
 	int tamanho = sizeof(char) * (100 + strlen(nomeDoEstado) + strlen(nomeCidade) + 1);
-	query = malloc(tamanho);
+	query = (char *)malloc(tamanho);
 	if(query == NULL)
 	{
 		printf(" Warning: não foi possível alocar memoria para query (1) em OperacoesBanco.h addCidadeAoBanco()\n");
@@ -342,7 +342,7 @@ bool addCidadeAoBanco(char *nomeDoEstado, char *nomeCidade)//DONE
 		query = NULL;
 		
 		tamanho = sizeof(char) * (101 + strlen(nomeDoEstado) + strlen(nomeCidade) + 1);
-		query = malloc(tamanho);
+		query = (char *)malloc(tamanho);
 		if(query == NULL)
 		{
 			printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addCidadeAoBanco() (2)\n");
@@ -433,7 +433,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 				if(complemento == NULL)
 				{
 					int tamanho = sizeof(char) * (strlen(cep) + strlen(idCidade) + 57 + 1);
-					char *query = malloc(tamanho);
+					char *query = (char *)malloc(tamanho);
 					if(query == NULL)
 					{
 						printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addLocalizacaoAoBanco() (1)\n");
@@ -477,7 +477,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 				else
 				{
 					int tamanho = sizeof(char) * (strlen(cep) + strlen(idCidade) + strlen(complemento) + 70 + 1);
-					char *query = malloc(tamanho);
+					char *query = (char *)malloc(tamanho);
 					if(query == NULL)
 					{
 						printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addLocalizacaoAoBanco() (2)\n");
@@ -524,7 +524,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 				if(complemento == NULL)//Numero nao nulo e todo o resto nulo
 				{
 					int tamanho = sizeof(char) * (strlen(cep) + strlen(idCidade) + strlen(numero) + 65 + 1);
-					char *query = malloc(tamanho);
+					char *query = (char *)malloc(tamanho);
 					if(query == NULL)
 					{
 						printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addLocalizacaoAoBanco() (3)\n");
@@ -568,7 +568,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 				else//Tudo nulo menos numero e complemento
 				{
 					int tamanho = sizeof(char) * (strlen(cep) + strlen(idCidade) + strlen(numero) + strlen(complemento) + 81 + 1);
-					char *query = malloc(tamanho);
+					char *query = (char *)malloc(tamanho);
 					if(query == NULL)
 					{
 						printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addLocalizacaoAoBanco() (4)\n");
@@ -618,7 +618,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 				if(complemento == NULL)// somente rua nao nula
 				{
 					int tamanho = sizeof(char) * (strlen(cep) + strlen(idCidade) + strlen(rua) + 64 + 1);
-					char *query = malloc(tamanho);
+					char *query = (char *)malloc(tamanho);
 					if(query == NULL)
 					{
 						printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addLocalizacaoAoBanco() (7)\n");
@@ -662,7 +662,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 				else// Somente rua e complemento nao nulos
 				{
 					int tamanho = sizeof(char) * (strlen(cep) + strlen(idCidade) + strlen(rua) + strlen(complemento) + 79 + 1);
-					char *query = malloc(tamanho);
+					char *query = (char *)malloc(tamanho);
 					if(query == NULL)
 					{
 						printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addLocalizacaoAoBanco() (8)\n");
@@ -709,7 +709,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 				if(complemento == NULL)// Somente rua e numero nao nulos
 				{
 					int tamanho = sizeof(char) * (strlen(cep) + strlen(idCidade) + strlen(numero) + strlen(rua) + 73 + 1);
-					char *query = malloc(tamanho);
+					char *query = (char *)malloc(tamanho);
 					if(query == NULL)
 					{
 						printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addLocalizacaoAoBanco() (5)\n");
@@ -753,7 +753,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 				else//Somente rua, numero e complemento nao nulos
 				{
 					int tamanho = sizeof(char) * (strlen(cep) + strlen(idCidade) + strlen(numero) + strlen(rua) + strlen(complemento) + 87 + 1);
-					char *query = malloc(tamanho);
+					char *query = (char *)malloc(tamanho);
 					if(query == NULL)
 					{
 						printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addLocalizacaoAoBanco() (6)\n");
@@ -806,7 +806,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 				if(complemento == NULL)//Somente bairro nao nulo
 				{
 					int tamanho = sizeof(char) * (strlen(cep) + strlen(idCidade) + strlen(bairro) + 67 + 1);
-					char *query = malloc(tamanho);
+					char *query = (char *)malloc(tamanho);
 					if(query == NULL)
 					{
 						printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addLocalizacaoAoBanco() (9)\n");
@@ -850,7 +850,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 				else// Bairro e complemento nao nulos
 				{
 					int tamanho = sizeof(char) * (strlen(cep) + strlen(idCidade) + strlen(bairro) + strlen(complemento) + 83 + 1);
-					char *query = malloc(tamanho);
+					char *query = (char *)malloc(tamanho);
 					if(query == NULL)
 					{
 						printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addLocalizacaoAoBanco() (10)\n");
@@ -897,7 +897,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 				if(complemento == NULL)// Somente bairro e numero nao nulos (RUA NULA)
 				{
 					int tamanho = sizeof(char) * (strlen(cep) + strlen(idCidade) + strlen(bairro) + strlen(numero) + 76 + 1);
-					char *query = malloc(tamanho);
+					char *query = (char *)malloc(tamanho);
 					if(query == NULL)
 					{
 						printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addLocalizacaoAoBanco() (11)\n");
@@ -941,7 +941,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 				else//Bairo, numero complemento nao nulos  (RUA NULA)
 				{
 					int tamanho = sizeof(char) * (strlen(cep) + strlen(idCidade) + strlen(bairro) + strlen(numero) + strlen(complemento) + 78 + 1);
-					char *query = malloc(tamanho);
+					char *query = (char *)malloc(tamanho);
 					if(query == NULL)
 					{
 						printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addLocalizacaoAoBanco() (12)\n");
@@ -991,7 +991,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 				if(complemento == NULL)//Somente bairo e rua nao nulos
 				{
 					int tamanho = sizeof(char) * (strlen(cep) + strlen(idCidade) + strlen(bairro) + strlen(rua) + 74 + 1);
-					char *query = malloc(tamanho);
+					char *query = (char *)malloc(tamanho);
 					if(query == NULL)
 					{
 						printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addLocalizacaoAoBanco() (15)\n");
@@ -1035,7 +1035,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 				else//Bairro, rua e complemento nao nulos
 				{
 					int tamanho = sizeof(char) * (strlen(cep) + strlen(idCidade) + strlen(bairro) + strlen(rua) + strlen(complemento) + 89 + 1);
-					char *query = malloc(tamanho);
+					char *query = (char *)malloc(tamanho);
 					if(query == NULL)
 					{
 						printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addLocalizacaoAoBanco() (16)\n");
@@ -1082,7 +1082,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 				if(complemento == NULL)//Bairro, rua e numero nao nulos, mas complemento nulo
 				{
 					int tamanho = sizeof(char) * (strlen(cep) + strlen(idCidade) + strlen(bairro) + strlen(numero) + strlen(rua) + 82 + 1);
-					char *query = malloc(tamanho);
+					char *query = (char *)malloc(tamanho);
 					if(query == NULL)
 					{
 						printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addLocalizacaoAoBanco() (14)\n");
@@ -1126,7 +1126,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 				else// nada nulo, armazenar bairo, numero, rua, complemento
 				{
 					int tamanho = sizeof(char) * (strlen(cep) + strlen(idCidade) + strlen(bairro) + strlen(numero) + strlen(complemento) + strlen(rua) + 97 + 1);
-					char *query = malloc(tamanho);
+					char *query = (char *)malloc(tamanho);
 					if(query == NULL)
 					{
 						printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addLocalizacaoAoBanco() (13)\n");
@@ -1222,7 +1222,7 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 	
 	/* Checa se a já existe empresa com esse cnpj e esse email cadastrada */
 	tamanho = 68 + strlen(email) + strlen(cnpj) + 1; // Esse +1 é o do bendito \0 kkk
-	query = malloc(sizeof(char) * tamanho);
+	query = (char *)malloc(sizeof(char) * tamanho);
 	
 	if(query == NULL)
 	{
@@ -1247,7 +1247,7 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 			
 			query = NULL;
 			tamanho = 51 + 1 + strlen(idLocalizacao);
-			query = malloc(sizeof(char) * tamanho);
+			query = (char *)malloc(sizeof(char) * tamanho);
 			
 			if(query == NULL)
 			{
@@ -1285,7 +1285,7 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 	{
 		printf(" LOG: Telefone não informado, prosseguindo em addContratanteAoBanco() OperacoesBanco.h\n");
 		tamanho = 90 + 1 + strlen(plano) + strlen(cnpj) + strlen(nome) + strlen(email) + strlen(idLocalizacao);
-		query = malloc(sizeof(char) * tamanho );
+		query = (char *)malloc(sizeof(char) * tamanho );
 		if(query == NULL)
 		{
 			printf(" Warning: Falha ao alocar memoria para query em addContratanteAoBanco() OperacoesBanco.h\n");
@@ -1307,7 +1307,7 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 		printf(" LOG: Telefone informado pelo cliente em addContratanteAoBanco() OperacoesBanco.h\n");
 		
 		tamanho = 102 + 1 + strlen(plano) + strlen(cnpj) + strlen(nome) + strlen(email) + strlen(telefone) + strlen(idLocalizacao);
-		query = malloc(sizeof(char) * tamanho );
+		query = (char *)malloc(sizeof(char) * tamanho );
 		if(query == NULL)
 		{
 			printf(" Warning: Falha ao alocar memoria para query em addContratanteAoBanco() OperacoesBanco.h (dasbkdbqwjkd)\n");
@@ -1418,7 +1418,7 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 	if(descricao == NULL)
 	{
 		tamanho = 93 + 1 + strlen(idContratante) + strlen(idProduto) + strlen(duracao) + strlen(nomeProduto);
-		query = malloc(sizeof(char) * tamanho);
+		query = (char *)malloc(sizeof(char) * tamanho);
 		
 		if(query == NULL)
 		{
@@ -1469,7 +1469,7 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 		// Se a descricao for informada
 		//tamanho = 106 + 1 + strlen(idContratante) + strlen(idProduto) + strlen(duracao) + strlen(nomeProduto) + strlen(descricao);
 		tamanho = 117 + strlen(idContratante) + strlen(duracao) + strlen(nomeProduto) + strlen(descricao);
-		query = malloc(sizeof(char) * tamanho);
+		query = (char *)malloc(sizeof(char) * tamanho);
 		
 		if(query == NULL)
 		{
@@ -1551,7 +1551,7 @@ char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)/* APP 4 CHAVE_DE_
 	}
 	
 	int tamanho = 108 + 1 + strlen(nomeEstado) + strlen(nomeCidade);
-	char *query = malloc(sizeof(char) * (tamanho));
+	char *query = (char *)malloc(sizeof(char) * (tamanho));
 	
 	if(query == NULL)
 	{
@@ -1599,7 +1599,7 @@ char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)/* APP 4 CHAVE_DE_
 				free(query);
 				resultado = NULL;
 				query = NULL;
-				return RETORNO_NOT_FOUND;
+				return (char *)RETORNO_NOT_FOUND;
 			}
 			else
 			{
@@ -1678,7 +1678,7 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 	}
 	
 	int tamanho = 65 + 1;
-	char *query = malloc(sizeof(char) * (tamanho));
+	char *query = (char *)malloc(sizeof(char) * (tamanho));
 	
 	if(query == NULL)
 	{
@@ -1718,7 +1718,7 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 		query = NULL;
 		mysql_free_result(resultado);
 		resultado = NULL;
-		return RETORNO_NOT_FOUND;
+		return (char *)RETORNO_NOT_FOUND;
 	}
 	
 	MYSQL_ROW linha = NULL;
@@ -1726,7 +1726,7 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 	
 	tamanho = ((mysql_num_rows(resultado) * 10) + 1 + mysql_num_rows(resultado)-1);
 	
-	retorno = malloc(sizeof(char) * tamanho);// numero de resultados * tamanho de cada resultado + \0 + numero de resultados -1
+	retorno = (char *)malloc(sizeof(char) * tamanho);// numero de resultados * tamanho de cada resultado + \0 + numero de resultados -1
 	
 	if(retorno == NULL)
 	{
@@ -1813,7 +1813,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, char *email)//DONE
 		//int tamanho = 55 + TAMANHO_ID_PRODUTO + 1;// Usando TAMANHO_ID_PRODUTO para otimização
 		int tamanho = 66;// Usando TAMANHO_ID_PRODUTO para otimização
 		
-		query = malloc(sizeof(char) * tamanho);
+		query = (char *)malloc(sizeof(char) * tamanho);
 		if(query == NULL)
 		{
 			printf(" Warning: nao foi possível alocar memoria para query em OperacoesBanco.h obterDescricaoProdutoDoBanco()\n");
@@ -1853,7 +1853,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, char *email)//DONE
 			mysql_free_result(resultado);
 			resultado = NULL;
 			query = NULL;
-			return RETORNO_NOT_FOUND;
+			return (char *)RETORNO_NOT_FOUND;
 		}
 		
 		MYSQL_ROW linha = NULL;
@@ -1893,12 +1893,12 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, char *email)//DONE
 				mysql_free_result(resultado);
 				resultado = NULL;
 				query = NULL;
-				return RETORNO_NOT_FOUND;
+				return (char *)RETORNO_NOT_FOUND;
 				
 			}
 			
 			int tamanho = strlen(linha[0]) + 1;
-			retorno = malloc(sizeof(char) * tamanho);
+			retorno =(char *)malloc(sizeof(char) * tamanho);
 			
 			if(retorno == NULL)
 			{
@@ -1981,7 +1981,7 @@ char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 		//int tamanho = 57 + TAMANHO_ID_PRODUTO + 1;// Usando TAMANHO_ID_PRODUTO para otimização
 		int tamanho = 68;// Usando TAMANHO_ID_PRODUTO para otimização
 		
-		query = malloc(sizeof(char) * tamanho);
+		query = (char *)malloc(sizeof(char) * tamanho);
 		if(query == NULL)
 		{
 			printf(" Warning: nao foi possível alocar memoria para query em OperacoesBanco.h obterNomeProdutoDoBanco()\n");
@@ -2021,7 +2021,7 @@ char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 			mysql_free_result(resultado);
 			resultado = NULL;
 			query = NULL;
-			return RETORNO_NOT_FOUND;
+			return (char *)RETORNO_NOT_FOUND;
 		}
 		
 		MYSQL_ROW linha = NULL;
@@ -2053,12 +2053,12 @@ char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 				mysql_free_result(resultado);
 				resultado = NULL;
 				query = NULL;
-				return RETORNO_NOT_FOUND;
+				return (char *)RETORNO_NOT_FOUND;
 				
 			}
 			
 			int tamanho = strlen(linha[0]) + 1;
-			retorno = malloc(sizeof(char) * tamanho);
+			retorno = (char *)malloc(sizeof(char) * tamanho);
 			
 			if(retorno == NULL)
 			{
@@ -2141,7 +2141,7 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * id
 		// int tamanho = 79 + 1 + TAMANHO_ID_PRODUTO;
 		int tamanho = 99;// Usando TAMANHO_ID_PRODUTO para otimização
 		
-		query = malloc(sizeof(char) * tamanho);
+		query = (char *)malloc(sizeof(char) * tamanho);
 		if(query == NULL)
 		{
 			printf(" Warning: nao foi possível alocar memoria para query em OperacoesBanco.h obterAvaliacaoProdutoDoBanco()\n");
@@ -2192,7 +2192,7 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * id
 			mysql_free_result(resultado);
 			resultado = NULL;
 			query = NULL;
-			return RETORNO_NOT_FOUND;
+			return (char *)RETORNO_NOT_FOUND;
 		}
 		
 		MYSQL_ROW linha = NULL;
@@ -2222,11 +2222,11 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * id
 				mysql_free_result(resultado);
 				resultado = NULL;
 				query = NULL;
-				return RETORNO_NOT_FOUND;
+				return (char *)RETORNO_NOT_FOUND;
 			}
 			
 			int tamanho = strlen(linha[0])+ 1 + strlen(linha[1]) + 1;
-			retorno = malloc(sizeof(char) * tamanho);
+			retorno = (char *)malloc(sizeof(char) * tamanho);
 			
 			if(retorno == NULL)
 			{
@@ -2304,7 +2304,7 @@ bool addNomeDeUsuarioAoBanco(char *email, char *nome)// TESTAR        APP 2 & # 
 	char *query = NULL;
 	// int tamanho = strlen(email) + strlen(nome) + 48 +1;
 	int tamanho = strlen(email) + strlen(nome) + 49;
-	query = malloc(sizeof(char) * tamanho);
+	query = (char *)malloc(sizeof(char) * tamanho);
 	if(query == NULL)
 	{
 		printf(" Warning: nao foi possível alocar memoria para query em OperacoesBanco.h addNomeDeUsuarioAoBanco()\n");
@@ -2381,7 +2381,7 @@ bool addSobrenomeDeUsuarioAoBanco(char *email, char *sobrenome)//TESTAR         
 	char *query = NULL;
 	// int tamanho = strlen(email) + strlen(sobrenome) + 53 +1;
 	int tamanho = strlen(email) + strlen(sobrenome) + 54;
-	query = malloc(sizeof(char) * tamanho);
+	query = (char *)malloc(sizeof(char) * tamanho);
 	if(query == NULL)
 	{
 		printf(" Warning: nao foi possível alocar memoria para query em OperacoesBanco.h addSobrenomeDeUsuarioAoBanco()\n");
@@ -2458,7 +2458,7 @@ bool addSexoDeUsuarioAoBanco(char *email, char *sexo)// TESTAR        APP 2 & SQ
 	char *query = NULL;
 	// int tamanho = strlen(email) + strlen(sobrenome) + 48 +1;
 	int tamanho = strlen(email) + strlen(sexo) + 49;
-	query = malloc(sizeof(char) * tamanho);
+	query = (char *)malloc(sizeof(char) * tamanho);
 	if(query == NULL)
 	{
 		printf(" Warning: nao foi possível alocar memoria para query em OperacoesBanco.h addSexoDeUsuarioAoBanco()\n");
@@ -2535,7 +2535,7 @@ bool addDataNascimentoDeUsuarioAoBanco(char *email, char *dataNascimento)
 	char *query = NULL;
 	// int tamanho = strlen(email) + strlen(dataNascimento) + 82 +1;
 	int tamanho = strlen(email) + strlen(dataNascimento) + 83;
-	query = malloc(sizeof(char) * tamanho);
+	query = (char *)malloc(sizeof(char) * tamanho);
 	if(query == NULL)
 	{
 		printf(" Warning: nao foi possível alocar memoria para query em OperacoesBanco.h addDataNascimentoDeUsuarioAoBanco()\n");
@@ -2641,7 +2641,7 @@ bool addAvaliacaoAProdutoAoBanco(char *email, char *idProduto, char *avaliacao)/
 
 	//int tamanho = 151 + strlen(email) + TAMANHO_ID_PRODUTO + 1;
 	int tamanho = strlen(email) + 162;//otimizado
-	char *query = malloc(sizeof(char) * tamanho);
+	char *query = (char *)malloc(sizeof(char) * tamanho);
 
 	if (query == NULL)
 	{
@@ -2671,7 +2671,7 @@ bool addAvaliacaoAProdutoAoBanco(char *email, char *idProduto, char *avaliacao)/
 		{
 			//tamanho = 84+TAMANHO_ID_PRODUTO+1;
 			tamanho = 95;//otimizado
-			query = malloc(sizeof(char) * tamanho);
+			query = (char *)malloc(sizeof(char) * tamanho);
 			if(query == NULL)
 			{
 				printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() akhkvejjd81779c\n");
@@ -2699,7 +2699,7 @@ bool addAvaliacaoAProdutoAoBanco(char *email, char *idProduto, char *avaliacao)/
 		{
 			//tamanho = 84+TAMANHO_ID_PRODUTO+1;
 			tamanho = 95;//otimizado
-			query = malloc(sizeof(char) * tamanho);
+			query = (char *)malloc(sizeof(char) * tamanho);
 			if(query == NULL)
 			{
 				printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() akhkvejjd81779c\n");
@@ -2736,78 +2736,139 @@ bool addAvaliacaoAProdutoAoBanco(char *email, char *idProduto, char *avaliacao)/
 	return false;
 }
 
-#endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-while( !personIsDead( (struct person*) me) )
+bool addFeedBackDeProdutoAoBanco(char *email, char *idProduto, char *titulo, char *conteudo)
 {
-	if ( !personIsHappy( (struct person*) me) )
+	if (conexao == NULL)
 	{
-		printf("%s, be happy !\n", getPersonName(me));
-		startListenMusic();
-		startPlaySomething();
-		startCodeSomething();
-		startWatchSomeAnime();
-		startTalkToGirlfriend();
-		me->emotionalState = "Happy";
+		printf(" Warning: Conexao nula detectada em OperacoesBanco.h addFeedBackDeProdutoAoBanco() 56456q489b87ts\n");
+		printf(" LOG: Tentando reconexão com banco de dados em OperacoesBanco.h addFeedBackDeProdutoAoBanco()\n");
+		if(conectarBanco())
+		{
+			printf(" \tLOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" \tWarning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
+	}
+	if(email == NULL)
+	{
+		printf(" Warning: email == NULL detectado em addFeedBackDeProdutoAoBanco() OperacoesBanco.h ashjgvrs\n");
+		return false;
+	}
+	if (idProduto == NULL)
+	{
+		printf(" Warning: idProduto == NULL detectado em addFeedBackDeProdutoAoBanco() OperacoesBanco.h ashjgvrs\n");
+		return false;
+	}
+	if (titulo == NULL)
+	{
+		printf(" Warning: titulo == NULL detectado em addFeedBackDeProdutoAoBanco() OperacoesBanco.h ashjgvrs\n");
+		return false;
+	}
+	if (conteudo == NULL)
+	{
+		printf(" Warning: conteudo == NULL detectado em addFeedBackDeProdutoAoBanco() OperacoesBanco.h ashjgvrs\n");
+		return false;
+	}
+	
+	if( produtoVencido(idProduto, email) )
+	{
+		printf(" Warning: Produto vencido detectado em OperacoesBanco.h addFeedBackDeProdutoAoBanco() sa6b54xdad\n");
+		return false;
 	}
 	else
 	{
-		startListenMusic();
-		startPlaySomething();
-		startCodeSomething();
-		startWatchSomeAnime();
-		startTalkToGirlfriend();
-	}
+		if(checaExistenciaDeVisualizacaoDeProdutoComPessoa(idProduto, email) != RETORNO_OK)
+		{
+			printf(" Warning: usuario cadastrado não possui nenhuma visualização desse produto registrada em OperacoesBanco.h addFeedBackDeProdutoAoBanco() askjdhjvbdsd5\n");
+			return false;
+		}
 
-	me->emotionalState = getEmotionalState( RNG_GODS_RESPONSE );
+		// int tamanho = 93 + strlen(email), TAMANHO_ID_PRODUTO + 1;
+		int tamanho = 104 + strlen(email);
+		char *query = (char *)malloc(sizeof(char) * tamanho);
+		if(query == NULL)
+		{
+			printf(" Warning: não foi possivel alocar memoria para query em OperacoesBanco.h addFeedBackDeProdutoAoBanco() asdjkhkvdn");
+			return false;
+		}
+		snprintf(query, tamanho, "SELECT F.idfeedBackCliente FROM feedBackCliente F WHERE F.emailCliente=\'%s\' AND F.idproduto=\'%s\';", email, idProduto);
+		if(query == NULL)
+		{
+			printf(" Warning: não foi possivel formatar query em OperacoesBanco.h addFeedBackDeProdutoAoBanco() asdjkhkvdn");
+			return false;
+		}
+		if(checarSeVoltaAlgumaCoisaDaQuery(query))
+		{
+			printf(" LOG: Feedback existente detectado em OperacoesBanco.h addFeedBackDeProdutoAoBanco() asdjhjkbvscf\n");
+			// tamanho = 115 + strlen(titulo) + strlen(conteudo) + strlen(email) + TAMANHO_ID_PRODUTO + 1;
+			tamanho = 126 + strlen(titulo) + strlen(conteudo) + strlen(email);
+			query = (char *)malloc(sizeof(char) * tamanho);
+			if(query == NULL)
+			{
+				printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addFeedBackDeProdutoAoBanco() asdjhkvdsdf65025s\n");
+				return false;
+			}
+			snprintf(query, tamanho, "UPDATE feedBackCliente F SET F.titulo=\'%s\', F.conteudo=\'%s\' WHERE F.emailCliente=\'%s\' AND F.idproduto=\'%s\';", titulo, conteudo, email, idProduto);
+			if(query == NULL)
+			{
+				printf(" Warning: falha ao formatar query em OperacoesBanco.h addFeedBackDeProdutoAoBanco() bhjvbhjcfdsfr\n");
+				return false;
+			}
+			if(!executaQuery(query))
+			{
+				printf(" Warning: Ocorreram erros ao executar a query em OperacoesBanco.h addFeedBackDeProdutoAoBanco() 1684ws89bvd\n");
+				free(query);
+				query = NULL;
+				return false;
+			}
+			else
+			{
+				printf(" LOG: Dados adicionados ao banco com sucesso em OperacoesBanco.h addFeedBackDeProdutoAoBanco() sadjhkvdsg\n");
+				free(query);
+				query = NULL;
+				return true;
+			}
+		}
+		else
+		{
+			printf(" LOG: Adicionando conteudo ao banco de dados em OperacoesBanco.h addFeedBackDeProdutoAoBanco() sadjhkvrd\n");
+			// tamanho = 88 + strlen(titulo) + strlen(conteudo) + strlen(email) + TAMANHO_ID_PRODUTO + 1;
+			tamanho = strlen(titulo) + strlen(conteudo) + strlen(email) + 99;//OTIMIZADO
+			query = (char *)malloc(sizeof(char) * tamanho);
+			if (query == NULL)
+			{
+				printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addFeedBackDeProdutoAoBanco() sadkhjgvhresd\n");
+				return false;
+			}
+			snprintf(query, tamanho, "INSERT INTO feedBackCliente(titulo,conteudo,emailCliente,idproduto) VALUES(\'%s\',\'%s\',\'%s\',\'%s\');", titulo, conteudo, email, idProduto);
+			if (query == NULL)
+			{
+				printf(" Warning: Falha ao formatar query para ser executada em OperacoesBanco.h addFeedBackDeProdutoAoBanco() sadhjgjbvrg5456f\n");
+				return false;
+			}
+			if(executaQuery(query))
+			{
+				printf(" LOG: Produto adicionado ao banco de dados com sucesso em OperacoesBanco.h addFeedBackDeProdutoAoBanco() asdhjkvxd\n");
+				free(query);
+				query = NULL;
+				return true;
+			}
+			else
+			{
+				printf(" Warning: Falha ao adicionar produto ao banco de dados em OperacoesBanco.h addFeedBackDeProdutoAoBanco() sadjhksafhjkgbr\n");
+				free(query);
+				query = NULL;
+				return false;
+			}
+		}
+	}
+	printf(" ERRO: erro desconhecido detectado em OperacoesBanco.h addFeedBackDeProdutoAoBanco() ajkhfjgsdf462\n");
+	return false;
 }
 
-return OH_SHIT;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif
 
 
