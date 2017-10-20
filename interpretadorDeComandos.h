@@ -27,8 +27,8 @@ int comandoAtualizar(char *comando);
 
 
 // int interpretaComando(char *comando, bool *autorizado, char *email)
-char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* email, bool *usuarioAnonimo)
 // int interpretaComando(char *comando, bool *autorizado)
+char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* email, bool *usuarioAnonimo)
 {
 	// printf("Posicao de EMAIL recebida (interpretando) 1 =  %x\n", email);
 	interpretando = true;
@@ -36,7 +36,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 	int tipoComando;
 	char *login = NULL;
 
-//	char *comandoADividir = NULL;
+	//	char *comandoADividir = NULL;
 
 	// printf("EMAIL APONTA PARA (6) : %x\n", email);
 	
@@ -58,25 +58,25 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 		return NULL;
 	}
 
-//	comandoADividir = malloc(sizeof(char) * BUFFER_CLIENTE);
-//	if(comandoADividir == NULL)
-//	{
-//		printf(" Warning: Falha ao alocar comando para ser dividido em interpretadorDeComandos.h interpretaComando()\n");
-//		interpretando = false;
-//		*resultado = ERRO;
-//		return NULL;
-//	}
+	//	comandoADividir = malloc(sizeof(char) * BUFFER_CLIENTE);
+	//	if(comandoADividir == NULL)
+	//	{
+	//		printf(" Warning: Falha ao alocar comando para ser dividido em interpretadorDeComandos.h interpretaComando()\n");
+	//		interpretando = false;
+	//		*resultado = ERRO;
+	//		return NULL;
+	//	}
 
 	nomeAplicacao = strtok(comando, " ");/* Separa a primeira palavra */
-//	strcpy(comandoADividir, comando);
-//	if(comandoADividir == NULL)
-//	{
-//		printf(" Warning: Falha ao copiar comando para dividir em interpretadorDeComandos.h interpretaComando()\n");
-//	}
-//	nomeAplicacao = strtok(comandoADividir, " ");/* Separa a primeira palavra */
-//
-//	free(comandoADividir);
-//	comandoADividir = NULL;
+	//	strcpy(comandoADividir, comando);
+	//	if(comandoADividir == NULL)
+	//	{
+	//		printf(" Warning: Falha ao copiar comando para dividir em interpretadorDeComandos.h interpretaComando()\n");
+	//	}
+	//	nomeAplicacao = strtok(comandoADividir, " ");/* Separa a primeira palavra */
+	//
+	//	free(comandoADividir);
+	//	comandoADividir = NULL;
 
 	if(strcmp(nomeAplicacao, CHAVE_APLICACAO) != 0)/* CHAVE DE Aplicacao */
 	{
@@ -193,14 +193,14 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 		case COMANDO_OBTER:
 			printf(" Obtencao de algo requisitado\n");
 			printf(" Não preparado\n");
-//			if(comandoObter())
-//			{
-//				*resultado = REQUISITANDO_OBTENCAO;
-//			}
-//			else
-//			{
-//				*resultado = ERRO;
-//			}
+	//			if(comandoObter())
+	//			{
+	//				*resultado = REQUISITANDO_OBTENCAO;
+	//			}
+	//			else
+	//			{
+	//				*resultado = ERRO;
+	//			}
 			*resultado = REQUISITANDO_OBTENCAO;
 			//interpretando = false;
 			return NULL;
