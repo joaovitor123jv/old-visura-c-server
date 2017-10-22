@@ -168,6 +168,7 @@
 #define BUFFER_ADICAO_CONTEUDO 1024*5
 
 #define TOP_10_NOVOS "J"
+#define TOP_10_MELHORES "9&"
 
 
 // #define ARQUIVO_DE_INDICES "indice"

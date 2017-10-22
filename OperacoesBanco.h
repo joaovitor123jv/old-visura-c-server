@@ -1789,6 +1789,123 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 	return NULL;
 }
 
+char *obterTop10ProdutosMelhorAvaliadosDoBanco()
+{
+	if (conexao == NULL)
+	{
+		printf(" ERRO: conexao nula em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return NULL;
+		}
+	}
+	//int tamanho = 149 + 1;
+	int tamanho = 150;
+	char *query = (char *)malloc(sizeof(char) * tamanho);
+	if(query == NULL)
+	{
+		printf(" Warning: não foi possível alocar memoria para query em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
+		return NULL;
+	}
+	query = strdup("SELECT idproduto FROM produto P WHERE DATEDIFF(CURDATE(), P.datacriacao)-P.duracao<=0 ORDER BY P.avaliacaoPositiva-P.avaliacaoNegativa DESC LIMIT 10;");
+	if (query == NULL)
+	{
+		printf(" Warning: Falha ao copiar string para query em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
+		return NULL;
+	}
+
+	if(mysql_query(conexao, query))
+	{
+		printf(" Warning: falhao ao executar query: |%s| em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n", query);
+		free(query);
+		query = NULL;
+		return NULL;
+	}
+
+	free(query);
+	query = NULL;//Não preciso mais de query daqui pra frente
+	
+	MYSQL_RES *resultado = mysql_store_result(conexao);
+	if(resultado == NULL)// Se não houver consulta
+	{
+		printf(" Warning: Consulta não realizada em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
+		return NULL;
+	}
+	
+	if(mysql_num_fields(resultado) == 0)
+	{
+		printf(" Warning: Nada encontrado em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
+		mysql_free_result(resultado);
+		resultado = NULL;
+		return (char *)RETORNO_NOT_FOUND;
+	}
+	
+	MYSQL_ROW linha = NULL;
+	char *retorno = NULL;
+	
+	tamanho = ((mysql_num_rows(resultado) * 10) + 1 + mysql_num_rows(resultado)-1);
+	
+	retorno = (char *)malloc(sizeof(char) * tamanho);// numero de resultados * tamanho de cada resultado + \0 + numero de resultados -1
+	
+	if(retorno == NULL)
+	{
+		printf(" Warning: Falha ao alocar memoria para retorno em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
+		mysql_free_result(resultado);
+		resultado = NULL;
+		return NULL;
+	}
+	memset(retorno, '\0', tamanho);
+	
+	//	 int i = 0;
+	
+	while((linha = mysql_fetch_row(resultado)) != NULL)
+	{
+		//		snprintf(retorno, tamanho, "%s %s", retorno, linha);
+		
+		printf(" LOG: LINHA OBTIDA = |%s| em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n", linha[0]);
+		if(strlen(linha[0]) > 0)
+		{
+			strcat(retorno, linha[0]);
+		}
+		
+		printf(" LOG: Retorno = |%s| até agora em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n", retorno);
+		
+		if(retorno == NULL)
+		{
+			printf(" Warning: Falha ao formatar resultado em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco() vbrjka\n");
+			mysql_free_result(resultado);
+			resultado = NULL;
+			return NULL;
+		}
+		if(strlen(retorno) < tamanho - 1)
+		{
+			strcat(retorno, " ");
+		}
+	}
+	
+	if(retorno == NULL)
+	{
+		printf(" ERRO: Falha ao obter dados em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
+		mysql_free_result(resultado);
+		resultado = NULL;
+		return NULL;
+	}
+	else
+	{
+		mysql_free_result(resultado);
+		resultado = NULL;
+		return retorno;
+	}
+	
+	return NULL;
+}
+
 
 char *obterDescricaoProdutoDoBanco(char *idProduto, char *email)//DONE
 {

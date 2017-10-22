@@ -9,6 +9,7 @@
 char *obterIdCidade(void);//APP 4 $
 char *obterIdContratante(void);// APP 4 ;
 char *obterTop10NovosProdutos();//APP 4 J
+char *obterTop10ProdutosMelhorAvaliados();//Retorna os 10 produtos melhor avaliados do banco de dados, ou NULL quando dá erro
 char *obterDescricaoProduto(char *email);// APP 4 Q * idProduto
 char *obterNomeProduto(char *email);// APP 4 1. idProduto
 char *obterAvaliacaoProduto(char *email);// APP 4 kW * idProduto                       (Retorna NULL quando ocorre algum erro)
@@ -34,13 +35,27 @@ char *obterDados(char *email)// APP 4 algumaCoisa
 			char *top10 = obterTop10NovosProdutos();// Obtem os ultimos produtos adicionados
 			if(top10 == NULL)
 			{
-				printf(" Warning: ocorreu um erro ao processar top 10 produtos novos\n");
+				printf(" Warning: ocorreu um erro ao processar top 10 produtos novos em Comando-Obter.h obterDados()\n");
 				return NULL;
 			}
 			else
 			{
-				printf(" Log: Retorno obtido com sucesso de obterTop10NovosProdutos()\n");
+				printf(" Log: Retorno obtido com sucesso de obterTop10NovosProdutos() em Comando-Obter.h obterDados()\n");
 				return top10;
+			}
+		}
+		else if(strcmp(token, TOP_10_MELHORES) == 0)
+		{
+			char *top = obterTop10ProdutosMelhorAvaliados();
+			if(top == NULL)
+			{
+				printf(" Warning: ocorreu um erro ao processar top 10 melhores produtos em Comando-Obter. obterDados()\n");
+				return NULL;
+			}
+			else
+			{
+				printf(" LOG: Retorno obtido com sucesso de obterTop10ProdutosMelhorAvaliados() em Comando-Obter.h obterDados()\n");
+				return top;
 			}
 		}
 		else if(strcmp(token, TIPO_DESCRICAO_PRODUTO) == 0)// APP 4 Q
@@ -143,7 +158,7 @@ char *obterIdCidade()
 
 	char *nomeCidade = NULL;
 
-	nomeCidade = malloc(sizeof(char) * (tamanhoCidade + 1));
+	nomeCidade = (char *)malloc(sizeof(char) * (tamanhoCidade + 1));
 
 	if(nomeCidade == NULL)
 	{
@@ -178,7 +193,7 @@ char *obterIdCidade()
 			return NULL;
 		}
 
-		char *nomeEstado = malloc(sizeof(char) * (tamanhoEstado + 1));
+		char *nomeEstado = (char *)malloc(sizeof(char) * (tamanhoEstado + 1));
 
 		if(nomeEstado == NULL)
 		{
@@ -219,7 +234,7 @@ char *obterIdContratante()// APP 4 ;
 	//TODO
 	char *token = strtok(NULL, " ");// APP 4 ; emailInformado
 
-	token = malloc(sizeof(char) * (strlen(token) + 1));
+	token = (char *)malloc(sizeof(char) * (strlen(token) + 1));
 	if(token == NULL)
 	{
 		printf(" Warning: Falha ao alocar memoria para token em Comando-Obter.h obterIdContratante()\n");
@@ -245,12 +260,12 @@ char *obterTop10NovosProdutos()// APP 4 J
 	char *top10 = obterTop10NovosProdutosDoBanco();
 	if(top10 == NULL)
 	{
-		printf(" Warning: top 10 produtos não obteve resultado em Comando-Obter.h obterIdContratante()\n");
+		printf(" Warning: top 10 produtos não obteve resultado em Comando-Obter.h obterTop10NovosProdutos()\n");
 		return NULL;
 	}
 	else
 	{
-		printf(" LOG: Retorno obtido com sucesso de obterTop10NovosProdutos em Comando-Obter.h obterIdContratante()\n");
+		printf(" LOG: Retorno obtido com sucesso de obterTop10NovosProdutos em Comando-Obter.h obterTop10NovosProdutos()\n");
 		return top10;
 	}
 
@@ -293,7 +308,7 @@ char *obterDescricaoProduto(char *email)// APP 4 Q
 		else
 		{
 			char *idProduto = NULL;
-			idProduto = malloc(sizeof(char) * (TAMANHO_ID_PRODUTO + 1));
+			idProduto = (char *)malloc(sizeof(char) * (TAMANHO_ID_PRODUTO + 1));
 			printf(" LOG: Memoria para produto alocada em Comando-Obter.h obterDescricaoProduto() eb19cc7\n");
 
 			if(idProduto == NULL)
@@ -345,7 +360,7 @@ char *obterNomeProduto(char *email)
 	}
 
 	char *idProduto = NULL;
-	idProduto = malloc(sizeof(char) * (TAMANHO_ID_PRODUTO + 1));
+	idProduto = (char *)malloc(sizeof(char) * (TAMANHO_ID_PRODUTO + 1));
 
 	if(idProduto == NULL)
 	{
@@ -429,5 +444,29 @@ char *obterAvaliacaoProduto(char *email)// APP 4 kW * idProduto                 
 		return NULL;
 	}
 	printf(" ERRO: Erro desconhecido em Comando-Obter.h obterAvaliacaoProduto() askjhgvrdf\n");
+	return NULL;
+}
+
+char *obterTop10ProdutosMelhorAvaliados()
+{
+	/*
+	 * PADRÃO DE RETORNO: Retorna os id's de produtos separados por um espaco
+	 *
+	 * Linha 1 ->  "idProduto1 idproduto2 idProduto3 ...\0"
+	 *
+	 * Em caso de erro -> NULL
+	 */
+	char *top = obterTop10ProdutosMelhorAvaliadosDoBanco();
+	if(top == NULL)
+	{
+		printf(" Warning: top 10 produtos não obteve resultado em Comando-Obter.h obterTop10ProdutosMelhorAvaliados()\n");
+		return NULL;
+	}
+	else
+	{
+		printf(" LOG: Retorno obtido com sucesso de obterTop10NovosProdutos em Comando-Obter.h obterTop10ProdutosMelhorAvaliados()\n");
+		return top;
+	}
+
 	return NULL;
 }
