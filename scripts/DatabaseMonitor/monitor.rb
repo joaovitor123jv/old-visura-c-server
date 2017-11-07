@@ -3,8 +3,9 @@
 require 'mysql2'
 
 
-$client = Mysql2::Client.new(:host => "127.0.0.1", :username => "interface", :password => "senha", :database => "teste")
+#$client = Mysql2::Client.new(:host => "127.0.0.1", :username => "interface", :password => "senha", :database => "teste")
 
+$client = Mysql2::Client.new(:host => "localhost", :username => "interface", :password => "essaSenhaEsoPraInteFaCeSaBeRPorQuESiM", :database => "teste")
 
 #def monitor(idproduto)
 #	cliente = Mysql2::Client.new(:host => "127.0.0.1", :username => "interface", :password => "senha", :database => "teste")

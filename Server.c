@@ -13,6 +13,8 @@
 
 void limpaBuffers(void) __attribute__ ((destructor));
 
+bool inicializaMonitorDeBancoDeDados();
+
 int main(void)
 {
 	system("clear");
@@ -21,7 +23,17 @@ int main(void)
 
 	printf(" LOG: Configurando servidor.");
 	int sockfd = configuraServidor();
-	printf("\r LOG: Configurando servidor............................ OK em Server.c main()");
+	printf("\r LOG: Configurando servidor............................ OK em Server.c main()\n");
+
+	printf(" LOG: Inicializando monitor de banco de dados (ruby) ");
+	if(inicializaMonitorDeBancoDeDados())
+	{
+		printf(" OK em Server.c main()\n");
+	}
+	else
+	{
+		printf(" ERRO ao inicalizar monitor de Base de Dados em Server.c main()\n");
+	}
 
 	printf(" LOG: Aguardando conexão em Server.c main()\n");
 
@@ -68,4 +80,38 @@ void limpaBuffers(void)// Nunca foi chamada, mas vai que...
 		printf(" LOG: Conexão com o banco de dados liberada em Server.c limpaBuffers()\n");
 	}
 	printf(" LOG: Buffers Limpos com sucesso em Server.c void limpaBuffers(void) __attribute__ ((destructor));\n");
+}
+
+void *threadMonitoraDoBancoDeDados(void *args)
+{
+	if(args != NULL)
+	{
+		printf(" Warning: DEU PAU na thread de monitorar o banco de dados kkk\n");
+		pthread_exit( NULL );
+	}
+	else
+	{
+		printf(" Inicializar o ruby aqui\n");
+		system(COMANDO_MONITOR_DO_BANCO_DE_DADOS_RUBY);
+		pthread_exit( NULL );
+	}
+	printf(" Vai que.... threadMonitoraDoBancoDeDados()\n");
+	pthread_exit( NULL );
+}
+
+bool inicializaMonitorDeBancoDeDados()/* Abre uma thread e executa o monitor do banco de dados */
+{
+	pthread_t identificadorDaThread;
+	if(pthread_create(&identificadorDaThread, NULL, threadMonitoraDoBancoDeDados, NULL))
+	{
+		printf(" Warning: Falha ao criar thread para monitorar o banco de dados em inicializaMonitorDeBancoDeDados() Server.c\n");
+		return false;
+	}
+	else
+	{
+		printf(" LOG: Thread criada para monitorar o banco de dados em inicializaMonitorDeBancoDeDados() Server.c\n");
+		pthread_detach(identificadorDaThread);
+		return true;
+	}
+	return false;
 }

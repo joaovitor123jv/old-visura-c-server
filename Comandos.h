@@ -42,6 +42,11 @@
 #define LOGIN_DO_SITE "contratante@servidor"
 #define SENHA_DO_SITE "qwertyuiopasdfghjklzxcvbnm"
 
+#define TAMANHO_CONFIRMADOR_DE_EMAIL_RUBY 21
+#define CONFIRMADOR_DE_EMAIL_RUBY "scripts/confirmador.rb"
+
+#define COMANDO_MONITOR_DO_BANCO_DE_DADOS_RUBY "ruby scripts/DatabaseMonitor/monitor.rb"
+
 
 #define TAMANHO_LOGIN 64
 #define TAMANHO_EMAIL 64//Mesma coisa que TAMANHO_LOGIN
@@ -150,7 +155,7 @@
 
 #define TIPO_REALIDADE_VIRTUAL "V"
 #define TIPO_REALIDADE_AUMENTADA "A"
-#define TIPO_REALIDADE_AUMENTADA_E_VIRTUAL "J"
+#define TIPO_REALIDADE_AUMENTADA_E_VIRTUAL "VA"
 
 //#define TIPO_VISUALIZACAO_COM_LOGIN []
 

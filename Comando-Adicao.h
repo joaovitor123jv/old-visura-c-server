@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include<stdlib.h>
+#include <stdlib.h>
 #include <string.h>
 #include "Comandos.h"
 
@@ -536,7 +536,7 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 	}
 }
 
-bool addUsuario(char *emailAnterior)//TODO  APP 2 1 1
+bool addUsuario(char *emailAnterior)//TODO  APP 2 1 1      (done)
 {
 	if(emailAnterior == NULL)
 	{
@@ -772,6 +772,34 @@ bool addUsuario(char *emailAnterior)//TODO  APP 2 1 1
 	if(addUsuarioAoBanco(emailAnterior, email, senha, sexo, dataNascimento))
 	{
 		printf(" LOG: Usuario adicionado com sucesso ao banco de dados em Comando-Adicao.h addUsuario()  qbu39sad87\n");
+
+		printf(" LOG: Executando script RUBY para enviar email de confirmação WEB em Comando-Adicao.h addUsuario() aoeh29d09)\n");
+
+		int tamanho = strlen(email) + TAMANHO_CONFIRMADOR_DE_EMAIL_RUBY + 6 + 1;
+		char *comando = malloc(sizeof(char) * tamanho);
+
+		if(comando == NULL)
+		{
+			printf(" Warning: Não foi possível gerar comando para executar em Comando-Adicao.h addUsuario() askdjheoa)\n");
+			/* Mesmo que não envie confirmação, o usuario foi adicionado *//* TODO: fazer verificação de usuarios não autenticados */
+		}
+		else
+		{
+			snprintf(comando, tamanho, "ruby %s %s", CONFIRMADOR_DE_EMAIL_RUBY, email);
+			if(comando == NULL)
+			{
+				printf(" Warning: Falha ao formatar comando em Comando-Adicao.h addUsuario() ahqoif9a3k)\n");
+			}
+			else
+			{
+				printf(" LOG: Inicializando script RUBY em Comando-Adicao.h addUsuario() qoidbauiu)\n");
+				system(comando);
+				printf(" LOG: Finalizada execução de script RUBY em Comando-Adicao.h addUsuario() qoidbauiu)\n");
+				free(comando);
+				comando = NULL;
+			}
+		}
+
 		free(email);
 		free(senha);
 		free(sexo);
