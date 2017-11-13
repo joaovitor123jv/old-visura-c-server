@@ -17,6 +17,8 @@
 #define bool char
 #endif
 
+//CREATE USER 'interface'@'127.0.0.1'
+//GRANT SELECT DELETE UPDATE INSERT ON teste.* to 'interface'@'127.0.0.0'
 #define DATABASE_HOST "127.0.0.1"//TESTES
 // #define DATABASE_HOST "35.186.190.243"//GOOGLE CLOUD
 #define DATABASE_USER "interface"
