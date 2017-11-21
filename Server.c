@@ -15,6 +15,7 @@ void limpaBuffers(void) __attribute__ ((destructor));
 
 bool inicializaMonitorDeBancoDeDados();
 
+
 int main(void)
 {
 	system("clear");
@@ -67,7 +68,7 @@ int main(void)
 }
 
 
-void limpaBuffers(void)// Nunca foi chamada, mas vai que...
+void limpaBuffers(void)// Funfou !!!
 {
 	printf(" LOG: Liberando memoria residual utilizada em Server.h limpaBuffers() \n");
 	if(conexao != NULL)

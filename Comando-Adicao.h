@@ -793,8 +793,8 @@ bool addUsuario(char *emailAnterior)//TODO  APP 2 1 1      (done)
 			else
 			{
 				printf(" LOG: Inicializando script RUBY em Comando-Adicao.h addUsuario() qoidbauiu)\n");
-				system(comando);
-				printf(" LOG: Finalizada execução de script RUBY em Comando-Adicao.h addUsuario() qoidbauiu)\n");
+				int retorno = system(comando);
+				printf(" LOG: Finalizada execução de script RUBY em Comando-Adicao.h addUsuario(), retorno == |%d| qoidbauiu)\n", retorno);
 				free(comando);
 				comando = NULL;
 			}
