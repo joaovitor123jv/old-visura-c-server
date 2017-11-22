@@ -77,20 +77,13 @@ char *padronizarString(char *original)
 				}
 				i = i + 1;
 			}
-//			fila_mostraFila(fila);
 			int tamanho = fila_getQuantidadeDeCaracteres(fila);
 			resposta = (char *)malloc(sizeof(char) * (tamanho + 1));/* +1 por causa d \0 */
 			for(i = 0; i < tamanho; i++)
 			{
 				fila_remover(fila, &resposta[i]);
-//				fila_mostraFila(fila);
 			}
-//			i = i + 1;
-//			resposta[i] = '\0';
 			free_Fila(fila);
-/*			printf(" resposta = |%s| \n", resposta);
-			printf(" Endereco de resposta = %ld\n", &resposta);
-			printf(" Endereco de valor de resposta = %ld\n", &(*resposta));*/
 			return resposta;
 		}
 	}
@@ -119,8 +112,9 @@ char *intToString(int n)
     }
     do 
     {       /* generate digits in reverse order */
-        s[i++] = n % 10 + '0';   /* get next digit */
-    } while ((n /= 10) > 0);     /* delete it */
+        s[i++] = n % 10 + '0';   
+    } 
+	while ((n /= 10) > 0);     
     if (sign < 0)
     {
         s[i++] = '-';

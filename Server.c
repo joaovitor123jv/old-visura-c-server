@@ -1,4 +1,3 @@
-// char *email = "NULO";
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -68,7 +67,7 @@ int main(void)
 }
 
 
-void limpaBuffers(void)// Funfou !!!
+void limpaBuffers(void)// Função executada ao final das interpretações da função main.c
 {
 	printf(" LOG: Liberando memoria residual utilizada em Server.h limpaBuffers() \n");
 	if(conexao != NULL)
@@ -83,7 +82,7 @@ void limpaBuffers(void)// Funfou !!!
 	printf(" LOG: Buffers Limpos com sucesso em Server.c void limpaBuffers(void) __attribute__ ((destructor));\n");
 }
 
-void *threadMonitoraDoBancoDeDados(void *args)
+void *threadMonitoraDoBancoDeDados(void *args)// EXECUTADA EM SEGUNDO PLANO!!!
 {
 	if(args != NULL)
 	{

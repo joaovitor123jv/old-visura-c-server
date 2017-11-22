@@ -1,5 +1,1 @@
-Contratante:
-	addPlano/updatePlano
-	obterPlano
-
-a
+Padronizar códigos

@@ -2,9 +2,7 @@
 #include <string.h>
 #include "Comandos.h"
 
-
 bool usuarioRoot(char *email);
-
 
 
 #include "OperacoesBanco.h"
@@ -13,39 +11,27 @@ bool usuarioRoot(char *email);
 #include "Comando-Obter.h"
 
 
-
 /* Variável de CONTROLE */
 /***********************************IMPORTANTE********************************************/
 /* **********************bool interpretando = false;**************************************/
 /*****************************************************************************************/
 
-// bool comandoLogin(char *comando);
 int comandoAtualizar(char *comando);
 
 
-
-
-
-// int interpretaComando(char *comando, bool *autorizado, char *email)
-// int interpretaComando(char *comando, bool *autorizado)
 char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* email, bool *usuarioAnonimo)
 {
-	// printf("Posicao de EMAIL recebida (interpretando) 1 =  %x\n", email);
 	interpretando = true;
 	char *nomeAplicacao = NULL;
 	int tipoComando;
 	char *login = NULL;
 
-	//	char *comandoADividir = NULL;
-
-	// printf("EMAIL APONTA PARA (6) : %x\n", email);
 	
 
 	if(autorizado == NULL)
 	{
 		interpretando = false;
 		printf("ERRO INDEFINIDO (interpretadorDeComandos.h) (interpretaComando())\n");
-		// return ERRO;
 		*resultado = ERRO;
 		return NULL;
 	}
@@ -53,40 +39,19 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 	if(comando == NULL)
 	{
 		interpretando = false;
-		// return ERRO;
 		*resultado = ERRO;
 		return NULL;
 	}
 
-	//	comandoADividir = malloc(sizeof(char) * BUFFER_CLIENTE);
-	//	if(comandoADividir == NULL)
-	//	{
-	//		printf(" Warning: Falha ao alocar comando para ser dividido em interpretadorDeComandos.h interpretaComando()\n");
-	//		interpretando = false;
-	//		*resultado = ERRO;
-	//		return NULL;
-	//	}
-
 	nomeAplicacao = strtok(comando, " ");/* Separa a primeira palavra */
-	//	strcpy(comandoADividir, comando);
-	//	if(comandoADividir == NULL)
-	//	{
-	//		printf(" Warning: Falha ao copiar comando para dividir em interpretadorDeComandos.h interpretaComando()\n");
-	//	}
-	//	nomeAplicacao = strtok(comandoADividir, " ");/* Separa a primeira palavra */
-	//
-	//	free(comandoADividir);
-	//	comandoADividir = NULL;
 
 	if(strcmp(nomeAplicacao, CHAVE_APLICACAO) != 0)/* CHAVE DE Aplicacao */
 	{
 		interpretando = false;
 		printf(" NOME DA APLICACAO INCORRETO, INTERROMPENDO CONEXAO (interpretadorDeComandos.h)\n");
-		// return ERRO;
 		*resultado = ERRO;
 		return NULL;
 	}
-	// printf(" SEGUINDO COM A INTERPRETAÇÃO (interpretadorDeComandos.h)\n");
 
 
 	if( !(*autorizado) )
@@ -99,7 +64,6 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 		{
 			interpretando = false;
 			*autorizado = true;
-			// return OK;
 			*resultado = OK;
 			return login;
 		}
@@ -107,14 +71,12 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 		{
 			interpretando = false;
 			*autorizado = false;
-			// return REQUISITANDO_LOGIN;
 			*resultado = ERRO;
 			return NULL;
 		}
 		printf("FALHA FATAL (interpretadorDeComandos.h)\n");
 		exit(1);
 		*resultado = ERRO;
-		//return ERRO;
 	}
 	else
 	{
@@ -126,7 +88,6 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 		printf(" ERRO: FALHA FATAL (email == NULL) em interpretadorDeComandos.h interpretaComando()\n");
 		exit(1);
 		interpretando = false;
-		// return ERRO;
 		*resultado = ERRO;
 		return NULL;
 	}
@@ -142,7 +103,6 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 	{
 		interpretando = false;
 		printf(" ERRO: Aplicação contem informação excessiva (interpretadorDeComandos.h) interpretaComando()\n");
-		// return ERRO;
 		*resultado = ERRO;
 		return NULL;
 	}
@@ -174,7 +134,6 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 			{
 				printf(" LOG: comando adicionar NÃO deu certo interpretadorDeComandos.h (interpretaComando())\n");
 				interpretando = false;
-			// return REQUISITANDO_ADICAO;
 				*resultado = REQUISITANDO_ADICAO;
 				return NULL;
 			}
@@ -184,7 +143,6 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 			printf(" Atualização requisitada (interpretadorDeComandos.h)\n");
 			printf(" NÂO IMPLEMENTADO (interpretadorDeComandos.h)\n");
 			interpretando = false;
-			// return REQUISITANDO_ATUALIZACAO;
 
 			*resultado = REQUISITANDO_ATUALIZACAO;
 			return NULL;
@@ -193,16 +151,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 		case COMANDO_OBTER:
 			printf(" Obtencao de algo requisitado\n");
 			printf(" Não preparado\n");
-	//			if(comandoObter())
-	//			{
-	//				*resultado = REQUISITANDO_OBTENCAO;
-	//			}
-	//			else
-	//			{
-	//				*resultado = ERRO;
-	//			}
 			*resultado = REQUISITANDO_OBTENCAO;
-			//interpretando = false;
 			return NULL;
 			break;
 
@@ -216,7 +165,6 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 		default:
 			printf(" Requisição não manipulada, (interpretadorDeComandos.h)\n");
 			interpretando = false;
-			// return ERRO;
 			*resultado = ERRO;
 			return NULL;
 			break;
@@ -224,7 +172,6 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 
 	interpretando = false;
 	printf(" Exceção não manipulada (interpretadorDeComandos.h)\n");
-	// return ERRO;
 	*resultado = ERRO;
 	return NULL;
 }

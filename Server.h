@@ -1,7 +1,7 @@
 #include <string.h>
-#include <unistd.h>//sleep
+#include <unistd.h>
 
-#define BUFFER_CLIENTE 1024//ANTERIOR 256 (aceitou 1024*1024 (1MB))
+#define BUFFER_CLIENTE 1024//(aceitou 1024*1024 (1MB))
 
 #include "interpretadorDeComandos.h"
 
@@ -25,83 +25,124 @@
 
 
 
+int abreSocket()
+{
+	int numeroDeTentativas = 10;
+	int contador = 0;
+	int sockfd = -1;
+	int tempoEntreTentativas = 1;
+	for(contador = 0; contador<numeroDeTentativas || sockfd < 0; contador++)
+	{
+		sockfd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+		if( sockfd < 0)
+		{
+			printf(" Warning: Falha ao abrir socket detectada em Server.h abreSocket(), tentativa nº %d\n", contador);
+		}
+		sleep(tempoEntreTentativas);
+	}
+	if(sockfd < 0)
+	{
+		printf(" ERRO: Numero maximo de tentativas para abrir socket detectado, encerrando\n");
+		return -1;
+	}
+	else
+	{
+		printf(" LOG: Socket configurado, pronto pra estabelecer conexao em Server.h abreSocket()\n");
+		return sockfd;
+	}
+}
+
+int fazerBind(int sockfd, struct sockaddr *serverAddr)
+{
+	int numeroDeTentativas = 100;
+	int tempoEntreTentativas = 1;
+	int contador;
+	int bindEstabelecido = -7;
+
+	printf(" sockfd = %d\n", sockfd);
+
+	for(contador = 0; contador<numeroDeTentativas && bindEstabelecido < 0; contador++)
+	{
+		bindEstabelecido = bind(sockfd, serverAddr, sizeof(struct sockaddr));
+		if(bindEstabelecido<0)
+		{
+			printf(" Warning: Falha ao fazer bind, em Server.h fazerBind(), tentativa nº %d\n", contador);
+		}
+		sleep(tempoEntreTentativas);
+	}
+	if(bindEstabelecido < 0)
+	{
+		printf(" ERRO: Fatal, falha ao estabelecer conexão entre aplicação e socket, em Server.h fazerBind()\n");
+		return -1;
+	}
+	else
+	{
+		printf(" LOG: Bind estabelecido com sucesso em Server.h fazerBind()\n");
+		return 0;
+	}
+}
+
 
 int configuraServidor()
 {
-	printf(".");
-	int sockfd;
-	printf(".");
+	int sockfd = -1;//Inicializado com -1 por causa do for
 	int contador = 0;
-	printf(".");
+	int numeroDeTentativas = 99;
+	int tempoEntreTentativas = 1;
+	bool conectadoAoBanco = false;
+
 	struct sockaddr_in serverAddr;
-	printf(".");
 
-
-	if((sockfd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
+	if((sockfd = abreSocket()) < 0)
 	{
-		printf(" Erro ao tentar criar socket \n");
-		contador++;
-
-		exit(1);
+		printf(" ERRO: Fatal, impossível abrir socket, em Server.h configuraServidor()\n");
+		return ERRO;
 	}
-	printf(".");
-	/* Zera a estrutura */
+
+	/* Configuração de variáveis, pra fazer bind */
 	memset(&serverAddr, 0, sizeof(serverAddr));
-	printf(".");
 
 	serverAddr.sin_family = AF_INET;
-	printf(".");
 	serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	printf(".");
 	serverAddr.sin_port = htons(PORTA);
-	printf(".");
-	int contAux = 1;
+	/* FIM - Configuração de variáveis, pra fazer bind */
 
-TENTAR_DENOVO:
-	if( bind(sockfd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0 )
+	if(fazerBind(sockfd, (struct sockaddr *)&serverAddr) < 0)
 	{
-		printf("\r Configurando servidor.......");
-		//fflush(stdout);
-		while(contAux < contador)
-		{
-			fflush(stdout);
-			printf(".");
-			contAux++;
-		}
-		contAux = 0;
-		printf("Erro ao fazer BIND (%d)", contador+1);
-		if(contador < 99)
-		{
-			contador++;
-			//printf("Tentando novamente\n");
-			sleep(1);
-			goto TENTAR_DENOVO;
-		}
-		printf("\r Não foi possível iniciar o servidor, (ERRO AO FAZER BIND) Encerrando\n");
-		exit(1);
+		printf(" ERRO: Falha ao fazer bind em Server.h configuraServidor()\n");
+		return ERRO;
 	}
-	printf(".");
 
 	/* Fica na escuta de até 5 clientes */
 	if(listen(sockfd, QTD_CLIENTE) < 0)
 	{
 		printf(" Falha ao iniciar listener\n");
-		exit(1);
-	}
-	printf(".");
-	
-	printf(".");
-	if(conectarBanco())
-	{
-		printf(".");
-	}
-	else
-	{
-		printf("Erro ao conectar-se ao banco de dados\n");
 		return ERRO;
 	}
 
-	return sockfd;
+	for(contador = 0; contador<numeroDeTentativas; contador++)
+	{
+		if(!conectarBanco())
+		{
+			printf(" Warning: Falha ao estabelecer conexao com o banco de dados, tentatica nº %d em Server.h configuraServidor()\n", contador);
+		}
+		else
+		{
+			printf(" LOG: Conectado com sucesso ao banco de dados em Server.h configuraServidor()\n");
+			conectadoAoBanco = true;
+			break;
+		}
+		sleep(tempoEntreTentativas);
+	}
+
+	if(conectadoAoBanco)
+	{
+		return sockfd;
+	}
+	else
+	{
+		return ERRO;
+	}
 }
 
 
@@ -125,8 +166,6 @@ void *Servidor(void *arg)
 	char mensagemAnterior[BUFFER_CLIENTE];
 	int resultado;
 	bool usuarioAnonimo = true;
-	// int auxImediata = 0;
-	//
 	
 	memset(bufferCliente, '\0', BUFFER_CLIENTE);
 	memset(mensagemAnterior, '\0', BUFFER_CLIENTE);
@@ -134,43 +173,36 @@ void *Servidor(void *arg)
 	printf(" Aguardando por mensagens\n");
 	while(true)
 	{
-		//if(strlen(bufferCliente) > 0)
 		if(bufferCliente[0] != '\0')// tentativa de otimização
 		{
 			strcpy(mensagemAnterior, bufferCliente);
 			memset(bufferCliente, '\0', BUFFER_CLIENTE);
 			if(mensagem != NULL)
 			{
-				// printf("PASSO 1\n");
-				// auxImediata = strlen(mensagem);
-				// printf("PASSO 2\n");
-				// memset(mensagem, '\0', auxImediata);
-				// auxImediata = 0;
-				// free(mensagem);
 				mensagem = NULL;
 			}
-			printf("\t\t*************BUFFER_CLIENTE Limpo****************\n\n");
-			// printf("COMECO DE TUDO →→→→→→→→→→→→→→→→→→→→→→→→→→→→→→  EMAIL = %s\n", email);
 		}
 
-		//OTIMIZAR AQUI !!!!
 
 		read(sockEntrada, bufferCliente, sizeof(bufferCliente));
 		printf(" RECEBIDO: |%s|\n", bufferCliente);
+
+
+		//OTIMIZAR AQUI !!!!
 		if(strcmp(bufferCliente, "APP sair") != 0)/* Se cliente não pedir pra sair */
 		{
 			if(strcmp(bufferCliente, "") == 0)
 			{
 				SAIR_DA_THREAD:
 				interpretando = false;
-				printf(" Cliente não escreveu nada, então saiu\n");
+				printf(" LOG: Cliente não escreveu nada, então saiu, em Server.h Servidor()\n");
 				close(sockEntrada);
 				liberaMemoriaTalvezUtilizada(email);
 				pthread_exit( (void *) 0);
 			}
 			else
 			{
-				printf("Cliente não saiu\n");
+				printf(" LOG: Cliente não saiu\n");
 				if(mensagemAnterior != NULL)
 				{
 					if(strcmp(bufferCliente,mensagemAnterior) == 0)
@@ -180,7 +212,7 @@ void *Servidor(void *arg)
 					}
 				}
 
-				printf(" \tAguardando liberacao para interpretacao\n");
+				printf(" LOG: tAguardando liberacao para interpretacao\n");
 				while(interpretando)
 				{
 					pthread_yield();/* Causa um warning, mas nada demais */
