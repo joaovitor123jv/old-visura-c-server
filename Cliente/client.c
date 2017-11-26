@@ -22,16 +22,6 @@ int main(int argc, char* argv[])
 	int y = 0;
 
 
-//	unsigned char senha[2048/8] = "Eu te amo Alexia Lui Da Silva !!!!";/* Máximo de 256 caracteres por senha */
-//	unsigned char *publicKey = getChavePublica();
-//	unsigned char *privateKey = getChavePrivada();
-//	unsigned char  encrypted[4098]={};
-//	int encrypted_length= public_encrypt(senha,strlen((const char *)senha),publicKey,encrypted);
-//	if(encrypted_length == -1)
-//	{
-//		printf("Erro ao criptografar mensagem\n");
-//	}
-
 
 	char* message;//Mensagem Enviada
 	char server_reply[TAMANHO_DA_RESPOSTA];//Resposta do servidor
@@ -69,8 +59,6 @@ int main(int argc, char* argv[])
 
 	//Conexão a servidor remoto
 	socket_desc = socket(PF_INET, SOCK_STREAM, 0);	//AF_INET == usando IPV4
-	//SOCK_STREAM == Use TCP (Protocolo orientado a TCP)
-	//IPPROTO_IP ou 0 == Use protocolo IP
 
 	printf(" Socket criado\n");
 
@@ -86,12 +74,9 @@ int main(int argc, char* argv[])
 	printf(" Configurando Servidor\n");
 
 	server.sin_addr.s_addr = inet_addr(IP_DESTINO);//Endereço IP desse server
-//	server.sin_addr.s_addr = inet_addr(ip);
 	server.sin_family = AF_INET;//Usando IPV4
 	server.sin_port = htons( PORTA );//Define a porta que vai chamar
 
-// while(1)
-// {
 
 	printf(" conectando ao Servidor\n");
 	if( connect( socket_desc, (const struct sockaddr *)&server, sizeof(server) ) < 0 )
@@ -105,28 +90,7 @@ int main(int argc, char* argv[])
 	}
 
 
-//printf("1\n");
-//char *aux = NULL;
-//printf("2\n");
 	message = "APP 1 interface@servidor senatauri";//Login
-//	aux = malloc(sizeof(char) * strlen(message));
-//	printf("3\n");
-//	strcpy(aux, message);
-//	printf("4\n");
-
-/* *****FORMATANDO A STRING*********************************************************************************************************************/
-//	printf("5\n");
-//	message = malloc(sizeof(char) * (strlen(aux) + 1 + 256));
-//	printf("6\n");
-//	snprintf(message, sizeof(char) * (strlen(aux) + 1 + 256), "%s %s", aux, encrypted);
-//	printf("7\n");
-//	printf(" tamanho da senha aqui = %ld\n", strlen(encrypted));
-//	printf(" Tamanho do envio = %ld\n", sizeof(char)* (strlen(aux) + 1+ 257) );
-
-//	message = "ProProp 2 4 joaovitor 5 al9zssskds";//Adicionar
-//	message = "ProProp 3 4 joaovitor 5 al9zssskds";//Atualizar
-//	message = "ProProp 4 4 joaovitor 5 al9zssskds";//Obter
-//	if(send(socket_desc, message, (sizeof(char)* (strlen(aux) + 1 + 257)) , 0) < 0) //Envia dados ao servidor
 	if(send(socket_desc, message, (sizeof(char)* (strlen(message) )) , 0) < 0) //Envia dados ao servidor
 	{
 		printf("Erro: Não foi possível enviar a mensagem ao servidor");
@@ -164,7 +128,7 @@ int main(int argc, char* argv[])
 //message = "APP 2 l0 $ 10 L 12654267 RN nN b nomeDoBairro M Cx$Postal$11\0";// adiciona localizacao ao banco
 //
 //message = "APP 2 $C MIGqAgEAAiEArPXCV6pZjBh+OKNVEM/+eIb5KgGZw24jX2mfu2GzFPcCAwEAAQIgCx8KTgTAGUgB5bZq49fb7tzxlVPJya47G9dtFcNrZ7ECEQDgJPU9398P6I0R5MCV+SeVAhEAxYqPkCR6yJ2YuCUZI903WwIRAMmp9swYo8TYYjP7MBq+9JECECeNYMVZqIP2mhd0xh3aMzUCEBGnaCJnmYNciQfqIT1vmws= # Adicionado_Pela_Interface 12346578954120 10 teste-da-coca-cola@gmail.com > 21445122540 7\0";//Adiciona um contratante ao banco 
-message = "APP 2 + MIGqAgEAAiEArPXCV6pZjBh+OKNVEM/+eIb5KgGZw24jX2mfu2GzFPcCAwEAAQIgCx8KTgTAGUgB5bZq49fb7tzxlVPJya47G9dtFcNrZ7ECEQDgJPU9398P6I0R5MCV+SeVAhEAxYqPkCR6yJ2YuCUZI903WwIRAMmp9swYo8TYYjP7MBq+9JECECeNYMVZqIP2mhd0xh3aMzUCEBGnaCJnmYNciQfqIT1vmws= ; 2 1Aqe5CE8q7 10 Esse-é-o-nome-do-negocio-de-outra-coisa Olha_A-Descricao_Aqui!!!\0";// Adiciona produt ao banco
+message = "APP 2 + MIGqAgEAAiEArPXCV6pZjBh+OKNVEM/+eIb5KgGZw24jX2mfu2GzFPcCAwEAAQIgCx8KTgTAGUgB5bZq49fb7tzxlVPJya47G9dtFcNrZ7ECEQDgJPU9398P6I0R5MCV+SeVAhEAxYqPkCR6yJ2YuCUZI903WwIRAMmp9swYo8TYYjP7MBq+9JECECeNYMVZqIP2mhd0xh3aMzUCEBGnaCJnmYNciQfqIT1vmws= ; 2 apqiieujah 10 Olha-que-nome-reideicoulou-queu-eu-coulouqueui Olha_A-Descricao_Aqui!!!\0";// Adiciona produt ao banco
 printf(" MENSAGEM ENVIADA AO SERVER: |||%s|||\n",message);
 
 	if(send(socket_desc, message, (sizeof(char)* (strlen(message) )) , 0) < 0) //Envia dados ao servidor

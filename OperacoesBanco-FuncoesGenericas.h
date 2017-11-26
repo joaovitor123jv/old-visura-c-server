@@ -17,8 +17,13 @@
 #define bool char
 #endif
 
-//CREATE USER 'interface'@'127.0.0.1'
-//GRANT SELECT DELETE UPDATE INSERT ON teste.* to 'interface'@'127.0.0.0'
+	/*
+		Comandos pra executar no cloud quando for refazer a maquina kkk
+		CREATE USER 'interface'@'127.0.0.1';
+		CREATE DATABASE teste;
+		GRANT SELECT DELETE UPDATE INSERT ON teste.* to 'interface'@'127.0.0.0';
+	*/
+
 #define DATABASE_HOST "127.0.0.1"//TESTES
 // #define DATABASE_HOST "35.186.190.243"//GOOGLE CLOUD
 #define DATABASE_USER "interface"
@@ -47,7 +52,7 @@ bool conectarBanco()//OK
 		return false;
 	}
 
-	printf("\r Configurando servidor.............Inicializando cliente SQL");
+	printf(" LOG: Inicializando cliente SQL em OperacoesBanco-FuncoesGenericas.h conectarBanco()\n");
 
 	if( mysql_init(conexao) == NULL )
 	{
@@ -55,7 +60,7 @@ bool conectarBanco()//OK
 		return false;
 	}
 
-	printf("\r Configurando servidor..............Inicializando cliente SQL");
+	printf(" LOG: Cliente SQL inicializado em OperacoesBanco-FuncoesGenericas.h conectarBanco()\n");
 
 	if( !mysql_real_connect( conexao, DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_SCHEMA, DATABASE_PORT, DATABASE_DEFAULT_SOCKET, DATABASE_DEFAULT_FLAGS ))
 	{
@@ -74,16 +79,15 @@ bool conectarBanco()//OK
 	}
 	else
 	{
-		printf("\r Configurando servidor...............");
+		printf(" LOG: Conexão com banco de dados estabelecida em OperacoesBanco-FuncoesGenericas.h conectarBanco()\n");
 		return true;
 	}
-	//mysql_close(&conexao);
-	//
+	printf(" ERRO: Erro incompreendido em OperacoesBanco-FuncoesGenericas.h conectarBanco()\n");
 	return false;
 }
 
 // Retorna TRUE, se a query retorna algo com conteúdo
-bool checarSeVoltaAlgumaCoisaDaQuery(char *query)
+bool queryRetornaConteudo(char *query)
 {
 	if(query == NULL)
 	{
@@ -268,7 +272,7 @@ bool checarIdProduto(char *id)//OK
 		return false;
 	}
 
-	bool retorno = checarSeVoltaAlgumaCoisaDaQuery(query);
+	bool retorno = queryRetornaConteudo(query);
 	query = NULL;
 	return retorno;
 }
@@ -294,7 +298,7 @@ bool checarIdContratante(char *idContratante)
 			return false;
 		}
 	
-		if(checarSeVoltaAlgumaCoisaDaQuery(query))
+		if(queryRetornaConteudo(query))
 		{
 			//Se voltar algo da query
 			printf(" LOG: Existe empresa com esse ID no banco de dados em checarIdContratante() OperacoesBanco-FuncoesGenericas.h\n");
@@ -355,7 +359,7 @@ bool checarLogin(char *email, char *senha)
 		return false;
 	}
 	
-	bool retorno = checarSeVoltaAlgumaCoisaDaQuery(query);
+	bool retorno = queryRetornaConteudo(query);
 	if(retorno)
 	{
 		printf(" LOG: Foi encontrado um ID para cliente que satisfaça as seguintes comparações: em OperacoesBanco-FuncoesGenericas.h checarLogin()\n");
@@ -394,10 +398,6 @@ bool produtoVencido(char *idProduto, char *email)//retorna TRUE se o produto est
 	}
 	else
 	{
-		// if (strcmp(email, LOGIN_DO_SITE) == 0)
-		// {
-		// 	return false;//PODE ACESSAR INFORMAÇÕES DE PRODUTO
-		// }
 		if(usuarioRoot(email))
 		{
 			return false;
@@ -448,7 +448,6 @@ bool produtoVencido(char *idProduto, char *email)//retorna TRUE se o produto est
 	}
 	
 	MYSQL_ROW linha = NULL;
-	// char *retorno = NULL;
 	
 	linha = mysql_fetch_row(resultado);
 	if(linha == NULL)

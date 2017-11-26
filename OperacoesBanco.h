@@ -166,7 +166,7 @@ bool addUsuarioAoBanco(char *emailAnterior, char *email, char *senha, char* sexo
 		return false;
 	}
 	
-	if(!checarSeVoltaAlgumaCoisaDaQuery(query))/* Query já é liberada após essa função */
+	if(!queryRetornaConteudo(query))/* Query já é liberada após essa função */
 	{
 		printf(" Warning: Não existe nenhum usuario anonimo com esse email cadastrado em OperacoesBanco.h addUsuarioAoBanco() 13as54q987cd\n");
 		query = NULL;
@@ -335,7 +335,7 @@ bool addCidadeAoBanco(char *nomeDoEstado, char *nomeCidade)//DONE
 	}
 	
 	/* Checa se existe estado com esse nome */
-	if(!checarSeVoltaAlgumaCoisaDaQuery(query))
+	if(!queryRetornaConteudo(query))
 	{
 		/* Se entrar aqui, então não existe cidade com esse nome nesse estado */
 		
@@ -1235,7 +1235,7 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 	{
 		
 		snprintf(query, tamanho, "SELECT idcontratante FROM contratante C WHERE C.email=\'%s\' OR C.cnpj=%s;", email, cnpj);
-		if(checarSeVoltaAlgumaCoisaDaQuery(query))
+		if(queryRetornaConteudo(query))
 		{
 			printf(" Warning: Já existe Uma empresa com esse email e/ou esse cnpj cadastrados no banco de dados em addContratanteAoBanco()  OperacoesBanco.h bqkjshqoxiusya\n");
 			query= NULL;
@@ -1264,7 +1264,7 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 				}
 				else
 				{
-					if(checarSeVoltaAlgumaCoisaDaQuery(query))
+					if(queryRetornaConteudo(query))
 					{
 						//Entra aqui se  query retornar algo
 						printf(" LOG: Localizacao informada realmente existe em addContratanteAoBanco() OperacoesBanco.h qkcb\n");
@@ -2917,7 +2917,7 @@ bool addFeedBackDeProdutoAoBanco(char *email, char *idProduto, char *titulo, cha
 			printf(" Warning: não foi possivel formatar query em OperacoesBanco.h addFeedBackDeProdutoAoBanco() asdjkhkvdn");
 			return false;
 		}
-		if(checarSeVoltaAlgumaCoisaDaQuery(query))
+		if(queryRetornaConteudo(query))
 		{
 			printf(" LOG: Feedback existente detectado em OperacoesBanco.h addFeedBackDeProdutoAoBanco() asdjhjkbvscf\n");
 			// tamanho = 115 + strlen(titulo) + strlen(conteudo) + strlen(email) + TAMANHO_ID_PRODUTO + 1;

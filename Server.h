@@ -59,8 +59,6 @@ int fazerBind(int sockfd, struct sockaddr *serverAddr)
 	int contador;
 	int bindEstabelecido = -7;
 
-	printf(" sockfd = %d\n", sockfd);
-
 	for(contador = 0; contador<numeroDeTentativas && bindEstabelecido < 0; contador++)
 	{
 		bindEstabelecido = bind(sockfd, serverAddr, sizeof(struct sockaddr));
@@ -156,194 +154,179 @@ void liberaMemoriaTalvezUtilizada(char *email)
 }
 
 
-void *Servidor(void *arg)
+bool mensagemDeEscapeDetectada(const char *mensagem)// Verifica se a mensagem é "APP sair", de forma otimizada
+{
+	//	strcmp(mensagem, "APP sair");
+	if(mensagem == NULL)
+	{
+		return true;
+	}
+	else if(mensagem[0] != 'A')
+	{
+		return true;
+	}
+	else if( mensagem[1] != 'P' )
+	{
+		return true;
+	}
+	else if( mensagem[2] != 'P' )
+	{
+		return true;
+	}
+	else if(mensagem[3] != ' ')
+	{
+		return true;
+	}
+	else if(mensagem[4] == 's')
+	{
+		if( mensagem[5] == 'a' )
+		{
+			if( mensagem[6] == 'i' )
+			{
+				if( mensagem[7] == 'r' )
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+
+bool enviaMensagemParaCliente(const char *mensagem, void *cliente)
+{
+	write( *(int *)cliente, mensagem, strlen(mensagem) + 1 );
+	printf(" LOG: Mensagem enviada |%s|, em Server.h enviaMensagemParaCliente()\n", mensagem);
+	return true;
+}
+
+void *Servidor(void *cliente)
 {
 	char bufferCliente[BUFFER_CLIENTE];
 	bool autorizado = false;
 	char *email = NULL;
-	int sockEntrada = *(int*)arg;
 	char *mensagem = NULL;
-	char mensagemAnterior[BUFFER_CLIENTE];
 	int resultado;
 	bool usuarioAnonimo = true;
 	
-	memset(bufferCliente, '\0', BUFFER_CLIENTE);
-	memset(mensagemAnterior, '\0', BUFFER_CLIENTE);
 
-	printf(" Aguardando por mensagens\n");
+	printf(" LOG: Aguardando por mensagens\n");
 	while(true)
 	{
-		if(bufferCliente[0] != '\0')// tentativa de otimização
+
+		memset(bufferCliente, '\0', BUFFER_CLIENTE);
+		if(mensagem != NULL)
 		{
-			strcpy(mensagemAnterior, bufferCliente);
-			memset(bufferCliente, '\0', BUFFER_CLIENTE);
-			if(mensagem != NULL)
-			{
-				mensagem = NULL;
-			}
+			mensagem = NULL;
 		}
 
 
-		read(sockEntrada, bufferCliente, sizeof(bufferCliente));
+		read(*(int*)cliente, bufferCliente, sizeof(bufferCliente));
 		printf(" RECEBIDO: |%s|\n", bufferCliente);
 
-
-		//OTIMIZAR AQUI !!!!
-		if(strcmp(bufferCliente, "APP sair") != 0)/* Se cliente não pedir pra sair */
+		void sairDaThread(bool liberaInterpretacao)
 		{
-			if(strcmp(bufferCliente, "") == 0)
+			if(liberaInterpretacao)
 			{
-				SAIR_DA_THREAD:
 				interpretando = false;
-				printf(" LOG: Cliente não escreveu nada, então saiu, em Server.h Servidor()\n");
-				close(sockEntrada);
-				liberaMemoriaTalvezUtilizada(email);
-				pthread_exit( (void *) 0);
 			}
-			else
+			printf(" LOG: Encerrando thread de Servidor em Server.h Servidor()->sairDaThread()\n");
+			close(*(int *)cliente);
+			liberaMemoriaTalvezUtilizada(email);
+			pthread_exit( (void *) 0 );
+		}
+
+		if( !mensagemDeEscapeDetectada(bufferCliente) )
+		{
+			printf(" LOG: Cliente não saiu\n");
+
+			printf(" LOG: Aguardando liberacao para interpretacao\n");
+			while(interpretando)
 			{
-				printf(" LOG: Cliente não saiu\n");
-				if(mensagemAnterior != NULL)
-				{
-					if(strcmp(bufferCliente,mensagemAnterior) == 0)
-					{
-						printf("\t\tMensagens Repetidas, Saindo\n");
-						goto SAIR_DA_THREAD;//CUIDADO AQUI
-					}
-				}
-
-				printf(" LOG: tAguardando liberacao para interpretacao\n");
-				while(interpretando)
-				{
-					pthread_yield();/* Causa um warning, mas nada demais */
-				}//Aguarda, liberando cpu para outros trabalhos (senão fica fazendo coisa a toa até ser interrompida pelo SO)
-				printf("\n\n \t*********************Inicio de Interpretação *************\n");
+				pthread_yield();/* Causa um warning, mas nada demais */
+			}//Aguarda, liberando cpu para outros trabalhos (senão fica fazendo coisa a toa até ser interrompida pelo SO)
 
 
-				if(email == NULL)
+
+			printf("\n\n \t*********************Inicio de Interpretação *************\n");
+
+
+			if(email == NULL)
+			{
+				email = interpretaComando(bufferCliente, &autorizado, &resultado, email, &usuarioAnonimo);
+				if(email != NULL)
 				{
-					// printf("Email == NULL (Server.h)\n");
-					email = interpretaComando(bufferCliente, &autorizado, &resultado, email, &usuarioAnonimo);
-					if(email != NULL)
-					{
-						char *aux = email;
-						aux = email;
-						email = malloc(sizeof(char) * (strlen(aux) + 1));
-						strcpy(email, aux);
-					}
-					else
-					{
-						printf("Warning: Email resetado !!!!!!\n");
-						printf("\t\t\tOU\n");
-						printf("\tUsuário não autorizado\n");
-					}
+					// char *aux = email;
+					// aux = email;
+					// email = malloc(sizeof(char) * (strlen(aux) + 1));
+					// strcpy(email, aux);
+					email = strdup(email);
 				}
 				else
 				{
-					interpretaComando(bufferCliente, &autorizado, &resultado, email, &usuarioAnonimo);
+					printf("\t LOG :Usuário não autorizado em Server.h Servidor()\n");
 				}
+			}
+			else
+			{
+				interpretaComando(bufferCliente, &autorizado, &resultado, email, &usuarioAnonimo);
+			}
 
+			switch(resultado)
+			{
+				case ERRO:
+					printf("Warning: Erro na execução do comando\n");
+					enviaMensagemParaCliente("Erro, desconectando\0", cliente);
+					sairDaThread(false);
+					break;
 
+				case OK:
+					printf("Log: Comando bem-sucedido (Server Thread)\n");
+					enviaMensagemParaCliente("OK\0", cliente);
+					break;
 
-				switch(resultado)
-				{
-					case ERRO:
-						// interpretando = false;
-						printf("Warning: Erro na execução do comando\n");
+				case REQUISITANDO_LOGIN:/* Cliente NÃO AUTORIZADO OK */
+					printf(" Cliente Requisitou Login, mas Não foi atendido (Server Thread)\n");
+					enviaMensagemParaCliente("Não autorizado\0", cliente);
+					sairDaThread(true);
+					break;
+
+				case REQUISITANDO_ADICAO:/* OK */
+					printf(" Cliente requisitou adicao\n");
+					enviaMensagemParaCliente("Adicao recusada\0", cliente);
+					sairDaThread(false);
+					break;
+
+				case REQUISITANDO_OBTENCAO:
+					mensagem = obterDados(email);
+					interpretando = false;
+					bool precisaLiberar = true;
+					if(mensagem == NULL)
+					{
+						precisaLiberar = false;
+						mensagem = RETORNO_ERRO_CHAR;
+					}
+					write( *(int *)cliente, mensagem, strlen(mensagem) +1);
+					if(precisaLiberar)
+					{
+						free(mensagem);
 						mensagem = NULL;
-						mensagem="ERRO, Desconectando\0";
-						printf("Log: Mensagem a enviar = |%s|\n", mensagem);
-						write(*(int *)arg, mensagem, strlen(mensagem) +1);
-						close(sockEntrada);
-						liberaMemoriaTalvezUtilizada(email);
-						pthread_exit( (void *) 0);
-						// exit(1);
-						break;
+					}
+					break;
 
-					case OK:
-						// interpretando = false;
-						printf("Log: Comando bem-sucedido (Server Thread)\n");
-						// mensagem = calloc(strlen("Comando bem-sucedido testanto o teste do teste do teste da testa que não sei se da certo\0"), sizeof(char));
-						// strcpy(mensagem, "Comando bem-sucedido testanto o teste do teste do teste da testa que não sei se da certo\0");
-						mensagem = NULL;
-						mensagem = "OK\0";
-						printf("Log: Mensagem a enviar = |%s|\n", mensagem);
-						write(*(int *)arg, mensagem, strlen(mensagem) + 1);
-						// exit(1);
-						break;
-
-					case REQUISITANDO_LOGIN:/* Cliente NÃO AUTORIZADO OK */
-						interpretando = false;
-						printf(" Cliente Requisitou Login, mas Não foi atendido (Server Thread)\n");
-						// mensagem = calloc(strlen("Não autorizado\0"), sizeof(char));
-						// strcpy(mensagem, "Não autorizado\0");
-						mensagem = NULL;
-						mensagem = "Não autorizado\0";
-						write( *(int *)arg, mensagem, strlen(mensagem) +1);
-						close(sockEntrada);
-						liberaMemoriaTalvezUtilizada(email);
-						pthread_exit( (void *) 0);
-						break;
-
-					case REQUISITANDO_ADICAO:/* OK */
-						// interpretando = false;
-						printf(" Cliente requisitou adicao\n");
-						// mensagem = calloc(strlen("Adição requisitada mas não atendida\0"), sizeof(char));
-						// strcpy(mensagem, "Adição requisitada mas não atendida\0");
-						mensagem = NULL;
-						mensagem = "Adição recusada\0";
-						write( *(int *)arg, mensagem, strlen(mensagem) +1);
-						break;
-						
-					case REQUISITANDO_OBTENCAO:
-						mensagem = obterDados(email);
-						interpretando = false;
-						bool precisaLiberar = true;
-						if(mensagem == NULL)
-						{
-							precisaLiberar = false;
-							mensagem = RETORNO_ERRO_CHAR;
-						}
-						write( *(int *)arg, mensagem, strlen(mensagem) +1);
-						if(precisaLiberar)
-						{
-							free(mensagem);
-							mensagem = NULL;
-						}
-						break;
-
-					default:
-						// interpretando = false;
-						printf(" Não foi possivel interpretar comando (Server.h) (Servidor()) Resultado == %d\n", resultado );
-						// mensagem = calloc(strlen("ERRO: Comando não indentificado\0"), sizeof(char));
-						mensagem = NULL;
-						mensagem="Comando incorreto, Desconectando\0";
-						// strcpy(mensagem, "ERRO: Comando não indentificado\0");
-						printf(" Mensagem a enviar = |%s|\n", mensagem);
-						write(*(int *)arg, mensagem, strlen(mensagem) +1);
-						close(sockEntrada);
-						liberaMemoriaTalvezUtilizada(email);
-						pthread_exit( (void *) 0);
-						// exit(1);
-						break;
-				}
+				default:
+					printf(" Não foi possivel interpretar comando (Server.h) (Servidor()) Resultado == %d\n", resultado );
+					enviaMensagemParaCliente("Comando incorreto, desconectando\0", cliente);
+					sairDaThread(false);
+					break;
 			}
 		}
 		else
 		{
-			// interpretando = false;
-			printf(" Cliente saiu\n");
-			memset(mensagemAnterior, '\0', strlen(mensagemAnterior));
-			// mensagem = calloc((strlen("Conexao encerrada") + 1), sizeof(char));
-			// strcpy(mensagem, "Conex encerrada\0");
-			mensagem = NULL;
-			mensagem = "Conexao encerrada\0";
-			write(*(int *)arg, mensagem, strlen(mensagem) + 1);
-			close(sockEntrada);
-			liberaMemoriaTalvezUtilizada(email);
-			// free(mensagem);
-			mensagem = NULL;
-			pthread_exit( (void *) 0);
+			printf(" LOG: Mensagem de escape detectada em Server.h Servidor()\n");
+			enviaMensagemParaCliente("Conexao encerrada\0", cliente);
+			sairDaThread(false);
 		}
 	}
 }

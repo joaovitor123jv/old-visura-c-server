@@ -3,128 +3,72 @@
 #include "Comandos.h"
 #include "OperacoesBanco.h"
 
-char *comandoLogin(char *comando, bool *usuarioAnonimo)/* APP 1 login senha */
+//char *comandoLogin(char *comando, bool *usuarioAnonimo)/* APP 1 login senha */
+char *comandoLogin(bool *usuarioAnonimo)
 {
-	char *token = NULL;
+	char *email = NULL;
 	char *senha= NULL;
+	char *token;
+	int contador = 0;
+
 	token = strtok(NULL, " ");
-	if(comando == NULL)
-	{
-		printf(" Warning: comando == NULL em (interpretadorDeComandos.h) (comandoLogin)\n");
-		exit(1);
-	}
+
 	if(token != NULL)
 	{
-		if(strcmp(token, "1") == 0)/* Cliente solicitou Login (APP 1) */
+//		if(strcmp(token, COMANDO_LOGIN) == 0)/* Cliente solicitou Login (APP 1) */
+		if( token[0] == '1' && token[1] == '\0' )// Otimização
 		{
 			printf(" LOG: cliente solicitando login (interpretadordecomandos.h) (comandoLogin)\n");
-			token = strtok(NULL, " ");
-			// token = "email";
-			if(token == NULL)
+			email = strtok(NULL, " ");
+			if(email == NULL)
 			{
-				printf(" Warning: Token NULO (comandoLogin) (Comando-Login.h)\n");
+				printf(" Warning: Email NULO (comandoLogin) (Comando-Login.h)\n");
 				return NULL;
 			}
+			if( strlen(email) > TAMANHO_LOGIN )
+			{
+				printf(" Warning: Email exageradamente grande em Comando-Login.h comandoLogin()\n");
+				return NULL;
+			}
+			
 			senha = strtok(NULL, "\0");
 			if(senha == NULL)
 			{
 				printf(" Warning: Senha NULA (comandoLogin) (Comando-Login.h)\n");
 				return NULL;
 			}
-
-
-			printf("\n\n ************COMANDO LOGIN***********\n\n");// TODO **************************************************************************
-			printf(" \tComando recebido: %s\n", comando);
-			printf(" \tProximo token (Login): %s\n", token); // Login
-			printf(" \tTamanho do login: %ld\n", strlen(token));
-			printf(" \tSenha recebida : %s\n", senha);
-			printf(" \tTamanho da senha recebida: %ld\n", strlen(senha));
-			printf("\n\n\n\n");//Separando informações
-
-			if(strlen(token) <= 0 || strlen(token) > 64)
+			if( strlen(senha) > TAMANHO_SENHA )
 			{
-				printf(" Login muito grande ou muito pequeno(Comando-Login.h) (comandoLogin())\n");
+				printf(" Warning: Email exageradamente grande em Comando-Login.h comandoLogin()\n");
 				return NULL;
 			}
 
-			// if(strlen(senha) != 256)
-			// {
-			// 	printf("Tamanho incorreto para senha criptografada (Comando-Login.h) (comandoLogin())\n");
-			// 	return false;
-			// }
 
-			int contador = 0;
-			bool emailValido = false;
+			printf("\n\n ************COMANDO LOGIN***********\n\n");// TODO **************************************************************************
+			printf(" \tEmail : %s\n", email); // Login
+			printf(" \tSenha recebida : %s\n", senha);
+			printf("\n\n\n\n");//Separando informações
+
+			*usuarioAnonimo = false;
 
 			for(contador  = 0; contador < strlen(token); contador++)/* Checa se email é válido */
 			{
 				if(token[contador] == '@')
 				{
-					emailValido = true;
+					*usuarioAnonimo = true;
 					break;
 				}
 			}
 
-			if(!emailValido)
-			{
-				*usuarioAnonimo = true;
-				// return NULL;
-			}
-			else
-			{
-				*usuarioAnonimo = false;
-				// *usuarioAnonimo = true;
-			}
 
-			// MYSQL *conexao = malloc(sizeof(MYSQL));
-
-			if(conexao == NULL)
-			{
-				// printf(" Falha ao tentar alocar memória para conexao (Comando-Login.h) comandoLogin()\n");
-				printf("Conexão com o banco de dados é NULA (Comando-Login.h) (comandoLogin())\n");
-				printf(" LOG: Tentando reconexão com banco de dados \n");
-				if(conectarBanco())
-				{
-					printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
-				}
-				else
-				{
-					printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-					return NULL;
-				}
-			}
-
-			// if(!conectarBanco(conexao))
-			// {
-			// 	printf("Falha ao tentar se conectar ao banco de dados (comandoLogin) (Comando-Login.h)\n");
-			// 	return NULL;
-			// }
-			// printf(" Retorno com sucesso para Comando-Login\n");
-
-
-			// if(!checarLogin(conexao, token))
-			if(!checarLogin(token, senha))// APP 1 login senha
+			if(!checarLogin(email, senha))// APP 1 login senha
 			{
 				printf(" Warning: Erro ao conectar ou de autenticação em (Comando-Login.h) (comandoLogin)\n");
 				printf("\tFalha ao checar login\n");
-				printf("\t\tEncerrando Conexão\n");
-				
-				// mysql_close(conexao);
-				// free(conexao);
-				// conexao = NULL;
 				return NULL;
 			}
 
-
-			// printf("\t\tEncerrando Conexão\n");
-			
-			// mysql_close(conexao);
-			// free(conexao);
-			// conexao = NULL;
-
-			printf(" log: conexão encerrada em Comando-Login.h comandoLogin()\n");
-			printf(" log: token = |%s| em Comando-Login.h comandoLogin()\n", token);
-			return token;
+			return email;
 		}
 		else
 		{
@@ -138,6 +82,5 @@ char *comandoLogin(char *comando, bool *usuarioAnonimo)/* APP 1 login senha */
 		return NULL;
 	}
 	printf(" Warning: erro indecifravel (Comando-Login.h) (comandoLogin)\n");
-	return NULL;// APAGAR DEPOIS
-	exit(1);
+	return NULL;
 }

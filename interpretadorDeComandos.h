@@ -58,7 +58,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 	{
 		printf(" Cliente ainda não autorizado, INTERROMPENDO PROCESSO PARA SOLICITAR LOGIN\n");
 		printf(" COMANDO (depois de fazer o primeiro strtok) = %s\n", comando);
-		login = comandoLogin(comando, usuarioAnonimo);
+		login = comandoLogin(usuarioAnonimo);
 		printf(" Retornou do Comando-Login (interpretadorDeComandos.h) interpretaComando()\n");
 		if( login  != NULL )
 		{

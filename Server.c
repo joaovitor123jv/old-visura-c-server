@@ -26,14 +26,14 @@ int main(void)
 	printf("\r LOG: Configurando servidor............................ OK em Server.c main()\n");
 
 	printf(" LOG: Inicializando monitor de banco de dados (ruby) ");
-	if(inicializaMonitorDeBancoDeDados())
-	{
-		printf(" OK em Server.c main()\n");
-	}
-	else
-	{
-		printf(" ERRO ao inicalizar monitor de Base de Dados em Server.c main()\n");
-	}
+//	if(inicializaMonitorDeBancoDeDados())
+//	{
+//		printf(" OK em Server.c main()\n");
+//	}
+//	else
+//	{
+//		printf(" ERRO ao inicalizar monitor de Base de Dados em Server.c main()\n");
+//	}
 
 	printf(" LOG: Aguardando conexão em Server.c main()\n");
 
