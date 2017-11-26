@@ -37,7 +37,7 @@ MYSQL *conexao;
 
 //Retorna TRUE se conectar ao banco com sucesso
 // bool conectarBanco(MYSQL *conexao)
-bool conectarBanco()//OK
+bool conectarBanco()
 {
 	if(conexao != NULL)
 	{
@@ -84,6 +84,18 @@ bool conectarBanco()//OK
 	}
 	printf(" ERRO: Erro incompreendido em OperacoesBanco-FuncoesGenericas.h conectarBanco()\n");
 	return false;
+}
+
+// Retorna true se der certo
+bool desconectarBanco()
+{
+	mysql_close(conexao);
+	conexao = NULL;
+	if (conexao != NULL)
+	{
+	 	free(conexao);
+	 	conexao = NULL;
+	}
 }
 
 // Retorna TRUE, se a query retorna algo com conteúdo
@@ -191,7 +203,8 @@ bool queryRetornaConteudo(char *query)
 	}
 }
 
-bool executaQuery(char *query)// retorna false se der algum problema, true se der certo (Não libera a query, como o checarSeVoltaAlgumaCoisaDaQuery())
+// retorna false se der algum problema, true se der certo (Não libera a query, como o checarSeVoltaAlgumaCoisaDaQuery())
+bool executaQuery(char *query)
 {
 	if(query == NULL)
 	{
@@ -370,7 +383,8 @@ bool checarLogin(char *email, char *senha)
 	return retorno;
 }
 
-bool produtoVencido(char *idProduto, char *email)//retorna TRUE se o produto estiver vencido, false se estiver dentro do prazo de validade
+//retorna TRUE se o produto estiver vencido, false se estiver dentro do prazo de validade
+bool produtoVencido(char *idProduto, char *email)
 {
 	if(conexao == NULL)
 	{

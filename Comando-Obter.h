@@ -308,27 +308,17 @@ char *obterDescricaoProduto(char *email)// APP 4 Q
 		else
 		{
 			char *idProduto = NULL;
-			idProduto = (char *)malloc(sizeof(char) * (TAMANHO_ID_PRODUTO + 1));
-			printf(" LOG: Memoria para produto alocada em Comando-Obter.h obterDescricaoProduto() eb19cc7\n");
+			idProduto = strdup(token);
 
 			if(idProduto == NULL)
 			{
-				printf(" Warning: Falha ao alocar memoria para idProduto em Comando-Obter.h obterIdCidade() hjk4ba72\n");
+				printf(" Warning: Falha ao duplicar idProduto em Comando-Obter.h obterIdCidade() hjk4ba72\n");
 				return NULL;
 			}
-			else
-			{
-				strcpy(idProduto, token);
-				if(idProduto == NULL)
-				{
-					printf(" Warning: Falha ao copiar de token para idProduto em Comando-Obter.h obterIdCidade() eqkuhjgbvt120\n");
-					return NULL;
-				}
-				return obterDescricaoProdutoDoBanco(idProduto, email);
-			}
-
-			printf(" ERRO: Desconhecido 45652022200018448974113 em Comando-Obter.h obterDescricaoProduto()\n");
-			return NULL;
+			char *retorno = obterDescricaoProdutoDoBanco(idProduto, email);
+			free(idProduto);
+			idProduto = NULL;
+			return retorno;
 		}
 		printf(" ERRO: Desconhecido rb1625f0j66 em Comando-Obter.h obterDescricaoProduto()\n");
 		return NULL;// TEMP

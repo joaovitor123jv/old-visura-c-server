@@ -31,12 +31,16 @@ int abreSocket()
 	int contador = 0;
 	int sockfd = -1;
 	int tempoEntreTentativas = 1;
-	for(contador = 0; contador<numeroDeTentativas || sockfd < 0; contador++)
+	for(contador = 0; contador<numeroDeTentativas; contador++)
 	{
 		sockfd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 		if( sockfd < 0)
 		{
 			printf(" Warning: Falha ao abrir socket detectada em Server.h abreSocket(), tentativa nº %d\n", contador);
+		}
+		else
+		{
+			break;
 		}
 		sleep(tempoEntreTentativas);
 	}
@@ -59,12 +63,16 @@ int fazerBind(int sockfd, struct sockaddr *serverAddr)
 	int contador;
 	int bindEstabelecido = -7;
 
-	for(contador = 0; contador<numeroDeTentativas && bindEstabelecido < 0; contador++)
+	for(contador = 0; contador<numeroDeTentativas; contador++)
 	{
 		bindEstabelecido = bind(sockfd, serverAddr, sizeof(struct sockaddr));
 		if(bindEstabelecido<0)
 		{
 			printf(" Warning: Falha ao fazer bind, em Server.h fazerBind(), tentativa nº %d\n", contador);
+		}
+		else
+		{
+			break;
 		}
 		sleep(tempoEntreTentativas);
 	}
@@ -114,7 +122,7 @@ int configuraServidor()
 	/* Fica na escuta de até 5 clientes */
 	if(listen(sockfd, QTD_CLIENTE) < 0)
 	{
-		printf(" Falha ao iniciar listener\n");
+		printf(" ERRO: Falha ao iniciar listener em Server.h configuraServidor()\n");
 		return ERRO;
 	}
 
@@ -151,6 +159,7 @@ void liberaMemoriaTalvezUtilizada(char *email)
 		free(email);
 		email = NULL;
 	}
+	desconectarBanco();
 }
 
 

@@ -21,7 +21,7 @@ int main(void)
 	int x =0;
 	printf(" LOG: Iniciando servidor em Server.c main()\n");
 
-	printf(" LOG: Configurando servidor.");
+	printf(" LOG: Configurando servidor em Server.c main()\n");
 	int sockfd = configuraServidor();
 	printf("\r LOG: Configurando servidor............................ OK em Server.c main()\n");
 

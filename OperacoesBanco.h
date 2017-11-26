@@ -1226,14 +1226,11 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 	
 	if(query == NULL)
 	{
-		
 		printf(" Warning: Falha ao alocar memoria para query em addContratanteAoBanco() OperacoesBanco.h (qbbabdkhhhf)");
 		return false;
-		
 	}
 	else
 	{
-		
 		snprintf(query, tamanho, "SELECT idcontratante FROM contratante C WHERE C.email=\'%s\' OR C.cnpj=%s;", email, cnpj);
 		if(queryRetornaConteudo(query))
 		{

@@ -18,14 +18,10 @@ int main(int argc, char* argv[])
 	int x = 0;
 	int y = 0;
 	
-	
-	
 	char message[1024];//Mensagem Enviada
 	char server_reply[TAMANHO_DA_RESPOSTA];//Resposta do servidor
 	
 	printf(" Preparando cliente\n");
-	
-	
 	
 	//Conexão a servidor remoto
 	socket_desc = socket(PF_INET, SOCK_STREAM, 0);	//AF_INET == usando IPV4
@@ -39,14 +35,12 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 	
-	
 	//Configurações
 	printf(" Configurando Servidor\n");
 	
 	server.sin_addr.s_addr = inet_addr(IP_DESTINO);//Endereço IP desse server
 	server.sin_family = AF_INET;//Usando IPV4
 	server.sin_port = htons( PORTA );//Define a porta que vai chamar
-	
 	
 	printf(" conectando ao Servidor\n");
 	if( connect( socket_desc, (const struct sockaddr *)&server, sizeof(server) ) < 0 )
@@ -58,7 +52,6 @@ int main(int argc, char* argv[])
 	{
 		printf("Conectado !\n");
 	}
-	
 	
 	while(1)
 	{
@@ -94,7 +87,6 @@ int main(int argc, char* argv[])
 		}
 	}
 	
-	
 	//SAIR
 	strcpy(message, "APP sair\0");
 	if(send(socket_desc, message, strlen(message), 0) < 0) //Envia dados ao servidor
@@ -118,8 +110,6 @@ int main(int argc, char* argv[])
 		printf("\n%s\n", server_reply);
 	}
 	close(socket_desc);//Fecha o Socket
-	
-	
 	return 0;
 }
 
