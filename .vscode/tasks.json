@@ -5,6 +5,7 @@
     "tasks": 
     [
         {
+            "label": "Makefile Runner",
             "taskName": "MakeFile Runner",
             "type": "shell",
             "command": "make debug",
@@ -14,6 +15,19 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
+            }
+        },
+        {
+            "label": "Makefile Normal Runner",
+            "taskName": "Makefile MAKE",
+            "type": "shell",
+            "command": "make",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
             }
         }
     ]

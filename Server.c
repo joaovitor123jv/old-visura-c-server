@@ -8,18 +8,32 @@
 #include <arpa/inet.h>
 #include <sys/ioctl.h>
 #include <pthread.h>
+// void pthread_kill_other_threads_np(void);
+
+#include<signal.h>
+
+void interrupcaoForcada(int sinal);
+void limpaBuffers(void) __attribute__ ((destructor));
+
 #include "Server.h"
 
-void limpaBuffers(void) __attribute__ ((destructor));
+
+//Funcao chamada quando ctrl+c é "invocado"
+void interrupcaoForcada(int sinal)
+{
+	printf(" Sinal pego = |%d| ← \n", sinal);
+	exit(sinal);
+}
 
 bool inicializaMonitorDeBancoDeDados();
 
-
 int main(void)
 {
-	system("clear");
+	//system("clear");
 	int x =0;
 	printf(" LOG: Iniciando servidor em Server.c main()\n");
+	signal(SIGINT, interrupcaoForcada);
+
 
 	printf(" LOG: Configurando servidor em Server.c main()\n");
 	int sockfd = configuraServidor();
@@ -53,10 +67,11 @@ int main(void)
 			return 0;
 		}
 
-		if(pthread_create(&thread, NULL, Servidor, (void *)&clienteSockfd) != 0)
+		if(pthread_create(&thread, NULL, Servidor, (void *)&clienteSockfd) != 0)// ERRO aqui
 		{
 			printf(" Falha ao tentar criar Thread\n");
 			printf(" Provavel limite de threads simultâneas atingido\n");
+			close(clienteSockfd);
 			return 0;
 		}
 		x++;
@@ -70,6 +85,7 @@ int main(void)
 void limpaBuffers(void)// Função executada ao final das interpretações da função main.c
 {
 	printf(" LOG: Liberando memoria residual utilizada em Server.h limpaBuffers() \n");
+	// pthread_kill_other_threads_np();
 	if(conexao != NULL)
 	{
 		printf(" LOG: Liberando conexão com o banco de dados em Server.c limpaBuffers()\n");

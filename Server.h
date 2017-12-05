@@ -3,8 +3,8 @@
 
 #define BUFFER_CLIENTE 1024//(aceitou 1024*1024 (1MB))
 
-#include "interpretadorDeComandos.h"
-
+// #include "GerenciadorDeThreads.h"
+#include "Comandos/interpretadorDeComandos.h"
 
 #define PORTA 7420
 
@@ -20,10 +20,6 @@
 #ifndef bool
 #define bool char
 #endif
-
-
-
-
 
 int abreSocket()
 {
@@ -219,17 +215,14 @@ void *Servidor(void *cliente)
 	int resultado;
 	bool usuarioAnonimo = true;
 	
-
 	printf(" LOG: Aguardando por mensagens\n");
 	while(true)
 	{
-
 		memset(bufferCliente, '\0', BUFFER_CLIENTE);
 		if(mensagem != NULL)
 		{
 			mensagem = NULL;
 		}
-
 
 		read(*(int*)cliente, bufferCliente, sizeof(bufferCliente));
 		printf(" RECEBIDO: |%s|\n", bufferCliente);
@@ -256,10 +249,7 @@ void *Servidor(void *cliente)
 				pthread_yield();/* Causa um warning, mas nada demais */
 			}//Aguarda, liberando cpu para outros trabalhos (senão fica fazendo coisa a toa até ser interrompida pelo SO)
 
-
-
 			printf("\n\n \t*********************Inicio de Interpretação *************\n");
-
 
 			if(email == NULL)
 			{
@@ -319,8 +309,30 @@ void *Servidor(void *cliente)
 					write( *(int *)cliente, mensagem, strlen(mensagem) +1);
 					if(precisaLiberar)
 					{
-						free(mensagem);
-						mensagem = NULL;
+						if(strcmp(mensagem, RETORNO_NOT_FOUND) == 0)
+						{
+							mensagem = NULL;
+						}
+						else
+						{
+							free(mensagem);
+							mensagem = NULL;
+						}
+					}
+					break;
+
+				case REQUISITANDO_ROOT:
+					if( usuarioRoot(email) )
+					{
+						 mensagem = comandoRoot(email);
+						 interpretando = false;// NÃO REMOVER !!!
+						 enviaMensagemParaCliente(mensagem, cliente);
+						 free(mensagem);
+						 mensagem = NULL;
+					}
+					else
+					{
+						enviaMensagemParaCliente("Erro, desconectando\0", cliente);
 					}
 					break;
 

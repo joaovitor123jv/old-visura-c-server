@@ -1,7 +1,7 @@
+#pragma once
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include"Comando-Login.h"
 
 #ifndef true
 #define true 1
@@ -22,7 +22,7 @@
 
 // Criar biblioteca de criação e manipulacao de usuarios
 
-typedef struct Usuario
+struct Usuario
 {
 	char *login;
 	int tamanhoLogin;
@@ -30,6 +30,10 @@ typedef struct Usuario
 	int tamanhoSenha;
 	int nivelDePermissao;
 };
+
+typedef struct Usuario Usuario;
+
+bool usuarioPrivilegiado(char *email);
 
 Usuario *new_Usuario(const char *login, const char *senha)
 {
@@ -73,6 +77,39 @@ Usuario *new_Usuario(const char *login, const char *senha)
 	return usuario;
 }
 
+bool usuarioPrivilegiado(char *email)
+{
+	if(email == NULL)
+	{
+		return false;
+	}
+	if(strcmp(email, LOGIN_DE_CADASTRO) == 0)
+	{
+		return true;
+	}
+	if(strcmp(email, LOGIN_DO_SITE) == 0)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool usuarioRoot(char *email)
+{
+	if( email == NULL )
+	{
+		return false;
+	}
+	else if( strcmp(email, LOGIN_USUARIO_ROOT) == 0 )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 char *usuario_obterLogin(Usuario *usuario)
 {
 	if( usuario == NULL )
@@ -98,7 +135,7 @@ int usuario_obterTamanhoSenha(Usuario *usuario)
 	if( usuario == NULL )
 	{
 		printf(" Warning: Usuario nula detectado em Usuario.h usuario_obterTamanhoSenha()\n");
-		return NULL;
+		return -1;
 	}
 	return usuario->tamanhoSenha;
 }
@@ -108,7 +145,7 @@ int usuario_obterTamanhoLogin(Usuario *usuario)
 	if( usuario == NULL )
 	{
 		printf(" Warning: Usuario nula detectado em Usuario.h usuario_obterTamanhoLogin()\n");
-		return NULL;
+		return -1;
 	}
 	return usuario->tamanhoLogin;
 }

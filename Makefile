@@ -21,7 +21,7 @@ LIKE_A_LIBRARY=-c
 
 WARNINGS=-Wall
 
-#STANDARD=-std=c11
+#STANDARD=--std=c11
 
 
 all: Fila_Objeto

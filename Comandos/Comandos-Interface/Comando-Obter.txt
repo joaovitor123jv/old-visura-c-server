@@ -1,0 +1,7 @@
+Para Obter os 10 produtos mais novos:
+	Necessário estar logado: (Ver arquivo de como logar)
+
+	Enviar a seguinte string à interface:
+		→  APP 4 J
+
+		Sintaxa: CHAVE_DE_APLICACAO COMANDO_OBTER TIPO_10_MAIS_NOVOS

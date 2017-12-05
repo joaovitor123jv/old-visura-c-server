@@ -1,0 +1,28 @@
+Adicao simulada de visualização (anonima ou nao) via APP, solicitando à interface:
+
+	→ Dados hipotéticos utilizados no exemplo:
+		→ Login do usuario: "algumLoginAleatorioOuNao"
+		→ Senha do usuario: "nulo"
+		→ ID do produto: "cocacolavc"
+		→ Quantidade de visualizações a ser adicionadas: "3"
+
+	→ Passo 1: Logar-se com usuario
+		→ APP 1 algumLoginAleatorioOuNao nulo
+
+		Sintaxe: CHAVE_APLICACAO COMANDO_LOGIN loginInformado senhaInformada
+		(retorno esperado: "OK")
+
+	→ Passo 2: Solicitar adicao de visualizacao
+
+		→ APP 2 2 cocacolavc 3
+
+		Sintaxe: CHAVE_APLICACAO COMANDO_ADICAO TIPO_VISUALIZACAO idProdutoInformado qtdVisualizacoes
+
+		(retorno esperado: "OK")
+
+	→ Passo 3 (opcional-recomendado): desconectar-se da interface
+
+		→ APP sair
+
+
+
