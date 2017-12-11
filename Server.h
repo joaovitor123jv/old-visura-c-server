@@ -4,6 +4,7 @@
 #define BUFFER_CLIENTE 1024//(aceitou 1024*1024 (1MB))
 
 // #include "GerenciadorDeThreads.h"
+
 #include "Comandos/interpretadorDeComandos.h"
 
 #define PORTA 7420
@@ -239,11 +240,10 @@ void *Servidor(void *cliente)
 			pthread_exit( (void *) 0 );
 		}
 
+		/* Se a mensagem recebida não for incompatível com nenhum comando */
 		if( !mensagemDeEscapeDetectada(bufferCliente) )
 		{
-			printf(" LOG: Cliente não saiu\n");
-
-			printf(" LOG: Aguardando liberacao para interpretacao\n");
+			printf(" LOG: Mensagem recebida, Aguardando liberacao para interpretacao\n");
 			while(interpretando)
 			{
 				pthread_yield();/* Causa um warning, mas nada demais */
@@ -256,10 +256,6 @@ void *Servidor(void *cliente)
 				email = interpretaComando(bufferCliente, &autorizado, &resultado, email, &usuarioAnonimo);
 				if(email != NULL)
 				{
-					// char *aux = email;
-					// aux = email;
-					// email = malloc(sizeof(char) * (strlen(aux) + 1));
-					// strcpy(email, aux);
 					email = strdup(email);
 				}
 				else

@@ -3,6 +3,7 @@
 #include <mysql/mysql.h>
 #include "Comandos.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
+#include "../Usuario.h"
 
 //char *comandoLogin(char *comando, bool *usuarioAnonimo)/* APP 1 login senha */
 char *comandoLogin(bool *usuarioAnonimo)
@@ -69,6 +70,7 @@ char *comandoLogin(bool *usuarioAnonimo)
 				return NULL;
 			}
 
+//			Usuario *usuario = new_Usuario(email, senha); // FUTURO FEATURE
 			return email;
 		}
 		else

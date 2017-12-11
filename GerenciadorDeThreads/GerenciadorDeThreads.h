@@ -1,3 +1,6 @@
+#ifndef _GERENCIADOR_DE_THREADS_
+#define _GERENCIADOR_DE_THREADS_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,12 +18,16 @@
 #define bool char
 #endif
 
-typedef struct 
+typedef struct GerenciadorDeThreads
 {
 	int numeroDeThreads;
-	void *(*rodarEmBackground)(void *);
-	GerenciadorDeThreads *this;
-	void *(threadMonitoradora)(void *);
+	void *(*rodarEmBackground)(void *, struct GerenciadorDeThreads *);
+	struct GerenciadorDeThreads *this;
+//	void *(threadMonitoradora)(void *);
 }GerenciadorDeThreads;
 
 GerenciadorDeThreads *initGerenciadorDeThreads();
+
+bool freeGerenciadorDeThreads(GerenciadorDeThreads *gerenciador);
+
+#endif /* _GERENCIADOR_DE_THREADS_ */

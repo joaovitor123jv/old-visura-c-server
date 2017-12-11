@@ -1,0 +1,92 @@
+Árvore de Comandos disponíveis para a interface do Visu-RA
+
+login padrão (para criação de usuario): interface@servidor
+senha padrão (para criação de usuario): senatauri
+
+#ifndef CHAVE_DE_SEGURANCA
+#define CHAVE_DE_SEGURANCA "MIGqAgEAAiEArPXCV6pZjBh+OKNVEM/+eIb5KgGZw24jX2mfu2GzFPcCAwEAAQIgCx8KTgTAGUgB5bZq49fb7tzxlVPJya47G9dtFcNrZ7ECEQDgJPU9398P6I0R5MCV+SeVAhEAxYqPkCR6yJ2YuCUZI903WwIRAMmp9swYo8TYYjP7MBq+9JECECeNYMVZqIP2mhd0xh3aMzUCEBGnaCJnmYNciQfqIT1vmws="
+#endif
+
+
+APP
+	1	(COMANDO_LOGIN)
+		login
+			senha
+				(solicita inicio de sessão com usuário com login e senha)
+	
+	2	(COMANDO_ADICAO)
+		2	(TIPO_VISUALIZACAO)
+			idproduto
+				quantidadeDeVisualizacoes
+					(Adiciona quantidadeDeVisualizacoes visualizações ao produto referenciado por idproduto)
+
+		kW	(TIPO_AVALIACAO)
+			idproduto
+				avaliacao
+					(avaliacao pode ser '1' ou '0', sendo:
+						1: Avaliacao Positiva
+						2: Avaliacao Negativa)
+
+		tr	(TIPO_FEEDBACK)
+			idproduto
+				tituloDoFeedback	(até 100 caracteres)
+					conteudoDoFeedback	(até 500 caracteres)
+						(Adiciona um feedback de um cliente a um produto, referenciado por idproduto, com título e conteudo (opinião textual))
+		1	(TIPO_USUARIO)
+			1	(TIPO_USUARIO)
+				7	(TIPO_LOGIN)
+					emailInformado
+						9	(TIPO_SENHA)
+							senhaInformada
+								(Converte usuario logado para usar agora o login e senha informados (cria um usuario), somente login e senha *ATÉ AQUI*)
+
+								sexoInformado
+									dataNascimentoInformada		(formato  DD/MM/AAAA )
+										(Converte usuario logado para usar agora o login e senha informados (cria um usuario normal)
+											DIFERENÇA: Adiciona informações de sexo e data de nascimento do usuario ao banco com o mesmo comando que já adiciona o usuario (menos dados transitando))
+				
+			2	(TIPO_USUARIO_ANONIMO)
+				CHAVE_DE_SEGURANCA
+					7	(TIPO_LOGIN)
+						loginInformado
+							9	(TIPO_SENHA)
+								senhaPadraoUsuarioAnonimo
+									(Adiciona usuario Anonimo com loginInformado e senhaPadraoUsuarioAnonimo)
+									(loginInformado não pode conter nenhum caracter '@' ou espaços)
+								
+					9	(TIPO_SENHA)
+						senhaPadraoUsuarioAnonimo
+							7	(TIPO_LOGIN)
+								loginInformado
+									(Adiciona usuario Anonimo com loginInformado e senhaPadraoUsuarioAnonimo)
+									(loginInformado não pode conter nenhum caracter '@' ou espaços)
+		&	(TIPO_INFORMACAO) (NÃO COMPLETO (e não vai ficar completo nunca kkk))
+			#	(TIPO_NOME)
+				nomeInformado
+					(Adiciona ou altera, o nome do cliente logado (somente usuario registrado))
+			Y	(TIPO_SOBRENOME)
+				sobrenomeInformado
+					(Adiciona ou altera, o sobrenome do cliente locado (somente usuario registrado))
+			Dj	(TIPO_PONTO)
+				quantidadeDePontos
+					(Adiciona quantidadeDePontos ao usuario logado (gamificação) (somente usuario registrado))
+			SQ	(TIPO_SEXO)
+				sexoInformado	(Representado por um numero (por enquanto, de 1 a 3), sendo os possiveis → |1 == Masculino | 2 == Feminino | 3 == Outro|)
+					(Adiciona ou altera o sexo do cliente logado)
+			T	(TIPO_DATA)
+				dataInformada	(formato DD/MM/AAAA )
+					(Adiciona ou altera a data de nascimento do cliente logado (somente usuario registrado))
+			
+		{	(TIPO_CIDADE)
+			nomeDoEstado	(na verdade... sigla, sempre em maiúsculo, duas letras... exemplos: "SP", "GO", "MT" (todos os estados brasileiros estão adicionados no banco))
+				nomeDaCidade
+					(Adiciona cidade com nome nomeDaCidade ao estado nomeDoEstado)
+
+		l0	(TIPO_LOCALIZACAO)	(Esse dá um pouco de trabalho kkk)
+			(CONSIDERE INOPERANTE POR ENQUANTO, na verdade ele funciona, mas vou padronizar ele antes)
+
+		/* FUNÇÕES PARA ADMINISTRADORES - Não precisam ser mapeadas por agora (integrar APP com SERVER) */
+
+		+	(TIPO_PRODUTO)	
+		$C	(TIPO_CONTRATANTE)
+

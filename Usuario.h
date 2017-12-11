@@ -19,6 +19,21 @@
 #define _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_ -1
 #endif
 
+#ifndef USUARIO_NIVEL_DE_PERMISSAO_ROOT 
+#define USUARIO_NIVEL_DE_PERMISSAO_ROOT 40
+#endif
+
+#ifndef USUARIO_NIVEL_DE_PERMISSAO_ELEVADO
+#define USUARIO_NIVEL_DE_PERMISSAO_ELEVADO 10
+#endif
+
+#ifndef USUARIO_NIVEL_DE_PERMISSAO_ANONIMO
+#define USUARIO_NIVEL_DE_PERMISSAO_ANONIMO 5
+#endif
+
+#ifndef USUARIO_NIVEL_DE_PERMISSAO_NORMAL
+#define USUARIO_NIVEL_DE_PERMISSAO_NORMAL 0
+#endif
 
 // Criar biblioteca de criação e manipulacao de usuarios
 
@@ -73,7 +88,23 @@ Usuario *new_Usuario(const char *login, const char *senha)
 		usuario = NULL;
 		return NULL;
 	}
-	usuario->nivelDePermissao = _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
+
+	if( strcmp(usuario->login, LOGIN_DE_CADASTRO) == 0 )
+	{
+		usuario->nivelDePermissao = USUARIO_NIVEL_DE_PERMISSAO_ELEVADO;
+	}
+	else if( strcmp(usuario->login, LOGIN_DO_SITE) == 0 )
+	{
+		usuario->nivelDePermissao = USUARIO_NIVEL_DE_PERMISSAO_ELEVADO;
+	}
+	else if( strcmp(usuario->login, LOGIN_USUARIO_ROOT) == 0 )
+	{
+		usuario->nivelDePermissao = USUARIO_NIVEL_DE_PERMISSAO_ROOT;
+	}
+	else
+	{
+		usuario->nivelDePermissao = USUARIO_NIVEL_DE_PERMISSAO_NORMAL;
+	}
 	return usuario;
 }
 
@@ -108,6 +139,45 @@ bool usuarioRoot(char *email)
 	{
 		return false;
 	}
+}
+
+bool usuario_PermissaoPrivilegiada(Usuario *usuario)
+{
+	if( usuario == NULL )
+	{
+		printf(" Warning: usuario == NULL detectado em Usuario.h usuario_PermissaoPrivilegiada()\n");
+		return false;
+	}
+	if( usuario->nivelDePermissao == USUARIO_NIVEL_DE_PERMISSAO_NORMAL )
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+bool usuario_PermissaoRoot(Usuario *usuario)
+{
+	if( usuario == NULL )
+	{
+		printf(" Warning: usuario == NULL em Usuario.h usuario_PermissaoRoot()\n");
+		return false;
+	}
+	if( usuario->nivelDePermissao == USUARIO_NIVEL_DE_PERMISSAO_ROOT )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool usuario_anonimo(Usuario *usuario)
+{
+	return false;
 }
 
 char *usuario_obterLogin(Usuario *usuario)

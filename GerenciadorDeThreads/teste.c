@@ -7,6 +7,6 @@ int main()
 	printf(" INISNDISANDIAS\n");
 	GerenciadorDeThreads *gerenciador;
 	gerenciador = initGerenciadorDeThreads();
-	gerenciador->rodarEmBackground(NULL);
+	gerenciador->rodarEmBackground(NULL, NULL);
 	return 0;
 }

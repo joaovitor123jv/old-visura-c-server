@@ -433,7 +433,7 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 			return false;
 		}
 		printf(" LOG: String copiada Comando-Adicao.h\n");
-		token = strtok(NULL, " ");//APP 2 1 2 asdkjhaskd 9 loginDoUsuario 7
+		token = strtok(NULL, " ");//APP 2 1 2 asdkjhaskd 7 loginDoUsuario 9
 		if(token == NULL)
 		{
 			printf(" Warning: Comando insuficiente (Comando-Adicao.h) addUsuarioAnonimo() (2)\n");
@@ -441,14 +441,14 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 			senha = NULL;
 			return false;
 		}
-		if(strcmp(token, TIPO_LOGIN) != 0)//APP 2 1 2 asdhasjdkh 9 logindousuario 7
+		if(strcmp(token, TIPO_LOGIN) != 0)//APP 2 1 2 asdhasjdkh 7 logindousuario 9
 		{
 			printf(" Warning: Comando insuficiente Comando-Adicao.h addUsuarioAnonimo() (3)\n");
 			free(senha);
 			senha = NULL;
 			return false;
 		}
-		token = strtok(NULL, "\0");//APP 2 1 2 asdhasjdkh 9 logindousuario 7 senhaInformada
+		token = strtok(NULL, "\0");//APP 2 1 2 asdhasjdkh 7 logindousuario 9 senhaInformada
 		if(token == NULL)
 		{
 			printf(" Warning: Comando insuficiente Comando-Adicao.h addUsuarioAnonimo() (4)\n");
@@ -983,29 +983,13 @@ bool addVisualizacao(char *email, bool usuarioAnonimo)/* APP 2 2 idProduto quant
 bool addCidade()/* APP 2 { */
 {
 	char *token = NULL;
-	token = strtok(NULL, " ");
-	if(token == NULL)/* APP 2 { S */
-	{
-		printf(" Warning: Comando insuficiente em Comando-Adicao.h addCidade()\n");
-		return false;
-	}
-	if(strlen(token) > 1)
-	{
-		printf(" Warning: Argumento exageradamente grande em Comando-Adicao.h addCidade()\n");
-		return false;
-	}
-	if(strcmp(token, TIPO_ESTADO) != 0)
-	{
-		printf(" Warning: Argumento inválido em Comando-Adicao.h addCidade()\n");
-		return false;
-	}
 	token = strtok(NULL, " ");/* APP 2 { nomeDoEstado */
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addCidade()\n");
 		return false;
 	}
-	if(strlen(token) != 2)/* APP 2 { S nomeDoEstado */
+	if(strlen(token) != 2)/* APP 2 { nomeDoEstado */
 	{
 		printf(" Warning: Tamanho de estado informado incorreto Comando-Adicao.h addCidade()\n");
 		return false;
@@ -1028,7 +1012,7 @@ bool addCidade()/* APP 2 { */
 		printf(" Warning: Executada copia incorreta de token para nomeDoEstado em Comando-Adicao.h addCidade()\n");
 		return false;
 	}
-	token = strtok(NULL, " ");/* APP 2 { S nomeDoEstado nomeDaCidade */
+	token = strtok(NULL, " ");/* APP 2 { nomeDoEstado nomeDaCidade */
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addCidade() (2)\n");
@@ -2972,25 +2956,8 @@ bool addAvaliacaoAProduto(char *email)//DONE       APP 2 kW * idProduto avaliaca
 		printf(" Warning: Email nulo em Comando-Adicao.h addAvaliacaoAProduto()\n");
 		return false;
 	}
-	char *token = strtok(NULL, " ");// APP 2 kW * idProduto
+	char *token = strtok(NULL, " ");// APP 2 kW idProduto
 
-	if(token == NULL)
-	{
-		printf(" Warning: Comando insuficiente em Comando-Adicao.h addAvaliacaoAProduto() q654t88y77q9f2\n");
-		return false;
-	}
-	if (token[1] != '\0' && token[2] != '\0')
-	{
-		printf(" Warning: Comando exageradamente grande detectado em Comando-Adicao.h addAvaliacaoAProduto() 46487871121a\n");
-		return false;
-	}
-	if (strcmp(token, TIPO_ID_PRODUTO) != 0)
-	{
-		printf(" Warning: Comando incorreto detectado em Comando-Adicao.h addAvaliacaoAProduto() 41q54r8bw\n");
-		return false;
-	}
-
-	token = strtok(NULL, " ");// APP 2 kW * idProduto
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addAvaliacaoAProduto() qkjh4uhuasd\n");
@@ -3008,7 +2975,7 @@ bool addAvaliacaoAProduto(char *email)//DONE       APP 2 kW * idProduto avaliaca
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2 kW * idProduto avaliacaoDoUsuario
+	token = strtok(NULL, " ");// APP 2 kW idProduto avaliacaoDoUsuario
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addAvaliacaoAProduto() jklsadve\n");
@@ -3069,29 +3036,8 @@ bool addFeedbackAProduto(char *email)// APP 2 tr * idProduto tituloDoFeedback te
 		printf(" Warning: email == NULL em addFeedbackAProduto() Comando-Adicao.h qq654nn");
 		return false;
 	}
-	char *token = strtok(NULL, " ");// APP 2 tr *
-	if(token == NULL)
-	{
-		printf(" Warning: Comando insuficiente em addFeedBackAProduto() Comando-Adicao.h q195dh65s\n");
-		return false;
-	}
-	// if(strlen(token) > TAMANHO_TIPO)
-	// {
-	// 	printf(" Warning: Comando exageradamente grande em addFeedBackAProduto() Comando-Adicao.h vbkjbdg\n");
-	// 	return false;
-	// }
-	// if(strcmp(token, TIPO_ID_PRODUTO) != 0)
-	// {
-	// 	printf(" Warning: Comando incorreto detectado em addFeedBackAProduto() Comando-Adicao.h askjhbrdr5\n");
-	// 	return false;
-	// }
-	if (token[0] != '*' || token[1] != '\0')// OTIMIZADO
-	{
-		printf(" Warning: Comando incorreto detectado em addFeedbackAProduto() Comando-Adicao.h akjhbvrd\n");
-		return false;
-	}
+	char *token = strtok(NULL, " ");// APP 2 tr idProduto
 
-	token = strtok(NULL, " ");// APP 2 tr * idProduto
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em addFeedbackAProduto() Comando-Adicao.h asdkjbvd\n");
@@ -3109,7 +3055,7 @@ bool addFeedbackAProduto(char *email)// APP 2 tr * idProduto tituloDoFeedback te
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2 tr * idProduto tituloFeedBack
+	token = strtok(NULL, " ");// APP 2 tr idProduto tituloFeedBack
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addFeedbackAProduto() sv489s51hrd\n");
