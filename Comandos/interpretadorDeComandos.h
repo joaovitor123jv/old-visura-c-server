@@ -151,18 +151,18 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 			printf(" LOG: Requisitando \"COMANDO-OBTER\" em interpretadorDeComandos.h interpretaComando()\n");
 			*resultado = REQUISITANDO_OBTENCAO;
 			return NULL;
-			break;
-
-		case COMANDO_ROOT: // 7
-			printf(" Warning: COMANDO_ROOT REQUISITADO em interpretadorDeComandos.h interpretaComando()\n");
-			*resultado = REQUISITANDO_ROOT; // 17
-			return NULL;
-			break;
+			break;		
 
 		case ERRO:
 			printf("Erro na execução do comando\n");
 			interpretando = false;
 			*resultado = ERRO;
+			return NULL;
+			break;
+
+		case COMANDO_ROOT: // 7
+			printf(" Warning: COMANDO_ROOT REQUISITADO em interpretadorDeComandos.h interpretaComando()\n");
+			*resultado = REQUISITANDO_ROOT; // 17
 			return NULL;
 			break;
 

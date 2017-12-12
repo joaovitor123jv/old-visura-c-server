@@ -14,6 +14,7 @@ APP
 			senha
 				(solicita inicio de sessão com usuário com login e senha)
 	
+	
 	2	(COMANDO_ADICAO)
 		2	(TIPO_VISUALIZACAO)
 			idproduto
@@ -60,6 +61,7 @@ APP
 								loginInformado
 									(Adiciona usuario Anonimo com loginInformado e senhaPadraoUsuarioAnonimo)
 									(loginInformado não pode conter nenhum caracter '@' ou espaços)
+
 		&	(TIPO_INFORMACAO) (NÃO COMPLETO (e não vai ficar completo nunca kkk))
 			#	(TIPO_NOME)
 				nomeInformado
@@ -90,3 +92,42 @@ APP
 		+	(TIPO_PRODUTO)	
 		$C	(TIPO_CONTRATANTE)
 
+	3	(COMANDO_ATUALIZAR)
+		(Não possui comandos ainda, está aqui como uma possível extensão futura)
+
+
+	4	(COMANDO_OBTER)
+		J	(TOP_10_NOVOS)
+			(Obtem os 10 produtos mais recentemente adicionados ao banco de dados e retorna seus respectivos IDs, separados por espaço)
+		
+		9&	(TOP_10_MELHORES)
+			(Obtem os 10 produtos melhor avaliados do banco de dados (disponíveis/dentro da validade), retorna seus IDs, separados por espaço)
+		
+		Q	(TIPO_DESCRICAO_PRODUTO)
+			idproduto
+				(Obtem a descricao do produto referenciado por idproduto e a retorna, caso esteja dentro da validade para o usuario que está pedindo isso)
+		
+		1.	(TIPO_NOME_PRODUTO)
+			idproduto
+				(Obtem o nome do produto referenciado por idproduto e retorna esse, caso esteja dentro da validade para o usuario que está pedindo isso)
+		
+		kW	(TIPO_AVALIACAO)
+			idproduto
+				(Obtem a avaliacao do produto referenciado por idproduto e retorna esse)
+		
+		2	(TIPO_VISUALIZACAO)	(leia como "Desejo OBTER algo relacionado a VISUALIZACAO")
+			@	(TIPO_QUANTIDADE)	(deseja obter a quantidade de visualizacoes de alguma coisa)
+				2	(TIPO_VISUALIZACAO)
+					idproduto
+						(retorna a quantidade de visualizacoes de usuarios cadastrados a um determinado produto referenciado por idproduto)
+
+				3	(TIPO_VISUALIZACAO_ANONIMA)
+					idproduto
+						(retorna a quantidade de visualizacoes de usuarios Anonimos a um determinado produto referenciado por idproduto)
+						
+				=	(TIPO_ESPECIFICO)	(possibilita extensão do comando)
+					(Ainda não implementado nada aqui, aguardando pra "visualização de empresa, perfil de usuários, coisas do tipo")
+		$	(TIPO_ID_CIDADE)
+			nomeDaCidade
+				nomeDoEstado	(como SIGLA, exemplos: "SP", "GO", "DF", "PE"...)
+					(retorna o ID da cidade "nomeDaCidade" que está no estado "nomeDoEstado")
