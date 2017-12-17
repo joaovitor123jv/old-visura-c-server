@@ -1,0 +1,36 @@
+→Adicionar campo "categoria" ao banco de dados
+→Adaptar codigo para nova arquitetura de usuario
+→redesenhar funcionamento da variavel "interpretando"
+→Checar strtok em multithread
+→Criar alternativa ao strtok
+→Separar .h de .c
+→Adaptar Makefile
+→Separar a interface em processos  (mestre-> escravo)
+→Adaptar Makefile
+→Pesquisar e testar TCP Hand-off e Spoofing
+→Implementar TCPSpoof
+→Procurar saber mais sobre ZIMBRA (Gerenciador de e-mail)
+→Estabelecer comando pra confirmar e-mail
+→Implementar confirma-email
+→Otimizar dados de confirmacao de email
+→Definir intervalo de tempo de Logs (15s é pouco)
+→Pesquisar algoritimos de definicao de perfil
+→Implementar obter id contratante
+→Implementar update plano contratante
+→Implementar obterPlanoContratante
+→Revisar indices de plano produto
+→Adicionar suporta a perfis ao banco de dados
+→Adicionar perfis de usuario
+→Implementar calculo de perfil
+→implementar update perfil
+→Implementar obterPontosCliente
+→Estudar big data Hadoop
+→Estudar big data Spark
+→Pesquisar particionamento de indice
+→Otimizar modelo pra integracao com Big Data
+→Definir comandos que precisam ou não de chave
+→Re-Fazer addLocalizacao
+→estabelecer aquivo de logs somente para o Ruby
+→Criar função para gerenciamento de thread/forks
+
+

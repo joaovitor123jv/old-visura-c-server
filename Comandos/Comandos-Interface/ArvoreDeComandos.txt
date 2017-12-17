@@ -90,7 +90,23 @@ APP
 		/* FUNÇÕES PARA ADMINISTRADORES - Não precisam ser mapeadas por agora (integrar APP com SERVER) */
 
 		+	(TIPO_PRODUTO)	
-		$C	(TIPO_CONTRATANTE)
+			CHAVE_DE_SEGURANCA
+				idContratante	(ID da empresa que vai adicionar o produto)
+					idProduto
+						duracao	(O tempo que o produto vai durar, em dias)
+							nomeProduto	(nome do produto)
+								(adiciona um produto que vai ser dado como criado pelo contratante referenciado por idContratante, com duracao(inteiro) em dias, e nomeProduto como seu "nome que vai aparecer pro público", deixei descricao como não obrigatória)
+
+								descricaoProduto	(descricao do produto que vai aparecer ao usuario, não obrigatório)
+									(adiciona um produto que vai ser dado como criado pelo contratante referenciado por idContratante, com duracao(inteiro) em dias, e nomeProduto como seu "nome que vai aparecer pro público", deixei descricao como não obrigatória)
+
+	$C	(TIPO_CONTRATANTE)
+		CHAVE_DE_SEGURANCA
+			nome	(nome da empresa a ser adicionada)
+				cnpj	(CNPJ da empresa a ser adicionada (obrigatório))
+					plano	(plano escolhido (da tabela de planos a ser criada, de 00 a 99));
+						email	(email (responsável) ao qual quer associar a contratante)
+							// REFORMULANDO ESSE COMANDO 
 
 	3	(COMANDO_ATUALIZAR)
 		(Não possui comandos ainda, está aqui como uma possível extensão futura)

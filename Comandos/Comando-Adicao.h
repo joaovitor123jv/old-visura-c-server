@@ -1790,23 +1790,8 @@ bool addContratante()// APP 2 $C
 		return false;
 	}
 	// A partir daqui o usuário está autorizado (chave aprovada e usuario conectado)
-	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP #
-	if(token == NULL)
-	{
-		printf(" Warning: Comando insuficiente em Comando-Adicao.h addContratante() nnqksjhr\n");
-		return false;
-	}
-	if(strlen(token) > TAMANHO_TIPO)
-	{
-		printf(" Warning: Token obtido exageradamente grande em Comando-Adicao.h addContratante() qjwehka\n");
-		return false;
-	}
-	if(strcmp(token, TIPO_NOME) != 0)
-	{
-		printf(" Warning: Comando incorreto em Comando-Adicao.h addContratante() asdkjqb\n");
-		return false;
-	}
-	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP # nome
+
+	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addContratante() qkrba\n");
@@ -1818,48 +1803,26 @@ bool addContratante()// APP 2 $C
 		return false;
 	}
 	char *nome;
-	nome = malloc(sizeof(char) * (strlen(token) +1));
-	if(nome == NULL)
+	//nome = malloc(sizeof(char) * (strlen(token) +1));
+	nome = strdup(token);
+	if( nome == NULL )
 	{
-		printf(" Warning: Falha ao tentar alocar memoria para nome de contratante em Comando-Adicao.h addContratante() qaskb\n");
+		printf(" Warning: Falha ao duplicar de token para nome em Comando-Adicao.h addContratante() sahdjkasvbeu\n");
 		return false;
 	}
-	strcpy(nome, token);
-	if(strcmp(nome, token) != 0)
+
+	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome cnpj
+	if( token == NULL )
 	{
-		printf(" Warning: Copia incorreta em Comando-Adicao.h addContratante() qkjbxw\n");
-		printf(" \tNome = |%s|\n", nome);
-		printf(" \tToken = |%s|\n", token);
+		printf(" Warning: Comando insuficiente em Comando-Adicao.h addContratante() abvria093sd\n");
 		free(nome);
 		nome = NULL;
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP # nome cnpj
-	if(token == NULL)
-	{
-		printf(" Warning: Comando insuficiente em Comando-Adicao.h addContratante() nqkjhiruha\n");
-		free(nome);
-		nome = NULL;
-		return false;
-	}
-	if(strlen(token) != TAMANHO_CNPJ)
-	{
-		printf(" Warning: Tamanho incorreto de token de cnpj em Comando-Adicao.h addContratante()\n");
-		free(nome);
-		nome = NULL;
-		return false;
-	}
 	char *cnpj;
-	cnpj = malloc(sizeof(char) * (TAMANHO_CNPJ + 1));
-	if(cnpj == NULL)
-	{
-		printf(" Warning: falha ao alocar memoria para cnpj em Comando-Adicao.h addContratante()\n");
-		free(nome);
-		nome = NULL;
-		return false;
-	}
-	strcpy(cnpj, token);
+	//cnpj = malloc(sizeof(char) * (TAMANHO_CNPJ + 1));
+	cnpj = strdup(token);
 	if(cnpj == NULL)
 	{
 		printf(" Warning: erro ao copiar cnpj em Comando-Adicao.h addContratante() qjhkc\n");
@@ -1867,16 +1830,8 @@ bool addContratante()// APP 2 $C
 		nome = NULL;
 		return false;
 	}
-	if(strcmp(cnpj, token) != 0)
-	{
-		printf(" Warning: Copia incorreta de cnpj em Comando-Adicao.h addContratante() qkbqo\n");
-		free(cnpj);
-		free(nome);
-		nome = NULL;
-		cnpj = NULL;
-		return false;
-	}
-	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP # nome cnpj plano
+
+	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addContratante() qkjhbvq\n");
@@ -1896,17 +1851,8 @@ bool addContratante()// APP 2 $C
 		return false;
 	}
 	char *plano;
-	plano = malloc(sizeof(char) * (strlen(token) + 1));
-	if(plano == NULL)
-	{
-		printf(" Warning: falha ao alocar memoria para plano em Comando-Adicao.h addContratante() qkbhve\n");
-		free(cnpj);
-		free(nome);
-		nome = NULL;
-		cnpj = NULL;
-		return false;
-	}
-	strcpy(plano, token);
+	//plano = malloc(sizeof(char) * (strlen(token) + 1));
+	plano = strdup(token);
 	if(plano == NULL)
 	{
 		printf(" Warning: falha ao copiar de token para plano em Comando-Adicao.h addContratante() qkbccw\n");
@@ -1916,19 +1862,8 @@ bool addContratante()// APP 2 $C
 		cnpj = NULL;
 		return false;
 	}
-	if(strcmp(plano, token) != 0)
-	{
-		printf(" Warning: Copia incorreta de token para plano em Comando-Adicao.h addContratante() qkbveq\n");
-		free(cnpj);
-		free(nome);
-		free(plano);
-		plano = NULL;
-		cnpj = NULL;
-		nome = NULL;
-		return false;
-	}
 
-	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP # nome cnpj plano email
+	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addContratante() bcqkj\n");
@@ -1954,21 +1889,8 @@ bool addContratante()// APP 2 $C
 	}
 
 	char *email;
-	email = malloc(sizeof(char) * (strlen(token) + 1));
-
-	if (email == NULL)
-	{
-		printf(" Warning: não foi possível alocar memoria para email em Comando-Adicao.h addContratante() kqbceo\n");
-		free(nome);
-		free(cnpj);
-		free(plano);
-		plano = NULL;
-		cnpj = NULL;
-		nome = NULL;
-		return false;
-	}
-
-	strcpy(email, token);
+	//email = malloc(sizeof(char) * (strlen(token) + 1));
+	email = strdup(token);
 
 	if(email == NULL)
 	{
@@ -1982,21 +1904,9 @@ bool addContratante()// APP 2 $C
 		return false;
 	}
 
-	if(strcmp(email, token) != 0)
-	{
-		printf(" Warning: Copia incorreta em Comando-Adicao.h addContratante() qkbeja\n");
-		free(cnpj);
-		free(nome);
-		free(plano);
-		free(email);
-		email = NULL;
-		plano = NULL;
-		nome = NULL;
-		cnpj = NULL;
-		return false;
-	}
+	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email algumaCoisa
 
-	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP # nome cnpj plano email algumaCoisa
+	//TODO
 
 	if(token == NULL)
 	{
@@ -2386,26 +2296,7 @@ bool addProduto()//DONE
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP ;
-	if(token == NULL)
-	{
-		printf(" Warning: Comando insuficiente em addProduto() Comando-Adicao.h 1b35 \n");
-		return false;
-	}
-
-	if(strlen(token) > TAMANHO_TIPO)
-	{
-		printf(" Warning: Tipo informado em token exageradamente grande em addProduto() Comando-Adicao.h qk5j\n");
-		return false;
-	}
-
-	if(strcmp(token, TIPO_ID_CONTRATANTE) != 0)
-	{
-		printf(" Warning: Tipo informado incorreto em addProduto() Comando-Adicao.h vkbn\n");
-		return false;
-	}
-
-	token = strtok(NULL, " ");// APP 2 * CHAVE_DE_SEGURANCA_PHP ; idContratante
+	token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em addProduto() Comando-Adicao.h 1b34 \n");
@@ -2419,40 +2310,16 @@ bool addProduto()//DONE
 	}
 
 	char *idContratante = NULL;
-	idContratante = malloc(sizeof(char) * (strlen(token) + 1));
-
-	//Checando id e copia
-	if(idContratante == NULL)
-	{
-		printf(" Warning: Falha ao alocar memoria para idContratante em addProduto() Comando-Adicao.h ekbna\n");
-		return false;
-	}
-
-	strcpy(idContratante, token);
+	//idContratante = malloc(sizeof(char) * (strlen(token) + 1));
+	idContratante = strdup(token);
 
 	if(idContratante == NULL)
 	{
 		printf(" Warning: falha ao copiar de token para idContratante em addProduto() Comando-Adicao.h b2i5\n");
 		return false;
 	}
-	else if(strlen(idContratante) > TAMANHO_CHAVE_PRIMARIA)
-	{
-		printf(" Warning: Copia de token para idContratante incorreto em addProduto() Comando-Adicao.h 3124w8\n");
-		free(idContratante);
-		idContratante = NULL;
-		return false;
-	}
 
-	if(strcmp(token, idContratante) != 0)
-	{
-		printf(" Warning: Copia incorreta de variaveis em addProduto() Comando-Adicao.h bvk3\n");
-		free(idContratante);
-		idContratante = NULL;
-		return false;
-	}
-
-
-	token = strtok(NULL, " ");// APP 2 * CHAVE_DE_SEGURANCA_PHP ; idContratante idProduto
+	token = strtok(NULL, " ");// APP 2 * CHAVE_DE_SEGURANCA_PHP idContratante idProduto
 
 	if(token == NULL)
 	{
@@ -2471,31 +2338,18 @@ bool addProduto()//DONE
 	}
 
 	char *idProduto = NULL;
-	idProduto = malloc(sizeof(char) * (strlen(token) + 1));
+	// idProduto = malloc(sizeof(char) * (strlen(token) + 1));
+	idProduto = strdup(token);
 
-	if(idProduto == NULL)
+	if( idProduto == NULL )
 	{
-		printf(" Warning: Falha ao alocar memoria para idProduto em addProduto() Comando-Adicao.h kwj4\n");
+		printf(" Warning: Faha ao duplicar string de token para idProduto em Comando-Adicao.h addProduto() djasdhjkvbka\n");
 		free(idContratante);
 		idContratante = NULL;
 		return false;
 	}
 
-	strcpy(idProduto, token);
-
-	if(idProduto == NULL)
-	{
-		printf(" Warning: Falha ao copiar de token para idProduto em addProduto() Comando-Adicao.h 324tg\n");
-		free(idContratante);
-		idContratante = NULL;
-		return false;
-	}
-	
-	//ID PRODUTO SEM CHECAGEM DE SEGURANÇA, POSSIVEL "ERRO" PROPOSITAL
-	
-
-	//TODO
-	token = strtok(NULL, " ");// APP 2 * CHAVE_DE_SEGURANCA_PHP ; idContratante idProduto duracao
+	token = strtok(NULL, " ");// APP 2 * CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao
 
 	if(token == NULL)
 	{
@@ -2518,19 +2372,9 @@ bool addProduto()//DONE
 	}
 
 	char *duracao = NULL;
-	duracao = malloc(sizeof(char) * (strlen(token) + 1));
+	// duracao = malloc(sizeof(char) * (strlen(token) + 1));
+	duracao = strdup(token);
 
-	if(duracao == NULL)
-	{
-		printf(" Warning: Não foi possível alocar memoria para duracao em addProduto() Comando-Adicao.h vbjk\n");
-		free(idProduto);
-		free(idContratante);
-		idContratante = NULL;
-		idProduto = NULL;
-		return false;
-	}
-	
-	strcpy(duracao, token);
 	if(duracao == NULL)
 	{
 		printf(" Warning: Não foi possivel copiar de token para duracao em addProduto() Comando-Adicao.h sadkjh4\n");
@@ -2542,7 +2386,7 @@ bool addProduto()//DONE
 	}
 
 	
-	token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP ; idContratante idProduto duracao nomeProduto
+	token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao nomeProduto
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em addProduto() Comando-Adicao.h\n");
@@ -2568,21 +2412,8 @@ bool addProduto()//DONE
 	}
 
 	char *nomeProduto = NULL;
-	nomeProduto = malloc(sizeof(char) * (strlen(token) + 1));
-
-	if(nomeProduto == NULL)
-	{
-		printf(" Warning: não foi possível alocar memoria para nome de produto em addProduto() Comando-Adicao.h 672bc98\n");
-		free(idProduto);
-		free(idContratante);
-		free(duracao);
-		duracao = NULL;
-		idContratante = NULL;
-		idProduto = NULL;
-		return false;
-	}
-
-	strcpy(nomeProduto, token);
+	//nomeProduto = malloc(sizeof(char) * (strlen(token) + 1));
+	nomeProduto = strdup(token);
 
 	if(nomeProduto == NULL)
 	{
@@ -2637,19 +2468,8 @@ bool addProduto()//DONE
 			return false;
 		}
 		char *descricao = NULL;
-		descricao = malloc(sizeof(char) * (strlen(token) + 1));
-		if(descricao == NULL)
-		{
-			printf(" Warning: Não foi possível alocar memoria para descricao em Comando-Adicao.h addProduto() 13121215454q\n");
-			free(duracao);
-			free(idProduto);
-			free(idContratante);
-			idContratante = NULL;
-			idProduto = NULL;
-			duracao = NULL;
-			return false;
-		}
-		strcpy(descricao, token);
+		//descricao = malloc(sizeof(char) * (strlen(token) + 1));
+		descricao = strdup(token);
 
 		if(descricao == NULL)
 		{
@@ -2663,7 +2483,7 @@ bool addProduto()//DONE
 			return false;
 		}
 
-		if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, descricao))//TODO Adicionar descrição de produto
+		if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, descricao))
 		{
 			printf(" LOG: Produto adicionado com sucesso ao banco de dados em addProdutoAoBanco() Comando-Adicao.h\n");
 			free(duracao);
@@ -2697,8 +2517,6 @@ bool addProduto()//DONE
 			return false;
 		}
 	}
-
-	//NAO CHECANDO COPIA DE DURACAO, POSSIVEL ERRO
 
 	printf(" Warning: Erro desconhecido em addProduto() Comando-Adicao.h chagsjkchsajk\n");
 
