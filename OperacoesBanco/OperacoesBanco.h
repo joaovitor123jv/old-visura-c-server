@@ -1176,7 +1176,7 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 }
 
 
-bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, char *telefone, char *idLocalizacao)//DONE
+bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, char *telefone, char *idLocalizacao, char *senha)//DONE
 {
 	if(conexao == NULL)
 	{
@@ -1216,12 +1216,18 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 		printf(" Warning: email informado é nule em addContratanteAoBanco() OperacoesBanco.h\n");
 		return false;
 	}
+	if( senha == NULL )
+	{
+		printf(" Warning: senha informada é nula em addContratanteAoBanco() OperacoesBanco.h sajbveiosd89\n");
+		return false;
+	}
 	
 	int tamanho;
 	char *query = NULL;
 	
 	
 	/* Checa se a já existe empresa com esse cnpj e esse email cadastrada */
+	/* QUERYs para checagem de dados corretos */
 	tamanho = 68 + strlen(email) + strlen(cnpj) + 1; // Esse +1 é o do bendito \0 kkk
 	query = (char *)malloc(sizeof(char) * tamanho);
 	
@@ -1279,10 +1285,10 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 		}
 	}
 	
-	if(telefone == NULL)
+	if(telefone == NULL)/* Se o cliente não informou telefone */
 	{
 		printf(" LOG: Telefone não informado, prosseguindo em addContratanteAoBanco() OperacoesBanco.h\n");
-		tamanho = 90 + 1 + strlen(plano) + strlen(cnpj) + strlen(nome) + strlen(email) + strlen(idLocalizacao);
+		tamanho = 99 + 1 + strlen(plano) + strlen(cnpj) + strlen(nome) + strlen(email) + strlen(idLocalizacao) + strlen(senha);
 		query = (char *)malloc(sizeof(char) * tamanho );
 		if(query == NULL)
 		{
@@ -1291,8 +1297,7 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 		}
 		else
 		{
-			snprintf(query, tamanho, "INSERT INTO contratante(email,plano,cnpj,nome,localizacao_idlocalizacao) VALUES(\'%s\',%s,%s,\'%s\',%s);", email, plano, cnpj, nome, idLocalizacao);
-			
+			snprintf(query, tamanho, "INSERT INTO contratante(email,plano,cnpj,nome,localizacao_idlocalizacao,senha) VALUES(\'%s\',%s,%s,\'%s\',%s,\'%s\');", email, plano, cnpj, nome, idLocalizacao, senha);
 			if(query == NULL)
 			{
 				printf(" Warning: Não foi possível formatar aquery para enviar ao banco de dados em addContratanteAoBanco() OperacoesBanco.h \n");
@@ -1300,11 +1305,11 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 			}
 		}
 	}
-	else
+	else/* Se o cliente informou telefone */
 	{
 		printf(" LOG: Telefone informado pelo cliente em addContratanteAoBanco() OperacoesBanco.h\n");
 		
-		tamanho = 102 + 1 + strlen(plano) + strlen(cnpj) + strlen(nome) + strlen(email) + strlen(telefone) + strlen(idLocalizacao);
+		tamanho = 111 + 1 + strlen(plano) + strlen(cnpj) + strlen(nome) + strlen(email) + strlen(telefone) + strlen(idLocalizacao) + strlen(senha);
 		query = (char *)malloc(sizeof(char) * tamanho );
 		if(query == NULL)
 		{
@@ -1313,7 +1318,7 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 		}
 		else
 		{
-			snprintf(query, tamanho, "INSERT INTO contratante(email,plano,cnpj,nome,telefone,localizacao_idlocalizacao) VALUES(\'%s\',%s,%s,\'%s\',\'%s\',%s);", email, plano, cnpj, nome, telefone, idLocalizacao);
+			snprintf(query, tamanho, "INSERT INTO contratante(email,plano,cnpj,nome,telefone,localizacao_idlocalizacao,senha) VALUES(\'%s\',%s,%s,\'%s\',\'%s\',%s,\'%s\');", email, plano, cnpj, nome, telefone, idLocalizacao, senha);
 			if(query == NULL)
 			{
 				printf(" Warning: Não foi possível formatar aquery para enviar ao banco de dados em addContratanteAoBanco() OperacoesBanco.h (oqvervinsjk)\n");
@@ -1518,6 +1523,272 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 	
 }
 
+char *obterIdLocalizacaoDoBanco(char *cidade, char *estado)
+{
+	if(conexao == NULL)
+	{
+		printf(" ERRO: Conexao nula em OperacoesBanco.h obterIdLocalizacaoDoBanco() !!!\n");
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return NULL;
+		}
+	}
+
+	if( cidade == NULL )
+	{
+		printf(" Warning: Cliente não informou nome da cidade em OperacoesBanco.h obterIdLocalizacaoDoBanco() adbfrw48ty89sd8f\n");
+		return NULL;
+	}
+
+	if( estado == NULL )
+	{
+		printf(" Warning: Cliente não informou nome do estado em OperacoesBanco.h obterIdLocalizacaoDoBanco() we4b18sfsdcnpe\n");
+		return NULL;
+	}
+
+	int tamanho = 126 + 1 + 2 * (strlen(cidade) + strlen(estado));
+	char *query = (char *)malloc(sizeof(char) * (tamanho));
+	
+	if(query == NULL)
+	{
+		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdLocalizacaoDoBanco() qkjeh\n");
+		return NULL;
+	}
+	
+	snprintf(query, tamanho, "SELECT L.idlocalizacao FROM localizacao L JOIN cidade C ON C.nome=\'%s\' JOIN estado E ON E.nome=\'%s\' WHERE C.nome=\'%s\' AND E.nome=\'%s\';", cidade, estado, cidade, estado);
+	
+	if(query == NULL)
+	{
+		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdLocalizacaoDoBanco() bqjek\n");
+		return NULL;
+	}
+	
+	if(mysql_query(conexao, query))
+	{
+		printf(" ERRO: Falha ao executar query em OperacoesBanco.h obterIdLocalizacaoDoBanco() sakdjh\n");
+		printf(" \t%s\n", mysql_error(conexao));
+		return NULL;
+	}
+	
+	MYSQL_RES *resultado = mysql_store_result(conexao);
+	
+	if(resultado == NULL)// Se não houver consulta
+	{
+		printf(" Warning: Resultado nulo em OperacoesBanco.h obterIdLocalizacaoDoBanco() kqht\n");
+		return NULL;
+	}
+	else
+	{
+		
+		if(mysql_num_fields(resultado) != 1)
+		{
+			if(mysql_num_fields(resultado) == 0)
+			{
+				printf(" LOG: Nada encontrado na base de dados para:\n");
+				printf(" \t%s\n", query);
+				printf(" \t em OperacoesBanco.h obterIdLocalizacaoDoBanco() 4rr455\n");
+				mysql_free_result(resultado);
+				free(query);
+				resultado = NULL;
+				query = NULL;
+				return (char *)RETORNO_NOT_FOUND;
+			}
+			else
+			{
+				printf(" Warning: Resultado inconsistente em OperacoesBanco.h obterIdLocalizacaoDoBanco() hekja\n");
+				mysql_free_result(resultado);
+				free(query);
+				query = NULL;
+				resultado = NULL;
+				return NULL;
+			}
+		}
+		else
+		{
+			if(mysql_num_rows(resultado) != 1)
+			{
+				printf(" Warning: Mais de uma cidade com mesmo nome e estado em OperacoesBanco.h obterIdLocalizacaoDoBanco() ekjjha\n");
+				printf(" \tRespostas:\n");
+				MYSQL_ROW linhas;
+				while((linhas = mysql_fetch_row(resultado)) != NULL)
+				{
+					printf(" linhas[0] -> %s\n", linhas[0]);
+				}
+				printf(" \n");
+				mysql_free_result(resultado);
+				free(query);
+				query = NULL;
+				resultado = NULL;
+				return linhas[0];//Retorna o ultimo resultado, mesmo se houver erro
+			}
+			else
+			{
+				MYSQL_ROW linha;
+				
+				linha = mysql_fetch_row(resultado);
+				
+				if(linha == NULL)
+				{
+					printf(" ERRO: Não era pra poder retornar nulo aqui abv84eu9h89hbd\n");
+					mysql_free_result(resultado);
+					free(query);
+					query = NULL;
+					resultado = NULL;
+					return NULL;
+				}
+				else
+				{
+					mysql_free_result(resultado);
+					free(query);
+					query = NULL;
+					resultado = NULL;
+					return linha[0];
+				}
+			}
+		}
+		
+	}
+	return NULL;
+}
+
+char *obterIdContratanteDoBanco(char *cnpj)// APP 4 ; cnpj
+{
+	if(conexao == NULL)
+	{
+		printf(" ERRO: Conexao nula em OperacoesBanco.h obterIdContratanteDoBanco() !!!\n");
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return NULL;
+		}
+	}
+
+	if( cnpj == NULL )
+	{
+		printf(" Warning: Cliente não informou cnpj em OperacoesBanco.h obterIdContratanteDoBanco() asvbeuasd\n");
+		return NULL;
+	}
+
+
+	int tamanho = 58 + 1 + strlen(cnpj);
+	char *query = (char *)malloc(sizeof(char) * (tamanho));
+	
+	if(query == NULL)
+	{
+		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdContratanteDoBanco() qkjeh\n");
+		return NULL;
+	}
+	
+	snprintf(query, tamanho, "SELECT C.idcontratante FROM contratante C WHERE C.cnpj=\'%s\';", cnpj);
+	
+	
+	if(query == NULL)
+	{
+		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdContratanteDoBanco() bqjek\n");
+		return NULL;
+	}
+	
+	if(mysql_query(conexao, query))
+	{
+		printf(" ERRO: Falha ao executar query em OperacoesBanco.h obterIdContratanteDoBanco() sakdjh\n");
+		printf(" \t%s\n", mysql_error(conexao));
+		return NULL;
+	}
+	
+	MYSQL_RES *resultado = mysql_store_result(conexao);
+	
+	if(resultado == NULL)// Se não houver consulta
+	{
+		printf(" Warning: Resultado nulo em OperacoesBanco.h obterIdContratanteDoBanco() kqht\n");
+		return NULL;
+	}
+	else
+	{
+		
+		if(mysql_num_fields(resultado) != 1)
+		{
+			if(mysql_num_fields(resultado) == 0)
+			{
+				printf(" LOG: Nada encontrado na base de dados para:\n");
+				printf(" \t%s\n", query);
+				printf(" \t em OperacoesBanco.h obterIdContratanteDoBanco() 4rr455\n");
+				mysql_free_result(resultado);
+				free(query);
+				resultado = NULL;
+				query = NULL;
+				return (char *)RETORNO_NOT_FOUND;
+			}
+			else
+			{
+				printf(" Warning: Resultado inconsistente em OperacoesBanco.h obterIdContratanteDoBanco() hekja\n");
+				mysql_free_result(resultado);
+				free(query);
+				query = NULL;
+				resultado = NULL;
+				return NULL;
+			}
+		}
+		else
+		{
+			if(mysql_num_rows(resultado) != 1)
+			{
+				printf(" Warning: Mais de uma cidade com mesmo nome e estado em OperacoesBanco.h obterIdContratanteDoBanco() ekjjha\n");
+				printf(" \tRespostas:\n");
+				MYSQL_ROW linhas;
+				while((linhas = mysql_fetch_row(resultado)) != NULL)
+				{
+					printf(" linhas[0] -> %s\n", linhas[0]);
+				}
+				printf(" \n");
+				mysql_free_result(resultado);
+				free(query);
+				query = NULL;
+				resultado = NULL;
+				return linhas[0];//Retorna o ultimo resultado, mesmo se houver erro
+			}
+			else
+			{
+				MYSQL_ROW linha;
+				
+				linha = mysql_fetch_row(resultado);
+				
+				if(linha == NULL)
+				{
+					printf(" ERRO: Não era pra poder retornar nulo aqui abv84eu9h89hbd\n");
+					mysql_free_result(resultado);
+					free(query);
+					query = NULL;
+					resultado = NULL;
+					return NULL;
+				}
+				else
+				{
+					mysql_free_result(resultado);
+					free(query);
+					query = NULL;
+					resultado = NULL;
+					return linha[0];
+				}
+			}
+		}
+		
+	}
+	return NULL;
+
+
+
+}
 
 char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)/* APP 4 CHAVE_DE_SEGURANCA_PHP $ { nomeCidadeInformada nomeEstadoInformado*/
 {

@@ -157,6 +157,7 @@
 #define TIPO_ID_CIDADE "$"
 #define TIPO_ID_CONTRATANTE ";"
 #define TIPO_ID_PRODUTO "*"
+#define TIPO_ID_LOCALIZACAO "i0"
 
 //#define TIPO_PAIS 'pa'
 

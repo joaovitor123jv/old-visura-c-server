@@ -1904,13 +1904,41 @@ bool addContratante()// APP 2 $C
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email algumaCoisa
-
 	//TODO
+
+	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email senha
 
 	if(token == NULL)
 	{
-		printf(" Warning: Comando insuficiente em Comando-Adicao.a addContratante() qbvkeja\n");
+		printf(" Warning: Cliente não informando senha em Comando-Adicao.h addContratante() bvkauqofs\n");
+		free(cnpj);
+		free(plano);
+		free(nome);
+		free(email);
+		email = NULL;
+		nome = NULL;
+		plano = NULL;
+		cnpj = NULL;
+		return false;
+	}
+	if (strlen(token) > TAMANHO_SENHA)
+	{
+		printf(" Warning: senha informada tem tamanho exageradamente grande em Comando-Adicao.h addContratante() akjvebuiasdwn");
+		free(cnpj);
+		free(plano);
+		free(nome);
+		free(email);
+		email = NULL;
+		cnpj = NULL;
+		plano = NULL;
+		nome = NULL;
+		return false;
+	}
+
+	char *senha = strdup(token);
+	if(senha == NULL)
+	{
+		printf(" Warning: Falha ao duplicar senha em Comando-Adicao.h addContratante() qoifoaisdj\n");
 		free(cnpj);
 		free(plano);
 		free(nome);
@@ -1922,13 +1950,125 @@ bool addContratante()// APP 2 $C
 		return false;
 	}
 
-	if(strlen(token) > TAMANHO_TIPO)
+	token = strtok(NULL, " ");// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email senha idLocalizacao
+	if(token == NULL)
+	{
+		printf(" Warning: cliente não informou localizacao em Comando-Adicao.h addContratante() sakjcbjrkbjkasd\n");
+		free(cnpj);
+		free(plano);
+		free(nome);
+		free(senha);
+		free(email);
+		email = NULL;
+		nome = NULL;
+		senha = NULL;
+		plano = NULL;
+		cnpj = NULL;
+		return false;
+	}
+
+	if (strlen(token) > 11)// 11 é o tamanho de IDs de "int" no banco de dados
+	{
+		printf(" Warning: ID de Localizacao recebido é exageradamente grande em Comando-Adicao.h addContratante() asdfbjvkrlasd\n");
+		free(cnpj);
+		free(plano);
+		free(nome);
+		free(senha);
+		free(email);
+		email = NULL;
+		nome = NULL;
+		senha = NULL;
+		plano = NULL;
+		cnpj = NULL;
+		return false;
+	}
+
+	char *idLocalizacao = strdup(token);
+
+	if( idLocalizacao == NULL )
+	{
+		printf(" Warning: Falha ao duplicar ID de Localizacao em Comando-Adicao.h addContratante() sajkdhjkrenubasd\n");
+		free(cnpj);
+		free(plano);
+		free(nome);
+		free(senha);
+		free(email);
+		email = NULL;
+		nome = NULL;
+		senha = NULL;
+		plano = NULL;
+		cnpj = NULL;
+		return false;
+	}
+
+	strtok(NULL, " ");// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email senha idLocalizacao telefone
+
+	if(token == NULL)
+	{
+		printf(" Warning: Cliente não informando telefone em Comando-Adicao.a addContratante() qbvkeja\n");
+		free(cnpj);
+		free(plano);
+		free(nome);
+		free(senha);
+		free(email);
+		free( idLocalizacao );
+		idLocalizacao = NULL;
+		email = NULL;
+		nome = NULL;
+		senha = NULL;
+		plano = NULL;
+		cnpj = NULL;
+		return false;
+	}
+	else
+	{
+		if(addContratanteAoBanco(nome, cnpj, plano, email, NULL, idLocalizacao, senha))// Se der tudo certo ao tentar adicionar contratante ao banco de dados
+		{
+			printf(" LOG: Contratante adicionado com sucesso ao banco de dados em addContratante() Comando-Adicao.h qasdjiwuygh48sd987\n");
+			free(cnpj);
+			free(nome);
+			free(email);
+			free(plano);
+			free(senha);
+			free( idLocalizacao );
+			idLocalizacao = NULL;
+			senha = NULL;
+			plano = NULL;
+			email = NULL;
+			nome = NULL;
+			cnpj = NULL;
+			return true;
+		}
+		else
+		{
+			printf(" Warning: Falha ao adicionar contratante ao banco de dados em Comando-Adicao.h addContratante() asbnveioasd\n");
+			free(cnpj);
+			free(plano);
+			free(nome);
+			free(senha);
+			free(email);
+			free( idLocalizacao );
+			idLocalizacao = NULL;
+			email = NULL;
+			nome = NULL;
+			senha = NULL;
+			plano = NULL;
+			cnpj = NULL;
+			return false;
+		}
+	}
+
+	if(strlen(token) > TAMANHO_TELEFONE)
 	{
 		printf(" Warning: token exageradamente grande recebido em Comando-Adicao.h addContratante() qvboa72\n");
 		free(cnpj);
 		free(nome);
 		free(email);
 		free(plano);
+		free(senha);
+		free( idLocalizacao );
+		idLocalizacao = NULL;
+		senha = NULL;
 		plano = NULL;
 		nome = NULL;
 		email = NULL;
@@ -1936,338 +2076,104 @@ bool addContratante()// APP 2 $C
 		return false;
 	}
 
-	if(strcmp(token, TIPO_TELEFONE) == 0)// APP 2 $C CHAVE_DE_SEGURANCA_PHP # nome cnpj plano email >
+	char *telefone = strdup(token);
+
+	if(telefone == NULL)
 	{
-		printf(" LOG: Cliente informando telefone em Comando-Adicao.h addContratante() qkejbv\n");
-		//TODO Adicionar suporte a senha (chave de seguranca)
-		
-		token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP # nome cnpj plano email > telefone
-		if(token == NULL)
-		{
-			printf(" Warning: Comando insuficiente em addContratante() Comando-Adicao.h qqqokasdn\n");
-			free(nome);
-			free(email);
-			free(cnpj);
-			free(plano);
-			plano = NULL;
-			email = NULL;
-			cnpj = NULL;
-			nome = NULL;
-			return false;
-		}
-
-		if(strlen(token) > TAMANHO_TELEFONE)
-		{
-			printf(" Warning: Telefone informado é exageradamente grande em addContratante() Comando-Adicao.h\n");
-			free(nome);
-			free(email);
-			free(cnpj);
-			free(plano);
-			plano = NULL;
-			cnpj = NULL;
-			email = NULL;
-			nome = NULL;
-			return false;
-		}
-
-		char *telefone = NULL;
-		telefone = malloc(sizeof(char) * (strlen(token) + 1));
-		if(telefone == NULL)
-		{
-			printf(" Warning: Falha ao alocar memoria para telefone em addContratante() Comando-Adicao.h\n");
-			free(nome);
-			free(email);
-			free(cnpj);
-			free(plano);
-			plano = NULL;
-			cnpj = NULL;
-			email = NULL;
-			nome = NULL;
-			return false;
-		}
-
-		strcpy(telefone, token);
-		if(telefone == NULL)
-		{
-			printf(" Warning: Não foi possível copiar de token para telefone em addContratante() Comando-Adicao.h sakjdhsa\n");
-			free(email);
-			free(plano);
-			free(nome);
-			free(cnpj);
-			cnpj = NULL;
-			nome = NULL;
-			plano = NULL;
-			email = NULL;
-			return false;
-		}
-
-		token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP # nome cnpj plano email > telefone idCidadeInformado
-		if(token == NULL)
-		{
-			printf(" Warning: Comando insuficiente em addContratante() Comando-Adicao.h mankchru\n");
-			free(plano);
-			free(email);
-			free(nome);
-			free(cnpj);
-			free(telefone);
-			telefone = NULL;
-			cnpj = NULL;
-			nome = NULL;
-			email = NULL;
-			plano = NULL;
-			return false;
-		}
-
-		if(strlen(token) > TAMANHO_CHAVE_PRIMARIA)
-		{
-			printf(" Warning: Chave informada para idLocalizacao possui tamanho exageradamente grande em addContratante() Comando-Adicao.h cqbwjk\n");
-			free(cnpj);
-			free(email);
-			free(nome);
-			free(plano);
-			free(telefone);
-			telefone = NULL;
-			plano = NULL;
-			nome = NULL;
-			email = NULL;
-			cnpj = NULL;
-			return false;
-		}
-
-		char *idLocalizacao = malloc(sizeof(char) * (strlen(token) + 1));
-		if(idLocalizacao == NULL)
-		{
-			printf(" Warning: Falha ao alocar memoria para idLocalizacao em addContratante() Comando-Adicao.h cqbjkcqjk\n");
-			free(cnpj);
-			free(plano);
-			free(nome);
-			free(email);
-			free(telefone);
-			telefone = NULL;
-			email = NULL;
-			nome = NULL;
-			cnpj = NULL;
-			plano = NULL;
-			return false;
-		}
-
-		strcpy(idLocalizacao, token);
-		if(idLocalizacao == NULL)
-		{
-			printf(" Warning: Não foi possivel copiar string de token para idLocalizacao em addContratante() Comando-Adicao.h 5wkb8d\n");
-			free(cnpj);
-			free(plano);
-			free(nome);
-			free(email);
-			free(telefone);
-			telefone = NULL;
-			email = NULL;
-			nome = NULL;
-			plano = NULL;
-			cnpj = NULL;
-			return false;
-		}
-
-		if(strcmp(idLocalizacao, token) != 0)
-		{
-			printf(" Warning: Copia incorreta de token para idLocalizacao em addContratante() Comando-Adicao.h hwq \n");
-			free(cnpj);
-			free(plano);
-			free(nome);
-			free(email);
-			free(telefone);
-			telefone = NULL;
-			email = NULL;
-			nome = NULL;
-			plano = NULL;
-			cnpj = NULL;
-			return false;
-		}
-
-		if(addContratanteAoBanco(nome, cnpj, plano, email, telefone, idLocalizacao))
-		{
-			printf(" LOG: Contratante adicionado com sucesso ao banco de dados em addContratante() Comando-Adicao.h qkcnsjbwodcv\n");
-			free(telefone);
-			free(nome);
-			free(email);
-			free(plano);
-			free(cnpj);
-			cnpj = NULL;
-			plano = NULL;
-			email = NULL;
-			nome = NULL;
-			telefone = NULL;
-			return true;
-		}
-		else
-		{
-			printf(" Warning: Falha ao tentar adicionar contratante ao banco de dados em addContratante() Comando-Adicao.h dsahsajkdhsajkdhjksadh\n");
-			free(nome);
-			free(email);
-			free(plano);
-			free(cnpj);
-			free(telefone);
-			telefone = NULL;
-			cnpj = NULL;
-			plano = NULL;
-			email = NULL;
-			nome = NULL;
-			return false;
-		}
-
-	}
-	else if(strcmp(token, TIPO_TELEFONE_NULO) == 0)// APP 2 $C CHAVE_DE_SEGURANCA_PHP # nome cnpj plano email >N
-	{
-		printf(" LOG: Cliente não informou telefone em Comando-Adicao.h addContratante() qkbveasfve\n");
-		/*
-		// SENHA TODO
-		token = strtok(NULL, " ");
-		if(token == NULL)
-		{
-			printf(" Warning: Comando insuficiente em Comando-Adicao.h addContratante() bkjqj\n");
-			free(cnpj);
-			free(nome);
-			free(email);
-			free(plano);
-			plano = NULL;
-			email = NULL;
-			cnpj = NULL;
-			nome = NULL;
-			return false;
-		}
-		*/
-
-		token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP # nome cnpj plano email >N idCidadeInformado
-		if(token == NULL)
-		{
-			printf(" Warning: Comando insuficiente em addContratante() Comando-Adicao.h 13qjcxd \n");
-			free(email);
-			free(nome);
-			free(cnpj);
-			free(plano);
-			plano = NULL;
-			cnpj = NULL;
-			nome = NULL;
-			email = NULL;
-			return false;
-		}
-
-		if(strlen(token) > TAMANHO_CHAVE_PRIMARIA)
-		{
-			printf(" Warning: idLocalizacao informado contem tamanho exageradamente grande em addContratante() Comando-Adicao.h sadnjksadh\n");
-			free(email);
-			free(nome);
-			free(cnpj);
-			free(plano);
-			plano = NULL;
-			cnpj = NULL;
-			nome = NULL;
-			email = NULL;
-			return false;
-		}
-
-		char *idLocalizacao;
+		printf(" Warning: Falha ao duplicar telefone em Comando-Adicao.h addContratante() anv4ias0\n");
+		free(cnpj);
+		free(nome);
+		free(email);
+		free(plano);
+		free(senha);
+		free( idLocalizacao );
 		idLocalizacao = NULL;
-		idLocalizacao = malloc(sizeof(char) * (strlen(token) + 1));
-		
-		if(idLocalizacao == NULL)
-		{
-			printf(" Warning: Falha ao alocar memoria para idLocalizacao em addContratante() Comando-Adicao.h sahdjkds \n");
-			free(email);
-			free(nome);
-			free(cnpj);
-			free(plano);
-			plano = NULL;
-			cnpj = NULL;
-			nome = NULL;
-			email = NULL;
-			return false;
-		}
+		senha = NULL;
+		plano = NULL;
+		email = NULL;
+		nome = NULL;
+		cnpj = NULL;
+		return false;
+	}
 
-		strcpy(idLocalizacao, token);
-
-		if(idLocalizacao == NULL)
-		{
-			printf(" Warning: Falha ao copiar de token para idLocalizacao em addContratante() Comando-Adicao.h sadhjksad \n");
-			free( cnpj);
-			free(nome);
-			free(email);
-			free(plano);
-			plano = NULL;
-			email = NULL;
-			nome = NULL;
-			cnpj = NULL;
-			return false;
-		}
-
-		if(strcmp(token, idLocalizacao) != 0)
-		{
-			printf(" Warning: Copia incorreta de token para idLocalizacao em addContratante() Comando-Adicao.h 54g8j\n");
-			free(email);
-			free(cnpj);
-			free(nome);
-			free(plano);
-			free(idLocalizacao);
-			idLocalizacao = NULL;
-			plano = NULL;
-			nome = NULL;
-			cnpj = NULL;
-			email = NULL;
-			return false;
-		}
-
-		if(addContratanteAoBanco(nome, cnpj, plano, email, NULL, idLocalizacao))
-		{
-			printf(" LOG: Contratante adicionada com sucesso ao banco de dados em addContratante() Comando-Adicao.h\n");
-			free(nome);
-			free(email);
-			free(cnpj);
-			free(plano);
-			free(idLocalizacao);
-			idLocalizacao = NULL;
-			plano = NULL;
-			nome = NULL;
-			cnpj = NULL;
-			email = NULL;
-			return true;
-		}
-		else
-		{
-			printf(" Warning: Falha ao adicionar contratante ao banco de dados em addContratante() Comando-Adicao.h\n");
-			free(nome);
-			free(email);
-			free(cnpj);
-			free(plano);
-			plano = NULL;
-			nome = NULL;
-			cnpj = NULL;
-			email = NULL;
-			return false;
-		}
-		
+	if(addContratanteAoBanco(nome, cnpj, plano, email, telefone, idLocalizacao, senha))// Se der tudo certo ao tentar adicionar contratante ao banco de dados
+	{
+		printf(" LOG: Contratante adicionado com sucesso ao banco de dados em addContratante() Comando-Adicao.h qkcnsjbwodcv\n");
+		free(cnpj);
+		free(nome);
+		free(email);
+		free(plano);
+		free(senha);
+		free( idLocalizacao );
+		free( telefone );
+		telefone = NULL;
+		idLocalizacao = NULL;
+		senha = NULL;
+		plano = NULL;
+		email = NULL;
+		nome = NULL;
+		cnpj = NULL;
+		return true;
 	}
 	else
 	{
-		printf(" Warning: Comando incorreto em Comando-Adicao.h addContratante() qibeuisdf\n");
-		free(plano);
-		free(nome);
+		printf(" Warning: Falha ao tentar adicionar contratante ao banco de dados em addContratante() Comando-Adicao.h dsahsajkdhsajkdhjksadh\n");
 		free(cnpj);
+		free(nome);
 		free(email);
-		email = NULL;
-		cnpj = NULL;
-		nome = NULL;
+		free(plano);
+		free(senha);
+		free( idLocalizacao );
+		free( telefone );
+		telefone = NULL;
+		idLocalizacao = NULL;
+		senha = NULL;
 		plano = NULL;
+		email = NULL;
+		nome = NULL;
+		cnpj = NULL;
 		return false;
 	}
 
-	free(plano);
-	free(nome);
-	free(cnpj);
-	free(email);
-	email = NULL;
-	cnpj = NULL;
-	nome = NULL;
-	plano = NULL;
+	//Caso dê um erro TOTALMENTE imprevisível
+	
+	if( cnpj != NULL )
+	{
+		free( cnpj );
+		cnpj = NULL;
+	}
+
+	if( telefone != NULL )
+	{
+		free( telefone );
+		telefone = NULL;
+	}
+
+	if( idLocalizacao != NULL )
+	{
+		free( idLocalizacao );
+		idLocalizacao = NULL;
+	}
+	if( senha != NULL )
+	{
+		free(senha);
+		senha = NULL;
+	}
+	if( plano != NULL )
+	{
+		free(plano);
+		plano = NULL;
+	}
+	if( nome != NULL )
+	{
+		free(nome);
+		nome = NULL;
+	}
+	if( email != NULL )
+	{
+		free(email);
+		email = NULL;
+	}
 
 	printf(" ERRO: Exceção não manipulada em Comando-Adicao.h addContratante() NQJWREGAIUWYYTOBQ\n");
 	return false;

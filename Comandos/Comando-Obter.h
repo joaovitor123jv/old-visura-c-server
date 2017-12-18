@@ -8,6 +8,7 @@
 
 char *obterIdCidade(void);//APP 4 $
 char *obterIdContratante(void);// APP 4 ;
+char *obterIdLocalizacao(void);// APP 4 i0
 char *obterTop10NovosProdutos();//APP 4 J
 char *obterTop10ProdutosMelhorAvaliados();//Retorna os 10 produtos melhor avaliados do banco de dados, ou NULL quando dá erro
 char *obterDescricaoProduto(char *email);// APP 4 Q idProduto
@@ -133,6 +134,14 @@ char *obterDados(char *email)// APP 4 algumaCoisa
 		{
 			return obterIdCidade();
 		}
+		else if( strcmp(token, TIPO_ID_CONTRATANTE) == 0 )
+		{
+			return obterIdContratante();
+		}
+		else if( strcmp(token, TIPO_ID_LOCALIZACAO) == 0 )
+		{
+			return obterIdLocalizacao();
+		}
 		printf(" Warning: Comando inexistente: |%s| em Comando-Obter.h obterDados() rbjak\n", token);
 		return NULL;
 	}
@@ -214,22 +223,78 @@ char *obterIdCidade()
 }
 
 
-char *obterIdContratante()// APP 4 ;
+char *obterIdContratante()// APP 4 ; cnpj
 {
+	char *token = strtok(NULL, " "); // cnpj
 
-	//TODO
-	char *token = strtok(NULL, " ");// APP 4 ; emailInformado
-
-	token = (char *)malloc(sizeof(char) * (strlen(token) + 1));
-	if(token == NULL)
+	if( token == NULL )
 	{
-		printf(" Warning: Falha ao alocar memoria para token em Comando-Obter.h obterIdContratante()\n");
+		printf(" Warning: Comando insuficiente em Comando-Obter.h obterIdContratante() asjhvbruw0f7878s756f6d\n");
+		return NULL;
+	}
+	if( strlen(token) > TAMANHO_CNPJ )
+	{
+		printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterIdContratante() abq78vas98wbjhax\n");
+		return NULL;
+	}
+	char *cnpj = strdup(token);
+	if( cnpj == NULL )
+	{
+		printf(" Warning: Falha ao duplicar email informado em Comando-Obter.h obterIdContratante() abv849a8sd72bhjht65w\n");
+		return NULL;
+	}
+	return obterIdContratanteDoBanco(cnpj);
+}
+
+char *obterIdLocalizacao(void)// APP 4 i0 nomeCidade nomeEstado	//TODO FAZENDO
+{
+	char *token = strtok(NULL, " ");
+	if( token == NULL )
+	{
+		printf(" Warning: Comando insuficiente em Comando-Obter.h obterIdLocalizacao() qiuwbv89r4sf\n");
+		return NULL;
+	}
+	if( strlen(token) > TAMANHO_DO_NOME_DA_CIDADE_COM_MAIOR_NOME_DO_MUNDO )
+	{
+		printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterIdLocalizacao() asbvreiaoisdij58\n");
 		return NULL;
 	}
 
+	char *nomeCidade = strdup(token);
+	if( nomeCidade == NULL )
+	{
+		printf(" Warning: Falha ao duplicar nomeCidade em Comando-Obter.h obterIdLocalizacao() askjvbruos8d\n");
+		return NULL;
+	}
 
-	printf(" ERRO: Comando executado de forma incorreta em Comando-Obter.h obterIdContratante()\n");
-	return NULL;
+	strtok(NULL, " ");
+	
+	if( token == NULL )
+	{
+		printf(" Warning: Comando insuficiente em Comando-Obter.h obterIdLocalizacao() asdfbuvieuhw74\n");
+		free( nomeCidade );
+		nomeCidade = NULL;
+		return NULL;
+	}
+	if( strlen(token) > TAMANHO_ESTADO )
+	{
+		printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterIdLocalizacao() 590cvy73dsvkve\n");
+		free( nomeCidade );
+		nomeCidade = NULL;
+		return NULL;
+	}
+
+	char *estado = strdup(token);
+	if( estado == NULL )
+	{
+		printf(" Warning: Falha ao duplicar nomeCidade em Comando-Obter.h obterIdLocalizacao() askjdhvbru\n");
+		free( nomeCidade );
+		nomeCidade = NULL;
+		return NULL;
+	}
+	//TODO
+
+	return obterIdLocalizacaoDoBanco(nomeCidade, estado);
 }
 
 

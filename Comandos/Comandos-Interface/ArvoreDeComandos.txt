@@ -106,7 +106,12 @@ APP
 				cnpj	(CNPJ da empresa a ser adicionada (obrigatório))
 					plano	(plano escolhido (da tabela de planos a ser criada, de 00 a 99));
 						email	(email (responsável) ao qual quer associar a contratante)
-							// REFORMULANDO ESSE COMANDO 
+							senha	(a senha que a empresa vai ter que informar em operacoes de acesso restrito)
+								idLocalizacao	(ID da localizacao da empresa, criada anteriormente)// REFORMULANDO ESSE COMANDO 
+								(adiciona uma empresa (contratante) pra poder adicionar produtos ao banco de dados, por enquanto esta liberado para usuarios comuns, mas... assim que eu mudar a arquitetura de usuario, pode ser que alguns comandos sejam facilitados, e a seguranca aumente, por restringir nível de acesso a funcoes assim)
+
+									telefone	(Não-Obrigatorio)
+										(adiciona a empresa (contratante), mas já preenche o numero de telefone da empresa, (útil pra contato, algumas vezes))
 
 	3	(COMANDO_ATUALIZAR)
 		(Não possui comandos ainda, está aqui como uma possível extensão futura)
@@ -147,3 +152,12 @@ APP
 			nomeDaCidade
 				nomeDoEstado	(como SIGLA, exemplos: "SP", "GO", "DF", "PE"...)
 					(retorna o ID da cidade "nomeDaCidade" que está no estado "nomeDoEstado")
+
+		;	(TIPO_ID_CONTRATANTE)
+			cnpj	(o cnpj da empresa que quer obter o ID)(Temporariamente obrigatorio)
+				(retorna o id que referencia a empresa(contratante) no banco de dados)
+		
+		i0	(TIPO_ID_LOCALIZACAO)
+			cidade	(A cidade em que essa localizacao esta)
+				estado	(O estado em que essa localizacao esta)
+					//AINDA ESTÁ SENDO FEITO, comando incompleto
