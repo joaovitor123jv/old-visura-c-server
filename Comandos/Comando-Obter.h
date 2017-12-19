@@ -246,55 +246,224 @@ char *obterIdContratante()// APP 4 ; cnpj
 	return obterIdContratanteDoBanco(cnpj);
 }
 
-char *obterIdLocalizacao(void)// APP 4 i0 nomeCidade nomeEstado	//TODO FAZENDO
+char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complemento//TODO Teoricamente pronto
 {
-	char *token = strtok(NULL, " ");
+	char *token = strtok(NULL, " ");// APP 4 i0 idCidade
 	if( token == NULL )
 	{
 		printf(" Warning: Comando insuficiente em Comando-Obter.h obterIdLocalizacao() qiuwbv89r4sf\n");
 		return NULL;
 	}
-	if( strlen(token) > TAMANHO_DO_NOME_DA_CIDADE_COM_MAIOR_NOME_DO_MUNDO )
+
+	if( strlen(token) > TAMANHO_CHAVE_PRIMARIA )
 	{
-		printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterIdLocalizacao() asbvreiaoisdij58\n");
+		printf(" Warning: Argumento \"idCidade\" informado é exageradamente grande em Comando-Obter.h obterIdLocalizacao()\n");
+		return NULL;
+	}
+	char *idCidade = strdup(token);
+	if( idCidade == NULL )
+	{
+		printf(" Warning: Falha ao duplicar idCidade em Comando-Obter.h obterIdLocalizacao()\n");
 		return NULL;
 	}
 
-	char *nomeCidade = strdup(token);
-	if( nomeCidade == NULL )
-	{
-		printf(" Warning: Falha ao duplicar nomeCidade em Comando-Obter.h obterIdLocalizacao() askjvbruos8d\n");
-		return NULL;
-	}
-
-	strtok(NULL, " ");
-	
+	token = strtok(NULL, " ");// AOO 4 i0 idCidade cep
 	if( token == NULL )
 	{
-		printf(" Warning: Comando insuficiente em Comando-Obter.h obterIdLocalizacao() asdfbuvieuhw74\n");
-		free( nomeCidade );
-		nomeCidade = NULL;
-		return NULL;
-	}
-	if( strlen(token) > TAMANHO_ESTADO )
-	{
-		printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterIdLocalizacao() 590cvy73dsvkve\n");
-		free( nomeCidade );
-		nomeCidade = NULL;
+		printf(" Warning: Comando insuficiente em Comando-Obter.h akiuvbruiasjd\n");
+		free( idCidade );
+		idCidade = NULL;
 		return NULL;
 	}
 
-	char *estado = strdup(token);
-	if( estado == NULL )
+	//TODO Adicionar suporte a checagem de tamanho de CEP
+
+	char *cep = strdup(token);
+	if( cep == NULL )
 	{
-		printf(" Warning: Falha ao duplicar nomeCidade em Comando-Obter.h obterIdLocalizacao() askjdhvbru\n");
-		free( nomeCidade );
-		nomeCidade = NULL;
+		printf(" Warning: Falha ao duplicar dados de cep em Comando-Obter.h obterIdLocalizacao() sadkjahsfjkruiosdidds\n");
+		free( idCidade );
+		idCidade = NULL;
 		return NULL;
 	}
-	//TODO
 
-	return obterIdLocalizacaoDoBanco(nomeCidade, estado);
+	token = strtok(NULL, " ");// APP 4 i0 idCidade cep bairro
+	if( token == NULL )// Se o cliente informar somente idCidade e cep
+	{
+		printf(" LOG: Cliente não informou bairro em Comando-Obter.h obterIdLocalizacao() askjfjkhqsg4 \n");
+		char *retorno = obterIdLocalizacaoDoBanco(idCidade, cep, NULL, NULL, NULL, NULL);
+		free( idCidade );
+		free( cep );
+		cep = NULL;
+		idCidade = NULL;
+		return retorno;
+	}
+
+	if( strlen(token) > TAMANHO_BAIRRO )
+	{
+		printf(" Warning: Tamanho de bairro exageradamente grande em Comando-Obter.h obterIdLocalizacao() asjvhbroasd\n");
+		free( idCidade );
+		free( cep );
+		cep = NULL;
+		idCidade = NULL;
+		return NULL;
+	}
+
+	char *bairro = strdup(token);
+
+	if( bairro == NULL )
+	{
+		printf(" Warning: Falha ao tentar duplicar token para bairro em Comando-Obter.h obterIdLocalizacao() abnrs\n");
+		free( idCidade );
+		free( cep );
+		cep = NULL;
+		idCidade = NULL;
+		return NULL;
+	}
+
+	token = strtok(NULL, " ");// APP 4 i0 idCidade cep bairro rua
+
+	if( token == NULL )
+	{
+		printf(" LOG: Cliente não informou rua em Comando-Obter.h obterIdLocalizacao()\n");
+		char *retorno = obterIdLocalizacaoDoBanco(idCidade, cep, bairro, NULL, NULL, NULL);
+		free( idCidade );
+		free( cep );
+		free( bairro );
+		bairro = NULL;
+		cep = NULL;
+		idCidade = NULL;
+		return retorno;
+	}
+
+	if( strlen(token) > TAMANHO_RUA )
+	{
+		printf(" Warning: Tamanho da rua é exageradamente grande em Comando-Obter.h obterIdLocalizacao() aceghieoads\n");
+		free( idCidade );
+		free( cep );
+		free( bairro );
+		bairro = NULL;
+		cep = NULL;
+		idCidade = NULL;
+		return NULL;
+	}
+
+	char *rua = strdup(token);
+	if( rua == NULL )
+	{
+		printf(" Warning: Falha ao duplicar string de token para rua em Comando-Obter.h obterIdLocalizacao() asjhjvkeasf\n");
+		free( idCidade );
+		free( cep );
+		free( bairro );
+		bairro = NULL;
+		cep = NULL;
+		idCidade = NULL;
+		return NULL;
+	}
+
+	token = strtok(NULL, " ");// APP 4 i0 idCidade cep bairro rua numero
+	if( token == NULL )
+	{
+		printf(" LOG: Cliente não informou numero em Comando-Obter.h obterIdLocalizacao() ashjvjk\n");
+		char *retorno = obterIdLocalizacaoDoBanco(idCidade, cep, bairro, rua, NULL, NULL);
+		free( idCidade );
+		free( cep );
+		free( bairro );
+		free( rua );
+		rua = NULL;
+		bairro = NULL;
+		cep = NULL;
+		idCidade = NULL;
+		return retorno;
+	}
+	 if( strlen(token) > TAMANHO_NUMERO )
+	 {
+		printf(" Warning: Numero informado muto grande em Comando-Obter.h obterIdLocalizacao() sajhveasd\n");
+		free( idCidade );
+		free( cep );
+		free( bairro );
+		free( rua );
+		rua = NULL;
+		bairro = NULL;
+		cep = NULL;
+		idCidade = NULL;
+		return NULL;
+	 }
+
+	 char *numero = strdup(token);
+	 if( numero == NULL )
+	 {
+		printf(" Warning: Falha ao duplicar numero em Comando-Obter.h obterIdLocalizacao() sajhveasd\n");
+		free( idCidade );
+		free( cep );
+		free( bairro );
+		free( rua );
+		rua = NULL;
+		bairro = NULL;
+		cep = NULL;
+		idCidade = NULL;
+		return NULL;
+	 }
+
+	token = strtok(NULL, " ");// APP 4 i0 idCidade cep bairro rua numero complemento
+	if( token == NULL )
+	{
+		printf(" LOG: Cliente não informou numero em Comando-Obter.h obterIdLocalizacao() ashjvjk\n");
+		char *retorno = obterIdLocalizacaoDoBanco(idCidade, cep, bairro, rua, NULL, NULL);
+		free( idCidade );
+		free( cep );
+		free( bairro );
+		free( rua );
+		free( numero );
+		numero = NULL;
+		rua = NULL;
+		bairro = NULL;
+		cep = NULL;
+		idCidade = NULL;
+		return retorno;
+	}
+
+	if( strlen(token) > TAMANHO_COMPLEMENTO )
+	{
+		printf(" Warning: Complemento exageradamente grande em Comando-Obter.h obterIdLocalizacao() askjdhjkvd\n");
+		free( idCidade );
+		free( cep );
+		free( bairro );
+		free( rua );
+		rua = NULL;
+		bairro = NULL;
+		cep = NULL;
+		idCidade = NULL;
+		return NULL;
+	}
+
+	char *complemento = strdup(token);
+	if( complemento == NULL )
+	{
+		printf(" Warning: Falha ao duplicar complemento em Comando-Obter.h obterIdLocalizacao() kjhbrostf\n");
+		free( idCidade );
+		free( cep );
+		free( bairro );
+		free( rua );
+		rua = NULL;
+		bairro = NULL;
+		cep = NULL;
+		idCidade = NULL;
+		return NULL;
+	}
+
+	char *retorno = obterIdLocalizacaoDoBanco(idCidade, cep, bairro, rua, numero, complemento);
+	free( idCidade );
+	free( cep );
+	free( bairro );
+	free( rua );
+	free( complemento );
+	complemento = NULL;
+	rua = NULL;
+	bairro = NULL;
+	cep = NULL;
+	idCidade = NULL;
+	return retorno;
 }
 
 

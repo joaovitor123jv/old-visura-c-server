@@ -236,6 +236,101 @@ bool executaQuery(char *query)
 	return true;
 }
 
+char *retornaUnicoRetornoDaQuery(char *query)// Se chegou aqui, a conexao está ativa no momento
+{
+	if( query == NULL )
+	{
+		printf(" ERRO: query nula em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery()\n");
+		return NULL;
+	}
+	
+	if(mysql_query(conexao, query))
+	{
+		printf(" ERRO: Falha ao executar query em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery() sakdjh\n");
+		printf(" \t%s\n", mysql_error(conexao));
+		return NULL;
+	}
+	
+	MYSQL_RES *resultado = mysql_store_result(conexao);
+	
+	if(resultado == NULL)// Se não houver consulta
+	{
+		printf(" Warning: Resultado nulo em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery() kqht\n");
+		return NULL;
+	}
+	else
+	{
+		
+		if(mysql_num_fields(resultado) != 1)
+		{
+			if(mysql_num_fields(resultado) == 0)
+			{
+				printf(" LOG: Nada encontrado na base de dados para:\n");
+				printf(" \t%s\n", query);
+				printf(" \t em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery() 4rr455\n");
+				mysql_free_result(resultado);
+				free(query);
+				resultado = NULL;
+				query = NULL;
+				return (char *)RETORNO_NOT_FOUND;
+			}
+			else
+			{
+				printf(" Warning: Resultado inconsistente em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery() hekja\n");
+				mysql_free_result(resultado);
+				free(query);
+				query = NULL;
+				resultado = NULL;
+				return NULL;
+			}
+		}
+		else
+		{
+			if(mysql_num_rows(resultado) != 1)
+			{
+				printf(" Warning: Mais de uma cidade com mesmo nome e estado em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery() ekjjha\n");
+				printf(" \tRespostas:\n");
+				MYSQL_ROW linhas;
+				while((linhas = mysql_fetch_row(resultado)) != NULL)
+				{
+					printf(" linhas[0] -> %s\n", linhas[0]);
+				}
+				printf(" \n");
+				mysql_free_result(resultado);
+				free(query);
+				query = NULL;
+				resultado = NULL;
+				return linhas[0];//Retorna o ultimo resultado, mesmo se houver erro
+			}
+			else
+			{
+				MYSQL_ROW linha;
+				
+				linha = mysql_fetch_row(resultado);
+				
+				if(linha == NULL)
+				{
+					printf(" ERRO: Não era pra poder retornar nulo aqui abv84eu9h89hbd\n");
+					mysql_free_result(resultado);
+					free(query);
+					query = NULL;
+					resultado = NULL;
+					return NULL;
+				}
+				else
+				{
+					mysql_free_result(resultado);
+					free(query);
+					query = NULL;
+					resultado = NULL;
+					return linha[0];
+				}
+			}
+		}
+		
+	}
+}
+
 bool checarLogin(char *email, char *senha)
 {
 	if(conexao == NULL)
