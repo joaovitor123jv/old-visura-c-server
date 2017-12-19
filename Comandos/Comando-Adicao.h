@@ -130,7 +130,7 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 				return false;
 			}
 		}
-		else if( (strcmp(token, TIPO_USUARIO) == 0) && usuarioAnonimo)/* APP 2 1 1 Solicitação de criação de usuário não-anônimo */
+		else if( (strcmp(token, TIPO_USUARIO) == 0) && true)/* APP 2 1 1 Solicitação de criação de usuário não-anônimo && usuarioAnonimo */
 		{
 			printf("------------>regular Comando-Adicao.h comandoAdicionar()\n");
 			// token = strtok(NULL, " ");
