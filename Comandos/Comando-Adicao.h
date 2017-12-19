@@ -31,6 +31,15 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 		printf("Email == NULL (Comando-Adicao.h) comandoAdicionar()\n");
 		return false;
 	}
+	printf(" \tTipo de usuario em (Comando-Adicao.h comandoAdicionar()) → ");
+	if( usuarioAnonimo )
+	{
+		printf(" anonimo\n");
+	}
+	else
+	{
+		printf(" normal\n");
+	}
 	char *token;
 	token = strtok(NULL, " ");
 	if(token == NULL)
