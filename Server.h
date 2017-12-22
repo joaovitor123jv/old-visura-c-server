@@ -272,24 +272,24 @@ void *Servidor(void *cliente)
 			{
 				case ERRO:
 					printf("Warning: Erro na execução do comando\n");
-					enviaMensagemParaCliente("Erro, desconectando\0", cliente);
+					enviaMensagemParaCliente("Erro, desconectando (calma, estou arrumando kkk)\0", cliente);
 					sairDaThread(false);
 					break;
 
 				case OK:
 					printf("Log: Comando bem-sucedido (Server Thread)\n");
-					enviaMensagemParaCliente("OK\0", cliente);
+					enviaMensagemParaCliente("OK\nainda conectado\0", cliente);
 					break;
 
 				case REQUISITANDO_LOGIN:/* Cliente NÃO AUTORIZADO OK */
 					printf(" Cliente Requisitou Login, mas Não foi atendido (Server Thread)\n");
-					enviaMensagemParaCliente("Não autorizado\0", cliente);
+					enviaMensagemParaCliente("Não autorizado, desconectando\0", cliente);
 					sairDaThread(true);
 					break;
 
 				case REQUISITANDO_ADICAO:/* OK */
 					printf(" Cliente requisitou adicao\n");
-					enviaMensagemParaCliente("Adicao recusada\0", cliente);
+					enviaMensagemParaCliente("Adicao recusada, desconectando\0", cliente);
 					sairDaThread(false);
 					break;
 
@@ -317,6 +317,11 @@ void *Servidor(void *cliente)
 					}
 					break;
 
+				case REQUISITANDO_REMOCAO:
+					printf(" Warning: Falha ao concluir comando de remocao em Server.h Servidor()\n");
+					enviaMensagemParaCliente("Falha ao executar comando de remocao\nainda conectado\0", cliente);
+					break;
+
 				case REQUISITANDO_ROOT:
 					if( usuarioRoot(email) )
 					{
@@ -342,7 +347,7 @@ void *Servidor(void *cliente)
 		else
 		{
 			printf(" LOG: Mensagem de escape detectada em Server.h Servidor()\n");
-			enviaMensagemParaCliente("Conexao encerrada\0", cliente);
+			enviaMensagemParaCliente("Voce pediu pra sair... Conexao encerrada\0", cliente);
 			sairDaThread(false);
 		}
 	}

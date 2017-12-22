@@ -9,6 +9,7 @@
 #include "Comando-Adicao.h"
 #include "Comando-Obter.h"
 #include "Comando-Root.h"
+#include "Comando-Remover.h"
 
 
 /* Variável de CONTROLE */
@@ -151,7 +152,22 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 			printf(" LOG: Requisitando \"COMANDO-OBTER\" em interpretadorDeComandos.h interpretaComando()\n");
 			*resultado = REQUISITANDO_OBTENCAO;
 			return NULL;
-			break;		
+			break;
+
+		case COMANDO_REMOVER:
+			printf(" LOG: Requisitando \"COMANDO_REMOVER\" em interpretadorDeComandos.h interpretaComando()\n");
+			if (comandoRemover(email, *usuarioAnonimo))
+			{
+				interpretando = false;
+				*resultado = REQUISITANDO_REMOCAO;	
+			}
+			else
+			{
+				interpretando = false;
+				*resultado = OK;
+			}
+			return NULL;
+			break;
 
 		case ERRO:
 			printf("Erro na execução do comando\n");

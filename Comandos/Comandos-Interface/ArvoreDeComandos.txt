@@ -85,7 +85,13 @@ APP
 					(Adiciona cidade com nome nomeDaCidade ao estado nomeDoEstado)
 
 		l0	(TIPO_LOCALIZACAO)	(Esse dá um pouco de trabalho kkk)
-			(CONSIDERE INOPERANTE POR ENQUANTO, na verdade ele funciona, mas vou padronizar ele antes)
+			idCidadde	(Id da cidade em que a localizacao foi "definida", obrigatorio)
+				cep		(CEP da localidade definida, obrigatorio)
+					bairro	(opcional, bairro definido na localizacao)
+						rua	(opcional, rua definido na localizacao)
+							numero	(opcional, numero definido na localizacao)
+								complemento	(opcional, definido na lo
+									(Adiciona uma localizacao ao banco de dados)
 
 		/* FUNÇÕES PARA ADMINISTRADORES - Não precisam ser mapeadas por agora (integrar APP com SERVER) */
 
@@ -158,6 +164,25 @@ APP
 				(retorna o id que referencia a empresa(contratante) no banco de dados)
 		
 		i0	(TIPO_ID_LOCALIZACAO)
-			cidade	(A cidade em que essa localizacao esta)
-				estado	(O estado em que essa localizacao esta)
-					//AINDA ESTÁ SENDO FEITO, comando incompleto
+			idCidadde	(Id da cidade em que a localizacao foi "definida", obrigatorio)
+				cep		(CEP da localidade definida, obrigatorio)
+					bairro	(opcional, bairro definido na localizacao)
+						rua	(opcional, rua definido na localizacao)
+							numero	(opcional, numero definido na localizacao)
+								complemento	(opcional, definido na localizacao)
+									(Obtem o id que referencia a localizacao passada ao banco de dados)
+
+	5	(COMANDO_REMOVER)
+		// Sendo criado no momento
+
+	7	(COMANDO_ROOT)	// Funções administrativas, acessiveis somente em "modo root"
+		computador	// Sim, literalmente escrito "computador"
+			algumComando	(O comando que vai ser executado no sistema, no shell (sh, no caso)) // Exemplo:  APP 7 computador reboot
+				//Só pode ser acessado caso esteja logado como (provisoriamente) usuario padrão (	Login: interface@servidor 
+																									Senha: senatauri)
+		encerrar	//Sim, literalmente "encerrar"
+			(Reinicia o processo da interface/servidor não mysql)
+
+		resetar		//Sim, literalmente "resetar"
+			log
+			banco

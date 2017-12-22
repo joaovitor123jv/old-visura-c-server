@@ -116,18 +116,6 @@ INSERT INTO cliente(email, nome, sobrenome, localizacao_idlocalizacao, sexo, sen
     WHERE cidade.nome = 'Auriflama' AND estado.nome = 'SP' AND localizacao.numero = 65214;
     
 INSERT INTO cliente(email, nome, sobrenome, localizacao_idlocalizacao, sexo, senha)
-	SELECT 'jv.joaopedro@gmail.com', 'João Pedro', 'Antoniassi Segantin', localizacao.idlocalizacao , '1', 'nulo' from localizacao
-    JOIN cidade on cidade.nome = 'Auriflama'
-    JOIN estado on estado.nome = 'SP'
-    WHERE cidade.nome = 'Auriflama' AND estado.nome = 'SP' AND localizacao.numero = 65214;
-    
-INSERT INTO cliente(email, nome, sobrenome, localizacao_idlocalizacao, sexo, senha)
-	SELECT 'silvia.mara@hotmail.com', 'Silvia Mara', 'Antoniassi Segantin', localizacao.idlocalizacao , '2', 'nulo' from localizacao
-    JOIN cidade on cidade.nome = 'Auriflama'
-    JOIN estado on estado.nome = 'SP'
-    WHERE cidade.nome = 'Auriflama' AND estado.nome = 'SP' AND localizacao.numero = 65214;
-
-INSERT INTO cliente(email, nome, sobrenome, localizacao_idlocalizacao, sexo, senha)
 	SELECT 'carlos@gmail.com', 'Carlos Gabriel', 'Sei lá o que Stédile', localizacao.idlocalizacao , '1', 'nulo' from localizacao
     JOIN cidade on cidade.nome = 'Jataí'
     JOIN estado on estado.nome = 'GO'
@@ -138,11 +126,6 @@ INSERT INTO cliente(email, nome, sobrenome, localizacao_idlocalizacao, sexo, sen
     JOIN cidade on cidade.nome = 'Jataí'
     JOIN estado on estado.nome = 'GO'
     WHERE cidade.nome = 'Jataí' AND estado.nome = 'GO' AND localizacao.numero = 1546;
-    
-
-
-
-
 
 
 
@@ -188,7 +171,13 @@ INSERT INTO produto(contratante_idcontratante, duracao, idproduto)
 	WHERE contratante.email = 'susheria@comida.com';
 
 
+INSERT INTO produto(contratante_idcontratante, duracao, idproduto, descricao, tipo, nomeProduto)
+	SELECT contratante.idcontratante, 10, 'teste11111', 'Pacote_de_teste_1', '1', 'Teste_1' FROM contratante
+	WHERE contratante.email = 'susheria@comida.com';
 
+INSERT INTO produto(contratante_idcontratante, duracao, idproduto, descricao, tipo, nomeProduto)
+	SELECT contratante.idcontratante, 30, 'teste22222', 'Pacote_de_teste_2', '1', 'Teste_2' FROM contratante
+	WHERE contratante.email = 'susheria@comida.com';
 
 
 

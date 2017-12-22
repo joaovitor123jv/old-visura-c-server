@@ -1076,709 +1076,314 @@ bool addCidade()/* APP 2 { */
 
 bool addLocalizacao()/* APP 2 l0 */
 {
-	char *token = NULL;
-	token = strtok(NULL, " ");/* APP 2 l0 $ */
-	if(token == NULL)
+	char *token = strtok(NULL, " ");// APP 2 l0 idCidade
+	if (token == NULL)
 	{
-		printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() (1)\n");
+		printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() eiuhbase\n");
 		return false;
 	}
-	if(strcmp(token, TIPO_ID_CIDADE) != 0)
+	if (strlen(token) > TAMANHO_CHAVE_PRIMARIA)
 	{
-		printf(" Warning: Argumento inválido em Comando-Adicao.h addLocalizacao()\n");
+		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addLocalizacao() asb89as3\n");
 		return false;
 	}
+	char *idCidade = strdup(token);
+	if (idCidade == NULL)
+	{
+		printf(" Warning: falha ao copiar de token para idCidade em Comando-Adicao.h addLocalizacao() qibuwey5\n");
+		return false;
+	}
+	 token = strtok(NULL, " ");// APP 2 l0 idCidade cep
+	 if (token == NULL)
+	 {
+	 	printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() viubrusdh6wer5\n");
+	 	free(idCidade);
+	 	idCidade = NULL;
+	 	return false;
+	 }
+	 if (strlen(token) != TAMANHO_CEP)
+	 {
+	 	printf(" Warning: Cliente passou algo que não é o CEP em Comando-Adicao.h addLocalizacao() dsajhbveasd\n");
+	 	free(idCidade);
+	 	idCidade = NULL;
+	 	return false;
+	 }
+	 char *cep = strdup(token);
+	 if (cep == NULL)
+	 {
+	 	printf(" Warning: Falha ao duplicar cep para token em Comando-Adicao.h addLocalizacao() ivubudg\n");
+	 	free(idCidade);
+	 	idCidade = NULL;
+	 	return false;
+	 }
 
-	token = strtok(NULL, " ");// APP 2 l0 $ idCidade
-	if(token == NULL)
-	{
-		printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() (2)\n");
-		return false;
-	}
-	if(strlen(token) > TAMANHO_DE_INTEIRO_EM_BANCO_DE_DADOS)
-	{
-		printf(" Warning: Argumento exageradamente grande em Comando-Adicao.h addLocalizacao()\n");
-		return false;
-	}
+	 token = strtok(NULL, " ");// APP 2 l0 idCidade cep bairro
+	 if (token == NULL)// Informando idCidade e CEP
+	 {
+	 	printf(" LOG: Cliente só informou idCidade e CEP em Comando-Adicao.h addLocalizacao() aiuhgu tsdf\n");
+	 	if (addLocalizacaoAoBanco(idCidade, cep, NULL, NULL, NULL, NULL))
+	 	{
+	 		printf(" LOG: localizacao adicionada ao banco de dados com sucesso em Comando-Adicao.h addLocalizacao() ekjhgbdsf\n");
+	 		free(idCidade);
+	 		free(cep);
+	 		cep = NULL;
+	 		idCidade = NULL;
+	 		return true;
+	 	}
+	 	else
+	 	{
+	 		printf(" Warning: Ocorreu ao menos um erro ao tentar adicionar localizacao ao banco de dados em Comando-Adicao.h addLocalizacao() akjghjvksdf\n");
+	 		free(idCidade);
+	 		free(cep);
+	 		cep = NULL;
+	 		idCidade = NULL;
+	 		return false;
+	 	}
+	 }
+	 else
+	 {
+	 	if (strlen(token) > TAMANHO_BAIRRO)
+	 	{
+	 		printf(" Warning: Tamanho de bairro informado é exageradamente grande em Comando-Adicao.h addLocalizacao() dsakjburiasd\n");
+	 		free(idCidade);
+	 		free(cep);
+	 		cep = NULL;
+	 		idCidade = NULL;
+	 		return false;
+	 	}
+	 	char *bairro = strdup(token);
+	 	if (bairro == NULL)
+	 	{
+	 		printf(" Warning: Falha ao duplicar bairro em Comando-Adicao.h addLocalizacao() askjhbv rusidfsd\n");
+	 		free(idCidade);
+	 		free(cep);
+	 		cep = NULL;
+	 		idCidade = NULL;
+	 		return false;
+	 	}
 
-	char *idCidade = NULL;
-	idCidade = malloc(sizeof(char) * (strlen(token) + 1));
-	if(idCidade == NULL)
-	{
-		printf(" Warning: Falha ao alocar memoria para idCidade em Comando-Adicao.h addLocalizacao()\n");
-		return false;
-	}
-	strcpy(idCidade, token);
-	if(idCidade == NULL)
-	{
-		printf(" Warning: Falha ao copiar token para idCidade Comando-Adicao.h addLocalizacao()\n");
-		return false;
-	}
-	if(strcmp(idCidade, token) != 0)
-	{
-		printf(" Warning: Falha em copiar strings de token para idCidade Comando-Adicao.h addLocalizacao()\n");
-		free(idCidade);
-		idCidade = NULL;
-		return false;
-	}
-	token = strtok(NULL, " ");// APP 2 l0 $ idCidade L
-	if(token == NULL)
-	{
-		printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() (3)\n");
-		free(idCidade);
-		idCidade = NULL;
-		return false;
-	}
-	if(strcmp(token, TIPO_CEP) != 0)
-	{
-		printf(" Warning: CEP Não informado (que é obrigatorio) em Comando-Adicao.h addLocalizacao()\n");
-		free(idCidade);
-		idCidade = NULL;
-		return false;
-	}
+	 	token = strtok(NULL, " ");// APP 2 l0 idCidade cep bairro rua
+	 	if (token == NULL)// Informando idCidade, CEP e bairro
+	 	{
+	 		printf(" LOG: Cliente informou idCidade cep e bairro em Comando-Adicao.h addLocalizacao() ivubursfth\n");
+	 		if (addLocalizacaoAoBanco(idCidade, cep, bairro, NULL, NULL, NULL))
+	 		{
+	 			printf(" LOG: localizacao adicionada ao banco de dados com sucesso em Comando-Adicao.h addLocalizacao() ekjhgbdsf\n");
+		 		free(idCidade);
+		 		free(cep);
+		 		free(bairro);
+		 		bairro = NULL;
+		 		cep = NULL;
+		 		idCidade = NULL;
+		 		return true;
+	 		}
+	 		else
+	 		{
+	 			printf(" Warning: Falha ao adicionar localizacao ao banco em Comando-Adicao.h addLocalizacao() adkjhgbhjirbasd\n");
+	 			free(idCidade);
+	 			free(cep);
+	 			free(bairro);
+	 			bairro = NULL;
+	 			cep = NULL;
+	 			idCidade = NULL;
+	 			return false;
+	 		}
+	 	}
+	 	else
+	 	{
+	 		if (strlen(token) > TAMANHO_RUA)
+	 		{
+	 			printf(" Warning: Tamanho da rua informada é exageradamente grande em Comando-Adicao.h addLocalizacao() askjbvrkasd\n");
+	 			free(idCidade);
+	 			free(cep);
+	 			free(bairro);
+	 			bairro = NULL;
+	 			cep = NULL;
+	 			idCidade = NULL;
+	 			return false;
+	 		}
+	 		char *rua = strdup(token);
+	 		if (rua == NULL)
+	 		{
+	 			printf(" Warning: Falha ao duplicar rua em Comando-Adicao.h addLocalizacao() sakjvbehsads\n");
+	 			free(idCidade);
+	 			free(cep);
+	 			free(bairro);
+	 			bairro = NULL;
+	 			cep = NULL;
+	 			idCidade = NULL;
+	 			return false;
+	 		}
 
-	token = strtok(NULL, " ");// APP 2 l0 $ idCidade L CEP
-	if(token == NULL)
-	{
-		printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() (4)\n");
-		free(idCidade);
-		idCidade = NULL;
-		return false;
-	}
-	if(strlen(token) != 8)
-	{
-		printf(" Warning: Argumento incorreto (precisa ter 8 de tamanho, o CEP Comando-Adicao.h addLocalizacao()\n");
-		free(idCidade);
-		idCidade = NULL;
-		return false;
-	}
+	 		token = strtok(NULL, " ");// APP 2 l0 idCidade cep bairro rua numero
+	 		if (token == NULL)// Se informar idCidade, cep, bairro e rua
+	 		{
+	 			printf(" LOG: Cliente informou idCidade cep, bairro e rua em Comando-Adicao.h addLocalizacao() askbvjiuisdfg\n");
+	 			if (addLocalizacaoAoBanco(idCidade, cep, bairro, rua, NULL, NULL))
+	 			{
+	 				printf(" LOG: Localizacao adicionada ao banco de dados com sucesso em Comando-Adicao.h addLocalizacao() sauvgbuirvsdf\n");
+	 				free(idCidade);
+	 				free(cep);
+	 				free(bairro);
+	 				free(rua);
+	 				rua = NULL;
+	 				bairro = NULL;
+	 				cep = NULL;
+	 				idCidade = NULL;
+	 				return true;
+	 			}
+	 			else
+	 			{
+	 				printf(" Warning: Falha ao adicionar localizacao em Comando-Adicao.h addLocalizacao() ewuinuisf\n");
+	 				free(idCidade);
+	 				free(cep);
+	 				free(bairro);
+	 				free(rua);
+	 				rua = NULL;
+	 				bairro = NULL;
+	 				cep = NULL;
+	 				idCidade = NULL;
+	 				return false;
+	 			}
+	 		}
+	 		else
+	 		{
+	 			if (strlen(token) > TAMANHO_NUMERO)
+	 			{
+	 				printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addLocalizacao() askjbvruisdgjh589sad\n");
+	 				free(idCidade);
+	 				free(cep);
+	 				free(bairro);
+	 				free(rua);
+	 				rua = NULL;
+	 				bairro = NULL;
+	 				cep = NULL;
+	 				idCidade = NULL;
+	 				return false;
+	 			}
+	 			char *numero = strdup(token);
+	 			if (numero == NULL)
+	 			{
+	 				printf(" Warning: Falha ao duplicar numero em Comando-Adicao.h addLocalizacao() aksjb uiasdgr\n");
+	 				free(idCidade);
+	 				free(cep);
+	 				free(bairro);
+	 				free(rua);
+	 				rua = NULL;
+	 				bairro = NULL;
+	 				cep = NULL;
+	 				idCidade = NULL;
+	 				return false;
+	 			}
 
-	char *cep = malloc(sizeof(char) * (strlen(token + 1)));
-	if(cep == NULL)
-	{
-		printf(" Warning: não foi possível alocar memoria para CEP em Comando-Adicao.h addLocalizacao()\n");
-		free(idCidade);
-		idCidade = NULL;
-		return false;
-	}
+	 			token = strtok(NULL, " ");// APP 2 l0 idCidade cep bairro rua numero complemento
+	 			if (token == NULL)// Se informar idCidade, cep, bairro, rua e numero
+	 			{
+	 				printf(" LOG: Cliente informou idCidade, cep, bairro, rua e numero em Comando-Adicao.h addLocalizacao() kjubrui9dfjt\n");
+	 				if (addLocalizacaoAoBanco(idCidade, cep, bairro, rua, numero, NULL))
+	 				{
+	 					printf(" LOG: Localizacao adicionada com sucesso ao banco de dados em Comando-Adicao.h addLocalizacao() askjbvruyiasxfrgb\n");
+	 					free(idCidade);
+	 					free(cep);
+	 					free(bairro);
+	 					free(rua);
+	 					free(numero);
+	 					numero = NULL;
+	 					rua = NULL;
+	 					bairro = NULL;
+	 					cep = NULL;
+	 					idCidade = NULL;
+	 					return true;
+	 				}
+	 				else
+	 				{
+	 					printf(" Warning:Falha ao adicionar localizacao em Comando-Adicao.h addLocalizacao() askjbvruyiasxfrgb\n");
+	 					free(idCidade);
+	 					free(cep);
+	 					free(bairro);
+	 					free(rua);
+	 					free(numero);
+	 					numero = NULL;
+	 					rua = NULL;
+	 					bairro = NULL;
+	 					cep = NULL;
+	 					idCidade = NULL;
+	 					return false;
+	 				}
+	 			}
+	 			else// Se informar idCidade, cep, bairro, rua, numero e complemento
+	 			{
+	 				printf(" LOG: Cliente informando todos os dados em Comando-Adicao.h addLocalizacao() dkjghbuiuisdf\n");
+	 				if (strlen(token) > TAMANHO_COMPLEMENTO)
+	 				{
+	 					printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addLocalizacao() askjvnruisdbtb165 \n");
+	 					free(idCidade);
+	 					free(cep);
+	 					free(bairro);
+	 					free(rua);
+	 					free(numero);
+	 					numero = NULL;
+	 					rua = NULL;
+	 					bairro = NULL;
+	 					cep = NULL;
+	 					idCidade = NULL;
+	 					return false;
+	 				}
+	 				char *complemento = strdup(token);
+	 				if (complemento == NULL)
+	 				{
+	 					printf(" Warning: Falha ao duplicar complemento em Comando-Adicao.h addLocalizacao() asjhvjdkeh892df\n");
+	 					free(idCidade);
+	 					free(cep);
+	 					free(bairro);
+	 					free(rua);
+	 					free(numero);
+	 					numero = NULL;
+	 					rua = NULL;
+	 					bairro = NULL;
+	 					cep = NULL;
+	 					idCidade = NULL;
+	 					return false;
+	 				}
 
-	strcpy(cep, token);
-	if(cep == NULL)
-	{
-		printf(" Warning: Falha ao copiar de token para CEP em Comando-Adicao.h addLocalizacao()\n");
-		free(idCidade);
-		idCidade = NULL;
-		return false;
-	}
-	if(strcmp(token, cep) != 0)
-	{
-		printf(" Warning: Copia incorreta de token para CEP em Comando-Adicao.h addLocalizacao()\n");
-		free(idCidade);
-		idCidade = NULL;
-		free(cep);
-		cep = NULL;
-		return false;
-	}
-
-	token = strtok(NULL, " ");// APP 2 l0 $ idCidade L CEP R      ou     APP 2 l0 $ idCidade L CEP RN
-	if(token == NULL)
-	{
-		printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() (5)\n");
-		free(idCidade);
-		idCidade = NULL;
-		free(cep);
-		cep = NULL;
-		return false;
-	}
-	if(strcmp(token, TIPO_RUA) == 0)
-	{
-		printf(" LOG: Usuario informou adicao de rua em Comando-Adicao.h addLocalizacao()\n");
-		//TODO
-	}
-	else if(strcmp(token, TIPO_RUA_NULO) == 0)// APP 2 l0 $ idCidade L CEP RN
-	{
-		printf(" LOG: Usuario não informou adicao de rua, prosseguindo com interpretacao\n");
-		token = strtok(NULL, " ");// APP 2 l0 $ idCidade L CEP RN n      OU    APP 2 l0 $ idCidade L CEP RN nN
-		if(token == NULL)
-		{
-			printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() (6)\n");
-			free(idCidade);
-			idCidade = NULL;
-			free(cep);
-			cep = NULL;
-			return false;
-		}
-		if(strcmp(token, TIPO_NUMERO) == 0)// APP 2 l0 $ idCidade L CEP RN n
-		{
-			printf(" LOG: Usuario informou Numero em Comando-Adicao.h addLocalizacao()\n");
-			token = strtok(NULL, " ");// APP 2 l0 $ idCidade L CEP Rn n numero
-			if(token == NULL)
-			{
-				printf(" Warning: token == NULL em Comando-Adicao.h addLocalizacao()\n");
-				free(cep);
-				free(idCidade);
-				cep = NULL;
-				idCidade = NULL;
-				return false;
-			}
-			if(strlen(token) > TAMANHO_NUMERO)
-			{
-				printf(" Warning: Tamanho informado é exageradamente grande em Comando-Adicao.h addLocalizacao()\n");
-				free(idCidade);
-				free(cep);
-				cep = NULL;
-				idCidade = NULL;
-				return false;
-			}
-			char *numero = malloc(sizeof(char) * (strlen(token) + 1));
-			if(numero == NULL)
-			{
-				printf(" Warning: Impossível alocar memoria para numero em Comando-Adicao.h addLocalizacao()\n");
-				free(cep);
-				free(idCidade);
-				idCidade = NULL;
-				cep = NULL;
-				return false;
-			}
-			strcpy(numero, token);
-			if(strcmp(numero, token) != 0)
-			{
-				printf(" Warning: Falha ao copiar de token para numero em Comando-Adicao.h addLocalizacao() KKAHSJJJHANNE\n");
-				free(idCidade);
-				free(cep);
-				cep = NULL;
-				idCidade = NULL;
-				if(numero != NULL)
-				{
-					free(numero);
-					numero = NULL;
-				}
-				return false;
-			}
-			token = strtok(NULL, " ");// APP 2 l0 $ idCidade L CEP Rn n numero b     OU   APP 2 l0 $ idCidade L CEP Rn n numero bN
-			if(token == NULL)
-			{
-				printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() JJJANNNAH\n");
-				free(cep);
-				free(numero);
-				free(idCidade);
-				numero = NULL;
-				idCidade = NULL;
-				cep = NULL;
-				return false;
-			}
-			if(strcmp(token, TIPO_BAIRRO) == 0)// APP 2 l0 $ idCidade L CEP Rn n numero b
-			{
-				//TODO
-				return false; // porque não está pronto ainda
-			}
-			else if(strcmp(token, TIPO_BAIRRO_NULO) == 0)// APP 2 l0 $ idCidade L CEP Rn n numero bN
-			{
-				token = strtok(NULL, " ");// APP 2 l0 $ idCidade L CEP Rn n numero algumaCoisa
-				if(token == NULL)
-				{
-					printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() KKKKKK\n");
-					free(cep);
-					free(numero);
-					free(idCidade);
-					cep = NULL;
-					numero = NULL;
-					idCidade = NULL;
-					return false;
-				}
-				if(strlen(token) > TAMANHO_TIPO)
-				{
-					printf(" Warning: Tamanho de comando exageradamente grande em Comando-Adicao.h addLocalizacao() JANNEJH\n");
-					free(idCidade);
-					free(cep);
-					free(numero);
-					cep = NULL;
-					numero = NULL;
-					idCidade = NULL;
-					return false;
-				}
-				if(strcmp(token, TIPO_COMPLEMENTO) == 0)// APP 2 l0 $ idCidade L CEP Rn n numero M
-				{
-					printf(" LOG: Cliente informando complemento em Comando-Adicao.h addLocalizacao() JNNANKJHE\n");
-					token = strtok(NULL, " ");// APP 2 l0 $ idCidade L CEP Rn n numero M complementoInformado
-					if (token == NULL)
-					{
-						printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() JJNNNNABB\n");
-						free(idCidade);
-						free(cep);
-						free(numero);
-						numero = NULL;
-						cep = NULL;
-						idCidade = NULL;
-						return false;
-					}
-					if(strlen(token) > TAMANHO_COMPLEMENTO)
-					{
-						printf(" Warning: Tamanho de complemento informado exageradamente grande em Comando-Adicao.h addLocalizacao() NJNEBQ\n");
-						free(idCidade);
-						free(cep);
-						free(numero);
-						numero = NULL;
-						cep = NULL;
-						idCidade = NULL;
-						return false;
-					}
-					char *complemento = malloc(sizeof(char) * (strlen(token) + 1));
-					if(complemento == NULL)
-					{
-						printf(" Warning: Não foi possível alocar memoria para complemento em Comando-Adicao.h addLocalizacao() NNNQQ\n");
-						free(idCidade);
-						free(cep);
-						free(numero);
-						numero = NULL;
-						cep = NULL;
-						idCidade = NULL;
-						return false;
-					}
-					strcpy(complemento, token);
-					if(complemento == NULL)
-					{
-						printf(" Warning: Falha ao copiar de token para complemento em Comando-Adicao.h addLocalizacao() HJHQN\n");
-						free(idCidade);
-						free(numero);
-						free(cep);
-						cep = NULL;
-						numero = NULL;
-						idCidade = NULL;
-						return false;
-					}
-					if(strcmp(complemento, token) != 0)
-					{
-						printf(" Warning: Erro em copia de token para complemento em Comando-Adicao.h addLocalizacao() QNSK\n");
-						free(idCidade);
-						free(cep);
-						free(numero);
-						free(complemento);
-						complemento = NULL;
-						cep = NULL;
-						numero = NULL;
-						idCidade = NULL;
-						return false;
-					}
-
-					if(addLocalizacaoAoBanco(idCidade, cep, NULL, NULL, numero, complemento))
-					{
-						printf(" LOG: Localizacao adicionada com sucesso ao banco de dados em Comando-Adicao.h addLocalizacao() GGGQH\n");
-						free(cep);
-						free(idCidade);
-						free(numero);
-						free(complemento);
-						complemento = NULL;
-						cep = NULL;
-						numero = NULL;
-						idCidade = NULL;
-						return true;
-					}
-					else
-					{
-						printf(" Warning: Não foi possível adicionar localizacao ao banco de dados em Comando-Adicao.h addLocalizacao() HQWEK\n");
-						free(idCidade);
-						free(cep);
-						free(complemento);
-						free(numero);
-						numero = NULL;
-						cep = NULL;
-						complemento = NULL;
-						idCidade = NULL;
-						return false;
-					}
-					printf(" ERRO FATAL: erro indentificável em Comando-Adicao.h addLocalizacao() QWEJGC\n");
-					if(cep != NULL)
-					{
-						free(cep);
-						cep = NULL;
-					}
-					if(complemento != NULL)
-					{
-						free(complemento);
-						complemento = NULL;
-					}
-					if(numero != NULL)
-					{
-						free(numero);
-						numero = NULL;
-					}
-					if(idCidade != NULL)
-					{
-						free(numero);
-						numero = NULL;
-					}
-					return false;
-				}
-				else if(strcmp(token, TIPO_COMPLEMENTO_NULO) == 0)//  APP 2 l0 $ idCidade L CEP RN n numero MN
-				{
-					printf(" LOG: Cliente não informou complemento em Comando-Adicao.h addLocalizacao() lNNJANJEH\n");
-					if(addLocalizacaoAoBanco(idCidade, cep, NULL, NULL, numero, NULL))
-					{
-						printf(" LOG: Localizacao adicionada com sucesso ao banco de dados em Comando-Adicao.h addLocalizacao()  HHJHAJEN\n");
-						free(idCidade);
-						free(cep);
-						free(numero);
-						numero = NULL;
-						cep = NULL;
-						idCidade = NULL;
-						return true;
-					}
-					else
-					{
-						printf(" Warning: falha ao adicionar localizacao ao banco de dados em Comando-Adicao.h addLocalizacao() NNNMAH\n");
-						free(cep);
-						free(idCidade);
-						free(numero);
-						numero = NULL;
-						idCidade = NULL;
-						cep = NULL;
-						return false;
-					}
-				}
-				else
-				{
-					printf(" ERRO: Comando incorreto informado em Comando-Adicao.h addLocalizacao()\n");
-					free(cep);
-					free(idCidade);
-					free(numero);
-					numero = NULL;
-					idCidade = NULL;
-					cep = NULL;
-					return false;
-				}
-				printf(" ERRO FATAL: identificável em Comando-Adicao.h addLocalizacao()\n");
-				return false;
-			}
-			else
-			{
-				printf(" Warning: Comando incorreto em Comando-Adicao.h addLocalizacao() KKAHHJNENEN\n");
-				free(idCidade);
-				free(cep);
-				free(numero);
-				numero = NULL;
-				cep = NULL;
-				idCidade = NULL;
-				return false;
-			}
-		}
-		else if(strcmp(token, TIPO_NUMERO_NULO) == 0)
-		{
-			printf(" LOG: Usuario não informou Numero em Comando-Adicao.h addLocalizacao()\n");
-			token = strtok(NULL, " ");// APP 2 l0 $ idCidade L CEP RN nN b      OU    APP 2 l0 $ idCidade L CEP RN nN bN
-			if(token == NULL)
-			{
-				printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() (7)\n");
-				free(idCidade);
-				idCidade = NULL;
-				free(cep);
-				cep = NULL;
-				return false;
-			}
-			if(strcmp(token, TIPO_BAIRRO) == 0)// APP 2 l0 $ idCidade L CEP RN nN b
-			{
-				printf(" LOG: Usuario informou bairro em Comando-Adicao.h addLocalizacao()\n");
-
-				token = strtok(NULL, " ");// APP 2 l0 $ idCidade L CEP RN nN b nomeDoBairro
-				if(token == NULL)
-				{
-					printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() (10)\n");
-					free(idCidade);
-					idCidade = NULL;
-					free(cep);
-					cep= NULL;
-					return false;
-				}
-				if(strlen(token) > TAMANHO_BAIRRO)
-				{
-					printf(" Warning: Tamanho de bairro exageradamente grande em Comando-Adicao.h addLocalizacao()\n");
-					free(idCidade);
-					free(cep);
-					cep = NULL;
-					idCidade = NULL;
-					return false;
-				}
-				char *bairro = malloc(sizeof(char) * (strlen(token) + 1));
-				if(bairro == NULL)
-				{
-					printf(" Warning: Falha ao alocar memoria para bairro Comando-Adicao.a addLocalizacao()\n");
-					free(idCidade);
-					free(cep);
-					cep = NULL;
-					idCidade = NULL;
-					return false;
-				}
-				strcpy(bairro, token);
-				if(bairro == NULL)
-				{
-					printf(" Warning: Falha ao copiar de token para bairro em Comando-Adicao.h addLocalizacao()\n");
-					free(idCidade);
-					free(cep);
-					cep = NULL;
-					idCidade = NULL;
-					return false;
-				}
-				token = strtok(NULL, " ");//APP 2 l0 $ idCidade L CEP RN nN b nomeDoBairro M      ou     APP 2 l0 $ idCidade L CEP RN nN b nomeDoBairro MN
-				if(token == NULL)
-				{
-					printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() (11)\n");
-					free(idCidade);
-					free(cep);
-					free(bairro);
-					bairro = NULL;
-					cep = NULL;
-					idCidade = NULL;
-					return false;
-				}
-				if(strcmp(token, TIPO_COMPLEMENTO) == 0)//APP 2 l0 $ idCidade L CEP RN nN b nomeDoBairro M
-				{
-					token = strtok(NULL, " ");//APP 2 l0 $ idCidade L CEP Rn nN b nomeDoBairro M complementoInformado
-					if(token == NULL)
-					{
-						printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() (12)\n");
-						free(idCidade);
-						free(cep);
-						free(bairro);
-						bairro = NULL;
-						idCidade = NULL;
-						cep = NULL;
-						return false;
-					}
-					if(strlen(token) > TAMANHO_COMPLEMENTO)
-					{
-						printf(" Warning: Tamanho de complemento exageradamente grande em Comando-Adicao.h addLocalizacao() (lasdkhjksahjk)\n");
-						free(idCidade);
-						free(cep);
-						free(bairro);
-						bairro = NULL;
-						cep = NULL;
-						idCidade = NULL;
-						return false;
-					}
-					char *complemento = malloc(sizeof(char) * (strlen(token) + 1));
-					if(complemento == NULL)
-					{
-						printf(" Warning: Falha ao alocar memoria para complemento em Comando-Adicao.h addLocalizacao() (NNJNakjnsj*798f1hghsj)\n");
-						free(idCidade);
-						free(cep);
-						free(bairro);
-						bairro = NULL;
-						cep = NULL;
-						idCidade = NULL;
-						return false;
-					}
-					strcpy(complemento, token);
-					if(complemento == NULL)
-					{
-						printf(" Warning: Falha ao copiar de token para complemento em Comando-Adicao.h addLocalizacao() (asjkdjq33386c76c8a)\n");
-						free(idCidade);
-						free(cep);
-						free(bairro);
-						idCidade = NULL;
-						cep = NULL;
-						bairro = NULL;
-						return false;
-					}
-
-					if(addLocalizacaoAoBanco(idCidade, cep, bairro, NULL, NULL, complemento))
-					{
-						printf(" LOG: Sucesso ao adicionar localizacao ao banco de dados em Comando-Adicao.h addLocalizacao() (askjdhhh1127868c)\n");
-						free(bairro);
-						free(idCidade);
-						free(cep);
-						free(complemento);
-						complemento = NULL;
-						cep = NULL;
-						bairro = NULL;
-						idCidade = NULL;
-						return true;
-					}
-					else
-					{
-						printf(" Warning: Falha ao adicionar localizacao ao banco de dados em Comando-Adicao.h addLocalizacao() (kjslllakk)\n");
-						free(idCidade);
-						free(cep);
-						free(bairro);
-						free(complemento);
-						complemento = NULL;
-						bairro = NULL;
-						cep = NULL;
-						idCidade = NULL;
-						return false;
-					}
-				}
-				else if(strcmp(token, TIPO_COMPLEMENTO_NULO) == 0)// APP 2 l0 $ idCidade L CEP RN nN b nomeDoBairro MN
-				{
-					if(addLocalizacaoAoBanco(idCidade, cep, bairro, NULL, NULL, NULL))
-					{
-						printf(" LOG: Localizacao adicionada com sucesso em Comando-Adicao.h addLocalizacao() (LanjKjhajHjenKJAhsudiuyYYahhekNNkahbcirouqb*78111867&)\n");
-						free(idCidade);
-						free(cep);
-						free(bairro);
-						bairro = NULL;
-						cep = NULL;
-						idCidade = NULL;
-						return true;
-					}
-					else
-					{
-						printf(" Warning: Falha ao adicionar localizacao ao banco de dados em Comando-Adicao.h addLocalizacao() (vbwhdjg93776s6s67213jirs8vsg2jbb9s8)\n");
-						free(idCidade);
-						free(cep);
-						free(bairro);
-						bairro = NULL;
-						cep = NULL;
-						idCidade = NULL;
-						return false;
-					}
-				}
-				else
-				{
-					printf(" Warning: Comando incorreto em Comando-Adicao.h addLocalizacao() (5)\n");
-					free(idCidade);
-					free(cep);
-					free(bairro);
-					bairro = NULL;
-					cep = NULL;
-					idCidade = NULL;
-					return false;
-				}
-			}
-			else if(strcmp(token, TIPO_BAIRRO_NULO) == 0)// APP 2 l0 $ idCidade L CEP RN nN bN
-			{
-				printf(" LOG: Usuario não informou Bairro em Comando-Adicao.h addLocalizacao()\n");
-				token = strtok(NULL, " ");// APP 2 l0 $ idCidade L CEP RN nN bN M     OU    APP 2 l0 $ idCidade L CEP RN nN bN MN
-				if(token == NULL)
-				{
-					printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() (8)\n");
-					free(idCidade);
-					idCidade = NULL;
-					free(cep);
-					cep = NULL;
-					return false;
-				}
-				if(strcmp(token, TIPO_COMPLEMENTO) == 0)// APP 2 l0 $ idCidade L CEP RN nN bN M
-				{
-					printf(" LOG: Usuario informou complemento em Comando-Adicao.h addLocalizacao()\n");
-
-					token = strtok(NULL, " ");
-					if(token == NULL)
-					{
-						printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() (9)\n");
-						free(idCidade);
-						idCidade = NULL;
-						free(cep);
-						cep = NULL;
-						return false;
-					}
-					char *complemento = malloc(sizeof(char) * (strlen(token) + 1));
-					if(complemento == NULL)
-					{
-						printf(" Warning: Falha ao alocar memoria para complemento em Comando-Adicao.h addLocalizacao()\n");
-						free(idCidade);
-						free(cep);
-						idCidade = NULL;
-						cep = NULL;
-						return false;
-					}
-					strcpy(complemento, token);
-
-					if(addLocalizacaoAoBanco(idCidade, cep, NULL, NULL, NULL, complemento))
-					{
-						printf(" LOG: Localizacao adicionada com sucesso ao banco de dados em Comando-Adicao.h addLocalizacao() (2)\n");
-						free(idCidade);
-						free(complemento);
-						free(cep);
-						cep = NULL;
-						complemento = NULL;
-						idCidade = NULL;
-						return true;
-					}
-					else
-					{
-						printf(" Warning: Não foi possivel adicionar Localizacao ao banco de dados em Comando-Adicao.h addLocalizacao()\n");
-						free(idCidade);
-						free(complemento);
-						free(cep);
-						cep = NULL;
-						complemento = NULL;
-						idCidade = NULL;
-						return false;
-					}
-					printf(" Warning: Exceção não manipulada em Comando-Adicao.h addLocalizacao() (LAKJSNJHJAK)\n");
-					return false;
-				}
-				else if(strcmp(token, TIPO_COMPLEMENTO_NULO) == 0)// APP 2 l0 $ idCidade L CEP RN nN bN MN
-				{
-					printf(" LOG: Usuario não informou complemento em Comando-Adicao.h addLocalizacao()\n");
-					if(addLocalizacaoAoBanco(idCidade, cep, NULL, NULL, NULL, NULL))
-					{
-						printf(" LOG: Adicao de localizacao efetuada com sucesso em Comando-Adicao.h addLocalizacao()\n");
-						free(idCidade);
-						idCidade = NULL;
-						free(cep);
-						cep = NULL;
-						return true;
-					}
-					else
-					{
-						printf(" Warning: Falha ao adicionar Localizacao ao banco de dados em Comando-Adicao.h addLocalizacao()\n");
-						free(idCidade);
-						idCidade = NULL;
-						free(cep);
-						cep = NULL;
-						return false;
-					}
-				}
-				else
-				{
-					printf(" Warning: Comando incorreto em Comando-Adicao.h addLocalizacao() (4)\n");
-					free(idCidade);
-					idCidade = NULL;
-					free(cep);
-					cep = NULL;
-					return false;
-				}
-			}
-			else
-			{
-				printf(" Warning: Comando incorreto em Comando-Adicao.h addLocalizacao() (3)\n");
-				free(idCidade);
-				idCidade = NULL;
-				free(cep);
-				cep = NULL;
-				return false;
-			}
-		}
-		else
-		{
-			printf(" Warning: Comando incorreto em Comando-Adicao.h addLocalizacao() (2)\n");
-			free(idCidade);
-			idCidade = NULL;
-			free(cep);
-			cep = NULL;
-			return false;
-		}
-	}
-	else
-	{
-		printf(" Warning: Comando incorreto em Comando-Adicao.h addLocalizacao() (1)\n");
-		free(idCidade);
-		idCidade = NULL;
-		free(cep);
-		cep = NULL;
-		return false;
-	}
-	printf(" ERRO: Exceção não manipulada em Comando-Adicao.h addLocalizacao() \n");
-	free(idCidade);
-	idCidade = NULL;
-	free(cep);
-	cep = NULL;
-	return false;
+	 				if (addLocalizacaoAoBanco(idCidade, cep, bairro, rua, numero, complemento))
+	 				{
+	 					printf(" LOG: Localizacao adicionada com sucesso ao banco de dados em Comando-Adicao.h addLocalizacao() askjbvru8sd784sdf\n");
+	 					free(idCidade);
+	 					free(cep);
+	 					free(bairro);
+	 					free(rua);
+	 					free(numero);
+	 					numero = NULL;
+	 					rua = NULL;
+	 					bairro = NULL;
+	 					cep = NULL;
+	 					idCidade = NULL;
+	 					return true;
+	 				}
+	 				else
+	 				{
+	 					printf(" Warning: Falha ao adicionar localizacao ao banco de dados em Comando-Adicao.h addLocalizacao() asbvuei872df\n");
+	 					free(idCidade);
+	 					free(cep);
+	 					free(bairro);
+	 					free(rua);
+	 					free(numero);
+	 					numero = NULL;
+	 					rua = NULL;
+	 					bairro = NULL;
+	 					cep = NULL;
+	 					idCidade = NULL;
+	 					return false;
+	 				}
+	 			}
+	 		}
+	 	}
+	 }
 }
 
 
-bool addContratante()// APP 2 $C 
+bool addContratante()// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email senha idLocalizacao telefone
 {
 	printf("\t********************ADICAO DE CONTRATANTE***************************\n");
 	char *token;
