@@ -103,8 +103,13 @@ APP
 							nomeProduto	(nome do produto)
 								(adiciona um produto que vai ser dado como criado pelo contratante referenciado por idContratante, com duracao(inteiro) em dias, e nomeProduto como seu "nome que vai aparecer pro público", deixei descricao como não obrigatória)
 
-								descricaoProduto	(descricao do produto que vai aparecer ao usuario, não obrigatório)
-									(adiciona um produto que vai ser dado como criado pelo contratante referenciado por idContratante, com duracao(inteiro) em dias, e nomeProduto como seu "nome que vai aparecer pro público", deixei descricao como não obrigatória)
+								tipoProduto	(O Tipo do produto em si, se é RA ou RV ou misto... sendo) (obrigatório)
+											(1 == RA)
+											(2 == RV)
+											(3 == RV)
+
+									descricaoProduto	(descricao do produto que vai aparecer ao usuario, não obrigatório)
+										(adiciona um produto que vai ser dado como criado pelo contratante referenciado por idContratante, com duracao(inteiro) em dias, e nomeProduto como seu "nome que vai aparecer pro público", deixei descricao como não obrigatória)
 
 	$C	(TIPO_CONTRATANTE)
 		CHAVE_DE_SEGURANCA

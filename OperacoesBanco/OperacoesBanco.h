@@ -1364,7 +1364,7 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 }
 
 
-bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char *nomeProduto, char *descricao)//DONE
+bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char *nomeProduto, char *descricao, char *tipoProduto)//DONE
 {
 	if(conexao == NULL)
 	{
@@ -1404,6 +1404,12 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 		printf(" Warning: Nome do produto não foi informado em addProdutoAoBanco() OperacoesBanco.h 6jk29df\n");
 		return false;
 	}
+
+	if (tipoProduto == NULL)
+	{
+		printf(" Warning: Tipo de produto não especificado em addProdutoAoBanco() OperacoesBanco.h asbvur98as7fe\n");
+		return false;
+	}
 	
 	if(checarIdContratante(idContratante))
 	{
@@ -1420,7 +1426,8 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 	
 	if(descricao == NULL)
 	{
-		tamanho = 93 + 1 + strlen(idContratante) + strlen(idProduto) + strlen(duracao) + strlen(nomeProduto);
+		//tamanho = 101 + 1 + strlen(idContratante) + strlen(idProduto) + strlen(duracao) + strlen(nomeProduto) + strlen(tipoProduto);
+		tamanho = 112 + strlen(idContratante) + strlen(duracao) + strlen(nomeProduto) + strlen(tipoProduto);//Otimizado
 		query = (char *)malloc(sizeof(char) * tamanho);
 		
 		if(query == NULL)
@@ -1429,7 +1436,7 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 			return false;
 		}
 		
-		snprintf(query, tamanho, "INSERT INTO produto(idproduto,nomeproduto,duracao,contratante_idcontratante) VALUES(\'%s\',\'%s\',%s,%s);", idProduto, nomeProduto, duracao, idContratante);
+		snprintf(query, tamanho, "INSERT INTO produto(idproduto,nomeproduto,duracao,contratante_idcontratante,tipo) VALUES(\'%s\',\'%s\',%s,%s,\'%s\');", idProduto, nomeProduto, duracao, idContratante, tipoProduto);
 		
 		if(query == NULL)
 		{
@@ -1470,8 +1477,8 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 	else
 	{
 		// Se a descricao for informada
-		//tamanho = 106 + 1 + strlen(idContratante) + strlen(idProduto) + strlen(duracao) + strlen(nomeProduto) + strlen(descricao);
-		tamanho = 117 + strlen(idContratante) + strlen(duracao) + strlen(nomeProduto) + strlen(descricao);
+		//tamanho = 114 + 1 + strlen(idContratante) + strlen(idProduto) + strlen(duracao) + strlen(nomeProduto) + strlen(descricao) + strlen(tipoProduto);
+		tamanho = 125 + strlen(idContratante) + strlen(duracao) + strlen(nomeProduto) + strlen(descricao) + strlen(tipoProduto);//Otimizado
 		query = (char *)malloc(sizeof(char) * tamanho);
 		
 		if(query == NULL)
@@ -1480,7 +1487,7 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 			return false;
 		}
 		
-		snprintf(query, tamanho, "INSERT INTO produto(idproduto,nomeproduto,duracao,contratante_idcontratante,descricao) VALUES(\'%s\',\'%s\',%s,%s,\'%s\');", idProduto, nomeProduto, duracao, idContratante, descricao);
+		snprintf(query, tamanho, "INSERT INTO produto(idproduto,nomeproduto,duracao,contratante_idcontratante,descricao,tipo) VALUES(\'%s\',\'%s\',%s,%s,\'%s\',\'%s\');", idProduto, nomeProduto, duracao, idContratante, descricao, tipoProduto);
 		
 		if(query == NULL)
 		{

@@ -1947,15 +1947,60 @@ bool addProduto()//DONE
 		return false;
 	}
 
-	token = strtok(NULL, " ");
+	token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao tipoProduto nomeProduto
+	if (token == NULL)
+	{
+		printf(" Warning: Tipo de produto não especificado em Comando-Adicao.h addProduto() askbvu8ra8sd7\n");
+		free(idProduto);
+		free(idContratante);
+		free(duracao);
+		free(nomeProduto);
+		nomeProduto = NULL;
+		duracao = NULL;
+		idContratante = NULL;
+		idProduto = NULL;
+		return false;
+	}
+	if (strlen(token) != TAMANHO_TIPO_PRODUTO)
+	{
+		printf(" Warning: Tamanho do tipo do produto está exageradamente grande em Comando-Adicao.h addProduto() virb89s7d8hfs\n");
+		free(idProduto);
+		free(idContratante);
+		free(duracao);
+		free(nomeProduto);
+		nomeProduto = NULL;
+		duracao = NULL;
+		idContratante = NULL;
+		idProduto = NULL;
+		return false;
+	}
+
+	char *tipoProduto = strdup(token);
+	if (tipoProduto == NULL)
+	{
+		printf(" Warning: Falha ao duplicar tipo de produto em Comando-Adicao.h addProduto() ewiugh89da7dadfsfd\n");
+		free(idProduto);
+		free(idContratante);
+		free(duracao);
+		free(nomeProduto);
+		nomeProduto = NULL;
+		duracao = NULL;
+		idContratante = NULL;
+		idProduto = NULL;
+		return false;
+	}
+
+	token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao tipoProduto nomeProduto
 	if(token == NULL)
 	{
-		if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, NULL))//TODO Adicionar descrição de produto
+		if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, NULL, tipoProduto))//TODO Adicionar descrição de produto
 		{
 			printf(" LOG: Produto adicionado com sucesso ao banco de dados em addProdutoAoBanco() Comando-Adicao.h\n");
 			free(duracao);
 			free(idProduto);
 			free(idContratante);
+			free(tipoProduto);
+			tipoProduto = NULL;
 			idContratante = NULL;
 			idProduto = NULL;
 			duracao = NULL;
@@ -1967,6 +2012,8 @@ bool addProduto()//DONE
 			free(duracao);
 			free(idProduto);
 			free(idContratante);
+			free(tipoProduto);
+			tipoProduto = NULL;
 			idContratante = NULL;
 			idProduto = NULL;
 			duracao = NULL;
@@ -1982,6 +2029,8 @@ bool addProduto()//DONE
 			free(idProduto);
 			free(idContratante);
 			free(duracao);
+			free(tipoProduto);
+			tipoProduto = NULL;
 			duracao = NULL;
 			idContratante = NULL;
 			idProduto = NULL;
@@ -1997,19 +2046,23 @@ bool addProduto()//DONE
 			free(duracao);
 			free(idProduto);
 			free(idContratante);
+			free(tipoProduto);
+			tipoProduto = NULL;
 			idContratante = NULL;
 			idProduto = NULL;
 			duracao = NULL;
 			return false;
 		}
 
-		if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, descricao))
+		if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, descricao, tipoProduto))
 		{
 			printf(" LOG: Produto adicionado com sucesso ao banco de dados em addProdutoAoBanco() Comando-Adicao.h\n");
 			free(duracao);
 			free(idProduto);
 			free(idContratante);
 			free(descricao);
+			free(tipoProduto);
+			tipoProduto = NULL;
 			descricao = NULL;
 			idContratante = NULL;
 			idProduto = NULL;
@@ -2023,6 +2076,8 @@ bool addProduto()//DONE
 			free(idProduto);
 			free(idContratante);
 			free(descricao);
+			free(tipoProduto);
+			tipoProduto = NULL;
 			descricao = NULL;
 			idContratante = NULL;
 			idProduto = NULL;
@@ -2056,6 +2111,12 @@ bool addProduto()//DONE
 	{
 		free(idContratante);
 		idContratante = NULL;
+	}
+
+	if (tipoProduto != NULL)
+	{
+		free(tipoProduto);
+		tipoProduto = NULL;
 	}
 
 	return false;
