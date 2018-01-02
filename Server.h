@@ -156,7 +156,7 @@ void liberaMemoriaTalvezUtilizada(char *email)
 		free(email);
 		email = NULL;
 	}
-	desconectarBanco();
+	//desconectarBanco();
 }
 
 
@@ -238,6 +238,7 @@ void *Servidor(void *cliente)
 			printf(" LOG: Encerrando thread de Servidor em Server.h Servidor()->sairDaThread()\n");
 			close(*(int *)cliente);
 			liberaMemoriaTalvezUtilizada(email);
+			reset_Usuario(&usuario);
 			pthread_exit( (void *) 0 );
 		}
 
@@ -326,7 +327,7 @@ void *Servidor(void *cliente)
 
 				case REQUISITANDO_REMOCAO:
 					printf(" Warning: Falha ao concluir comando de remocao em Server.h Servidor()\n");
-					enviaMensagemParaCliente("Falha ao executar comando de remocao\nainda conectado\0", cliente);
+					enviaMensagemParaCliente("Remoção Negada\nainda conectado\0", cliente);
 					break;
 
 				case REQUISITANDO_ROOT:

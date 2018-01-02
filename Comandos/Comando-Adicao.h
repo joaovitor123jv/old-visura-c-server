@@ -3,13 +3,13 @@
 #include <string.h>
 #include "Comandos.h"
 
-bool comandoAdicionar(char *email, bool usuarioAnonimo);//Retorna true se adicionado com sucesso
-// bool addVisualizacao(char *comando);
-bool addVisualizacao(char *email, bool usuarioAnonimo);//Retorna true se adicionado com sucesso
+bool comandoAdicionar(char *email, bool usuarioAnonimo, Usuario *usuario);//Retorna true se adicionado com sucesso
+bool addVisualizacao(Usuario *usuario);
+//bool addVisualizacao(char *email, bool usuarioAnonimo);//Retorna true se adicionado com sucesso
 // bool addIndice(char *nomearquivo);
 
 bool addUsuarioAnonimo();//Retorna true se adicionado com sucesso
-bool addUsuario(char *emailAnterior);//Retorna true se adicionado com sucesso
+bool addUsuario(Usuario *usuario);//Retorna true se adicionado com sucesso
 
 bool addContratante();//Retorna true se adicionado com sucesso
 
@@ -18,17 +18,21 @@ bool addProduto();//Retorna true se adicionado com sucesso
 bool addCidade();//Retorna true se adicionado com sucesso
 bool addLocalizacao();//Retorna true se adicionado com sucesso
 
-bool addInformacoesAUsuario(char *email);//Retorna true se adicionado com sucesso
-bool addAvaliacaoAProduto(char *email);//Retorna TRUE se adicionado com sucesso
+bool addInformacoesAUsuario(Usuario *usuario);//Retorna true se adicionado com sucesso
+bool addAvaliacaoAProduto(Usuario *usuario);//Retorna TRUE se adicionado com sucesso
 
-bool addFeedbackAProduto(char *email);//Retorna TRUE se adicionado com sucesso
+bool addFeedbackAProduto(Usuario *usuario);//Retorna TRUE se adicionado com sucesso
 
 
-bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
+bool comandoAdicionar(char *email, bool usuarioAnonimo, Usuario *usuario)/* APP 2 */
 {
+	if (usuario == NULL)
+	{
+		printf(" ERRO: Usuario nulo detectado em Comando-Adicao.h comandoAdicionar()\n");
+	}
 	if(email == NULL)
 	{
-		printf("Email == NULL (Comando-Adicao.h) comandoAdicionar()\n");
+		printf(" ERRO: Email == NULL (Comando-Adicao.h) comandoAdicionar()\n");
 		return false;
 	}
 	printf(" \tTipo de usuario em (Comando-Adicao.h comandoAdicionar()) → ");
@@ -53,7 +57,7 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 	if(strcmp(token, TIPO_VISUALIZACAO) == 0)/* APP 2 2  (Solicitação de adicao de Visualizacao)*/
 	{
 		printf(" LOG: Solicitando adição de visualizacao de produto (Comando-Adicao.h) comandoAdicionar()\n");
-		if(addVisualizacao(email, usuarioAnonimo))
+		if(addVisualizacao(usuario))
 		{
 			printf(" LOG: Passou pelo OK Comando-Adicao.h comandoAdicionar()\n");
 			return true;
@@ -66,7 +70,7 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 	}
 	else if(strcmp(token, TIPO_AVALIACAO) == 0)/* APP 2 kW * idProduto avaliacaoProduto */
 	{
-		if(addAvaliacaoAProduto(email))
+		if(addAvaliacaoAProduto(usuario))
 		{
 			printf(" LOG: Avaliação cadastrada com sucesso em Comando-Adicao.h comandoAdicionar()\n");
 			return true;
@@ -79,7 +83,7 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 	}
 	else if(strcmp(token, TIPO_FEEDBACK) == 0)// APP 2 tr * idProduto textoDoFeedBack
 	{
-		if(addFeedbackAProduto(email))
+		if(addFeedbackAProduto(usuario))
 		{
 			printf(" LOG: Feedback adicionado com sucesso ao banco de dados em Comando-Adicao.h comandoAdicionar() 4a68easd\n");
 			return true;
@@ -141,7 +145,7 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 			// }
 
 			// Colocar aqui mais tarde suporte a autenticação (TALVEZ)
-			if(addUsuario(email))
+			if(addUsuario(usuario))
 			{
 				printf(" LOG: Adicao executada com sucesso em Comando-Adicao.h comandoAdicionar()\n");
 				return true;
@@ -161,7 +165,7 @@ bool comandoAdicionar(char *email, bool usuarioAnonimo)/* APP 2 */
 	else if(strcmp(token, TIPO_INFORMACAO) == 0)/* APP 2 & TIPO_DE_INFORMACAO */
 	{
 		printf(" LOG: Cliente requisita adicao de informação a usuario em Comando-Adicao.h comandoAdicionar()\n");
-		if(addInformacoesAUsuario(email))
+		if(addInformacoesAUsuario(usuario))
 		{	
 			printf(" LOG: Informações adicionadas com sucesso ao banco em Comand-Adicao.h comandoAdicionar()\n");
 			return true;
@@ -545,11 +549,21 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 	}
 }
 
-bool addUsuario(char *emailAnterior)//TODO  APP 2 1 1      (done)
+bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 {
-	if(emailAnterior == NULL)
+	// if(emailAnterior == NULL)
+	// {
+	// 	printf(" Warning: Email informado é nulo, não será possivel converter usuario anonimo em usuario registrado dessa forma, abortando em Comando-Adicao.h addUsuario()\n");
+	// 	return false;
+	// }
+	if (usuario == NULL)
 	{
-		printf(" Warning: Email informado é nulo, não será possivel converter usuario anonimo em usuario registrado dessa forma, abortando em Comando-Adicao.h addUsuario()\n");
+		printf(" Warning: Usuario nulo detectado em Comando-Adicao.h addUsuario() asdbra\n");
+		return false;
+	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		printf(" Warning: usuario não conectado em Comando-Adicao.h addUsuario()  riubusdb\n");
 		return false;
 	}
 
@@ -668,11 +682,10 @@ bool addUsuario(char *emailAnterior)//TODO  APP 2 1 1      (done)
 	if(token == NULL)
 	{
 		printf(" LOG: Comando de adição de usuario informou somente Login e Senha\n");
-		if(addUsuarioAoBanco(emailAnterior, email, senha, NULL, NULL))
+		if(addUsuarioAoBanco(usuario, email, senha, NULL, NULL))
 		{
 			printf(" LOG: Usuario adicionado com sucesso ao banco de dados em Comando-Adicao.h addUsuario() a654q87e\n");
-			emailAnterior = NULL;
-			emailAnterior = email;
+			usuario_atualizarLogin(usuario, email);
 			free(email);
 			free(senha);
 			senha = NULL;
@@ -778,13 +791,14 @@ bool addUsuario(char *emailAnterior)//TODO  APP 2 1 1      (done)
 		return false;
 	}
 
-	if(addUsuarioAoBanco(emailAnterior, email, senha, sexo, dataNascimento))
+	if(addUsuarioAoBanco(usuario, email, senha, sexo, dataNascimento))
 	{
 		printf(" LOG: Usuario adicionado com sucesso ao banco de dados em Comando-Adicao.h addUsuario()  qbu39sad87\n");
+		usuario_atualizarLogin(usuario, email);
 
 		printf(" LOG: Executando script RUBY para enviar email de confirmação WEB em Comando-Adicao.h addUsuario() aoeh29d09)\n");
 
-		int tamanho = strlen(email) + TAMANHO_CONFIRMADOR_DE_EMAIL_RUBY + 6 + 1;
+		int tamanho = usuario_obterTamanhoLogin(usuario) + TAMANHO_CONFIRMADOR_DE_EMAIL_RUBY + 6 + 1;
 		char *comando = malloc(sizeof(char) * tamanho);
 
 		if(comando == NULL)
@@ -839,14 +853,26 @@ bool addUsuario(char *emailAnterior)//TODO  APP 2 1 1      (done)
 }
 
 
-bool addVisualizacao(char *email, bool usuarioAnonimo)/* APP 2 2 idProduto quantidade*/
+//bool addVisualizacao(char *email, bool usuarioAnonimo)/* APP 2 2 idProduto quantidade*/
+bool addVisualizacao(Usuario *usuario)
 {
-	if(email == NULL)
+	// if(email == NULL)
+	// {
+	// 	printf("Email == NULL (Comando-Adicao.h) addVisualizacao()\n");
+	// 	return false;
+	// }
+	if (usuario == NULL)
 	{
-		printf("Email == NULL (Comando-Adicao.h) addVisualizacao()\n");
+		printf(" Warning: Usuario nulo detectado em Comando-Adicao.h addVisualizacao()\n");
 		return false;
 	}
-	printf("*************************COMANDO ADICAO ********************\n");
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		printf(" Warning: Usuario não-conectado detectado em Comando-Adicao.h addVisualizacao()\n");
+		return false;
+	}
+
+	// printf("*************************COMANDO ADICAO ********************\n");
 	
 	char* token = strtok(NULL, " ");// APP 2 2 idProduto
 	
@@ -969,7 +995,7 @@ bool addVisualizacao(char *email, bool usuarioAnonimo)/* APP 2 2 idProduto quant
 	//Quandidade de cliques calculada corretamente
 
 	//CONDIÇÕES PARA GERAR LOG, SOMENTE
-	if(!addVisualizacoesAoBanco(id, quantidade, email, usuarioAnonimo))
+	if(!addVisualizacoesAoBanco(id, quantidade, usuario))
 	{
 		printf(" ERRO: Não foi possível atualizar a base de dados addVisualizacao() (Comando-Adicao.h)\n");
 		free(id);
@@ -2122,11 +2148,16 @@ bool addProduto()//DONE
 	return false;
 }
 
-bool addInformacoesAUsuario(char *email)// DOING
+bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 {
-	if(email == NULL)
+	if(usuario == NULL)
 	{
-		printf(" Warning: email não informado em Comando-Adicao.h addInformacoesAUsuario()\n");
+		printf(" Warning: usuario não informado em Comando-Adicao.h addInformacoesAUsuario()\n");
+		return false;
+	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		printf(" Warning: usuario não conectado detectado em Comando-Adicao.h addInformacoesAUsuario()\n");
 		return false;
 	}
 	
@@ -2167,7 +2198,7 @@ bool addInformacoesAUsuario(char *email)// DOING
 		}
 		else
 		{
-			if(addNomeDeUsuarioAoBanco(email, nome))
+			if(addNomeDeUsuarioAoBanco(usuario, nome))
 			{
 				printf(" LOG: Informação de nome adicionada com sucesso ao banco de dados em Comando-Adicao.h addInformacoesAUsuario() 546q\n");
 				free(nome);
@@ -2205,7 +2236,7 @@ bool addInformacoesAUsuario(char *email)// DOING
 		}
 		else
 		{
-			if(addPontosDeUsuarioAoBanco(email, quantidade))
+			if(addPontosDeUsuarioAoBanco(usuario, quantidade))
 			{
 				printf(" LOG: Pontos adicionados com sucesso a usuario em Comando-Adicao.h addInformacoesAUsuario() cnqiunasd\n");
 				free(quantidade);
@@ -2245,7 +2276,7 @@ bool addInformacoesAUsuario(char *email)// DOING
 		}
 		else
 		{
-			if(addSobrenomeDeUsuarioAoBanco(email, sobrenome))
+			if(addSobrenomeDeUsuarioAoBanco(usuario, sobrenome))
 			{
 				printf(" LOG: Informação de nome adicionada com sucesso ao banco de dados em Comando-Adicao.h addInformacoesAUsuario() 546q\n");
 				free(sobrenome);
@@ -2285,7 +2316,7 @@ bool addInformacoesAUsuario(char *email)// DOING
 		}
 		else
 		{
-			if(addSexoDeUsuarioAoBanco(email, sexo))
+			if(addSexoDeUsuarioAoBanco(usuario, sexo))
 			{
 				printf(" LOG: Informação de nome adicionada com sucesso ao banco de dados em Comando-Adicao.h addInformacoesAUsuario() 546q\n");
 				free(sexo);
@@ -2319,7 +2350,7 @@ bool addInformacoesAUsuario(char *email)// DOING
 		}
 		else
 		{
-			if(addDataNascimentoDeUsuarioAoBanco(email, dataNascimento))
+			if(addDataNascimentoDeUsuarioAoBanco(usuario, dataNascimento))
 			{
 				printf(" LOG: Data de nascimento adicionada com sucesso em Comando-Adicao.h addInformacoesAUsuario()\n");
 				free(dataNascimento);
@@ -2348,11 +2379,16 @@ bool addInformacoesAUsuario(char *email)// DOING
 		1  → para avaliação positiva
 		0  → para avaliacao negativa
 */
-bool addAvaliacaoAProduto(char *email)//DONE       APP 2 kW * idProduto avaliacaoDoUsuario
+bool addAvaliacaoAProduto(Usuario *usuario)//DONE       APP 2 kW * idProduto avaliacaoDoUsuario
 {
-	if (email == NULL)
+	if (usuario == NULL)
 	{
-		printf(" Warning: Email nulo em Comando-Adicao.h addAvaliacaoAProduto()\n");
+		printf(" Warning: Usuario nulo em Comando-Adicao.h addAvaliacaoAProduto()\n");
+		return false;
+	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		printf(" Warning: Usuario não conectado detectado em Comando-Adicao.h addAvaliacaoAProduto()\n");
 		return false;
 	}
 	char *token = strtok(NULL, " ");// APP 2 kW idProduto
@@ -2408,7 +2444,7 @@ bool addAvaliacaoAProduto(char *email)//DONE       APP 2 kW * idProduto avaliaca
 	avaliacao[0] = token[0];
 	avaliacao[1] = token[1];
 
-	if(addAvaliacaoAProdutoAoBanco(email, idProduto, avaliacao))
+	if(addAvaliacaoAProdutoAoBanco(usuario, idProduto, avaliacao))
 	{
 		printf(" LOG: Avaliacao adicionada ao banco com sucesso em Comando-Adicao.h addAvaliacaoAProduto() 46q5w4vb\n");
 		free(idProduto);
@@ -2428,11 +2464,21 @@ bool addAvaliacaoAProduto(char *email)//DONE       APP 2 kW * idProduto avaliaca
 	}
 }
 
-bool addFeedbackAProduto(char *email)// APP 2 tr * idProduto tituloDoFeedback textoDoFeedBack
+bool addFeedbackAProduto(Usuario *usuario)// APP 2 tr * idProduto tituloDoFeedback textoDoFeedBack
 {
-	if(email == NULL)
+	// if(email == NULL)
+	// {
+	// 	printf(" Warning: email == NULL em addFeedbackAProduto() Comando-Adicao.h qq654nn");
+	// 	return false;
+	// }
+	if (usuario == NULL)
 	{
-		printf(" Warning: email == NULL em addFeedbackAProduto() Comando-Adicao.h qq654nn");
+		printf(" Warning: Usuario nulo detectado em Comando-Adicao.h addFeedbackAProduto()\n");
+		return false;
+	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		printf(" Warning: Usuario nao conectado detectado em Comando-Adicao.h addFeedbackAProduto()\n");
 		return false;
 	}
 	char *token = strtok(NULL, " ");// APP 2 tr idProduto
@@ -2507,7 +2553,7 @@ bool addFeedbackAProduto(char *email)// APP 2 tr * idProduto tituloDoFeedback te
 		return false;
 	}
 
-	if (addFeedBackDeProdutoAoBanco(email, idProduto, titulo, conteudo))
+	if (addFeedBackDeProdutoAoBanco(usuario, idProduto, titulo, conteudo))
 	{
 		printf(" LOG: Feedback adicionado ao banco de dados com sucesso em Comando-Adicao.h addFeedbackAProduto() vhjkfdg\n");
 		free(idProduto);

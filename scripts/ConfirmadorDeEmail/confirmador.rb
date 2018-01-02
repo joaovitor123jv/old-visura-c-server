@@ -39,4 +39,5 @@ mail.delivery_method :sendmail
 
 mail.deliver!
 
+
 puts "Email enviado ou não"

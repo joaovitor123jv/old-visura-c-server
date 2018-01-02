@@ -153,14 +153,24 @@ int checaExistenciaDeVisualizacaoDeProdutoComPessoa(char *idproduto, char *email
 }
 
 // bool addVisualizacoesAoBanco(MYSQL *conexao, char *id, int quantidade)
-bool addVisualizacoesAoBanco(char *id, char *quantidade, char *email, bool usuarioAnonimo)// APP 2 2 idProduto quantidade
+bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP 2 2 idProduto quantidade
 {
 	/*UPDATE produto SET produto.visualizacaoanom = 0 WHERE produto.idproduto = 'cocacolavc';*/
-	if(email == NULL)
+	if (usuario == NULL)
 	{
-		printf("ERRO: Email == NULL OperacoesBanco-Visualizacoes.h (addVisualizacoesAoBanco())\n");
+		printf(" ERRO: usuario nulo detectado em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
 		return false;
 	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		printf(" ERRO: usuario não conectado detectado em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
+		return false;
+	}
+	// if(email == NULL)
+	// {
+	// 	printf("ERRO: Email == NULL OperacoesBanco-Visualizacoes.h (addVisualizacoesAoBanco())\n");
+	// 	return false;
+	// }
 	
 	if(id == NULL)
 	{
@@ -188,6 +198,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, char *email, bool usuar
 	// 	printf("ERRO: Quantidade informada é inválida (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
 	// 	return false;
 	// }
+
     if(quantidade == NULL)
     {
         printf(" Warning: Não foi informada quantidade de produtos a ser adicionados em addVisualizacoesAoBanco() OperacoesBanco-Visualizacoes.h\n");
@@ -201,13 +212,13 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, char *email, bool usuar
 		return false;
 	}
     
-    if (produtoVencido(id, email))
+    if (produtoVencido(id, usuario_obterLogin(usuario)))
     {
         printf(" Warning: Produto vencido detectado em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
         return false;
     }
 	
-	if(usuarioAnonimo)
+	if(usuario_PermissaoAnonimo(usuario))
 	{
 		printf(" LOG: USUARIO ANONIMO DETECTADO em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
 		char *query = NULL;
@@ -262,13 +273,13 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, char *email, bool usuar
 			free(query);
 			query = NULL;
 			
-			switch(checaExistenciaDeVisualizacaoDeProdutoComPessoa(id, email))
+			switch(checaExistenciaDeVisualizacaoDeProdutoComPessoa(id, usuario_obterLogin(usuario)))
 			{
 				case RETORNO_OK://Se já tiver criado a tabela de visualizacaDeUsuario
                     //Usar update para atualizar dados já existentes
                     printf(" LOG: Informações já existem em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
                     // tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + strlen(quantidade) + 198 + 1);
-                    tamanhoDaQuery = sizeof(char) * ( strlen(email) + strlen(quantidade) + 219);
+                    tamanhoDaQuery = sizeof(char) * ( usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 219);
                     
                     query = malloc(tamanhoDaQuery);
                     if(query == NULL)
@@ -278,7 +289,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, char *email, bool usuar
                     }
                     memset(query, '\0', tamanhoDaQuery);
                     
-                    snprintf(query, tamanhoDaQuery, "UPDATE visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente JOIN produto P ON P.idproduto=V.produto_idproduto SET V.quantidade=V.quantidade+%s WHERE P.idproduto=\'%s\' AND C.email=\'%s\';", quantidade, id, email );
+                    snprintf(query, tamanhoDaQuery, "UPDATE visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente JOIN produto P ON P.idproduto=V.produto_idproduto SET V.quantidade=V.quantidade+%s WHERE P.idproduto=\'%s\' AND C.email=\'%s\';", quantidade, id, usuario_obterLogin(usuario) );
                     
                     if(query == NULL)
                     {
@@ -319,7 +330,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, char *email, bool usuar
                     //Usar Insert para inserir dados
                     printf(" LOG: Informações NÃO existem ainda\n");
                     // tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + strlen(quantidade) + 179 + 1);
-                    tamanhoDaQuery = sizeof(char) *  (strlen(email) + strlen(quantidade) + 190);
+                    tamanhoDaQuery = sizeof(char) *  (usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 190);
                     
                     query = malloc(tamanhoDaQuery);
                     if(query == NULL)
@@ -329,7 +340,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, char *email, bool usuar
                     }
                     memset(query, '\0', tamanhoDaQuery);
                     
-                    snprintf(query, tamanhoDaQuery, "INSERT INTO visualizacaoDeUsuario(quantidade,cliente_idcliente,produto_idproduto) SELECT %s,C.idcliente,P.idproduto FROM cliente C JOIN produto P ON P.idproduto=\'%s\' WHERE C.email=\'%s\';", quantidade, id, email);
+                    snprintf(query, tamanhoDaQuery, "INSERT INTO visualizacaoDeUsuario(quantidade,cliente_idcliente,produto_idproduto) SELECT %s,C.idcliente,P.idproduto FROM cliente C JOIN produto P ON P.idproduto=\'%s\' WHERE C.email=\'%s\';", quantidade, id, usuario_obterLogin(usuario));
                     
                     if(query == NULL)
                     {
@@ -448,13 +459,13 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, char *email, bool usuar
 			// int existencia = checaExistenciaDeVisualizacaoDeProdutoComPessoa(id, email);
 			
 			// switch(existencia)
-			switch(checaExistenciaDeVisualizacaoDeProdutoComPessoa(id, email))
+			switch(checaExistenciaDeVisualizacaoDeProdutoComPessoa(id, usuario_obterLogin(usuario)))
 			{
 				case RETORNO_OK://Se já tiver criado a tabela de visualizacaDeUsuario
                     //Usar update para atualizar dados já existentes
                     printf(" LOG: Informações já existem em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
                     // tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + strlen(quantidade) + 208 + 1);
-                    tamanhoDaQuery = sizeof(char) * ( strlen(email) + strlen(quantidade) + 219);
+                    tamanhoDaQuery = sizeof(char) * ( usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 219);
                     
                     query = malloc(tamanhoDaQuery);
                     if(query == NULL)
@@ -464,7 +475,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, char *email, bool usuar
                     }
                     memset(query, '\0', tamanhoDaQuery);
                     
-                    snprintf(query, tamanhoDaQuery, "UPDATE visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente JOIN produto P ON P.idproduto=V.produto_idproduto SET V.quantidade=V.quantidade+%s WHERE P.idproduto=\'%s\' AND C.email=\'%s\';", quantidade, id, email );
+                    snprintf(query, tamanhoDaQuery, "UPDATE visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente JOIN produto P ON P.idproduto=V.produto_idproduto SET V.quantidade=V.quantidade+%s WHERE P.idproduto=\'%s\' AND C.email=\'%s\';", quantidade, id, usuario_obterLogin(usuario) );
                     
                     if(query == NULL)
                     {
@@ -505,7 +516,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, char *email, bool usuar
                     //Usar Insert para inserir dados
                     printf(" LOG: Informações NÃO existem ainda\n");
                     // tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + strlen(quantidade) + 179 + 1);
-                    tamanhoDaQuery = sizeof(char) *  (strlen(email) + strlen(quantidade) + 190);
+                    tamanhoDaQuery = sizeof(char) *  (usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 190);
                     
                     query = malloc(tamanhoDaQuery);
                     if(query == NULL)
@@ -515,7 +526,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, char *email, bool usuar
                     }
                     memset(query, '\0', tamanhoDaQuery);
                     
-                    snprintf(query, tamanhoDaQuery, "INSERT INTO visualizacaoDeUsuario(quantidade,cliente_idcliente,produto_idproduto) SELECT %s,C.idcliente,P.idproduto FROM cliente C JOIN produto P ON P.idproduto=\'%s\' WHERE C.email=\'%s\';", quantidade, id, email);
+                    snprintf(query, tamanhoDaQuery, "INSERT INTO visualizacaoDeUsuario(quantidade,cliente_idcliente,produto_idproduto) SELECT %s,C.idcliente,P.idproduto FROM cliente C JOIN produto P ON P.idproduto=\'%s\' WHERE C.email=\'%s\';", quantidade, id, usuario_obterLogin(usuario));
                     
                     if(query == NULL)
                     {

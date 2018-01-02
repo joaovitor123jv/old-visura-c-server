@@ -22,11 +22,16 @@
 */
 
 
-bool comandoRemover(char *email, bool usuarioAnonimo)/* APP 5 algumaCoisa */
+bool comandoRemover(Usuario *usuario)/* APP 5 algumaCoisa */
 {
-	if( email == NULL )
+	if( usuario == NULL )
 	{
-		printf(" Warning: email nulo detectado em Comando-Remover.h comandoRemover()\n");
+		printf(" Warning: usuario nulo detectado em Comando-Remover.h comandoRemover()\n");
+		return false;
+	}
+	if (usuario_PermissaoAnonimo(usuario))
+	{
+		printf(" Warning: Usuario anonimo não pode excluir sua conta em Comando-Remover.h comandoRemover()\n");
 		return false;
 	}
 	printf(" LOG: Solicitando remocao de algo em Comando-Remover.h comandoRemover()\n");

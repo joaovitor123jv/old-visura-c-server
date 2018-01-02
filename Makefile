@@ -8,7 +8,10 @@ MYSQL_LINKER=-L/usr/lib  -lmysqlclient -lz -lm -ldl -lssl -lcrypto
 
 FILA_OBJ=Fila.o
 
-LINKERS=-lpthread $(MYSQL_LINKER)
+PTHREAD_LINKER=-lpthread
+#PTHREAD_LINKER=-pthread
+
+LINKERS=$(PTHREAD_LINKER) $(MYSQL_LINKER)
 
 DEBUGGER=-g
 

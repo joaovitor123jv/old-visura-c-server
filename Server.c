@@ -1,3 +1,4 @@
+#define _GNU_SOURCE // Renove warning do pthread_yield();
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

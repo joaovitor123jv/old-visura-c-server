@@ -194,9 +194,24 @@ bool usuario_PermissaoRoot(Usuario *usuario)
 	}
 }
 
-bool usuario_anonimo(Usuario *usuario)
+bool usuario_PermissaoAnonimo(Usuario *usuario)
 {
-	return false;
+	if (usuario == NULL)
+	{
+		printf(" Warning: Usuario == NULL em Usuario.h usuario_PermissaoAnonimo()\n");
+		return false;
+	}
+	else
+	{
+		if (usuario->nivelDePermissao == USUARIO_NIVEL_DE_PERMISSAO_ANONIMO)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
 
 char *usuario_obterLogin(Usuario *usuario)
@@ -252,6 +267,28 @@ void usuario_mostrarDados(Usuario *usuario)
 	printf(" LOG: Nível de permissão: |%d|\n", usuario->nivelDePermissao);
 }
 
+bool usuario_atualizarLogin(Usuario *usuario, char *login)
+{
+	if (usuario == NULL)
+	{
+		printf(" Warning: Usuario nulo detectado em Usuario.h usuario_atualizarLogin()\n");
+		return false;
+	}
+	if (usuario->login != NULL)
+	{
+		free(usuario->login);
+		usuario->login = NULL;
+	}
+	usuario->login = strdup(login);
+	if (usuario->login == NULL)
+	{
+		printf(" Warning: Falha ao atualizar login de usuario, string não duplicada em Usuario.h usuario_atualizarLogin()\n");
+		return false;
+	}
+	usuario->tamanhoLogin = strlen(usuario->login);
+	return true;
+}
+
 
 bool delete_Usuario(Usuario *usuario)
 {
@@ -270,3 +307,25 @@ bool delete_Usuario(Usuario *usuario)
 }
 
 
+bool reset_Usuario(Usuario *usuario)
+{
+	if (usuario == NULL)
+	{
+		printf(" Warning: Usuario nulo detectado em Usuario.h reset_Usuario()\n");
+		return false;
+	}
+	if (usuario->login != NULL)
+	{
+		free(usuario->login);
+		usuario->login = NULL;
+		usuario->tamanhoLogin = 0;
+	}
+	if (usuario->senha != NULL)
+	{
+		free(usuario->senha);
+		usuario->senha = NULL;
+		usuario->tamanhoSenha = 0;
+	}
+	usuario->nivelDePermissao = _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
+	return true;
+}
