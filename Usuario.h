@@ -27,6 +27,10 @@
 #define USUARIO_NIVEL_DE_PERMISSAO_ELEVADO 10
 #endif
 
+#ifndef USUARIO_NIVEL_DE_PERMISSAO_CADASTRO
+#define USUARIO_NIVEL_DE_PERMISSAO_CADASTRO 77
+#endif
+
 #ifndef USUARIO_NIVEL_DE_PERMISSAO_ANONIMO
 #define USUARIO_NIVEL_DE_PERMISSAO_ANONIMO 5
 #endif
@@ -50,22 +54,26 @@ typedef struct Usuario Usuario;
 
 bool usuarioPrivilegiado(char *email);
 
-Usuario *new_Usuario(const char *login, const char *senha)
+bool new_Usuario(Usuario *usuario, const char *login, const char *senha)
 {
+	if (usuario == NULL)
+	{
+		printf(" Warning: Usuario precisa ser inicializado antes de chegar aqui, em Usuario.h new_Usuario()\n");
+		return false;
+	}
 	if( login == NULL )
 	{
 		printf(" Warning: Login nulo identificado em Usuario.h new_Usuario()\n");
-		return NULL;
+		return false;
 	}
 	if( senha == NULL )
 	{
 		printf(" Warning: Senha nula identificada em Usuario.h new_Usuario()\n");
-		return NULL;
+		return false;
 	}
 
-	Usuario *usuario;
 	printf(" LOG: Iniciando criacao de usuario em Usuario.h new_Usuario()\n");
-	usuario = malloc(sizeof(Usuario));
+	//usuario = malloc(sizeof(Usuario));
 
 	usuario->tamanhoSenha = strlen(senha);
 	usuario->tamanhoLogin = strlen(login);
@@ -74,9 +82,9 @@ Usuario *new_Usuario(const char *login, const char *senha)
 	usuario->login = strdup(login);
 	if(usuario->login == NULL)
 	{
-		free(usuario);
-		usuario = NULL;
-		return NULL;
+		//free(usuario);
+		//usuario = NULL;
+		return false;
 	}
 	usuario->senha = strdup(senha);
 	if(usuario->senha == NULL)
@@ -84,28 +92,39 @@ Usuario *new_Usuario(const char *login, const char *senha)
 		printf(" Warning: Falha ao duplicar senha em Usuario.h new_Usuario()\n");
 		free(usuario->login);
 		usuario->login = NULL;
-		free(usuario);
-		usuario = NULL;
-		return NULL;
+		//free(usuario);
+		//usuario = NULL;
+		return false;
 	}
 
-	if( strcmp(usuario->login, LOGIN_DE_CADASTRO) == 0 )
+	if( strcmp(usuario->login, LOGIN_USUARIO_ROOT) == 0 )
 	{
-		usuario->nivelDePermissao = USUARIO_NIVEL_DE_PERMISSAO_ELEVADO;
+		usuario->nivelDePermissao = USUARIO_NIVEL_DE_PERMISSAO_ROOT;
 	}
 	else if( strcmp(usuario->login, LOGIN_DO_SITE) == 0 )
 	{
 		usuario->nivelDePermissao = USUARIO_NIVEL_DE_PERMISSAO_ELEVADO;
 	}
-	else if( strcmp(usuario->login, LOGIN_USUARIO_ROOT) == 0 )
+	else if( strcmp(usuario->login, LOGIN_DE_CADASTRO) == 0 )
 	{
-		usuario->nivelDePermissao = USUARIO_NIVEL_DE_PERMISSAO_ROOT;
+		usuario->nivelDePermissao = USUARIO_NIVEL_DE_PERMISSAO_CADASTRO;
 	}
 	else
 	{
+		int contador;
+
+		for(contador  = 0; contador < usuario->tamanhoLogin; contador++)/* Checa se email é válido */
+		{
+			if(usuario->login[contador] == '@')
+			{
+				usuario->nivelDePermissao = USUARIO_NIVEL_DE_PERMISSAO_ANONIMO;
+				return true;
+			}
+		}
+
 		usuario->nivelDePermissao = USUARIO_NIVEL_DE_PERMISSAO_NORMAL;
 	}
-	return usuario;
+	return true;
 }
 
 bool usuarioPrivilegiado(char *email)

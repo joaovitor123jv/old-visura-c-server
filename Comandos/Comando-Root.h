@@ -6,8 +6,13 @@
 #include "../OperacoesBanco/OperacoesBanco.h"
 
 
-char *comandoRoot(char *email)
+char *comandoRoot(Usuario *usuario)
 {
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		return strdup("ERRO: Usuario não autorizado, ou nulo.");
+	}
+	
 	char *token;
 	token = strtok(NULL, " ");
 	if(token == NULL)

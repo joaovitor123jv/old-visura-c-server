@@ -6,8 +6,12 @@
 #include "../OperacoesBanco/OperacoesBanco.h"
 #include "../Usuario.h"
 
-//char *comandoLogin(char *comando, bool *usuarioAnonimo)/* APP 1 login senha */
-char *comandoLogin(bool *usuarioAnonimo)
+/*bool comandoLogin(Usuario *usuario)
+{
+
+}*/
+
+char *comandoLogin(bool *usuarioAnonimo, Usuario *usuario)
 {
 	char *email = NULL;
 	char *senha= NULL;
@@ -66,15 +70,26 @@ char *comandoLogin(bool *usuarioAnonimo)
 				}
 			}
 
+			//printf(" DEBUG: Criando usuario em Comando-Login.h comandoLogin()\n");
+			//printf(" ** DEBUG: Endereço de usuario antes da criacao em Comando-Login.h comandoLogin(): %ld\n", &usuario);
+			if( new_Usuario(usuario, email, senha) ) // FUTURO FEATURE
+			{
+				printf(" LOG: Estrutura de usuario definida com sucesso em Comando-Login.h comandoLogin()\n");
+			}
+			//printf(" ***********usuario->login = %s em Comando-Login.h comandoLogin()\n", usuario_obterLogin(usuario));
+			//printf(" ** DEBUG: Endereço de usuario depois da criacao em Comando-Login.h comandoLogin(): %ld\n", &usuario);
+
 
 			if(!checarLogin(email, senha))// APP 1 login senha
 			{
 				printf(" Warning: Erro ao conectar ou de autenticação em (Comando-Login.h) (comandoLogin)\n");
 				printf("\tFalha ao checar login\n");
+				printf("\t\tLogin: %s\n", email);
+				printf("\t\tSenha: %s\n", senha);
 				return NULL;
 			}
 
-//			Usuario *usuario = new_Usuario(email, senha); // FUTURO FEATURE
+
 			return email;
 		}
 		else

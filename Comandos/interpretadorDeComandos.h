@@ -21,7 +21,7 @@
 int comandoAtualizar(char *comando);
 
 
-char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* email, bool *usuarioAnonimo)
+char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* email, bool *usuarioAnonimo, Usuario *usuario)
 {
 	interpretando = true;
 	char *nomeAplicacao = NULL;
@@ -74,10 +74,24 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 
 	if( !(*autorizado) )
 	{
-		printf(" Cliente ainda não autorizado, INTERROMPENDO PROCESSO PARA SOLICITAR LOGIN\n");
-		printf(" COMANDO (depois de fazer o primeiro strtok) = %s\n", comando);
-		login = comandoLogin(usuarioAnonimo);
-		printf(" Retornou do Comando-Login (interpretadorDeComandos.h) interpretaComando()\n");
+		printf(" LOG: Cliente ainda não autorizado, INTERROMPENDO PROCESSO PARA SOLICITAR LOGIN\n");
+		//printf(" DEBUG: COMANDO (depois de fazer o primeiro strtok) = %s\n", comando);
+
+
+
+		//printf(" ** DEBUG: Endereço de usuario antes da criacao em interpretadorDeComandos.h interpretaComando(): %ld\n", &usuario);
+		login = comandoLogin(usuarioAnonimo, usuario);
+		//printf(" ** DEBUG: Endereço de usuario depois da criacao em interpretadorDeComandos.h interpretaComando(): %ld\n", &usuario);
+		//printf(" ***********usuario->login = %s em interpretadorDeComandos.h interpretaComando()\n", usuario_obterLogin(usuario));
+
+
+
+
+
+		//printf(" DEBUG: Retornou do Comando-Login (interpretadorDeComandos.h) interpretaComando()\n");
+
+		
+
 		if( login  != NULL )
 		{
 			interpretando = false;

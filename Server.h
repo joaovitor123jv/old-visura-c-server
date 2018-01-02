@@ -215,6 +215,7 @@ void *Servidor(void *cliente)
 	char *mensagem = NULL;
 	int resultado;
 	bool usuarioAnonimo = true;
+	Usuario usuario;
 	
 	printf(" LOG: Aguardando por mensagens\n");
 	while(true)
@@ -253,7 +254,13 @@ void *Servidor(void *cliente)
 
 			if(email == NULL)
 			{
-				email = interpretaComando(bufferCliente, &autorizado, &resultado, email, &usuarioAnonimo);
+				email = interpretaComando(bufferCliente, &autorizado, &resultado, email, &usuarioAnonimo, &usuario);
+
+				usuario_mostrarDados(&usuario);
+
+				//printf(" DEBUG: email era NULO em Server.h Servidor()\n");	
+				//printf(" ***********usuario->login = %s em Server.h Servidor()\n", usuario_obterLogin(&usuario));
+				
 				if(email != NULL)
 				{
 					email = strdup(email);
@@ -265,7 +272,7 @@ void *Servidor(void *cliente)
 			}
 			else
 			{
-				interpretaComando(bufferCliente, &autorizado, &resultado, email, &usuarioAnonimo);
+				interpretaComando(bufferCliente, &autorizado, &resultado, email, &usuarioAnonimo, &usuario);
 			}
 
 			switch(resultado)
@@ -323,9 +330,9 @@ void *Servidor(void *cliente)
 					break;
 
 				case REQUISITANDO_ROOT:
-					if( usuarioRoot(email) )
+					if( usuario_PermissaoRoot(&usuario) )
 					{
-						 mensagem = comandoRoot(email);
+						 mensagem = comandoRoot(&usuario);
 						 interpretando = false;// NÃO REMOVER !!!
 						 enviaMensagemParaCliente(mensagem, cliente);
 						 free(mensagem);
@@ -333,7 +340,7 @@ void *Servidor(void *cliente)
 					}
 					else
 					{
-						enviaMensagemParaCliente("Erro, desconectando\0", cliente);
+						enviaMensagemParaCliente("Não Autorizado, desconectando\0", cliente);
 					}
 					break;
 
