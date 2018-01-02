@@ -93,7 +93,7 @@ APP
 								complemento	(opcional, definido na lo
 									(Adiciona uma localizacao ao banco de dados)
 
-		/* FUNÇÕES PARA ADMINISTRADORES - Não precisam ser mapeadas por agora (integrar APP com SERVER) */
+		/* FUNÇÕES PARA ADMINISTRADORES - Sujeitas a alterações */
 
 		+	(TIPO_PRODUTO)	
 			CHAVE_DE_SEGURANCA
@@ -106,7 +106,8 @@ APP
 								tipoProduto	(O Tipo do produto em si, se é RA ou RV ou misto... sendo) (obrigatório)
 											(1 == RA)
 											(2 == RV)
-											(3 == RV)
+											(3 == RV/RA)
+												(MANDAR O NUMERO.... ou 1, ou 2, ou 3)
 
 									descricaoProduto	(descricao do produto que vai aparecer ao usuario, não obrigatório)
 										(adiciona um produto que vai ser dado como criado pelo contratante referenciado por idContratante, com duracao(inteiro) em dias, e nomeProduto como seu "nome que vai aparecer pro público", deixei descricao como não obrigatória)
@@ -189,5 +190,6 @@ APP
 			(Reinicia o processo da interface/servidor não mysql)
 
 		resetar		//Sim, literalmente "resetar"
-			log
+			log 	//Ainda não está pronto
 			banco
+				(reseta o banco de dados e produz os dados padrão (por enquanto))

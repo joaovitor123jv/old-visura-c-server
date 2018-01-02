@@ -153,9 +153,7 @@ char *obterIdCidade()
 {
 	char *token;
 	char *nomeCidade = NULL;
-	int tamanhoCidade;
 	char *nomeEstado;
-	int tamanhoEstado;
 
 	token = strtok(NULL, " ");// APP 4 $ nomeCidadeInformado
 	
@@ -165,8 +163,7 @@ char *obterIdCidade()
 		return NULL;
 	}
 
-	tamanhoCidade = strlen(token);
-	if(tamanhoCidade > TAMANHO_DO_NOME_DA_CIDADE_COM_MAIOR_NOME_DO_MUNDO)
+	if( stringMaior(token, TAMANHO_DO_NOME_DA_CIDADE_COM_MAIOR_NOME_DO_MUNDO) )
 	{
 		printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterIdCidade() ebk1ud8\n");
 		return NULL;
@@ -190,8 +187,7 @@ char *obterIdCidade()
 		return NULL;
 	}
 
-	tamanhoEstado = strlen(token);
-	if(tamanhoEstado != TAMANHO_ESTADO)
+	if( !stringTamanhoIgual(token, TAMANHO_ESTADO) )
 	{
 		printf(" Warning: Tamanho de Comando incorreto em Comando-Obter.h obterIdCidade() n4yw5\n");
 		free(nomeCidade);
@@ -232,7 +228,8 @@ char *obterIdContratante()// APP 4 ; cnpj
 		printf(" Warning: Comando insuficiente em Comando-Obter.h obterIdContratante() asjhvbruw0f7878s756f6d\n");
 		return NULL;
 	}
-	if( strlen(token) > TAMANHO_CNPJ )
+//	if( strlen(token) > TAMANHO_CNPJ )
+	if( stringMaior(token, TAMANHO_CNPJ) )
 	{
 		printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterIdContratante() abq78vas98wbjhax\n");
 		return NULL;
@@ -255,7 +252,8 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 		return NULL;
 	}
 
-	if( strlen(token) > TAMANHO_CHAVE_PRIMARIA )
+//	if( strlen(token) > TAMANHO_CHAVE_PRIMARIA )
+	if( stringMaior(token, TAMANHO_CHAVE_PRIMARIA) )
 	{
 		printf(" Warning: Argumento \"idCidade\" informado é exageradamente grande em Comando-Obter.h obterIdLocalizacao()\n");
 		return NULL;
@@ -299,7 +297,8 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 		return retorno;
 	}
 
-	if( strlen(token) > TAMANHO_BAIRRO )
+//	if( strlen(token) > TAMANHO_BAIRRO )
+	if( stringMaior(token, TAMANHO_BAIRRO) )
 	{
 		printf(" Warning: Tamanho de bairro exageradamente grande em Comando-Obter.h obterIdLocalizacao() asjvhbroasd\n");
 		free( idCidade );
@@ -336,7 +335,8 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 		return retorno;
 	}
 
-	if( strlen(token) > TAMANHO_RUA )
+//	if( strlen(token) > TAMANHO_RUA )
+	if( stringMaior(token, TAMANHO_RUA) )
 	{
 		printf(" Warning: Tamanho da rua é exageradamente grande em Comando-Obter.h obterIdLocalizacao() aceghieoads\n");
 		free( idCidade );
@@ -376,7 +376,8 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 		idCidade = NULL;
 		return retorno;
 	}
-	 if( strlen(token) > TAMANHO_NUMERO )
+//	 if( strlen(token) > TAMANHO_NUMERO )
+	if( stringMaior(token, TAMANHO_NUMERO) )
 	 {
 		printf(" Warning: Numero informado muto grande em Comando-Obter.h obterIdLocalizacao() sajhveasd\n");
 		free( idCidade );
@@ -423,7 +424,8 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 		return retorno;
 	}
 
-	if( strlen(token) > TAMANHO_COMPLEMENTO )
+//	if( strlen(token) > TAMANHO_COMPLEMENTO )
+	if( stringMaior(token, TAMANHO_COMPLEMENTO) )
 	{
 		printf(" Warning: Complemento exageradamente grande em Comando-Obter.h obterIdLocalizacao() askjdhjkvd\n");
 		free( idCidade );
@@ -506,9 +508,10 @@ char *obterDescricaoProduto(char *email)// APP 4 Q
 		printf(" Warning: comando insuficiente em Comando-Obter.h obterDescricaoProduto() 4f51q\n");
 		return NULL;
 	}
-	else if(strlen(token) != TAMANHO_ID_PRODUTO)
+//	else if(strlen(token) != TAMANHO_ID_PRODUTO)
+	else if( !stringTamanhoIgual(token, TAMANHO_ID_PRODUTO) )
 	{
-		printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterDescricaoProduto()  44h5w11c\n");
+		printf(" Warning: Comando de tamanho incorreto identificado em Comando-Obter.h obterDescricaoProduto()  44h5w11c\n");
 		return NULL;
 	}
 	else
@@ -543,7 +546,8 @@ char *obterNomeProduto(char *email)
 		printf(" Warning: Comando insuficiente em obterNomeProduto() Comando-Obter.h akjbbe\n");
 		return NULL;
 	}
-	if(strlen(token) != TAMANHO_ID_PRODUTO)
+//	if(strlen(token) != TAMANHO_ID_PRODUTO)
+	if( !stringTamanhoIgual(token, TAMANHO_ID_PRODUTO) )
 	{
 		printf(" Warning: Comando incorreto em obterNomeProduto() Comando-Obter.h ohrbbzzk\n");
 		return NULL;
@@ -573,7 +577,8 @@ char *obterAvaliacaoProduto(char *email)// APP 4 kW idProduto                   
 		printf(" Warning: Comando insuficiente em Comando-Obter.h obterAvaliacaoProduto() sadkjhjvrsad\n");
 		return NULL;
 	}
-	if(strlen(token) != TAMANHO_ID_PRODUTO)
+//	if(strlen(token) != TAMANHO_ID_PRODUTO)
+	if( !stringTamanhoIgual(token, TAMANHO_ID_PRODUTO) )
 	{
 		printf(" Warning: Comando incorreto detectado em Comando-Obter.h obterAvaliacaoProduto() asdhjkvrsdf\n");
 		return NULL;

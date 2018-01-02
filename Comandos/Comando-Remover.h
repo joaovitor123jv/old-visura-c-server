@@ -30,5 +30,11 @@ bool comandoRemover(char *email, bool usuarioAnonimo)/* APP 5 algumaCoisa */
 		return false;
 	}
 	printf(" LOG: Solicitando remocao de algo em Comando-Remover.h comandoRemover()\n");
+	char *token = strtok(NULL, " ");
+	if( token == NULL )
+	{
+		printf(" Warning: Comando insuficiente em Comando-Remover.h comandoRemover()\n");
+		return false;
+	}
 	return false;
 }

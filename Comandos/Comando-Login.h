@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <mysql/mysql.h>
 #include "Comandos.h"
+#include "../AdaptadorDeString.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
 #include "../Usuario.h"
 
@@ -27,7 +28,8 @@ char *comandoLogin(bool *usuarioAnonimo)
 				printf(" Warning: Email NULO (comandoLogin) (Comando-Login.h)\n");
 				return NULL;
 			}
-			if( strlen(email) > TAMANHO_LOGIN )
+//			if( strlen(email) > TAMANHO_LOGIN )
+			if( stringMaior(email, TAMANHO_LOGIN) )
 			{
 				printf(" Warning: Email exageradamente grande em Comando-Login.h comandoLogin()\n");
 				return NULL;
@@ -39,7 +41,8 @@ char *comandoLogin(bool *usuarioAnonimo)
 				printf(" Warning: Senha NULA (comandoLogin) (Comando-Login.h)\n");
 				return NULL;
 			}
-			if( strlen(senha) > TAMANHO_SENHA )
+//			if( strlen(senha) > TAMANHO_SENHA )
+			if( stringMaior(senha, TAMANHO_SENHA) )
 			{
 				printf(" Warning: Email exageradamente grande em Comando-Login.h comandoLogin()\n");
 				return NULL;
@@ -52,8 +55,9 @@ char *comandoLogin(bool *usuarioAnonimo)
 			printf("\n\n\n\n");//Separando informações
 
 			*usuarioAnonimo = false;
+			int tamanho = strlen(token);
 
-			for(contador  = 0; contador < strlen(token); contador++)/* Checa se email é válido */
+			for(contador  = 0; contador < tamanho; contador++)/* Checa se email é válido */
 			{
 				if(token[contador] == '@')
 				{

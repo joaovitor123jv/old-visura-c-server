@@ -1,7 +1,12 @@
+#pragma once
 #include<stdlib.h>
 #include<stdio.h>
 #include<string.h>
+
+#ifndef _TESTAR_SEM_FILA_
 #include "Fila/Fila.h"
+#endif
+
 
 
 #ifndef bool
@@ -16,6 +21,7 @@
 #define false 0
 #endif
 
+#ifndef _TESTAR_SEM_FILA_
 char *padronizarString(char *original)
 {
 	char *resposta = NULL;
@@ -88,6 +94,7 @@ char *padronizarString(char *original)
 		}
 	}
 }
+#endif
 
 void adaptadorDeString_REVERSE(char s[])
 {
@@ -123,3 +130,101 @@ char *intToString(int n)
 	adaptadorDeString_REVERSE(s);
 	return s;
 }
+
+bool stringMenor(char *string, int tamanho)
+{
+	if( string == NULL )
+	{
+		return false;
+	}
+	if( tamanho <= 0 )
+	{
+		return false;
+	}
+	int i;
+	for( i = 0; i<tamanho; i++ )
+	{
+		if( string[i] == '\0' )
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool stringMenorOuIgual(char *string, int tamanho)
+{
+	if( string == NULL )
+	{
+		return false;
+	}
+	if( tamanho <= 0 )
+	{
+		return false;
+	}
+	int i;
+	for( i = 0; i<=tamanho; i++ )
+	{
+		if( string[i] == '\0' )
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool stringMaior(char *string, int tamanho)
+{
+	if( string == NULL )
+	{
+		return false;
+	}
+	if( tamanho <= 0 )
+	{
+		return false;
+	}
+	int i;
+	for( i = 0; i<=tamanho; i++ )
+	{
+		if( string[i] == '\0' )
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool stringTamanhoIgual(char *string, int tamanho)
+{
+	if( string == NULL )
+	{
+		return false;
+	}
+	if( tamanho <= 0 )
+	{
+		return false;
+	}
+	int i;
+	for( i = 0; i<=tamanho; i++ )
+	{
+		if( string[i] == '\0' )
+		{
+			if( i == tamanho )
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
+	return false;
+}
+
+
+
+
+
+
+

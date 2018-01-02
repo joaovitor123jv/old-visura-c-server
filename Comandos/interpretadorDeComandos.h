@@ -3,6 +3,7 @@
 #include "Comandos.h"
 
 
+#include "../AdaptadorDeString.h"
 #include "../Usuario.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
 #include "Comando-Login.h"
@@ -45,6 +46,22 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 	}
 
 	nomeAplicacao = strtok(comando, " ");/* Separa a primeira palavra */
+	if( nomeAplicacao == NULL )
+	{
+		printf(" Warning: Comando nulo detectado em interpretadorDeComandos.h interpretaComando()\n");
+		interpretando = false;
+		*resultado = ERRO;
+		return NULL;
+	}
+
+//	if( ! (stringTamanhoIgual(nomeAplicacao, TAMANHO_CHAVE_APLICACAO) ))
+	if( !stringTamanhoIgual(nomeAplicacao, TAMANHO_CHAVE_APLICACAO) )
+	{
+		printf(" Warning: Tamanho de chave de aplicacao incompativel em interpretadorDeComandos.h interpretaComando()\n");
+		interpretando = false;
+		*resultado = ERRO;
+		return NULL;
+	}
 
 	if(strcmp(nomeAplicacao, CHAVE_APLICACAO) != 0)/* CHAVE DE Aplicacao */
 	{
@@ -100,7 +117,8 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 
 	nomeAplicacao = strtok(NULL, " ");
 
-	if(strlen(nomeAplicacao) > TAMANHO_COMANDO)/* checa se há mais de uma letra na segunda "palavra" */
+//	if(strlen(nomeAplicacao) > TAMANHO_COMANDO)/* checa se há mais de uma letra na segunda "palavra" */
+	if( stringMaior(nomeAplicacao, TAMANHO_COMANDO) )
 	{
 		interpretando = false;
 		printf(" ERRO: Aplicação contem informação excessiva (interpretadorDeComandos.h) interpretaComando()\n");

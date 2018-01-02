@@ -52,19 +52,11 @@ char *comandoRoot(char *email)
 			{
 				return strdup("ERRO: Falha ao resetar o banco de dados, não foi possível executar \"DROP DATABASE\".");
 			}
-			/* 
-			else if( !executaQuery("SOURCE /tmp/server-teste/script-pra-resetar-o-banco.sql;") )
-			{
-				return strdup("ERRO: Falha ao executar script de reset do banco, banco deletado !!!");
-			}*/
-			int retorno = system("mysql < script-pra-resetar-o-banco.sql");
+			int retorno = system("sudo mysql < script-pra-resetar-o-banco.sql");
 			printf(" DEBUG: RETORNO = %d em Comando-Root.h comandoRoot()\n", retorno);
-			retorno = system("mysql teste < produzir-dados.sql");
+			retorno = system("sudo mysql teste < produzir-dados.sql");
 			printf(" DEBUG: RETORNO (2) = %d em Comando-Root.h comandoRoot()\n", retorno);
-//			else
-//			{
-				return strdup("LOG: Banco de dados resetado com sucesso, dados atuais: NULL.");
-//			}
+			return strdup("LOG: Banco de dados resetado com sucesso, dados atuais: NULL.");
 		}
 		else
 		{
