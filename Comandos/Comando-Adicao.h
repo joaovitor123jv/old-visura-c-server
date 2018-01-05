@@ -3,7 +3,7 @@
 #include <string.h>
 #include "Comandos.h"
 
-bool comandoAdicionar(char *email, bool usuarioAnonimo, Usuario *usuario);//Retorna true se adicionado com sucesso
+bool comandoAdicionar(Usuario *usuario);//Retorna true se adicionado com sucesso
 bool addVisualizacao(Usuario *usuario);
 //bool addVisualizacao(char *email, bool usuarioAnonimo);//Retorna true se adicionado com sucesso
 // bool addIndice(char *nomearquivo);
@@ -24,26 +24,28 @@ bool addAvaliacaoAProduto(Usuario *usuario);//Retorna TRUE se adicionado com suc
 bool addFeedbackAProduto(Usuario *usuario);//Retorna TRUE se adicionado com sucesso
 
 
-bool comandoAdicionar(char *email, bool usuarioAnonimo, Usuario *usuario)/* APP 2 */
+bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 {
 	if (usuario == NULL)
 	{
 		printf(" ERRO: Usuario nulo detectado em Comando-Adicao.h comandoAdicionar()\n");
 	}
-	if(email == NULL)
-	{
-		printf(" ERRO: Email == NULL (Comando-Adicao.h) comandoAdicionar()\n");
-		return false;
-	}
-	printf(" \tTipo de usuario em (Comando-Adicao.h comandoAdicionar()) → ");
-	if( usuarioAnonimo )
-	{
-		printf(" anonimo\n");
-	}
-	else
-	{
-		printf(" normal\n");
-	}
+	printf(" LOG: **************COMANDO_ADICAO*************** em Comando-Adicao.h comandoAdicionar()\n");
+	usuario_mostrarDados(usuario);
+	// if(email == NULL)
+	// {
+	// 	printf(" ERRO: Email == NULL (Comando-Adicao.h) comandoAdicionar()\n");
+	// 	return false;
+	// }
+	// printf(" \tTipo de usuario em (Comando-Adicao.h comandoAdicionar()) → ");
+	// if( usuarioAnonimo )
+	// {
+	// 	printf(" anonimo\n");
+	// }
+	// else
+	// {
+	// 	printf(" normal\n");
+	// }
 	char *token;
 	token = strtok(NULL, " ");
 	if(token == NULL)
@@ -331,7 +333,7 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 						if(strcmp(senha, token) == 0)
 						{
 							printf(" LOG: Solicitando adicao de usuario à base de dados Comando-Adicao.h addUsuarioAnonimo()\n");
-							if(addUsuarioAnonimoAoBanco(email, senha))//SUCESSO usuario criado (manda usuario para adição direta no banco)
+							if(addUsuarioAnonimoAoBanco(email))//SUCESSO usuario criado (manda usuario para adição direta no banco)
 							{
 								printf(" LOG: Usuario cadastrado com sucesso Comando-Adicao.h addUsuarioAnonimo()\n");
 								free(email);
@@ -488,7 +490,7 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 					if(strcmp(senha, token) == 0)
 					{
 						printf(" LOG: Solicitando adicao de usuario à base de dados Comando-Adicao.h addUsuarioAnonimo()\n");
-						if(addUsuarioAnonimoAoBanco(email, senha))//SUCESSO usuario criado (manda usuario para adição direta no banco)
+						if(addUsuarioAnonimoAoBanco(email))//SUCESSO usuario criado (manda usuario para adição direta no banco)
 						{
 							printf(" LOG: Usuario cadastrado com sucesso Comando-Adicao.h addUsuarioAnonimo()\n");
 							free(email);

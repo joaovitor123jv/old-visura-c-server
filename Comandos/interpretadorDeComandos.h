@@ -156,7 +156,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 	{
 		case COMANDO_ADICIONAR:
 			printf(" LOG: Requisitando \"COMANDO_ADICIONAR\" em interpretadorDeComandos.h interpretaComando()\n");
-			if(comandoAdicionar(email, *usuarioAnonimo, usuario))
+			if(comandoAdicionar(usuario))
 			{
 				printf(" LOG: comando adicionar deu certo interpretadorDeComandos.h (interpretaComando())\n");
 				interpretando = false;

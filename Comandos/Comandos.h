@@ -48,6 +48,8 @@
 #define LOGIN_DO_SITE "contratante@servidor"
 #define SENHA_DO_SITE "qwertyuiopasdfghjklzxcvbnm"
 
+#define SENHA_PADRAO_USUARIO_ANONIMO "nulo"
+
 #define TAMANHO_CONFIRMADOR_DE_EMAIL_RUBY 21
 #define CONFIRMADOR_DE_EMAIL_RUBY "scripts/confirmador.rb"
 
@@ -183,7 +185,7 @@
 #define TIPO_PONTO "Dj"
 
 
-#define SENHA_PADRAO_USUARIO_ANONIMO "nulo"
+
 
 
 

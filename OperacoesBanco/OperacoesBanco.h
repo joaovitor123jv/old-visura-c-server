@@ -26,18 +26,14 @@
 //bool checarLogin(MYSQL *conexao, char *email)//Funcional
 //bool checarLogin(char *email)//OK
 
-bool addUsuarioAnonimoAoBanco(char *email, char *senha)//DONE
+bool addUsuarioAnonimoAoBanco(char *email)//DONE
 {
 	if(email == NULL)
 	{
 		printf(" ERRO: email passado igual a NULL OperacoesBanco.h addUsuarioAnonimoAoBanco()\n");
 		return false;
 	}
-	if(senha == NULL)
-	{
-		printf(" ERRO: senha passada igual a NULL OperacoesBanco.h addUsuarioAnonimoAoBanco()\n");
-		return false;
-	}
+	
 	if(conexao == NULL)
 	{
 		printf(" ERRO: Não há conexao com o banco de dados OperacoesBanco.h addUsuarioAnonimoAoBanco()\n");
@@ -64,7 +60,7 @@ bool addUsuarioAnonimoAoBanco(char *email, char *senha)//DONE
 		printf(" Warning: falha ao alocar memoria para query (OperacoesBanco.h) addUsuarioAnonimoAoBanco()\n");
 		return false;
 	}
-	snprintf(query, tamanho, "INSERT INTO cliente(email,senha) VALUES(\'%s\',\'%s\');", email, senha);
+	snprintf(query, tamanho, "INSERT INTO cliente(email,senha) VALUES(\'%s\',\'nulo\');", email);
 	
 	if(query == NULL)
 	{
@@ -2208,7 +2204,7 @@ char *obterTop10ProdutosMelhorAvaliadosDoBanco()
 }
 
 
-char *obterDescricaoProdutoDoBanco(char *idProduto, char *email)//DONE
+char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 {
 	if (conexao == NULL)
 	{
@@ -2222,7 +2218,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, char *email)//DONE
 	}
 	else
 	{
-		if (produtoVencido(idProduto, email))
+		if (produtoVencido(idProduto, usuario_obterLogin(usuario)))
 		{
 			printf(" Warning: produto vencido em OperacoesBanco.h obterDescricaoProdutoDoBanco\n");
 			return NULL;

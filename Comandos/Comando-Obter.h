@@ -11,22 +11,32 @@ char *obterIdContratante(void);// APP 4 ;
 char *obterIdLocalizacao(void);// APP 4 i0
 char *obterTop10NovosProdutos();//APP 4 J
 char *obterTop10ProdutosMelhorAvaliados();//Retorna os 10 produtos melhor avaliados do banco de dados, ou NULL quando dá erro
-char *obterDescricaoProduto(char *email);// APP 4 Q idProduto
+char *obterDescricaoProduto(Usuario *usuario);// APP 4 Q idProduto
 char *obterNomeProduto(char *email);// APP 4 1. idProduto
 char *obterAvaliacaoProduto(char *email);// APP 4 kW idProduto                       (Retorna NULL quando ocorre algum erro)
 
-char *obterDados(char *email)// APP 4 algumaCoisa
+char *comandoObter(char *email, Usuario *usuario)// APP 4 algumaCoisa
 {
 	printf(" ********************** obterDados()\n");
 	if(email == NULL)
 	{
 		printf(" Warning: email == NULL em Comando-Obter.h obterDados() a465e\n");
 	}
+	if (usuario == NULL)
+	{
+		printf(" Warning: Usuario nulo detectado em Comando-Obter.h comandoObter()\n");
+		return NULL;
+	}
+	if (usuario_obterLogin(usuario))
+	{
+		printf(" Warning: usuario nao conectado detectado em Comando-Obter.h comandoObter()\n");
+		return NULL;
+	}
 	char* token = NULL;
 	token = strtok(NULL, " ");
 	if(token == NULL)
 	{
-		printf(" Warning: Comando insuficiente em Comando-Obter.h obterDados()\n");
+		printf(" Warning: Comando insuficiente em Comando-Obter.h comandoObter()\n");
 		return NULL;
 	}
 	else
@@ -36,12 +46,12 @@ char *obterDados(char *email)// APP 4 algumaCoisa
 			char *top10 = obterTop10NovosProdutos();// Obtem os ultimos produtos adicionados
 			if(top10 == NULL)
 			{
-				printf(" Warning: ocorreu um erro ao processar top 10 produtos novos em Comando-Obter.h obterDados()\n");
+				printf(" Warning: ocorreu um erro ao processar top 10 produtos novos em Comando-Obter.h comandoObter()\n");
 				return NULL;
 			}
 			else
 			{
-				printf(" Log: Retorno obtido com sucesso de obterTop10NovosProdutos() em Comando-Obter.h obterDados()\n");
+				printf(" Log: Retorno obtido com sucesso de obterTop10NovosProdutos() em Comando-Obter.h comandoObter()\n");
 				return top10;
 			}
 		}
@@ -50,36 +60,36 @@ char *obterDados(char *email)// APP 4 algumaCoisa
 			char *top = obterTop10ProdutosMelhorAvaliados();
 			if(top == NULL)
 			{
-				printf(" Warning: ocorreu um erro ao processar top 10 melhores produtos em Comando-Obter. obterDados()\n");
+				printf(" Warning: ocorreu um erro ao processar top 10 melhores produtos em Comando-Obter. comandoObter()\n");
 				return NULL;
 			}
 			else
 			{
-				printf(" LOG: Retorno obtido com sucesso de obterTop10ProdutosMelhorAvaliados() em Comando-Obter.h obterDados()\n");
+				printf(" LOG: Retorno obtido com sucesso de obterTop10ProdutosMelhorAvaliados() em Comando-Obter.h comandoObter()\n");
 				return top;
 			}
 		}
 		else if(strcmp(token, TIPO_DESCRICAO_PRODUTO) == 0)// APP 4 Q idProduto
 		{
-			printf(" LOG: Requisitando descricao de produto em Comando-Obter.h obterDados()\n");
-			return obterDescricaoProduto(email);
+			printf(" LOG: Requisitando descricao de produto em Comando-Obter.h comandoObter()\n");
+			return obterDescricaoProduto(usuario);
 		}
 		else if(strcmp(token, TIPO_NOME_PRODUTO) == 0)// APP 4 1. idProduto
 		{
-			printf(" LOG: Requisitando nome de produto em Comando-Obter.h obterDados()\n");
+			printf(" LOG: Requisitando nome de produto em Comando-Obter.h comandoObter()\n");
 			return obterNomeProduto(email);
 		}
 		else if(strcmp(token, TIPO_AVALIACAO) == 0)// APP 4 kW * idProduto
 		{
 			char *retorno;
-			if((retorno = obterAvaliacaoProduto(email)) != NULL)
+			if((retorno = obterAvaliacaoProduto(email)) != NULL)//TODO MECHER ATUALIZAR
 			{
-				printf(" LOG: Obtenção de produto realizada com sucesso em Comando-Obter.h obterDados() 1q654f8tgsd\n");
+				printf(" LOG: Obtenção de produto realizada com sucesso em Comando-Obter.h comandoObter() 1q654f8tgsd\n");
 				return retorno;
 			}
 			else
 			{
-				printf(" Warning: Ocorreu um erro durante a realização do comando de obtenção em Comando-Obter.h obterDados() asdkjhjbtffs\n");
+				printf(" Warning: Ocorreu um erro durante a realização do comando de obtenção em Comando-Obter.h comandoObter() asdkjhjbtffs\n");
 				return NULL;
 			}
 		}
@@ -91,7 +101,7 @@ char *obterDados(char *email)// APP 4 algumaCoisa
 			token = strtok(NULL, " ");
 			if(token == NULL)
 			{
-				printf(" Warning: Comando insuficiente em Comando-Obter.h obterDados() 45a654q8e\n");
+				printf(" Warning: Comando insuficiente em Comando-Obter.h comandoObter() 45a654q8e\n");
 				return NULL;
 			}
 			if (strcmp(token, TIPO_QUANTIDADE) == 0)// APP 4 2 @
@@ -100,33 +110,33 @@ char *obterDados(char *email)// APP 4 algumaCoisa
 				token = strtok(NULL, " ");
 				if(token == NULL)
 				{
-					printf(" Warning: Comando insuficiente em Comando-Obter.h obterDados() 5q68r87s\n");
+					printf(" Warning: Comando insuficiente em Comando-Obter.h comandoObter() 5q68r87s\n");
 					return NULL;
 				}
 				if (strcmp(token, TIPO_VISUALIZACAO) == 0)// APP 4 2 @ 2
 				{
 					// DESEJA obter a QUANTIDADE de VISUALIZACOES (NÃO ANONIMAS)
-					printf(" LOG: Solicitando Obtenção de quantidade de visualizações de usuario não anonimos em Comando-Obter.h obterDados()\n");
+					printf(" LOG: Solicitando Obtenção de quantidade de visualizações de usuario não anonimos em Comando-Obter.h comandoObter()\n");
 					// printf(" Warning: Comando incompleto em Comando-Obter.h obterDados()\n");
 					return obterQuantidadeDeVisualizacoesGerais(email);
 				}
 				else if(strcmp(token, TIPO_VISUALIZACAO_ANONIMA_CHAR) == 0)// APP 4 2 @ 3
 				{
 					// DESEJA obter a QUANTIDADE de VISUALIZACOES ANONIMAS
-					printf(" LOG: Solicitando Obtenção de quantidade de visualizações anonimas em Comando-Obter.h obterDados()\n");
+					printf(" LOG: Solicitando Obtenção de quantidade de visualizações anonimas em Comando-Obter.h comandoObter()\n");
 					return obterQuantidadeDeVisualizacoesAnonimas(email);
 				}
 				else if(strcmp(token, TIPO_ESPECIFICO) == 0)// APP 4 2 @ =
 				{
 					//DESEJA obter QUANTIDADE de VISUALIZACOES de ALGO ESPECIFICO
-					printf(" LOG: Solicitando Obtenção de quantidade de visualizações de algo específico em Comando-Obter.h obterDados()\n");
-					printf(" Warning: Comando incompleto em Comando-Obter.h obterDados()\n");
+					printf(" LOG: Solicitando Obtenção de quantidade de visualizações de algo específico em Comando-Obter.h comandoObter()\n");
+					printf(" Warning: Comando incompleto em Comando-Obter.h comandoObter()\n");
 					return NULL;
 				}
 			}
 			else
 			{
-				printf(" Warning: Comando não compreendido (%s) em Comando-Obter.h obterDados() aq468e7ca\n", token);
+				printf(" Warning: Comando não compreendido (%s) em Comando-Obter.h comandoObter() aq468e7ca\n", token);
 				return false;
 			}
 		}
@@ -142,10 +152,10 @@ char *obterDados(char *email)// APP 4 algumaCoisa
 		{
 			return obterIdLocalizacao();
 		}
-		printf(" Warning: Comando inexistente: |%s| em Comando-Obter.h obterDados() rbjak\n", token);
+		printf(" Warning: Comando inexistente: |%s| em Comando-Obter.h comandoObter() rbjak\n", token);
 		return NULL;
 	}
-	printf(" ERRO: deu uma merda muito grande aqui em Comando-Obter.h obterDados() asdejkjhjvkerwbhsajk\n");
+	printf(" ERRO: deu uma merda muito grande aqui em Comando-Obter.h comandoObter() asdejkjhjvkerwbhsajk\n");
 	return NULL;
 }
 
@@ -495,7 +505,7 @@ char *obterTop10NovosProdutos()// APP 4 J
 }
 
 
-char *obterDescricaoProduto(char *email)// APP 4 Q
+char *obterDescricaoProduto(Usuario *usuario)// APP 4 Q
 {
 	/*
 	*	Retorna descricao do produto caso sucesso, ou "ERRO" caso algo dê errado
@@ -524,7 +534,7 @@ char *obterDescricaoProduto(char *email)// APP 4 Q
 			printf(" Warning: Falha ao duplicar idProduto em Comando-Obter.h obterIdCidade() hjk4ba72\n");
 			return NULL;
 		}
-		char *retorno = obterDescricaoProdutoDoBanco(idProduto, email);
+		char *retorno = obterDescricaoProdutoDoBanco(idProduto, usuario);
 		free(idProduto);
 		idProduto = NULL;
 		return retorno;

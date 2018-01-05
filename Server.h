@@ -302,7 +302,7 @@ void *Servidor(void *cliente)
 					break;
 
 				case REQUISITANDO_OBTENCAO:
-					mensagem = obterDados(email);
+					mensagem = comandoObter(email, &usuario);
 					interpretando = false;
 					bool precisaLiberar = true;
 					if(mensagem == NULL)
