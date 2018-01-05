@@ -57,9 +57,9 @@ char *comandoRoot(Usuario *usuario)
 			{
 				return strdup("ERRO: Falha ao resetar o banco de dados, não foi possível executar \"DROP DATABASE\".");
 			}
-			int retorno = system("sudo mysql < script-pra-resetar-o-banco.sql");
+			int retorno = system("sudo mysql < /home/cgsste/script-pra-resetar-o-banco.sql");
 			printf(" DEBUG: RETORNO = %d em Comando-Root.h comandoRoot()\n", retorno);
-			retorno = system("sudo mysql teste < produzir-dados.sql");
+			retorno = system("sudo mysql teste < /home/cgsste/produzir-dados.sql");
 			printf(" DEBUG: RETORNO (2) = %d em Comando-Root.h comandoRoot()\n", retorno);
 			return strdup("LOG: Banco de dados resetado com sucesso, dados atuais: NULL.");
 		}
