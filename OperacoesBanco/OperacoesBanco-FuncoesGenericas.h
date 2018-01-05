@@ -241,14 +241,14 @@ char *retornaUnicoRetornoDaQuery(char *query)// Se chegou aqui, a conexao está 
 	if( query == NULL )
 	{
 		printf(" ERRO: query nula em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery()\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	
 	if(mysql_query(conexao, query))
 	{
 		printf(" ERRO: Falha ao executar query em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery() sakdjh\n");
 		printf(" \t%s\n", mysql_error(conexao));
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	
 	MYSQL_RES *resultado = mysql_store_result(conexao);
@@ -256,7 +256,7 @@ char *retornaUnicoRetornoDaQuery(char *query)// Se chegou aqui, a conexao está 
 	if(resultado == NULL)// Se não houver consulta
 	{
 		printf(" Warning: Resultado nulo em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery() kqht\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	else
 	{
@@ -272,7 +272,7 @@ char *retornaUnicoRetornoDaQuery(char *query)// Se chegou aqui, a conexao está 
 				free(query);
 				resultado = NULL;
 				query = NULL;
-				return (char *)RETORNO_NOT_FOUND;
+				return strdup("ERRO: nada encontrado");
 			}
 			else
 			{
@@ -281,12 +281,12 @@ char *retornaUnicoRetornoDaQuery(char *query)// Se chegou aqui, a conexao está 
 				free(query);
 				query = NULL;
 				resultado = NULL;
-				return NULL;
+				return strdup("ERRO interno, tente novamente");
 			}
 		}
 		else
 		{
-			if(mysql_num_rows(resultado) != 1)
+			if(mysql_num_rows(resultado) > 1)
 			{
 				printf(" Warning: Mais de uma cidade com mesmo nome e estado em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery() ekjjha\n");
 				printf(" \tRespostas:\n");
@@ -296,13 +296,18 @@ char *retornaUnicoRetornoDaQuery(char *query)// Se chegou aqui, a conexao está 
 					printf(" linhas[0] -> %s\n", linhas[0]);
 				}
 				printf(" \n");
+				char *retorno = strdup(linhas[0]);
+				if (retorno == NULL)
+				{
+					return strdup("ERRO interno, tente novamente");
+				}
 				mysql_free_result(resultado);
 				free(query);
 				query = NULL;
 				resultado = NULL;
-				return linhas[0];//Retorna o ultimo resultado, mesmo se houver erro
+				return retorno;//Retorna o ultimo resultado, mesmo se houver erro
 			}
-			else
+			else if (mysql_num_rows(resultado) == 1)
 			{
 				MYSQL_ROW linha;
 				
@@ -315,16 +320,30 @@ char *retornaUnicoRetornoDaQuery(char *query)// Se chegou aqui, a conexao está 
 					free(query);
 					query = NULL;
 					resultado = NULL;
-					return NULL;
+					return strdup("ERRO interno, tente novamente");
 				}
 				else
 				{
+					char *retorno = strdup(linha[0]);
+					if (retorno == NULL)
+					{
+						return strdup("ERRO interno, tente novamente");
+					}
 					mysql_free_result(resultado);
 					free(query);
 					query = NULL;
 					resultado = NULL;
-					return linha[0];
+					return retorno;
 				}
+			}
+			else
+			{
+				printf(" Warning: nenhum endereco localizado\n");
+				mysql_free_result(resultado);
+				resultado = NULL;
+				free(query);
+				query = NULL;
+				return strdup("ERRO: nada encontrado");
 			}
 		}
 		

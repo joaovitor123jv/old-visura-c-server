@@ -112,18 +112,18 @@ APP
 									descricaoProduto	(descricao do produto que vai aparecer ao usuario, não obrigatório)
 										(adiciona um produto que vai ser dado como criado pelo contratante referenciado por idContratante, com duracao(inteiro) em dias, e nomeProduto como seu "nome que vai aparecer pro público", deixei descricao como não obrigatória)
 
-	$C	(TIPO_CONTRATANTE)
-		CHAVE_DE_SEGURANCA
-			nome	(nome da empresa a ser adicionada)
-				cnpj	(CNPJ da empresa a ser adicionada (obrigatório))
-					plano	(plano escolhido (da tabela de planos a ser criada, de 00 a 99));
-						email	(email (responsável) ao qual quer associar a contratante)
-							senha	(a senha que a empresa vai ter que informar em operacoes de acesso restrito)
-								idLocalizacao	(ID da localizacao da empresa, criada anteriormente)// REFORMULANDO ESSE COMANDO 
-								(adiciona uma empresa (contratante) pra poder adicionar produtos ao banco de dados, por enquanto esta liberado para usuarios comuns, mas... assim que eu mudar a arquitetura de usuario, pode ser que alguns comandos sejam facilitados, e a seguranca aumente, por restringir nível de acesso a funcoes assim)
+		$C	(TIPO_CONTRATANTE)
+			CHAVE_DE_SEGURANCA
+				nome	(nome da empresa a ser adicionada)
+					cnpj	(CNPJ da empresa a ser adicionada (obrigatório))
+						plano	(plano escolhido (da tabela de planos a ser criada, de 00 a 99));
+							email	(email (responsável) ao qual quer associar a contratante)
+								senha	(a senha que a empresa vai ter que informar em operacoes de acesso restrito)
+									idLocalizacao	(ID da localizacao da empresa, criada anteriormente)// REFORMULANDO ESSE COMANDO 
+									(adiciona uma empresa (contratante) pra poder adicionar produtos ao banco de dados, por enquanto esta liberado para usuarios comuns, mas... assim que eu mudar a arquitetura de usuario, pode ser que alguns comandos sejam facilitados, e a seguranca aumente, por restringir nível de acesso a funcoes assim)
 
-									telefone	(Não-Obrigatorio)
-										(adiciona a empresa (contratante), mas já preenche o numero de telefone da empresa, (útil pra contato, algumas vezes))
+										telefone	(Não-Obrigatorio)
+											(adiciona a empresa (contratante), mas já preenche o numero de telefone da empresa, (útil pra contato, algumas vezes))
 
 	3	(COMANDO_ATUALIZAR)
 		(Não possui comandos ainda, está aqui como uma possível extensão futura)

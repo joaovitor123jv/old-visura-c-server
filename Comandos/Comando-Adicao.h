@@ -1483,7 +1483,7 @@ bool addContratante()// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email s
 		cnpj = NULL;
 		return false;
 	}
-	if(strlen(token) != TAMANHO_PLANO)
+	if(strlen(token) > TAMANHO_PLANO)
 	{
 		printf(" Warning: Comando incorreto em Comando-Adicao.h addContratante() qkbvqox\n");
 		free(cnpj);

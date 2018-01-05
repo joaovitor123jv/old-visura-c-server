@@ -27,7 +27,7 @@ char *comandoObter(char *email, Usuario *usuario)// APP 4 algumaCoisa
 		printf(" Warning: Usuario nulo detectado em Comando-Obter.h comandoObter()\n");
 		return NULL;
 	}
-	if (usuario_obterLogin(usuario))
+	if (usuario_obterLogin(usuario) == NULL)
 	{
 		printf(" Warning: usuario nao conectado detectado em Comando-Obter.h comandoObter()\n");
 		return NULL;

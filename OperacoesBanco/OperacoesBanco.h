@@ -1531,9 +1531,6 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 		
 		return true;
 	}
-	
-	
-	
 }
 
 char *obterIdLocalizacaoDoBanco(char *idCidade, char *cep, char *bairro, char *rua, char *numero, char *complemento)
@@ -1549,23 +1546,23 @@ char *obterIdLocalizacaoDoBanco(char *idCidade, char *cep, char *bairro, char *r
 		else
 		{
 			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return NULL;
+			return strdup("ERRO interno(banco de dados), tente novamente");
 		}
 	}
 
 	if( idCidade == NULL )
 	{
 		printf(" ERRO: idCidade nulo detectada em OperacoesBanco.h obterIdLocalizacaoDoBanco() sabfjieoq\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 
 	if( cep == NULL )
 	{
 		printf(" ERRO: cep nulo detectada em OperacoesBanco.h obterIdLocalizacaoDoBanco() sabfjieoq\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 
-//TODO Daqui pra baixo
+	//TODO Daqui pra baixo
 	int tamanho;
 	char *query;
 
@@ -1576,13 +1573,13 @@ char *obterIdLocalizacaoDoBanco(char *idCidade, char *cep, char *bairro, char *r
 		if( query == NULL )
 		{
 			printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdLocalizacaoDoBanco() aoirnisdf\n");
-			return NULL;
+			return strdup("ERRO interno, tente novamente");
 		}
 		snprintf(query, tamanho, "SELECT L.idlocalizacao FROM localizacao L WHERE L.cidade_idcidade=%s AND L.cep=\'%s\' LIMIT 1;", idCidade, cep);
 		if( query == NULL )
 		{
 			printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdLocalizacaoDoBanco() abuvirkasd\n");
-			return NULL;
+			return strdup("ERRO interno, tente novamente");
 		}
 		return retornaUnicoRetornoDaQuery(query);
 	}
@@ -1601,7 +1598,7 @@ char *obterIdLocalizacaoDoBanco(char *idCidade, char *cep, char *bairro, char *r
 			if( query == NULL )
 			{
 				printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdLocalizacaoDoBanco() abuvirkasd\n");
-				return NULL;
+				return strdup("ERRO interno, tente novamente");
 			}
 			return retornaUnicoRetornoDaQuery(query);
 		}
@@ -1614,13 +1611,13 @@ char *obterIdLocalizacaoDoBanco(char *idCidade, char *cep, char *bairro, char *r
 				if( query == NULL )
 				{
 					printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdLocalizacaoDoBanco() aoirnisdf\n");
-					return NULL;
+					return strdup("ERRO interno, tente novamente");
 				}
 				snprintf(query, tamanho, "SELECT L.idlocalizacao FROM localizacao L WHERE L.cidade_idcidade=%s AND L.bairro=\'%s\' AND L.cep=\'%s\' AND L.rua=\'%s\' LIMIT 1;", idCidade, bairro, cep, rua);
 				if( query == NULL )
 				{
 					printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdLocalizacaoDoBanco() abuvirkasd\n");
-					return NULL;
+					return strdup("ERRO interno, tente novamente");
 				}
 				return retornaUnicoRetornoDaQuery(query);
 			}
@@ -1633,13 +1630,13 @@ char *obterIdLocalizacaoDoBanco(char *idCidade, char *cep, char *bairro, char *r
 					if( query == NULL )
 					{
 						printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdLocalizacaoDoBanco() aoirnisdf\n");
-						return NULL;
+						return strdup("ERRO interno, tente novamente");
 					}
 					snprintf(query, tamanho, "SELECT L.idlocalizacao FROM localizacao L WHERE L.cidade_idcidade=%s AND L.bairro=\'%s\' AND L.cep=\'%s\' AND L.rua=\'%s\' AND L.numero=\'%s\' LIMIT 1;", idCidade, bairro, cep, rua, numero);
 					if( query == NULL )
 					{
 						printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdLocalizacaoDoBanco() abuvirkasd\n");
-						return NULL;
+						return strdup("ERRO interno, tente novamente");
 					}
 					return retornaUnicoRetornoDaQuery(query);
 				}
@@ -1650,13 +1647,13 @@ char *obterIdLocalizacaoDoBanco(char *idCidade, char *cep, char *bairro, char *r
 					if( query == NULL )
 					{
 						printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdLocalizacaoDoBanco() aoirnisdf\n");
-						return NULL;
+						return strdup("ERRO interno, tente novamente");
 					}
 					snprintf(query, tamanho, "SELECT L.idlocalizacao FROM localizacao L WHERE L.cidade_idcidade=%s AND L.bairro=\'%s\' AND L.cep=\'%s\' AND L.rua=\'%s\' AND L.numero=\'%s\' AND L.complemento=\'%s\' LIMIT 1;", idCidade, bairro, cep, rua, numero, complemento);
 					if( query == NULL )
 					{
 						printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdLocalizacaoDoBanco() abuvirkasd\n");
-						return NULL;
+						return strdup("ERRO interno, tente novamente");
 					}
 					return retornaUnicoRetornoDaQuery(query);
 				}
@@ -1664,25 +1661,25 @@ char *obterIdLocalizacaoDoBanco(char *idCidade, char *cep, char *bairro, char *r
 		}
 	}
 
-/* int tamanho = 126 + 1 + 2 * (strlen(cidade) + strlen(estado));
-	char *query = (char *)malloc(sizeof(char) * (tamanho));
-	
-	if(query == NULL)
-	{
-		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdLocalizacaoDoBanco() qkjeh\n");
-		return NULL;
-	}
-	
-	snprintf(query, tamanho, "SELECT L.idlocalizacao FROM localizacao L JOIN cidade C ON C.nome=\'%s\' JOIN estado E ON E.nome=\'%s\' WHERE C.nome=\'%s\' AND E.nome=\'%s\';", cidade, estado, cidade, estado);
-	
-	if(query == NULL)
-	{
-		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdLocalizacaoDoBanco() bqjek\n");
-		return NULL;
-	}*/
+	/* int tamanho = 126 + 1 + 2 * (strlen(cidade) + strlen(estado));
+		char *query = (char *)malloc(sizeof(char) * (tamanho));
+
+		if(query == NULL)
+		{
+			printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdLocalizacaoDoBanco() qkjeh\n");
+			return NULL;
+		}
+
+		snprintf(query, tamanho, "SELECT L.idlocalizacao FROM localizacao L JOIN cidade C ON C.nome=\'%s\' JOIN estado E ON E.nome=\'%s\' WHERE C.nome=\'%s\' AND E.nome=\'%s\';", cidade, estado, cidade, estado);
+
+		if(query == NULL)
+		{
+			printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdLocalizacaoDoBanco() bqjek\n");
+			return NULL;
+		}*/
 
 	//TODO Daqui pra cima
-	return NULL;
+	return strdup("ERRO interno, tente novamente");
 }
 
 char *obterIdContratanteDoBanco(char *cnpj)// APP 4 ; cnpj
@@ -1698,14 +1695,14 @@ char *obterIdContratanteDoBanco(char *cnpj)// APP 4 ; cnpj
 		else
 		{
 			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return NULL;
+			return strdup("ERRO interno(banco de dados), tente novamente");
 		}
 	}
 
 	if( cnpj == NULL )
 	{
 		printf(" Warning: Cliente não informou cnpj em OperacoesBanco.h obterIdContratanteDoBanco() asvbeuasd\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 
 
@@ -1715,7 +1712,7 @@ char *obterIdContratanteDoBanco(char *cnpj)// APP 4 ; cnpj
 	if(query == NULL)
 	{
 		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdContratanteDoBanco() qkjeh\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	
 	snprintf(query, tamanho, "SELECT C.idcontratante FROM contratante C WHERE C.cnpj=\'%s\';", cnpj);
@@ -1724,14 +1721,14 @@ char *obterIdContratanteDoBanco(char *cnpj)// APP 4 ; cnpj
 	if(query == NULL)
 	{
 		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdContratanteDoBanco() bqjek\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	
 	if(mysql_query(conexao, query))
 	{
 		printf(" ERRO: Falha ao executar query em OperacoesBanco.h obterIdContratanteDoBanco() sakdjh\n");
 		printf(" \t%s\n", mysql_error(conexao));
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	
 	MYSQL_RES *resultado = mysql_store_result(conexao);
@@ -1739,7 +1736,7 @@ char *obterIdContratanteDoBanco(char *cnpj)// APP 4 ; cnpj
 	if(resultado == NULL)// Se não houver consulta
 	{
 		printf(" Warning: Resultado nulo em OperacoesBanco.h obterIdContratanteDoBanco() kqht\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	else
 	{
@@ -1755,7 +1752,7 @@ char *obterIdContratanteDoBanco(char *cnpj)// APP 4 ; cnpj
 				free(query);
 				resultado = NULL;
 				query = NULL;
-				return (char *)RETORNO_NOT_FOUND;
+				return strdup("ERRO: Nada encontrado");
 			}
 			else
 			{
@@ -1764,7 +1761,7 @@ char *obterIdContratanteDoBanco(char *cnpj)// APP 4 ; cnpj
 				free(query);
 				query = NULL;
 				resultado = NULL;
-				return NULL;
+				return strdup("ERRO interno, tente novamente");
 			}
 		}
 		else
@@ -1779,11 +1776,17 @@ char *obterIdContratanteDoBanco(char *cnpj)// APP 4 ; cnpj
 					printf(" linhas[0] -> %s\n", linhas[0]);
 				}
 				printf(" \n");
+				char *retorno = strdup(linhas[0]);
+				if (retorno == NULL)
+				{
+					return strdup("ERRO interno, tente novamente");
+				}
 				mysql_free_result(resultado);
 				free(query);
 				query = NULL;
 				resultado = NULL;
-				return linhas[0];//Retorna o ultimo resultado, mesmo se houver erro
+				// return linhas[0];//Retorna o ultimo resultado, mesmo se houver erro
+				return retorno;
 			}
 			else
 			{
@@ -1798,24 +1801,26 @@ char *obterIdContratanteDoBanco(char *cnpj)// APP 4 ; cnpj
 					free(query);
 					query = NULL;
 					resultado = NULL;
-					return NULL;
+					return strdup("ERRO interno, tente novamente");
 				}
 				else
 				{
+					char *retorno = strdup(linha[0]);
+					if (retorno == NULL)
+					{
+						return strdup("ERRO interno, tente novamente");
+					}
 					mysql_free_result(resultado);
 					free(query);
 					query = NULL;
 					resultado = NULL;
-					return linha[0];
+					return retorno;
 				}
 			}
 		}
 		
 	}
-	return NULL;
-
-
-
+	return strdup("ERRO interno(desconhecido), tente novamente");
 }
 
 char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)/* APP 4 CHAVE_DE_SEGURANCA_PHP $ { nomeCidadeInformada nomeEstadoInformado*/
@@ -1831,20 +1836,20 @@ char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)/* APP 4 CHAVE_DE_
 		else
 		{
 			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return NULL;
+			return strdup("ERRO interno, banco off, tente novamente");
 		}
 	}
 	
 	if(nomeCidade == NULL)
 	{
 		printf(" ERRO: Comunicacao entre funcoes falhou, nomeCidade == NULL em OperacoesBanco.h obterIdCidadeDoBanco()\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	
 	if(nomeEstado == NULL)
 	{
 		printf(" ERRO: Comunicacao entre funcoes falhou, nomeEstado == NULL em OperacoesBanco.h obterIdCidadeDoBanco()\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	
 	int tamanho = 108 + 1 + strlen(nomeEstado) + strlen(nomeCidade);
@@ -1853,7 +1858,7 @@ char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)/* APP 4 CHAVE_DE_
 	if(query == NULL)
 	{
 		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdCidadeDoBanco() qkjeh\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	
 	snprintf(query, tamanho, "SELECT C.idcidade FROM cidade C JOIN estado E ON E.idestado=C.estado_idestado WHERE E.nome=\'%s\' AND C.nome=\'%s\';", nomeEstado, nomeCidade);
@@ -1862,14 +1867,14 @@ char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)/* APP 4 CHAVE_DE_
 	if(query == NULL)
 	{
 		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdCidadeDoBanco() bqjek\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	
 	if(mysql_query(conexao, query))
 	{
 		printf(" ERRO: Falha ao executar query em OperacoesBanco.h obterIdCidadeDoBanco() sakdjh\n");
 		printf(" \t%s\n", mysql_error(conexao));
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	
 	MYSQL_RES *resultado = mysql_store_result(conexao);
@@ -1877,7 +1882,7 @@ char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)/* APP 4 CHAVE_DE_
 	if(resultado == NULL)// Se não houver consulta
 	{
 		printf(" Warning: Resultado nulo em OperacoesBanco.h obterIdCidadeDoBanco() kqht\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	else
 	{
@@ -1887,16 +1892,16 @@ char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)/* APP 4 CHAVE_DE_
 		
 		if(mysql_num_fields(resultado) != 1)
 		{
-			if(mysql_num_fields(resultado) == 0)
+			if(mysql_num_fields(resultado) != 1)
 			{
-				printf(" LOG: Nada encontrado na base de dados para:\n");
+				printf(" LOG: Banco processou a query de forma errada, aparentemente...:\n");
 				printf(" \t%s\n", query);
 				printf(" \t em OperacoesBanco.h obterIdCidadeDoBanco() 4rr455\n");
 				mysql_free_result(resultado);
 				free(query);
 				resultado = NULL;
 				query = NULL;
-				return (char *)RETORNO_NOT_FOUND;
+				return strdup("ERRO interno, tente novamente");
 			}
 			else
 			{
@@ -1905,12 +1910,12 @@ char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)/* APP 4 CHAVE_DE_
 				free(query);
 				query = NULL;
 				resultado = NULL;
-				return NULL;
+				return strdup("ERRO interno, tente novamente");
 			}
 		}
 		else
 		{
-			if(mysql_num_rows(resultado) != 1)
+			if(mysql_num_rows(resultado) > 1)
 			{
 				printf(" Warning: Mais de uma cidade com mesmo nome e estado em OperacoesBanco.h obterIdCidadeDoBanco() ekjjha\n");
 				printf(" \tRespostas:\n");
@@ -1920,13 +1925,15 @@ char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)/* APP 4 CHAVE_DE_
 					printf(" linhas[0] -> %s\n", linhas[0]);
 				}
 				printf(" \n");
+				char *retorno = strdup(linhas[0]);
 				mysql_free_result(resultado);
 				free(query);
 				query = NULL;
 				resultado = NULL;
-				return linhas[0];//Retorna o ultimo resultado, mesmo se houver erro
+				//return linhas[0];//Retorna o primeiro resultado, mesmo se houver erro
+				return retorno;
 			}
-			else
+			else if (mysql_num_rows(resultado) == 1)
 			{
 				MYSQL_ROW linha;
 				
@@ -1934,26 +1941,35 @@ char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)/* APP 4 CHAVE_DE_
 				
 				if(linha == NULL)
 				{
-					printf(" ERRO: Não era pra poder retornar nulo aqui\n");
+					printf(" ERRO: Não era pra poder retornar nulo aqui em OperacoesBanco.h obterIdCidadeDoBanco()\n");
 					mysql_free_result(resultado);
 					free(query);
 					query = NULL;
 					resultado = NULL;
-					return NULL;
+					return strdup("ERRO interno, tente novamente, caso persista, chama eu");
 				}
 				else
 				{
+					char *retorno = strdup(linha[0]);
 					mysql_free_result(resultado);
 					free(query);
 					query = NULL;
 					resultado = NULL;
-					return linha[0];
+					printf(" LOG: Retornando id de cidade em OperacoesBanco.h obterIdCidadeDoBanco()\n");
+					return retorno;
 				}
+			}
+			else
+			{
+				mysql_free_result(resultado);
+				free(query);
+				query = NULL;
+				return strdup("ERRO, cidade nao encontrada na base de dados");
 			}
 		}
 		
 	}
-	return NULL;
+	return strdup("ERRO interno(desconhecido), tente novamente");
 }
 
 
@@ -1970,7 +1986,7 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 		else
 		{
 			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return NULL;
+			return strdup("ERRO: banco de dados desconectado, tente novamente");
 		}
 	}
 	
@@ -1980,7 +1996,7 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 	if(query == NULL)
 	{
 		printf(" Warning: Falha ao tentar alocar memoria para query em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	
 	snprintf(query, tamanho, "SELECT idproduto FROM produto ORDER BY datacriacao DESC LIMIT 10;");
@@ -1988,7 +2004,7 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 	if(query == NULL)
 	{
 		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	
 	if(mysql_query(conexao, query))
@@ -1996,7 +2012,7 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 		printf(" Warning: falhao ao executar query em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n");
 		free(query);
 		query = NULL;
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	
 	MYSQL_RES *resultado = mysql_store_result(conexao);
@@ -2005,7 +2021,7 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 		printf(" Warning: Consulta não realizada em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n");
 		free(query);
 		query = NULL;
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	
 	if(mysql_num_fields(resultado) == 0)
@@ -2015,7 +2031,7 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 		query = NULL;
 		mysql_free_result(resultado);
 		resultado = NULL;
-		return (char *)RETORNO_NOT_FOUND;
+		return strdup("ERRO: Nada encontrado");
 	}
 	
 	MYSQL_ROW linha = NULL;
@@ -2032,7 +2048,7 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 		query = NULL;
 		mysql_free_result(resultado);
 		resultado = NULL;
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	memset(retorno, '\0', tamanho);
 	
@@ -2057,7 +2073,7 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 			mysql_free_result(resultado);
 			resultado = NULL;
 			query = NULL;
-			return NULL;
+			return strdup("ERRO interno, tente novamente");
 		}
 		if(strlen(retorno) < tamanho - 1)
 		{
@@ -2072,7 +2088,7 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 		mysql_free_result(resultado);
 		resultado = NULL;
 		query = NULL;
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	else
 	{
@@ -2083,7 +2099,7 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 		return retorno;
 	}
 	
-	return NULL;
+	return strdup("ERRO interno, tente novamente");
 }
 
 char *obterTop10ProdutosMelhorAvaliadosDoBanco()
@@ -2099,7 +2115,7 @@ char *obterTop10ProdutosMelhorAvaliadosDoBanco()
 		else
 		{
 			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return NULL;
+			return strdup("ERRO interno(falha de conexao com o banco), tente novamente");
 		}
 	}
 	//int tamanho = 149 + 1;
@@ -2108,13 +2124,13 @@ char *obterTop10ProdutosMelhorAvaliadosDoBanco()
 	if(query == NULL)
 	{
 		printf(" Warning: não foi possível alocar memoria para query em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	query = strdup("SELECT idproduto FROM produto P WHERE DATEDIFF(CURDATE(), P.datacriacao)-P.duracao<=0 ORDER BY P.avaliacaoPositiva-P.avaliacaoNegativa DESC LIMIT 10;");
 	if (query == NULL)
 	{
 		printf(" Warning: Falha ao copiar string para query em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 
 	if(mysql_query(conexao, query))
@@ -2122,7 +2138,7 @@ char *obterTop10ProdutosMelhorAvaliadosDoBanco()
 		printf(" Warning: falhao ao executar query: |%s| em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n", query);
 		free(query);
 		query = NULL;
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 
 	free(query);
@@ -2132,7 +2148,7 @@ char *obterTop10ProdutosMelhorAvaliadosDoBanco()
 	if(resultado == NULL)// Se não houver consulta
 	{
 		printf(" Warning: Consulta não realizada em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	
 	if(mysql_num_fields(resultado) == 0)
@@ -2140,7 +2156,7 @@ char *obterTop10ProdutosMelhorAvaliadosDoBanco()
 		printf(" Warning: Nada encontrado em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
 		mysql_free_result(resultado);
 		resultado = NULL;
-		return (char *)RETORNO_NOT_FOUND;
+		return strdup("ERRO nada encontrado");
 	}
 	
 	MYSQL_ROW linha = NULL;
@@ -2155,7 +2171,7 @@ char *obterTop10ProdutosMelhorAvaliadosDoBanco()
 		printf(" Warning: Falha ao alocar memoria para retorno em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
 		mysql_free_result(resultado);
 		resultado = NULL;
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	memset(retorno, '\0', tamanho);
 	
@@ -2178,7 +2194,7 @@ char *obterTop10ProdutosMelhorAvaliadosDoBanco()
 			printf(" Warning: Falha ao formatar resultado em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco() vbrjka\n");
 			mysql_free_result(resultado);
 			resultado = NULL;
-			return NULL;
+			return strdup("ERRO interno, tente novamente");
 		}
 		if(strlen(retorno) < tamanho - 1)
 		{
@@ -2191,7 +2207,7 @@ char *obterTop10ProdutosMelhorAvaliadosDoBanco()
 		printf(" ERRO: Falha ao obter dados em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
 		mysql_free_result(resultado);
 		resultado = NULL;
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	else
 	{
@@ -2200,7 +2216,7 @@ char *obterTop10ProdutosMelhorAvaliadosDoBanco()
 		return retorno;
 	}
 	
-	return NULL;
+	return strdup("ERRO interno(desconhecido), tente novamente");
 }
 
 
@@ -2209,19 +2225,19 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 	if (conexao == NULL)
 	{
 		printf(" Warning: Conexao perdida com o banco de dados em OperacoesBanco.h obterDescricaoProdutoDoBanco() 4e5b11eea\n");
-		return NULL;
+		return strdup("ERRO interno(banco de dados), tente novamente");
 	}
 	else if(idProduto == NULL)
 	{
 		printf(" Warning: Id de produto nulo em OperacoesBanco.h obterDescricaoProdutoDoBanco() veqf45\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	else
 	{
 		if (produtoVencido(idProduto, usuario_obterLogin(usuario)))
 		{
 			printf(" Warning: produto vencido em OperacoesBanco.h obterDescricaoProdutoDoBanco\n");
-			return NULL;
+			return strdup("ERRO: produto vencido");
 		}
 		char *query = NULL;
 		//int tamanho = 55 + TAMANHO_ID_PRODUTO + 1;// Usando TAMANHO_ID_PRODUTO para otimização
@@ -2231,7 +2247,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 		if(query == NULL)
 		{
 			printf(" Warning: nao foi possível alocar memoria para query em OperacoesBanco.h obterDescricaoProdutoDoBanco()\n");
-			return false;
+			return strdup("ERRO interno, tente novamente");
 		}
 		
 		snprintf(query, tamanho, "SELECT P.descricao FROM produto P WHERE P.idproduto=\'%s\';", idProduto);
@@ -2239,7 +2255,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 		if(query == NULL)
 		{
 			printf(" Warning: nao foi possível formatar query em OperacoesBanco.h obterDescricaoProdutoDoBanco() cqhkhbjvr\n");
-			return false;
+			return strdup("ERRO interno, tente novamente");
 		}
 		
 		if(mysql_query(conexao, query))
@@ -2247,7 +2263,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 			printf(" Warning: falha ao executar query em OperacoesBanco.h obterDescricaoProdutoDoBanco() kjelkzj\n");
 			free(query);
 			query = NULL;
-			return NULL;
+			return strdup("ERRO interno, tente novamente");
 		}
 		
 		MYSQL_RES *resultado = mysql_store_result(conexao);
@@ -2257,7 +2273,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 			printf(" Warning: Consulta não realizada em OperacoesBanco.h obterDescricaoProdutoDoBanco() nao houve conexao\n");
 			free(query);
 			query = NULL;
-			return NULL;
+			return strdup("ERRO interno, tente novamente");
 		}
 		
 		if(mysql_num_fields(resultado) == 0)
@@ -2267,7 +2283,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 			mysql_free_result(resultado);
 			resultado = NULL;
 			query = NULL;
-			return (char *)RETORNO_NOT_FOUND;
+			return strdup("ERRO: Nada encontrado");
 		}
 		
 		MYSQL_ROW linha = NULL;
@@ -2281,7 +2297,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 			mysql_free_result(resultado);
 			resultado = NULL;
 			query = NULL;
-			return NULL;
+			return strdup("ERRO interno, tente novamente");
 		}
 		else
 		{
@@ -2293,7 +2309,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 				mysql_free_result(resultado);
 				resultado = NULL;
 				query = NULL;
-				return NULL;
+				return strdup("ERRO interno, tente novamente");
 			}
 			if(strlen(linha[0]) > 1)
 			{
@@ -2307,7 +2323,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 				mysql_free_result(resultado);
 				resultado = NULL;
 				query = NULL;
-				return (char *)RETORNO_NOT_FOUND;
+				return strdup("ERRO: Nada encontrado");
 				
 			}
 			
@@ -2322,7 +2338,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 				mysql_free_result(resultado);
 				resultado = NULL;
 				query = NULL;
-				return NULL;
+				return strdup("ERRO interno, tente novamente");
 				
 			}
 			
@@ -2338,7 +2354,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 				mysql_free_result(resultado);
 				resultado = NULL;
 				query = NULL;
-				return NULL;
+				return strdup("ERRO interno, tente novamente");
 				
 			}
 			else
@@ -2358,7 +2374,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 		
 	}
 	printf(" ERRO: erro Desconhecido chave: ew54b510530fv8qw em OperacoesBanco.h obterDescricaoProdutoDoBanco()\n");
-	return NULL;
+	return strdup("ERRO interno(desconhecido), tente novamente");
 }
 
 
@@ -2375,20 +2391,20 @@ char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 		else
 		{
 			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return NULL;
+			return strdup("ERRO interno(banco desconectado), tente novamente");
 		}
 	}
 	if(idProduto == NULL)
 	{
 		printf(" Warning: idProduto informado NULO em obterNomeProdutoDoBanco() OperacoesBanco.h\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	else
 	{
 		if(produtoVencido(idProduto, email))
 		{
 			printf(" Warning: produto vencido em OperacoesBanco.h obterNomeProdutoDoBanco()\n");
-			return NULL;
+			return strdup("ERRO: Produto vencido");
 		}
 
 		char *query = NULL;
@@ -2399,7 +2415,7 @@ char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 		if(query == NULL)
 		{
 			printf(" Warning: nao foi possível alocar memoria para query em OperacoesBanco.h obterNomeProdutoDoBanco()\n");
-			return false;
+			return strdup("ERRO interno, tente novamente");
 		}
 		
 		snprintf(query, tamanho, "SELECT P.nomeProduto FROM produto P WHERE P.idproduto=\'%s\';", idProduto);
@@ -2407,7 +2423,7 @@ char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 		if(query == NULL)
 		{
 			printf(" Warning: nao foi possível formatar query em OperacoesBanco.h obterNomeProdutoDoBanco() cqhkhbjvr\n");
-			return false;
+			return strdup("ERRO interno, tente novamente");
 		}
 		
 		if(mysql_query(conexao, query))
@@ -2415,7 +2431,7 @@ char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 			printf(" Warning: falha ao executar query em OperacoesBanco.h obterNomeProdutoDoBanco() kjelkzj\n");
 			free(query);
 			query = NULL;
-			return NULL;
+			return strdup("ERRO interno, tente novamente");
 		}
 		
 		MYSQL_RES *resultado = mysql_store_result(conexao);
@@ -2425,7 +2441,7 @@ char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 			printf(" Warning: Consulta não realizada em OperacoesBanco.h obterNomeProdutoDoBanco() nao houve conexao\n");
 			free(query);
 			query = NULL;
-			return NULL;
+			return strdup("ERRO interno, tente novamente");
 		}
 		
 		if(mysql_num_fields(resultado) == 0)
@@ -2435,7 +2451,7 @@ char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 			mysql_free_result(resultado);
 			resultado = NULL;
 			query = NULL;
-			return (char *)RETORNO_NOT_FOUND;
+			return strdup("ERRO: nada encontrado");
 		}
 		
 		MYSQL_ROW linha = NULL;
@@ -2449,7 +2465,7 @@ char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 			mysql_free_result(resultado);
 			resultado = NULL;
 			query = NULL;
-			return NULL;
+			return strdup("ERRO interno, tente novamente");
 		}
 		else
 		{
@@ -2460,31 +2476,32 @@ char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 				mysql_free_result(resultado);
 				resultado = NULL;
 				query = NULL;
-				return (char *)RETORNO_NOT_FOUND;
+				return strdup("ERRO: nada encontrado");
 			}
 			if(strlen(linha[0]) > 1)
 			{
 				printf(" LOG: Retorno obtido com sucesso em OperacoesBanco.h obterNomeProdutoDoBanco() kjh3as\n");
 			}
 			
-			int tamanho = strlen(linha[0]) + 1;
-			retorno = (char *)malloc(sizeof(char) * tamanho);
+			// int tamanho = strlen(linha[0]) + 1;
+			// retorno = (char *)malloc(sizeof(char) * tamanho);
 			
-			if(retorno == NULL)
-			{
+			// if(retorno == NULL)
+			// {
 				
-				printf(" Warning: Nao foi possivel alocar memoria para retorno em OperacoesBanco.h obterNomeProdutoDoBanco() sakdjhjkredf\n");
-				free(query);
-				mysql_free_result(resultado);
-				resultado = NULL;
-				query = NULL;
-				return NULL;
+			// 	printf(" Warning: Nao foi possivel alocar memoria para retorno em OperacoesBanco.h obterNomeProdutoDoBanco() sakdjhjkredf\n");
+			// 	free(query);
+			// 	mysql_free_result(resultado);
+			// 	resultado = NULL;
+			// 	query = NULL;
+			// 	return strdup("ERRO interno, tente novamente");
 				
-			}
+			// }
 			
-			memset(retorno, '\0', tamanho);
+			// memset(retorno, '\0', tamanho);
 			
-			strcpy(retorno, linha[0]);
+			// strcpy(retorno, linha[0]);
+			retorno = strdup(linha[0]);
 			
 			if(retorno == NULL)
 			{
@@ -2493,7 +2510,7 @@ char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 				mysql_free_result(resultado);
 				resultado = NULL;
 				query = NULL;
-				return NULL;
+				return strdup("ERRO interno, tente novamente");
 			}
 			else
 			{
@@ -2507,7 +2524,7 @@ char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 		}
 	}
 	printf(" ERRO: erro Desconhecido chave: ew54b510530fv8qw em OperacoesBanco.h obterNomeProdutoDoBanco()\n");
-	return NULL;
+	return strdup("ERRO interno(desconhecido), tente novamente");
 }
 
 
@@ -2525,20 +2542,20 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * id
 		else
 		{
 			printf(" \tWarning: Falha ao reconectar-se, encerrando interpretação\n");
-			return NULL;
+			return strdup("ERRO interno(banco), tente novamente");
 		}
 	}
 	if(idProduto == NULL)
 	{
 		printf(" Warning: idProduto informado NULO em obterAvaliacaoProdutoDoBanco() OperacoesBanco.h\n");
-		return NULL;
+		return strdup("ERRO interno, tente novamente");
 	}
 	else
 	{
 		if(produtoVencido(idProduto, email))
 		{
 			printf(" Warning: Produto vencido em OperacoesBanco.h obterAvaliacaoProdutoDoBanco()\n");
-			return NULL;
+			return strdup("ERRO: produto vencido");
 		}
 		char *query = NULL;
 		// int tamanho = 79 + 1 + TAMANHO_ID_PRODUTO;
@@ -2548,7 +2565,7 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * id
 		if(query == NULL)
 		{
 			printf(" Warning: nao foi possível alocar memoria para query em OperacoesBanco.h obterAvaliacaoProdutoDoBanco()\n");
-			return false;
+			return strdup("ERRO interno, tente novamente");
 		}
 		
 		snprintf(query, tamanho, "SELECT P.avaliacaoPositiva,P.avaliacaoNegativa FROM produto P WHERE P.idproduto=\'%s\';", idProduto);
@@ -2556,7 +2573,7 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * id
 		if(query == NULL)
 		{
 			printf(" Warning: nao foi possível formatar query em OperacoesBanco.h obterAvaliacaoProdutoDoBanco() cqhkhbjvr\n");
-			return NULL;
+			return strdup("ERRO interno, tente novamente");
 		}
 		
 		// if(mysql_query(conexao, query))
@@ -2571,7 +2588,7 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * id
 			printf(" Warning: Falha ao executar query em OperacoesBanco.h obterAvaliacaoProdutoDoBanco() qa468fsx2er\n");
 			free(query);
 			query = NULL;
-			return NULL;
+			return strdup("ERRO interno, tente novamente");
 		}
 		else
 		{
@@ -2585,7 +2602,7 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * id
 			printf(" Warning: Consulta não realizada em OperacoesBanco.h obterAvaliacaoProdutoDoBanco() nao houve conexao\n");
 			free(query);
 			query = NULL;
-			return NULL;
+			return strdup("ERRO interno, tente novamente");
 		}
 		
 		if(mysql_num_fields(resultado) == 0)
@@ -2595,7 +2612,7 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * id
 			mysql_free_result(resultado);
 			resultado = NULL;
 			query = NULL;
-			return (char *)RETORNO_NOT_FOUND;
+			return strdup("ERRO: nada encontrado");
 		}
 		
 		MYSQL_ROW linha = NULL;
@@ -2609,7 +2626,7 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * id
 			mysql_free_result(resultado);
 			resultado = NULL;
 			query = NULL;
-			return NULL;
+			return strdup("ERRO interno, tente novamente");
 		}
 		else
 		{
@@ -2625,7 +2642,7 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * id
 				mysql_free_result(resultado);
 				resultado = NULL;
 				query = NULL;
-				return (char *)RETORNO_NOT_FOUND;
+				return strdup("ERRO: produto sem descricao");
 			}
 			
 			int tamanho = strlen(linha[0])+ 1 + strlen(linha[1]) + 1;
@@ -2639,7 +2656,7 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * id
 				mysql_free_result(resultado);
 				resultado = NULL;
 				query = NULL;
-				return NULL;
+				return strdup("ERRO interno, tente novamente");
 				
 			}
 			
@@ -2656,7 +2673,7 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * id
 				mysql_free_result(resultado);
 				resultado = NULL;
 				query = NULL;
-				return NULL;
+				return strdup("ERRO interno, tente novamente");
 				
 			}
 			else
@@ -2676,7 +2693,7 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * id
 		
 	}
 	printf(" ERRO: erro Desconhecido chave: ew54b510530fv8qw em OperacoesBanco.h obterAvaliacaoProdutoDoBanco()\n");
-	return NULL;
+	return strdup("ERRO interno(desconhecido), tente novamente");
 
 }
 
