@@ -61,7 +61,18 @@ char *comandoRoot(Usuario *usuario)
 			printf(" DEBUG: RETORNO = %d em Comando-Root.h comandoRoot()\n", retorno);
 			retorno = system("sudo mysql teste < /home/cgsste/produzir-dados.sql");
 			printf(" DEBUG: RETORNO (2) = %d em Comando-Root.h comandoRoot()\n", retorno);
-			return strdup("LOG: Banco de dados resetado com sucesso, dados atuais: NULL.");
+			printf(" LOG: Fazendo desconexão com o banco de dados em Comando-Root.h comandoRoot()\n");
+			desconectarBanco();
+			printf(" LOG: Re-conectando ao banco de dados em Comando-Root.h comandoRoot()\n");
+			if(conectarBanco())
+			{
+				return strdup("LOG: Banco de dados resetado com sucesso, dados atuais: NULL.");	
+			}
+			else
+			{
+				return strdup("ERRO: Reconexão com o banco de dados retornou erro, recomendo fazer uma re-conexão forçada.");
+			}
+			
 		}
 		else
 		{
