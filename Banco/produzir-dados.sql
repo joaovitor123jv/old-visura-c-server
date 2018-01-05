@@ -103,7 +103,7 @@ INSERT INTO estado(nome) VALUES('TO');
     
 #COMMENT 'CLIENTE'
 
-INSERT INTO cliente(email, nome, sobrenome, localizacao_idlocalizacao, sexo, senha)
+INSERT INTO cliente(email, nome, sobrenome, sexo, senha)
     VALUES('interface@servidor', 'Interface', 'Senatauri Enterprise', '3', 'senatauri');
 	-- SELECT 'interface@servidor', 'Interface', 'Senatauri Enterprise', '3', 'senatauri' 
     -- from localizacao
