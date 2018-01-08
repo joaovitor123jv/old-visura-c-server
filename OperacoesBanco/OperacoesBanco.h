@@ -2061,6 +2061,16 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 		printf(" LOG: LINHA OBTIDA = |%s| em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n", linha[0]);
 		if(strlen(linha[0]) > 0)
 		{
+			if (strlen(linha[0]) != TAMANHO_ID_PRODUTO)
+			{
+				free(query);
+				query = NULL;
+				mysql_free_result(resultado);
+				resultado = NULL;
+				free(retorno);
+				retorno = NULL;
+				return strdup("ERRO interno, ou nada encontrado");
+			}
 			strcat(retorno, linha[0]);
 		}
 		

@@ -57,7 +57,7 @@ char *comandoObter(char *email, Usuario *usuario)// APP 4 algumaCoisa
 		}
 		else if(strcmp(token, TOP_10_MELHORES) == 0)
 		{
-			char *top = obterTop10ProdutosMelhorAvaliados();
+			char *top = obterTop10ProdutosMelhorAvaliados();// APP 4 9&
 			if(top == NULL)
 			{
 				printf(" Warning: ocorreu um erro ao processar top 10 melhores produtos em Comando-Obter. comandoObter()\n");
