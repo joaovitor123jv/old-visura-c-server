@@ -4,6 +4,7 @@
 #include "Comandos.h"
 #include "../AdaptadorDeString.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
+#include "../OperacoesBanco/OperacoesBanco-FuncoesGenericas.h"
 #include "../Usuario.h"
 
 /*bool comandoLogin(Usuario *usuario)
@@ -11,18 +12,18 @@
 
 }*/
 
-char *comandoLogin(bool *usuarioAnonimo, Usuario *usuario)
+// char *comandoLogin(bool *usuarioAnonimo, Usuario *usuario)
+char *comandoLogin(Usuario *usuario)
 {
 	char *email = NULL;
 	char *senha= NULL;
 	char *token;
-	int contador = 0;
+	// int contador = 0;
 
 	token = strtok(NULL, " ");
 
 	if(token != NULL)
 	{
-//		if(strcmp(token, COMANDO_LOGIN) == 0)/* Cliente solicitou Login (APP 1) */
 		if( token[0] == '1' && token[1] == '\0' )// Otimização
 		{
 			printf(" LOG: cliente solicitando login (interpretadordecomandos.h) (comandoLogin)\n");
@@ -32,7 +33,6 @@ char *comandoLogin(bool *usuarioAnonimo, Usuario *usuario)
 				printf(" Warning: Email NULO (comandoLogin) (Comando-Login.h)\n");
 				return NULL;
 			}
-//			if( strlen(email) > TAMANHO_LOGIN )
 			if( stringMaior(email, TAMANHO_LOGIN) )
 			{
 				printf(" Warning: Email exageradamente grande em Comando-Login.h comandoLogin()\n");
@@ -45,7 +45,6 @@ char *comandoLogin(bool *usuarioAnonimo, Usuario *usuario)
 				printf(" Warning: Senha NULA (comandoLogin) (Comando-Login.h)\n");
 				return NULL;
 			}
-//			if( strlen(senha) > TAMANHO_SENHA )
 			if( stringMaior(senha, TAMANHO_SENHA) )
 			{
 				printf(" Warning: Email exageradamente grande em Comando-Login.h comandoLogin()\n");
@@ -58,37 +57,16 @@ char *comandoLogin(bool *usuarioAnonimo, Usuario *usuario)
 			printf(" \tSenha recebida : %s\n", senha);
 			printf("\n\n\n\n");//Separando informações
 
-			*usuarioAnonimo = false;
-			int tamanho = strlen(token);
-
-			for(contador  = 0; contador < tamanho; contador++)/* Checa se email é válido */
+			if( new_Usuario(usuario, email, senha) )//DONE
 			{
-				if(token[contador] == '@')
-				{
-					*usuarioAnonimo = true;
-					break;
-				}
+				printf(" LOG: Estrutura de usuario definida com sucesso, usuario conectado em Comando-Login.h comandoLogin()\n");
+				//*usuarioAnonimo = usuario_PermissaoAnonimo(usuario);
 			}
-
-			//printf(" DEBUG: Criando usuario em Comando-Login.h comandoLogin()\n");
-			//printf(" ** DEBUG: Endereço de usuario antes da criacao em Comando-Login.h comandoLogin(): %ld\n", &usuario);
-			if( new_Usuario(usuario, email, senha) ) // FUTURO FEATURE
+			else
 			{
-				printf(" LOG: Estrutura de usuario definida com sucesso em Comando-Login.h comandoLogin()\n");
-			}
-			//printf(" ***********usuario->login = %s em Comando-Login.h comandoLogin()\n", usuario_obterLogin(usuario));
-			//printf(" ** DEBUG: Endereço de usuario depois da criacao em Comando-Login.h comandoLogin(): %ld\n", &usuario);
-
-
-			if(!checarLogin(email, senha))// APP 1 login senha
-			{
-				printf(" Warning: Erro ao conectar ou de autenticação em (Comando-Login.h) (comandoLogin)\n");
-				printf("\tFalha ao checar login\n");
-				printf("\t\tLogin: %s\n", email);
-				printf("\t\tSenha: %s\n", senha);
+				printf(" Warning: Usuario não autorizado em Comando-Login.h comandoLogin()\n");
 				return NULL;
 			}
-
 
 			return email;
 		}

@@ -22,7 +22,8 @@
 		Comandos pra executar no cloud quando for refazer a maquina kkk
 		CREATE USER 'interface'@'127.0.0.1';
 		CREATE DATABASE teste;
-		GRANT SELECT DELETE UPDATE INSERT ON teste.* to 'interface'@'127.0.0.0';
+		GRANT SELECT DELETE UPDATE INSERT ON teste.* to 'interface'@'127.0.0.1';
+		flush privileges;
 	*/
 
 #define DATABASE_HOST "127.0.0.1"//TESTES
@@ -34,7 +35,7 @@
 #define DATABASE_DEFAULT_SOCKET NULL
 #define DATABASE_DEFAULT_FLAGS 0
 
-MYSQL *conexao;
+//MYSQL *conexao;
 
 //Retorna TRUE se conectar ao banco com sucesso
 // bool conectarBanco(MYSQL *conexao)
@@ -87,7 +88,7 @@ bool conectarBanco()
 	return false;
 }
 
-// Retorna true se der certo
+// Retorna true se der certo (unica opção)
 bool desconectarBanco()
 {
 	mysql_close(conexao);
@@ -132,29 +133,22 @@ bool queryRetornaConteudo(char *query)
 	}
 
 	MYSQL_RES *resposta = NULL;
-	// MYSQL_ROW *linhas = NULL;
 	MYSQL_FIELD *campos = NULL;
 
 	resposta = mysql_store_result(conexao);
 
 	if(resposta)//Se houver resposta
 	{
-		// printf(" \tResposta recebida do banco de dados\n");
 		campos = mysql_fetch_fields(resposta);
 		if(campos != NULL)
 		{
-			// printf(" \tExistem campos na resposta\n");
 			if(mysql_num_fields(resposta) >= 1)
 			{
-				// printf(" \tObteve %d respostas\n", mysql_num_fields(resposta));
 
 				if(mysql_fetch_row(resposta) != NULL)
 				{
-					// printf("Obteve uma ou mais respostas\n");
 					mysql_free_result(resposta);
 					resposta = NULL;
-					// printf(" EMAIL (OperacoesBanco.h) = %s\n",email);
-					// printf(" POSICAO DE MEMORIA DE EMAIL (OperacoesBanco.h) = %x\n", &email );
 					free(query);
 					query = NULL;
 					return true;
@@ -350,65 +344,6 @@ char *retornaUnicoRetornoDaQuery(char *query)// Se chegou aqui, a conexao está 
 	}
 }
 
-bool checarLogin(char *email, char *senha)
-{
-	if(conexao == NULL)
-	{
-		printf("ERRO DE CONEXÃO (OperacoesBanco-FuncoesGenericas.h) (checarLogin)\n");
-		printf(" LOG: Tentando reconexão com banco de dados \n");
-		if(conectarBanco())
-		{
-			printf(" LOG: Reconectado com sucesso, continuando interpretação em OperacoesBanco-FuncoesGenericas.h checarLogin()\n");
-		}
-		else
-		{
-			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return false;
-		}
-	}
-	if(email == NULL)
-	{
-		printf(" ERRO: Não há login para checar (email == NULL) em OperacoesBanco-FuncoesGenericas.h checarLogin()\n");
-		return false;
-	}
-	if(senha == NULL)
-	{
-		printf(" ERRO: Senha não foi informada em OperacoesBanco.h checarLogin() asbiv3888wq2\n");
-		return false;
-	}
-	
-	char *query = NULL;
-	//size_t tamanho = strlen(email) + strlen(senha) + 66 + 1;
-	size_t tamanho = strlen(email) + strlen(senha) + 67;
-	
-	
-	query = (char *)malloc(sizeof(char) * tamanho);
-	if(query == NULL)
-	{
-		printf(" ERRO: não foi possível alocar memória para a query em OperacoesBanco-FuncoesGenericas.h checarLogin()\n");
-		return false;
-	}
-	
-	snprintf(query, sizeof(char) * tamanho, "SELECT C.idcliente from cliente C WHERE C.email=\'%s\' AND C.senha=\'%s\';", email, senha);
-	
-	
-	if(query == NULL)
-	{
-		printf(" ERRO: não foi possível alocar memória para a query (2) em OperacoesBanco-FuncoesGenericas.h checarLogin()\n");
-		return false;
-	}
-	
-	bool retorno = queryRetornaConteudo(query);
-	if(retorno)
-	{
-		printf(" LOG: Foi encontrado um ID para cliente que satisfaça as seguintes comparações: em OperacoesBanco-FuncoesGenericas.h checarLogin()\n");
-		printf(" \t\tcliente.email = |%s|\n", email);
-		printf(" \t\tcliente.senha = |%s|\n", senha);
-	}
-	query = NULL;
-	return retorno;
-}
-
 //Retorna TRUE se o produto existe na base de dados
 // bool checarIdProduto(MYSQL *conexao, char *id)
 bool checarIdProduto(char *id)//OK
@@ -497,7 +432,7 @@ bool checarIdContratante(char *idContratante)
 
 
 //retorna TRUE se o produto estiver vencido, false se estiver dentro do prazo de validade
-bool produtoVencido(char *idProduto, char *email)
+bool produtoVencido(char *idProduto, Usuario *usuario)
 {
 	if(conexao == NULL)
 	{
@@ -518,14 +453,14 @@ bool produtoVencido(char *idProduto, char *email)
 		printf(" Warning: idProduto == NULL em OperacoesBanco-FuncoesGenericas.h produtoVencido() 16q54cfr\n");
 		return true;
 	}
-	if (email == NULL)
+	if (usuario_obterLogin(usuario) == NULL)
 	{
-		printf(" Warning: email == NULL em OperacoesBanco-FuncoesGenericas.h produtoVencido() chjkjtrtds54\n");
+		printf(" Warning: usuario nao conectado detectado em OperacoesBanco-FuncoesGenericas.h produtoVencido() chjkjtrtds54\n");
 		// return true;
 	}
 	else
 	{
-		if(usuarioPrivilegiado(email))
+		if(usuario_PermissaoRoot(usuario))
 		{
 			return false;
 		}
@@ -618,5 +553,4 @@ bool produtoVencido(char *idProduto, char *email)
 			return true;
 		}
 	}
-
 }

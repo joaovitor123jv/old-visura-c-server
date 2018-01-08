@@ -5,7 +5,7 @@
 #include "Comandos.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
 
-char *obterQuantidadeDeVisualizacoesAnonimas(char *email)// APP 4 2 @ 3 idProduto
+char *obterQuantidadeDeVisualizacoesAnonimas(Usuario *usuario)// APP 4 2 @ 3 idProduto
 {
     char *token = strtok(NULL, " ");// APP 4 2 @ 3 idProduto
 
@@ -32,7 +32,7 @@ char *obterQuantidadeDeVisualizacoesAnonimas(char *email)// APP 4 2 @ 3 idProdut
     }
 
     char *retorno;
-    if((retorno = obterQuantidadeDeVisualizacoesAnonimasDoBanco(idProduto, email)) != NULL)
+    if((retorno = obterQuantidadeDeVisualizacoesAnonimasDoBanco(idProduto, usuario)) != NULL)
     {
         printf(" LOG: Quantidade de visualizações retornada com sucesso em obterQuantidadeDeVisualizacoesAnonimas() Comando-Obter_Visualizacoes.h\n");
         free(idProduto);
@@ -58,7 +58,7 @@ char *obterQuantidadeDeVisualizacoesAnonimas(char *email)// APP 4 2 @ 3 idProdut
     return NULL;
 }
 
-char *obterQuantidadeDeVisualizacoesGerais(char *email)// APP 4 2 @ 2 idProduto
+char *obterQuantidadeDeVisualizacoesGerais(Usuario *usuario)// APP 4 2 @ 2 idProduto
 {
     char *token = strtok(NULL, " ");// APP 4 2 @ 2 idProduto
     if(token == NULL)
@@ -83,7 +83,7 @@ char *obterQuantidadeDeVisualizacoesGerais(char *email)// APP 4 2 @ 2 idProduto
     }
 
     char *qtdVisualAnom;
-    if((qtdVisualAnom = obterQuantidadeDeVisualizacoesAnonimasDoBanco(idProduto, email)) != NULL)
+    if((qtdVisualAnom = obterQuantidadeDeVisualizacoesAnonimasDoBanco(idProduto, usuario)) != NULL)
     {
         printf(" LOG: Quantidade de visualizações retornada com sucesso em obterQuantidadeDeVisualizacoesGerais() Comando-Obter_Visualizacoes.h\n");
     }
@@ -97,7 +97,7 @@ char *obterQuantidadeDeVisualizacoesGerais(char *email)// APP 4 2 @ 2 idProduto
 
 
     char *qtdVisualNorm;
-    if((qtdVisualNorm = obterQuantidadeDeVisualizacoesGeraisDoBanco(idProduto, email)) != NULL)
+    if((qtdVisualNorm = obterQuantidadeDeVisualizacoesGeraisDoBanco(idProduto, usuario)) != NULL)
     {
         printf(" LOG: Quantidade de visualizações retornada com sucesso em obterQuantidadeDeVisualizacoesGerais() Comando-Obter_Visualizacoes.h\n");
     }

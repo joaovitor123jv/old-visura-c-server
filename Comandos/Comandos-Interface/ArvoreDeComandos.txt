@@ -95,7 +95,7 @@ APP
 
 		/* FUNÇÕES PARA ADMINISTRADORES - Sujeitas a alterações */
 
-		+	(TIPO_PRODUTO)	
+		+	(TIPO_PRODUTO)
 			CHAVE_DE_SEGURANCA
 				idContratante	(ID da empresa que vai adicionar o produto)
 					idProduto

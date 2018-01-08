@@ -1,3 +1,4 @@
+#pragma once
 #ifndef __OPERACOES_BANCO__
 #define __OPERACOES_BANCO__
 
@@ -2272,7 +2273,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 	}
 	else
 	{
-		if (produtoVencido(idProduto, usuario_obterLogin(usuario)))
+		if (produtoVencido(idProduto, usuario))
 		{
 			printf(" Warning: produto vencido em OperacoesBanco.h obterDescricaoProdutoDoBanco\n");
 			return strdup("ERRO: produto vencido");
@@ -2416,7 +2417,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 }
 
 
-char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
+char *obterNomeProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 {
 	if(conexao == NULL)
 	{
@@ -2432,6 +2433,11 @@ char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 			return strdup("ERRO interno(banco desconectado), tente novamente");
 		}
 	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		printf(" ERRO: usuario não logado detectado em OperacoesBanco.h obterNomeProdutoDoBanco()\n");
+		return strdup("ERRO interno(usuario nao conectado)");
+	}
 	if(idProduto == NULL)
 	{
 		printf(" Warning: idProduto informado NULO em obterNomeProdutoDoBanco() OperacoesBanco.h\n");
@@ -2439,7 +2445,7 @@ char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 	}
 	else
 	{
-		if(produtoVencido(idProduto, email))
+		if(produtoVencido(idProduto, usuario))
 		{
 			printf(" Warning: produto vencido em OperacoesBanco.h obterNomeProdutoDoBanco()\n");
 			return strdup("ERRO: Produto vencido");
@@ -2566,7 +2572,7 @@ char *obterNomeProdutoDoBanco(char *idProduto, char *email)//DONE
 }
 
 
-char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * idProduto
+char *obterAvaliacaoProdutoDoBanco(char *idProduto, Usuario *usuario)// APP 4 kW * idProduto
 {
 	printf(" LOG: iniciando obtenção de avaliação em OperacoesBanco.h obterAvaliacaoProdutoDoBanco()\n");
 	if(conexao == NULL)
@@ -2583,6 +2589,11 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * id
 			return strdup("ERRO interno(banco), tente novamente");
 		}
 	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		printf(" ERRO: usuario não conectado detectado em OperacoesBanco.h obterAvaliacaoProdutoDoBanco()\n");
+		return strdup("ERRO interno(usuario não conectado)");
+	}
 	if(idProduto == NULL)
 	{
 		printf(" Warning: idProduto informado NULO em obterAvaliacaoProdutoDoBanco() OperacoesBanco.h\n");
@@ -2590,7 +2601,7 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, char *email)// APP 4 kW * id
 	}
 	else
 	{
-		if(produtoVencido(idProduto, email))
+		if(produtoVencido(idProduto, usuario))
 		{
 			printf(" Warning: Produto vencido em OperacoesBanco.h obterAvaliacaoProdutoDoBanco()\n");
 			return strdup("ERRO: produto vencido");
@@ -3120,13 +3131,13 @@ bool addAvaliacaoAProdutoAoBanco(Usuario *usuario, char *idProduto, char *avalia
 		printf(" Warning: avaliacao == NULL em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() hkjqwd\n");
 		return false;
 	}
-	if(produtoVencido(idProduto, usuario_obterLogin(usuario)))
+	if(produtoVencido(idProduto, usuario))
 	{
 		printf(" Warning: produto vencido detectado em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() akjhvs\n");
 		return false;
 	}
 
-	int checou = checaExistenciaDeVisualizacaoDeProdutoComPessoa(idProduto, usuario_obterLogin(usuario));
+	int checou = checaExistenciaDeVisualizacaoDeProdutoComPessoa(idProduto, usuario);
 	if(checou == RETORNO_OK)
 	{
 		printf(" LOG: Existe visualização de usuario cadastrada em OperacoesBanco.h addAvaliacaoAProdutoAoBanco()\n");
@@ -3280,14 +3291,14 @@ bool addFeedBackDeProdutoAoBanco(Usuario *usuario, char *idProduto, char *titulo
 		return false;
 	}
 	
-	if( produtoVencido(idProduto, usuario_obterLogin(usuario)) )
+	if( produtoVencido(idProduto, usuario) )
 	{
 		printf(" Warning: Produto vencido detectado em OperacoesBanco.h addFeedBackDeProdutoAoBanco() sa6b54xdad\n");
 		return false;
 	}
 	else
 	{
-		if(checaExistenciaDeVisualizacaoDeProdutoComPessoa(idProduto, usuario_obterLogin(usuario)) != RETORNO_OK)
+		if(checaExistenciaDeVisualizacaoDeProdutoComPessoa(idProduto, usuario) != RETORNO_OK)
 		{
 			printf(" Warning: usuario cadastrado não possui nenhuma visualização desse produto registrada em OperacoesBanco.h addFeedBackDeProdutoAoBanco() askjdhjvbdsd5\n");
 			return false;

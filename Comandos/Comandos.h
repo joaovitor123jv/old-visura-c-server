@@ -23,6 +23,19 @@
 #define OK 0
 #endif
 
+#ifndef LOGIN_NAO_AUTORIZADO
+#define LOGIN_NAO_AUTORIZADO 155
+#endif
+
+#ifndef ERRO_COMANDO_INCORRETO
+#define ERRO_COMANDO_INCORRETO 156
+#endif
+
+
+#ifndef ERRO_DE_EXECUCAO
+#define ERRO_DE_EXECUCAO 157
+#endif
+
 /* Variável de CONTROLE */
 /***********************************IMPORTANTE********************************************/
 /*************************/bool interpretando = false;/***********************************/

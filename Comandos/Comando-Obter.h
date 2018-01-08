@@ -12,16 +12,17 @@ char *obterIdLocalizacao(void);// APP 4 i0
 char *obterTop10NovosProdutos();//APP 4 J
 char *obterTop10ProdutosMelhorAvaliados();//Retorna os 10 produtos melhor avaliados do banco de dados, ou NULL quando dá erro
 char *obterDescricaoProduto(Usuario *usuario);// APP 4 Q idProduto
-char *obterNomeProduto(char *email);// APP 4 1. idProduto
-char *obterAvaliacaoProduto(char *email);// APP 4 kW idProduto                       (Retorna NULL quando ocorre algum erro)
+char *obterNomeProduto(Usuario *usuario);// APP 4 1. idProduto
+char *obterAvaliacaoProduto(Usuario *usuario);// APP 4 kW idProduto                       (Retorna NULL quando ocorre algum erro)
 
-char *comandoObter(char *email, Usuario *usuario)// APP 4 algumaCoisa
+// char *comandoObter(char *email, Usuario *usuario)// APP 4 algumaCoisa
+char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 {
 	printf(" ********************** obterDados()\n");
-	if(email == NULL)
-	{
-		printf(" Warning: email == NULL em Comando-Obter.h obterDados() a465e\n");
-	}
+	// if(email == NULL)
+	// {
+	// 	printf(" Warning: email == NULL em Comando-Obter.h obterDados() a465e\n");
+	// }
 	if (usuario == NULL)
 	{
 		printf(" Warning: Usuario nulo detectado em Comando-Obter.h comandoObter()\n");
@@ -77,12 +78,12 @@ char *comandoObter(char *email, Usuario *usuario)// APP 4 algumaCoisa
 		else if(strcmp(token, TIPO_NOME_PRODUTO) == 0)// APP 4 1. idProduto
 		{
 			printf(" LOG: Requisitando nome de produto em Comando-Obter.h comandoObter()\n");
-			return obterNomeProduto(email);
+			return obterNomeProduto(usuario);
 		}
 		else if(strcmp(token, TIPO_AVALIACAO) == 0)// APP 4 kW * idProduto
 		{
 			char *retorno;
-			if((retorno = obterAvaliacaoProduto(email)) != NULL)//TODO MECHER ATUALIZAR
+			if((retorno = obterAvaliacaoProduto(usuario)) != NULL)//TODO MECHER ATUALIZAR
 			{
 				printf(" LOG: Obtenção de produto realizada com sucesso em Comando-Obter.h comandoObter() 1q654f8tgsd\n");
 				return retorno;
@@ -118,13 +119,13 @@ char *comandoObter(char *email, Usuario *usuario)// APP 4 algumaCoisa
 					// DESEJA obter a QUANTIDADE de VISUALIZACOES (NÃO ANONIMAS)
 					printf(" LOG: Solicitando Obtenção de quantidade de visualizações de usuario não anonimos em Comando-Obter.h comandoObter()\n");
 					// printf(" Warning: Comando incompleto em Comando-Obter.h obterDados()\n");
-					return obterQuantidadeDeVisualizacoesGerais(email);
+					return obterQuantidadeDeVisualizacoesGerais(usuario);
 				}
 				else if(strcmp(token, TIPO_VISUALIZACAO_ANONIMA_CHAR) == 0)// APP 4 2 @ 3
 				{
 					// DESEJA obter a QUANTIDADE de VISUALIZACOES ANONIMAS
 					printf(" LOG: Solicitando Obtenção de quantidade de visualizações anonimas em Comando-Obter.h comandoObter()\n");
-					return obterQuantidadeDeVisualizacoesAnonimas(email);
+					return obterQuantidadeDeVisualizacoesAnonimas(usuario);
 				}
 				else if(strcmp(token, TIPO_ESPECIFICO) == 0)// APP 4 2 @ =
 				{
@@ -544,7 +545,7 @@ char *obterDescricaoProduto(Usuario *usuario)// APP 4 Q
 }
 
 
-char *obterNomeProduto(char *email)
+char *obterNomeProduto(Usuario *usuario)
 {
 	char *token  = NULL;
 	printf(" LOG: Iniciando interpretação em obterNomeProduto() Comando-Obter.h\n");
@@ -572,14 +573,14 @@ char *obterNomeProduto(char *email)
 
 	char *nomeProduto = NULL;
 	//	obterNomeProdutoDoBanco(idProduto);
-	nomeProduto = obterNomeProdutoDoBanco(idProduto, email);
+	nomeProduto = obterNomeProdutoDoBanco(idProduto, usuario);
 	free(idProduto);
 	return nomeProduto;
 }
 
 
 /* Obtema avaliação do produto e retorna da seguinte forma:  "numeroDeAvaliacoesPositivas NumeroDeAvaliacoesNegativas" */
-char *obterAvaliacaoProduto(char *email)// APP 4 kW idProduto                       (Retorna NULL quando ocorre algum erro)
+char *obterAvaliacaoProduto(Usuario *usuario)// APP 4 kW idProduto                       (Retorna NULL quando ocorre algum erro)
 {
 	char *token = strtok(NULL, " ");// APP 4 kW idProduto
 	if(token == NULL)
@@ -602,7 +603,7 @@ char *obterAvaliacaoProduto(char *email)// APP 4 kW idProduto                   
 	}
 
 	char *retorno;
-	if((retorno = obterAvaliacaoProdutoDoBanco(idProduto, email)) != NULL)
+	if((retorno = obterAvaliacaoProdutoDoBanco(idProduto, usuario)) != NULL)
 	{
 		printf(" LOG: Produto obtido do banco de dados com sucesso em Comando-Obter.h obterAvaliacaoProduto() chjksdf\n");
 		free(idProduto);

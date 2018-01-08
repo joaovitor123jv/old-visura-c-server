@@ -149,15 +149,7 @@ int configuraServidor()
 }
 
 
-void liberaMemoriaTalvezUtilizada(char *email)
-{
-	if(email != NULL)
-	{
-		free(email);
-		email = NULL;
-	}
-	//desconectarBanco();
-}
+
 
 
 bool mensagemDeEscapeDetectada(const char *mensagem)// Verifica se a mensagem é "APP sair", de forma otimizada
@@ -211,11 +203,12 @@ void *Servidor(void *cliente)
 {
 	char bufferCliente[BUFFER_CLIENTE];
 	bool autorizado = false;
-	char *email = NULL;
+	//char *email = NULL;
 	char *mensagem = NULL;
 	int resultado;
-	bool usuarioAnonimo = true;
+	// bool usuarioAnonimo = true;
 	Usuario usuario;
+	init_Usuario(&usuario);
 	
 	printf(" LOG: Aguardando por mensagens\n");
 	while(true)
@@ -237,7 +230,7 @@ void *Servidor(void *cliente)
 			}
 			printf(" LOG: Encerrando thread de Servidor em Server.h Servidor()->sairDaThread()\n");
 			close(*(int *)cliente);
-			liberaMemoriaTalvezUtilizada(email);
+			// liberaMemoriaTalvezUtilizada(email);
 			reset_Usuario(&usuario);
 			pthread_exit( (void *) 0 );
 		}
@@ -248,33 +241,36 @@ void *Servidor(void *cliente)
 			printf(" LOG: Mensagem recebida, Aguardando liberacao para interpretacao\n");
 			while(interpretando)
 			{
-				pthread_yield();/* Causa um warning, mas nada demais */
+				pthread_yield();
 			}//Aguarda, liberando cpu para outros trabalhos (senão fica fazendo coisa a toa até ser interrompida pelo SO)
 
 			printf("\n\n \t*********************Inicio de Interpretação *************\n");
 
-			if(email == NULL)
-			{
-				email = interpretaComando(bufferCliente, &autorizado, &resultado, email, &usuarioAnonimo, &usuario);
+			// if(usuario_obterLogin(&usuario) == NULL)
+			// {
+			// 	//email = interpretaComando(bufferCliente, &autorizado, &resultado, email, &usuarioAnonimo, &usuario);
+			// 	interpretaComando(bufferCliente, &autorizado, &resultado, &usuario)
 
-				usuario_mostrarDados(&usuario);
+			// 	usuario_mostrarDados(&usuario);
 
-				//printf(" DEBUG: email era NULO em Server.h Servidor()\n");	
-				//printf(" ***********usuario->login = %s em Server.h Servidor()\n", usuario_obterLogin(&usuario));
+			// 	//printf(" DEBUG: email era NULO em Server.h Servidor()\n");	
+			// 	//printf(" ***********usuario->login = %s em Server.h Servidor()\n", usuario_obterLogin(&usuario));
 				
-				if(email != NULL)
-				{
-					email = strdup(email);
-				}
-				else
-				{
-					printf("\t LOG :Usuário não autorizado em Server.h Servidor()\n");
-				}
-			}
-			else
-			{
-				interpretaComando(bufferCliente, &autorizado, &resultado, email, &usuarioAnonimo, &usuario);
-			}
+			// 	// if(email != NULL)
+			// 	// {
+			// 	// 	email = strdup(email);
+			// 	// }
+			// 	// else
+			// 	// {
+			// 	// 	printf("\t LOG :Usuário não autorizado em Server.h Servidor()\n");
+			// 	// }
+			// }
+			// else
+			// {
+			// 	// interpretaComando(bufferCliente, &autorizado, &resultado, email, &usuarioAnonimo, &usuario);
+			// 	interpretaComando(bufferCliente, &autorizado, &resultado, &usuario);
+			// }
+			interpretaComando(bufferCliente, &autorizado, &resultado, &usuario);
 
 			switch(resultado)
 			{
@@ -291,18 +287,31 @@ void *Servidor(void *cliente)
 
 				case REQUISITANDO_LOGIN:/* Cliente NÃO AUTORIZADO OK */
 					printf(" Cliente Requisitou Login, mas Não foi atendido (Server Thread)\n");
-					enviaMensagemParaCliente("Não autorizado, desconectando\0", cliente);
+					enviaMensagemParaCliente("ERRO: Não autorizado, desconectando\0", cliente);
 					sairDaThread(true);
 					break;
 
 				case REQUISITANDO_ADICAO:/* OK */
 					printf(" Cliente requisitou adicao\n");
-					enviaMensagemParaCliente("Adicao recusada, desconectando\0", cliente);
+					enviaMensagemParaCliente("ERRO: Adicao recusada, desconectando\0", cliente);
+					sairDaThread(false);
+					break;
+
+				case LOGIN_NAO_AUTORIZADO:
+					printf(" Warning: Falha ao logar em Server.h Servidor()\n");
+					enviaMensagemParaCliente("ERRO: usuario ou senha incorretos, desconectando.", cliente);
+					sairDaThread(false);
+					break;
+
+				case ERRO_DE_EXECUCAO:
+					printf(" Warning: Falha ao executar comando em Server.h Servidor()\n");
+					enviaMensagemParaCliente("ERRO: Falha na execucao do comando, desconectando.", cliente);
 					sairDaThread(false);
 					break;
 
 				case REQUISITANDO_OBTENCAO:
-					mensagem = comandoObter(email, &usuario);
+					// mensagem = comandoObter(email, &usuario);
+					mensagem = comandoObter(&usuario);
 					interpretando = false;
 					bool precisaLiberar = true;
 					if(mensagem == NULL)
@@ -341,13 +350,14 @@ void *Servidor(void *cliente)
 					}
 					else
 					{
-						enviaMensagemParaCliente("Não Autorizado, desconectando\0", cliente);
+						enviaMensagemParaCliente("Você nn pode fazer isso, muahahahaha \\o/\0", cliente);
+						sairDaThread(true);
 					}
 					break;
 
 				default:
 					printf(" Não foi possivel interpretar comando (Server.h) (Servidor()) Resultado == %d\n", resultado );
-					enviaMensagemParaCliente("Comando incorreto, desconectando\0", cliente);
+					enviaMensagemParaCliente("Comando não compreendido, desconectando\0", cliente);
 					sairDaThread(false);
 					break;
 			}

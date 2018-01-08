@@ -5,16 +5,16 @@
 #include <mysql/mysql.h>
 
 
-int checaExistenciaDeVisualizacaoDeProdutoComPessoa(char *idproduto, char *email)//Se retorna RETORNO_OK, existe algo ali, se retornar RETORNO_NULO, não existe
+int checaExistenciaDeVisualizacaoDeProdutoComPessoa(char *idproduto, Usuario *usuario)//Se retorna RETORNO_OK, existe algo ali, se retornar RETORNO_NULO, não existe
 {
 	if(idproduto == NULL)
 	{
-		printf("Produto com id nulo em OperacoesBanco-Visualizacoes.h,  checaExistenciaDeVisualizacaoDeProdutoComPessoa()\n");
+		printf(" Warning: idproduto nulo detectado em OperacoesBanco-Visualizacoes.h,  checaExistenciaDeVisualizacaoDeProdutoComPessoa()\n");
 		return RETORNO_ERRO_DE_PARAMETRO;
 	}
-	if(email == NULL)
+	if(usuario_obterLogin(usuario) == NULL)
 	{
-		printf("Pessoa com id nulo em OperacoesBanco-Visualizacoes.h,  checaExistenciaDeVisualizacaoDeProdutoComPessoa()\n");
+		printf(" Warning: usuario não conectado detectado em OperacoesBanco-Visualizacoes.h,  checaExistenciaDeVisualizacaoDeProdutoComPessoa()\n");
 		return RETORNO_ERRO_DE_PARAMETRO;
 	}
 	if(conexao == NULL)
@@ -39,7 +39,7 @@ int checaExistenciaDeVisualizacaoDeProdutoComPessoa(char *idproduto, char *email
 	
 	char *query = NULL;
     // int tamanho = sizeof(char) * ( strlen(idproduto) + strlen(email) + 183 + 1);
-    int tamanho = sizeof(char) * (194 + strlen(email));
+    int tamanho = sizeof(char) * (194 + usuario_obterTamanhoLogin(usuario));
 	
 	query = malloc(tamanho);
 	if(query == NULL)
@@ -49,7 +49,7 @@ int checaExistenciaDeVisualizacaoDeProdutoComPessoa(char *idproduto, char *email
 	}
 	
     // snprintf(query, tamanho, "SELECT quantidade FROM visualizacaoDeUsuario JOIN cliente ON cliente.email=visualizacaoDeUsuario.cliente_idcliente JOIN produto ON P.idproduto=V.produto_idproduto WHERE P.idproduto=\'%s\';", email, idproduto );
-    snprintf(query, tamanho, "SELECT quantidade FROM visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente JOIN produto P ON P.idproduto=V.produto_idproduto WHERE P.idproduto=\'%s\' AND C.email=\'%s\';", idproduto, email);
+    snprintf(query, tamanho, "SELECT quantidade FROM visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente JOIN produto P ON P.idproduto=V.produto_idproduto WHERE P.idproduto=\'%s\' AND C.email=\'%s\';", idproduto, usuario_obterLogin(usuario));
 	
 	if(query == NULL)
 	{
@@ -212,7 +212,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
 		return false;
 	}
     
-    if (produtoVencido(id, usuario_obterLogin(usuario)))
+    if (produtoVencido(id, usuario))
     {
         printf(" Warning: Produto vencido detectado em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
         return false;
@@ -273,7 +273,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
 			free(query);
 			query = NULL;
 			
-			switch(checaExistenciaDeVisualizacaoDeProdutoComPessoa(id, usuario_obterLogin(usuario)))
+			switch(checaExistenciaDeVisualizacaoDeProdutoComPessoa(id, usuario))
 			{
 				case RETORNO_OK://Se já tiver criado a tabela de visualizacaDeUsuario
                     //Usar update para atualizar dados já existentes
@@ -459,7 +459,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
 			// int existencia = checaExistenciaDeVisualizacaoDeProdutoComPessoa(id, email);
 			
 			// switch(existencia)
-			switch(checaExistenciaDeVisualizacaoDeProdutoComPessoa(id, usuario_obterLogin(usuario)))
+			switch(checaExistenciaDeVisualizacaoDeProdutoComPessoa(id, usuario))
 			{
 				case RETORNO_OK://Se já tiver criado a tabela de visualizacaDeUsuario
                     //Usar update para atualizar dados já existentes
@@ -588,7 +588,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
 }
 
 
-char *obterQuantidadeDeVisualizacoesAnonimasDoBanco(char *idProduto, char *email)// APP 4 2 @ 3 * idProduto
+char *obterQuantidadeDeVisualizacoesAnonimasDoBanco(char *idProduto, Usuario *usuario)// APP 4 2 @ 3 * idProduto
 {
     if(conexao == NULL)
     {
@@ -609,7 +609,7 @@ char *obterQuantidadeDeVisualizacoesAnonimasDoBanco(char *idProduto, char *email
         return NULL;
     }
 
-    if (produtoVencido(idProduto, email))
+    if (produtoVencido(idProduto, usuario))
     {
         printf(" Warning: Produto vencido detectado em OperacoesBanco-Visualizacoes.h obterQuantidadeDeVisualizacoesAnonimasDoBanco()\n");
         return NULL;
@@ -763,7 +763,7 @@ char *obterQuantidadeDeVisualizacoesAnonimasDoBanco(char *idProduto, char *email
     return NULL;
 }
 
-char *obterQuantidadeDeVisualizacoesGeraisDoBanco(char *idProduto, char *email)// APP 4 2 @ 2 * idProduto (chama também, essa funcao)
+char *obterQuantidadeDeVisualizacoesGeraisDoBanco(char *idProduto, Usuario *usuario)// APP 4 2 @ 2 * idProduto (chama também, essa funcao)
 {
     if(conexao == NULL)
     {
@@ -783,7 +783,7 @@ char *obterQuantidadeDeVisualizacoesGeraisDoBanco(char *idProduto, char *email)/
         printf(" Warning: idProduto == NULL em obterQuantidadeDeVisualizacoesGeraisDoBanco() OperacoesBanco-Visualizacoes.h\n");
         return NULL;
     }
-    if (produtoVencido(idProduto, email))
+    if (produtoVencido(idProduto, usuario))
     {
         printf(" Warning: Produto vencido detectado em OperacoesBanco-Visualizacoes.h obterQuantidadeDeVisualizacoesGeraisDoBanco()\n");
         return NULL;

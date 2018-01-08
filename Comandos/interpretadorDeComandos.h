@@ -4,6 +4,10 @@
 
 
 #include "../AdaptadorDeString.h"
+
+#include <mysql/mysql.h>
+MYSQL *conexao;
+
 #include "../Usuario.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
 #include "Comando-Login.h"
@@ -21,7 +25,8 @@
 int comandoAtualizar(char *comando);
 
 
-char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* email, bool *usuarioAnonimo, Usuario *usuario)
+// char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* email, bool *usuarioAnonimo, Usuario *usuario)
+char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario *usuario)
 {
 	interpretando = true;
 	char *nomeAplicacao = NULL;
@@ -54,7 +59,6 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 		return NULL;
 	}
 
-//	if( ! (stringTamanhoIgual(nomeAplicacao, TAMANHO_CHAVE_APLICACAO) ))
 	if( !stringTamanhoIgual(nomeAplicacao, TAMANHO_CHAVE_APLICACAO) )
 	{
 		printf(" Warning: Tamanho de chave de aplicacao incompativel em interpretadorDeComandos.h interpretaComando()\n");
@@ -75,22 +79,8 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 	if( !(*autorizado) )
 	{
 		printf(" LOG: Cliente ainda não autorizado, INTERROMPENDO PROCESSO PARA SOLICITAR LOGIN\n");
-		//printf(" DEBUG: COMANDO (depois de fazer o primeiro strtok) = %s\n", comando);
 
-
-
-		//printf(" ** DEBUG: Endereço de usuario antes da criacao em interpretadorDeComandos.h interpretaComando(): %ld\n", &usuario);
-		login = comandoLogin(usuarioAnonimo, usuario);
-		//printf(" ** DEBUG: Endereço de usuario depois da criacao em interpretadorDeComandos.h interpretaComando(): %ld\n", &usuario);
-		//printf(" ***********usuario->login = %s em interpretadorDeComandos.h interpretaComando()\n", usuario_obterLogin(usuario));
-
-
-
-
-
-		//printf(" DEBUG: Retornou do Comando-Login (interpretadorDeComandos.h) interpretaComando()\n");
-
-		
+		login = comandoLogin(usuario);
 
 		if( login  != NULL )
 		{
@@ -103,7 +93,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 		{
 			interpretando = false;
 			*autorizado = false;
-			*resultado = ERRO;
+			*resultado = LOGIN_NAO_AUTORIZADO;
 			return NULL;
 		}
 		printf("FALHA FATAL (interpretadorDeComandos.h)\n");
@@ -115,9 +105,9 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 		printf(" LOG: Cliente Já logado, continuando em interpretadorDeComandos.h interpretaComando()\n");
 	}
 
-	if(email == NULL)
+	if(usuario_obterLogin(usuario) == NULL)
 	{
-		printf(" ERRO: FALHA FATAL (email == NULL) em interpretadorDeComandos.h interpretaComando()\n");
+		printf(" ERRO: FALHA FATAL usuario não conectado detectado em interpretadorDeComandos.h interpretaComando()\n");
 		exit(1);
 		interpretando = false;
 		*resultado = ERRO;
@@ -125,7 +115,9 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 	}
 	else
 	{
-		printf(" LOG: EMAIL NÂO NULO |%s| !!! em interpretadorDeComandos.h interpretaComando()\n", email);
+		//printf(" LOG: EMAIL NÂO NULO |%s| !!! em interpretadorDeComandos.h interpretaComando()\n", usuario_obterLogin);
+		printf(" LOG: Usuario conectado em interpretadorDeComandos.h interpretaComando()\n");
+		usuario_mostrarDados(usuario);
 	}
 
 
@@ -147,7 +139,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 		interpretando = false;
 		printf(" Warning: TIPO DE COMANDO NÂO GERENCIADO: %d (interpretadorDeComandos.h) interpretaComando()\n", tipoComando);
 		// return ERRO;
-		*resultado = ERRO;
+		*resultado = ERRO_COMANDO_INCORRETO;
 		return NULL;
 	}
 
@@ -204,7 +196,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* e
 		case ERRO:
 			printf("Erro na execução do comando\n");
 			interpretando = false;
-			*resultado = ERRO;
+			*resultado = ERRO_DE_EXECUCAO;
 			return NULL;
 			break;
 
