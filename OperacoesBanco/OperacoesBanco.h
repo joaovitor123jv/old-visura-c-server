@@ -2053,6 +2053,7 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 	memset(retorno, '\0', tamanho);
 	
 	//	 int i = 0;
+	bool achouAlgumaCoisa = false;
 	
 	while((linha = mysql_fetch_row(resultado)) != NULL)
 	{
@@ -2089,6 +2090,10 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 		{
 			strcat(retorno, " ");
 		}
+		if (!achouAlgumaCoisa)
+		{
+			achouAlgumaCoisa = true;
+		}
 	}
 	
 	if(retorno == NULL)
@@ -2106,6 +2111,15 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 		mysql_free_result(resultado);
 		resultado = NULL;
 		query = NULL;
+		if (!achouAlgumaCoisa)
+		{
+			if (retorno != NULL)
+			{
+				free(retorno);
+				retorno = NULL;
+			}
+			return strdup("ERRO, nada encontrado");
+		}
 		return retorno;
 	}
 	
