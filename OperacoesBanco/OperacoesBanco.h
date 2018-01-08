@@ -1370,7 +1370,7 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 }
 
 
-bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char *nomeProduto, char *descricao, char *tipoProduto)//DONE
+bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char *nomeProduto, char *descricao, char *tipoProduto)//DONE COM PROBLEMA
 {
 	if(conexao == NULL)
 	{
@@ -2200,6 +2200,7 @@ char *obterTop10ProdutosMelhorAvaliadosDoBanco()
 	memset(retorno, '\0', tamanho);
 	
 	//	 int i = 0;
+	bool achouAlgumaCoisa = false;
 	
 	while((linha = mysql_fetch_row(resultado)) != NULL)
 	{
@@ -2224,6 +2225,10 @@ char *obterTop10ProdutosMelhorAvaliadosDoBanco()
 		{
 			strcat(retorno, " ");
 		}
+		if (!achouAlgumaCoisa)
+		{
+			achouAlgumaCoisa = true;
+		}
 	}
 	
 	if(retorno == NULL)
@@ -2237,6 +2242,15 @@ char *obterTop10ProdutosMelhorAvaliadosDoBanco()
 	{
 		mysql_free_result(resultado);
 		resultado = NULL;
+		if (!achouAlgumaCoisa)
+		{
+			if (retorno != NULL)
+			{
+				free(retorno);
+				retorno=NULL;
+			}
+			return strdup("ERRO, nada encontrado");
+		}
 		return retorno;
 	}
 	
