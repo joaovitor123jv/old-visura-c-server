@@ -1,5 +1,6 @@
 #include <string.h>
 #include <unistd.h>
+#include<signal.h>
 
 #define BUFFER_CLIENTE 1024//(aceitou 1024*1024 (1MB))
 
@@ -21,6 +22,8 @@
 #ifndef bool
 #define bool char
 #endif
+
+
 
 int abreSocket()
 {
@@ -199,16 +202,34 @@ bool enviaMensagemParaCliente(const char *mensagem, void *cliente)
 	return true;
 }
 
+
+
 void *Servidor(void *cliente)
 {
 	char bufferCliente[BUFFER_CLIENTE];
 	bool autorizado = false;
-	//char *email = NULL;
 	char *mensagem = NULL;
 	int resultado;
-	// bool usuarioAnonimo = true;
 	Usuario usuario;
 	init_Usuario(&usuario);
+
+	void sairDaThread(bool liberaInterpretacao)
+	{
+		if(liberaInterpretacao)
+		{
+			interpretando = false;
+		}
+		printf(" LOG: Encerrando thread de Servidor em Server.h Servidor()->sairDaThread()\n");
+		reset_Usuario(&usuario);
+		close(*(int *)cliente);
+		pthread_exit( (void *) 0 );
+	}
+	void interrupcaoForcadaEmThread(int sinal)
+	{
+		printf(" Sinal pego na Thread = |%d| ← \n", sinal);
+		sairDaThread(false);
+	}
+	signal(SIGINT, interrupcaoForcadaEmThread);
 	
 	printf(" LOG: Aguardando por mensagens\n");
 	while(true)
@@ -222,18 +243,7 @@ void *Servidor(void *cliente)
 		read(*(int*)cliente, bufferCliente, sizeof(bufferCliente));
 		printf(" RECEBIDO: |%s|\n", bufferCliente);
 
-		void sairDaThread(bool liberaInterpretacao)
-		{
-			if(liberaInterpretacao)
-			{
-				interpretando = false;
-			}
-			printf(" LOG: Encerrando thread de Servidor em Server.h Servidor()->sairDaThread()\n");
-			close(*(int *)cliente);
-			// liberaMemoriaTalvezUtilizada(email);
-			reset_Usuario(&usuario);
-			pthread_exit( (void *) 0 );
-		}
+		
 
 		/* Se a mensagem recebida não for incompatível com nenhum comando */
 		if( !mensagemDeEscapeDetectada(bufferCliente) )
@@ -246,30 +256,6 @@ void *Servidor(void *cliente)
 
 			printf("\n\n \t*********************Inicio de Interpretação *************\n");
 
-			// if(usuario_obterLogin(&usuario) == NULL)
-			// {
-			// 	//email = interpretaComando(bufferCliente, &autorizado, &resultado, email, &usuarioAnonimo, &usuario);
-			// 	interpretaComando(bufferCliente, &autorizado, &resultado, &usuario)
-
-			// 	usuario_mostrarDados(&usuario);
-
-			// 	//printf(" DEBUG: email era NULO em Server.h Servidor()\n");	
-			// 	//printf(" ***********usuario->login = %s em Server.h Servidor()\n", usuario_obterLogin(&usuario));
-				
-			// 	// if(email != NULL)
-			// 	// {
-			// 	// 	email = strdup(email);
-			// 	// }
-			// 	// else
-			// 	// {
-			// 	// 	printf("\t LOG :Usuário não autorizado em Server.h Servidor()\n");
-			// 	// }
-			// }
-			// else
-			// {
-			// 	// interpretaComando(bufferCliente, &autorizado, &resultado, email, &usuarioAnonimo, &usuario);
-			// 	interpretaComando(bufferCliente, &autorizado, &resultado, &usuario);
-			// }
 			interpretaComando(bufferCliente, &autorizado, &resultado, &usuario);
 
 			switch(resultado)

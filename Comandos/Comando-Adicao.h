@@ -13,7 +13,7 @@ bool addUsuario(Usuario *usuario);//Retorna true se adicionado com sucesso
 
 bool addContratante();//Retorna true se adicionado com sucesso
 
-bool addProduto();//Retorna true se adicionado com sucesso
+bool addProduto(Usuario *usuario);//Retorna true se adicionado com sucesso
 
 bool addCidade();//Retorna true se adicionado com sucesso
 bool addLocalizacao();//Retorna true se adicionado com sucesso
@@ -32,20 +32,7 @@ bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 	}
 	printf(" LOG: **************COMANDO_ADICAO*************** em Comando-Adicao.h comandoAdicionar()\n");
 	usuario_mostrarDados(usuario);
-	// if(email == NULL)
-	// {
-	// 	printf(" ERRO: Email == NULL (Comando-Adicao.h) comandoAdicionar()\n");
-	// 	return false;
-	// }
-	// printf(" \tTipo de usuario em (Comando-Adicao.h comandoAdicionar()) → ");
-	// if( usuarioAnonimo )
-	// {
-	// 	printf(" anonimo\n");
-	// }
-	// else
-	// {
-	// 	printf(" normal\n");
-	// }
+
 	char *token;
 	token = strtok(NULL, " ");
 	if(token == NULL)
@@ -53,8 +40,6 @@ bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 		printf(" ERRO: Comando incorreto (Comando-Adicao.h) comandoAdicionar()\n");
 		return false;
 	}
-
-	// printf(" LOG: TOKEN = |%s| em Comando-Adicao.h comandoAdicionar()\n", token);
 
 	if(strcmp(token, TIPO_VISUALIZACAO) == 0)/* APP 2 2  (Solicitação de adicao de Visualizacao)*/
 	{
@@ -181,7 +166,7 @@ bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 	else if(strcmp(token, TIPO_PRODUTO) == 0)/* APP 2 +    -> Solicita criação de produto na base de dados */
 	{
 		printf(" LOG: Solicitando a adição de Produto em Comando-Adicao.h comandoAdicionar() qqpjah1\n");
-		if(addProduto())
+		if(addProduto(usuario))
 		{
 			printf(" LOG: Produto adicionado com sucesso em comandoAdicionar() Comando-Adicao.h\n");
 			return true;
@@ -1821,307 +1806,632 @@ bool addContratante()// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email s
 	return false;
 }
 
-
-bool addProduto()//DONE
+char *obterIdContratanteDoBancoPorUsuario(Usuario *usuario);
+bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 {
-	char *token = NULL;
-	token = strtok(NULL, " ");//APP 2 + CHAVE_DE_SEGURANCA_PHP
-	if(token == NULL)
+	if (usuario == NULL)
 	{
-		printf(" Warning: Comando insuficiente em addProduto() Comando-Adicao.h CHAVE: kqcbjdui45\n");
+		printf(" Warning: Usuario nulo detectado em Comando-Adicao.h addProduto()\n");
 		return false;
 	}
-
-	if(strlen(token) != TAMANHO_CHAVE_DE_SEGURANCA_PHP)
+	if (usuario_obterLogin(usuario) == NULL)
 	{
-		printf(" Warning: Chave de segurança informada incorreta em addProduto() Comando-Adicao.h cjqkkgjrwv \n");
+		printf(" Warning: Usuario não conectado detectado em Comando-Adicao.h addProduto()\n");
 		return false;
 	}
-	
-	if(strcmp(token, CHAVE_DE_SEGURANCA_PHP) != 0)
-	{
-		printf(" Warning: Chave de segurança informada possui tamanho correto, mas não bate em addProduto() Comando-Adicao.h bkqvej\n");
-		return false;
-	}
-
-	token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante
-	if(token == NULL)
-	{
-		printf(" Warning: Comando insuficiente em addProduto() Comando-Adicao.h 1b34 \n");
-		return false;
-	}
-
-	if(strlen(token) > TAMANHO_CHAVE_PRIMARIA)
-	{
-		printf(" Warning: Tamanho de chave primaria informada exageradamente grande em addProduto() Comando-Adicao.h 47dbj\n");
-		return false;
-	}
-
-	char *idContratante = NULL;
-	//idContratante = malloc(sizeof(char) * (strlen(token) + 1));
-	idContratante = strdup(token);
-
-	if(idContratante == NULL)
-	{
-		printf(" Warning: falha ao copiar de token para idContratante em addProduto() Comando-Adicao.h b2i5\n");
-		return false;
-	}
-
-	token = strtok(NULL, " ");// APP 2 * CHAVE_DE_SEGURANCA_PHP idContratante idProduto
-
-	if(token == NULL)
-	{
-		printf(" Warning: Comando insuficiente em addProduto() Comando-Adicao.h cbne4kj\n");
-		free(idContratante);
-		idContratante = NULL;
-		return false;
-	}
-
-	if(strlen(token) != TAMANHO_ID_PRODUTO)
-	{
-		printf(" Warning: Comando informado é exageradamente grande em addProduto() Comando-Adicao.h bk5j2h\n");
-		free(idContratante);
-		idContratante = NULL;
-		return false;
-	}
-
-	char *idProduto = NULL;
-	// idProduto = malloc(sizeof(char) * (strlen(token) + 1));
-	idProduto = strdup(token);
-
-	if( idProduto == NULL )
-	{
-		printf(" Warning: Faha ao duplicar string de token para idProduto em Comando-Adicao.h addProduto() djasdhjkvbka\n");
-		free(idContratante);
-		idContratante = NULL;
-		return false;
-	}
-
-	token = strtok(NULL, " ");// APP 2 * CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao
-
-	if(token == NULL)
-	{
-		printf(" Warning: Comando insuficiente em addProduto() Comando-Adicao.h 3jh6\n");
-		free(idContratante);
-		free(idProduto);
-		idProduto = NULL;
-		idContratante = NULL;
-		return false;
-	}
-
-	if(strlen(token) > TAMANHO_DURACAO)
-	{
-		printf(" Warning: Comando informado exageradamente grande em addProduto() Comando-Adicao.h ehjik\n");
-		free(idProduto);
-		free(idContratante);
-		idContratante = NULL;
-		idProduto = NULL;
-		return false;
-	}
-
-	char *duracao = NULL;
-	// duracao = malloc(sizeof(char) * (strlen(token) + 1));
-	duracao = strdup(token);
-
-	if(duracao == NULL)
-	{
-		printf(" Warning: Não foi possivel copiar de token para duracao em addProduto() Comando-Adicao.h sadkjh4\n");
-		free(idContratante);
-		free(idProduto);
-		idProduto = NULL;
-		idContratante = NULL;
-		return false;
-	}
-
-	
-	token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao nomeProduto
-	if(token == NULL)
-	{
-		printf(" Warning: Comando insuficiente em addProduto() Comando-Adicao.h\n");
-		free(idProduto);
-		free(idContratante);
-		free(duracao);
-		duracao = NULL;
-		idContratante = NULL;
-		idProduto = NULL;
-		return false;
-	}
-
-	if(strlen(token) > TAMANHO_NOME)
-	{
-		printf(" Warning: Tamanho de token informado é exageradamente grande em addProduto() Comando-Adicao.h 5jhk2g\n");
-		free(idProduto);
-		free(duracao);
-		free(idContratante);
-		idContratante = NULL;
-		duracao = NULL;
-		idProduto = NULL;
-		return false;
-	}
-
+	char *descricao = NULL;
+	char *tipoProduto = NULL;
 	char *nomeProduto = NULL;
-	//nomeProduto = malloc(sizeof(char) * (strlen(token) + 1));
-	nomeProduto = strdup(token);
+	char *duracao = NULL;
+	char *idProduto = NULL;
+	char *idContratante = NULL;
+	char *token = NULL;
+	char *categoria = NULL;// Acabar de implementar
 
-	if(nomeProduto == NULL)
+	if (usuario_PermissaoContratante(usuario))
 	{
-		printf(" Warning: Falha ao copiar de token para nomeProduto em addProduto() Comando-Adicao.h jkehqk57df\n");
-		free(idProduto);
-		free(idContratante);
-		free(duracao);
-		duracao = NULL;
-		idContratante = NULL;
-		idProduto = NULL;
-		return false;
-	}
-
-	token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao tipoProduto nomeProduto
-	if (token == NULL)
-	{
-		printf(" Warning: Tipo de produto não especificado em Comando-Adicao.h addProduto() askbvu8ra8sd7\n");
-		free(idProduto);
-		free(idContratante);
-		free(duracao);
-		free(nomeProduto);
-		nomeProduto = NULL;
-		duracao = NULL;
-		idContratante = NULL;
-		idProduto = NULL;
-		return false;
-	}
-	if (strlen(token) != TAMANHO_TIPO_PRODUTO)
-	{
-		printf(" Warning: Tamanho do tipo do produto está exageradamente grande em Comando-Adicao.h addProduto() virb89s7d8hfs\n");
-		free(idProduto);
-		free(idContratante);
-		free(duracao);
-		free(nomeProduto);
-		nomeProduto = NULL;
-		duracao = NULL;
-		idContratante = NULL;
-		idProduto = NULL;
-		return false;
-	}
-
-	char *tipoProduto = strdup(token);
-	if (tipoProduto == NULL)
-	{
-		printf(" Warning: Falha ao duplicar tipo de produto em Comando-Adicao.h addProduto() ewiugh89da7dadfsfd\n");
-		free(idProduto);
-		free(idContratante);
-		free(duracao);
-		free(nomeProduto);
-		nomeProduto = NULL;
-		duracao = NULL;
-		idContratante = NULL;
-		idProduto = NULL;
-		return false;
-	}
-
-	token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao tipoProduto nomeProduto
-	if(token == NULL)
-	{
-		if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, NULL, tipoProduto))//TODO Adicionar descrição de produto
+		token = strtok(NULL, " ");// APP 2 + idProduto
+		if (token == NULL)
 		{
-			printf(" LOG: Produto adicionado com sucesso ao banco de dados em addProdutoAoBanco() Comando-Adicao.h\n");
-			free(duracao);
+			printf(" Warning: Comando insuficiente em Comando-Adicao.h addProduto() asvnr89asd9\n");
+			return false;
+		}
+		if( !stringTamanhoIgual(token, TAMANHO_ID_PRODUTO) )
+		{
+			printf(" Warning: Tamanho de id de produto insuficiente em Comando-Adicao.h addProduto() dnioriasd\n");
+			return false;
+		}
+		idProduto = strdup(token);
+		if (idProduto == NULL)
+		{
+			printf(" ERRO: Falha ao duplicar string de idProduto em Comando-Adicao.h addProduto() asibb8r9asd\n");
+			return false;
+		}
+		token = strtok(NULL, " ");// APP 2 + idProduto duracao
+		if (token == NULL)
+		{
+			printf(" Warning: Comando insuficiente detectado em Comando-Adicao.h addProduto() aoi8hbv89a78sd\n");
 			free(idProduto);
-			free(idContratante);
+			idProduto = NULL;
+			return false;
+		}
+		if (stringMaior(token, TAMANHO_DURACAO))
+		{
+			printf(" Warning: Comando exageradamente grande detectado em Comando-Adicao.h addProduto() ashbvr98as7d3\n");
+			free(idProduto);
+			idProduto = NULL;
+			return false;
+		}
+		duracao = strdup(token);
+		if (duracao == NULL)
+		{
+			printf(" Warning: Falha ao duplicar duracao em Comando-Adicao.h addProduto()\n");
+			free(idProduto);
+			idProduto = NULL;
+			return false;
+		}
+		token = strtok(NULL, " ");// APP 2 + idProduto duracao nomeProduto
+		if (token == NULL)
+		{
+			printf(" Warning: Comando insuficiente em Comando-Adicao.h addProduto() sahvuroiuyasd\n");
+			free(idProduto);
+			free(duracao);
+			duracao = NULL;
+			idProduto = NULL;
+			return false;
+		}
+		if (stringMaior(token, TAMANHO_NOME_PRODUTO))
+		{
+			printf(" Warning: Tamanho de nome de produto exageradamente grande em Comando-Adicao.h addProduto() akbh7r98a7sd\n");
+			free(idProduto);
+			free(duracao);
+			duracao = NULL;
+			idProduto = NULL;
+			return false;
+		}
+		nomeProduto = strdup(token);
+		if (nomeProduto == NULL)
+		{
+			printf(" Warning: falha ao duplicar nome de produto em Comando-Adicao.h addProduto() ahvr89a7sr\n");
+			free(idProduto);
+			free(duracao);
+			duracao = NULL;
+			idProduto = NULL;
+			return false;
+		}
+		token = strtok(NULL, " ");// APP 2 + idProduto duracao nomeProduto tipoProduto
+		if (token == NULL)
+		{
+			printf(" Warning: Comando insuficiente detectado em Comando-Adicao.h addProduto() averuiuasy\n");
+			free(duracao);
+			duracao = NULL;
+			free(idProduto);
+			idProduto = NULL;
+			free(nomeProduto);
+			nomeProduto = NULL;
+			return false;
+		}
+		if (stringMaior(token, TAMANHO_TIPO_PRODUTO))
+		{
+			printf(" Warning: Tamanho do tipo de produto é exageradamente grande em Comando-Adicao.h addProduto() a09878dar\n");
+			free(idProduto);
+			free(duracao);
+			free(nomeProduto);
+			nomeProduto = NULL;
+			duracao = NULL;
+			idProduto = NULL;
+			return false;
+		}
+		tipoProduto = strdup(token);
+		if (tipoProduto == NULL)
+		{
+			printf(" Warning: Falha ao duplicar tipo de produto em Comando-Adicao.h addProduto() asioubv879asd4\n");
+			free(idProduto);
+			free(duracao);
+			free(nomeProduto);
+			nomeProduto = NULL;
+			duracao = NULL;
+			idProduto = NULL;
+			return false;
+		}
+		idContratante = obterIdContratanteDoBancoPorUsuario(usuario);
+		if (idContratante == NULL)
+		{
+			printf(" Warning: Falha ao obter id de contratante do banco de dados em Comando-Adicao.h addProduto() askbgvr8u9asud\n");
+			free(idProduto);
+			free(duracao);
+			free(nomeProduto);
 			free(tipoProduto);
 			tipoProduto = NULL;
-			idContratante = NULL;
-			idProduto = NULL;
 			duracao = NULL;
-			return true;
+			nomeProduto = NULL;
+			idProduto = NULL;
+			return false;
+		}
+		token = strtok(NULL, " ");// APP 2 + idProduto duracao nomeProduto tipoProduto categoriaProduto
+		if (token == NULL)// Se o cliente não informar categoria de produto
+		{
+			printf(" LOG: Usuario nao informou Categoria de produto em Comando-Adicao.h addProduto()\n");
+			if ( addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, NULL, tipoProduto, NULL) )
+			{
+				printf(" LOG: Produto adicionado ao banco de dados com sucesso em Comando-Adicao.h addProduto() asdjhfsf\n");
+				free(idProduto);
+				free(duracao);
+				free(nomeProduto);
+				free(idContratante);
+				free(tipoProduto);
+				tipoProduto = NULL;
+				idContratante = NULL;
+				duracao = NULL;
+				nomeProduto = NULL;
+				idProduto = NULL;
+				return true;
+			}
+			else
+			{
+				printf(" Warning: Falha ao adicionar produto ao banco de dados em Comando-Adicao.h addProduto() askjhsdsa\n");
+				free(idProduto);
+				free(duracao);
+				free(nomeProduto);
+				free(idContratante);
+				free(tipoProduto);
+				tipoProduto = NULL;
+				idContratante = NULL;
+				duracao = NULL;
+				nomeProduto = NULL;
+				idProduto = NULL;
+				return false;
+			}
+			
 		}
 		else
 		{
-			printf(" Warning: Não foi possivel adicionar produto ao banco de dadoe em addProduto() Comando-Adicao.h bcejqk\n");
-			free(duracao);
+			printf(" LOG: Cliente informando categoria de produto em Comando-Adicao.h addProduto() sakdjhsajkr\n");
+			if (stringMaior(token, TAMANHO_CATEGORIA))
+			{
+				printf(" Warning: Categoria de tamanho exageradamente grande em Comando-Adicao.h addProduto() askjhguias\n");
+				free(idProduto);
+				free(duracao);
+				free(nomeProduto);
+				free(idContratante);
+				free(tipoProduto);
+				tipoProduto = NULL;
+				idContratante = NULL;
+				duracao = NULL;
+				nomeProduto = NULL;
+				idProduto = NULL;
+				return false;
+			}
+			categoria = strdup(token);
+			if (categoria == NULL)
+			{
+				printf(" Warning: Falha ao duplicar categoria em Comando-Adicao.h addProduto() sajobrasd\n");
+				free(idProduto);
+				free(duracao);
+				free(nomeProduto);
+				free(idContratante);
+				free(tipoProduto);
+				tipoProduto = NULL;
+				idContratante = NULL;
+				duracao = NULL;
+				nomeProduto = NULL;
+				idProduto = NULL;
+				return false;
+			}
+			token = strtok(NULL, " ");
+			if (token == NULL)
+			{
+				printf(" LOG: Cliente não está informando descricao de ṕroduto em Comando-Adicao.h addProduto() sakveuaisd\n");
+				if (addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, NULL, tipoProduto, categoria))
+				{
+					printf(" LOG: Produto adicionado ao banco de dados com sucesso em Comando-Adicao.h addProduto() asvber98as7d3\n");
+					free(idProduto);
+					free(duracao);
+					free(nomeProduto);
+					free(idContratante);
+					free(tipoProduto);
+					tipoProduto = NULL;
+					idContratante = NULL;
+					duracao = NULL;
+					nomeProduto = NULL;
+					idProduto = NULL;
+					return true;
+				}
+				else
+				{
+					printf(" Warning: Falha ao adicionar produto ao banco de dados em Comando-Adicao.h addProduto() saouyr8usd\n");
+					free(idProduto);
+					free(duracao);
+					free(nomeProduto);
+					free(idContratante);
+					free(tipoProduto);
+					free(categoria);
+					categoria = NULL;
+					tipoProduto = NULL;
+					idContratante = NULL;
+					duracao = NULL;
+					nomeProduto = NULL;
+					idProduto = NULL;
+					return false;
+				}
+			}
+			else
+			{
+				if (stringMaior(token, TAMANHO_DESCRICAO_PRODUTO))
+				{
+					printf(" Warning: Descricao exageradamente grande em Comando-Adicao.h addProduto() askjdhjkr\n");
+					free(idProduto);
+					free(duracao);
+					free(nomeProduto);
+					free(idContratante);
+					free(tipoProduto);
+					free(categoria);
+					categoria = NULL;
+					tipoProduto = NULL;
+					idContratante = NULL;
+					duracao = NULL;
+					nomeProduto = NULL;
+					idProduto = NULL;
+					return false;
+				}
+				descricao = strdup(token);
+				if (descricao == NULL)
+				{
+					printf(" Warning: Falha ao duplicar descricao em Comando-Adicao.h addProduto() sakjr0asd\n");
+					free(idProduto);
+					free(duracao);
+					free(nomeProduto);
+					free(idContratante);
+					free(tipoProduto);
+					free(categoria);
+					categoria = NULL;
+					tipoProduto = NULL;
+					idContratante = NULL;
+					duracao = NULL;
+					nomeProduto = NULL;
+					idProduto = NULL;
+					return false;
+				}
+				if (addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, descricao, tipoProduto, categoria))
+				{
+					printf(" LOG: Produto adicionado ao banco de dados com sucesso em Comando-Adicao.h addProduto() asiurbhuiasd\n");
+					free(idProduto);
+					free(duracao);
+					free(nomeProduto);
+					free(idContratante);
+					free(tipoProduto);
+					free(categoria);
+					free(descricao);
+					descricao = NULL;
+					categoria = NULL;
+					tipoProduto = NULL;
+					idContratante = NULL;
+					duracao = NULL;
+					nomeProduto = NULL;
+					idProduto = NULL;
+					return true;
+				}
+				else
+				{
+					printf(" Warning: Falha ao adicionar produto ao banco de dados em Comando-Adicao.h addProduto() eoasb7890sad\n");
+					free(idProduto);
+					free(duracao);
+					free(nomeProduto);
+					free(idContratante);
+					free(tipoProduto);
+					free(categoria);
+					free(descricao);
+					descricao = NULL;
+					categoria = NULL;
+					tipoProduto = NULL;
+					idContratante = NULL;
+					duracao = NULL;
+					nomeProduto = NULL;
+					idProduto = NULL;
+					return true;
+				}
+			}
+			return false;
+		}
+		return false;
+
+	}
+	else if (usuario_PermissaoRoot(usuario))
+	{
+		
+		token = strtok(NULL, " ");//APP 2 + CHAVE_DE_SEGURANCA_PHP
+		if(token == NULL)
+		{
+			printf(" Warning: Comando insuficiente em addProduto() Comando-Adicao.h CHAVE: kqcbjdui45\n");
+			return false;
+		}
+
+		if(strlen(token) != TAMANHO_CHAVE_DE_SEGURANCA_PHP)
+		{
+			printf(" Warning: Chave de segurança informada incorreta em addProduto() Comando-Adicao.h cjqkkgjrwv \n");
+			return false;
+		}
+		
+		if(strcmp(token, CHAVE_DE_SEGURANCA_PHP) != 0)
+		{
+			printf(" Warning: Chave de segurança informada possui tamanho correto, mas não bate em addProduto() Comando-Adicao.h bkqvej\n");
+			return false;
+		}
+
+		token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante
+		if(token == NULL)
+		{
+			printf(" Warning: Comando insuficiente em addProduto() Comando-Adicao.h 1b34 \n");
+			return false;
+		}
+
+		if(strlen(token) > TAMANHO_CHAVE_PRIMARIA)
+		{
+			printf(" Warning: Tamanho de chave primaria informada exageradamente grande em addProduto() Comando-Adicao.h 47dbj\n");
+			return false;
+		}
+
+		idContratante = strdup(token);
+
+		if(idContratante == NULL)
+		{
+			printf(" Warning: falha ao copiar de token para idContratante em addProduto() Comando-Adicao.h b2i5\n");
+			return false;
+		}
+
+		token = strtok(NULL, " ");// APP 2 * CHAVE_DE_SEGURANCA_PHP idContratante idProduto
+
+		if(token == NULL)
+		{
+			printf(" Warning: Comando insuficiente em addProduto() Comando-Adicao.h cbne4kj\n");
+			free(idContratante);
+			idContratante = NULL;
+			return false;
+		}
+
+		if(strlen(token) != TAMANHO_ID_PRODUTO)
+		{
+			printf(" Warning: Comando informado é exageradamente grande em addProduto() Comando-Adicao.h bk5j2h\n");
+			free(idContratante);
+			idContratante = NULL;
+			return false;
+		}
+
+		idProduto = strdup(token);
+
+		if( idProduto == NULL )
+		{
+			printf(" Warning: Faha ao duplicar string de token para idProduto em Comando-Adicao.h addProduto() djasdhjkvbka\n");
+			free(idContratante);
+			idContratante = NULL;
+			return false;
+		}
+
+		token = strtok(NULL, " ");// APP 2 * CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao
+
+		if(token == NULL)
+		{
+			printf(" Warning: Comando insuficiente em addProduto() Comando-Adicao.h 3jh6\n");
+			free(idContratante);
+			free(idProduto);
+			idProduto = NULL;
+			idContratante = NULL;
+			return false;
+		}
+
+		if(strlen(token) > TAMANHO_DURACAO)
+		{
+			printf(" Warning: Comando informado exageradamente grande em addProduto() Comando-Adicao.h ehjik\n");
 			free(idProduto);
 			free(idContratante);
-			free(tipoProduto);
-			tipoProduto = NULL;
 			idContratante = NULL;
 			idProduto = NULL;
-			duracao = NULL;
 			return false;
+		}
+
+		duracao = strdup(token);
+
+		if(duracao == NULL)
+		{
+			printf(" Warning: Não foi possivel copiar de token para duracao em addProduto() Comando-Adicao.h sadkjh4\n");
+			free(idContratante);
+			free(idProduto);
+			idProduto = NULL;
+			idContratante = NULL;
+			return false;
+		}
+
+		
+		token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao nomeProduto
+		if(token == NULL)
+		{
+			printf(" Warning: Comando insuficiente em addProduto() Comando-Adicao.h\n");
+			free(idProduto);
+			free(idContratante);
+			free(duracao);
+			duracao = NULL;
+			idContratante = NULL;
+			idProduto = NULL;
+			return false;
+		}
+
+		if(strlen(token) > TAMANHO_NOME)
+		{
+			printf(" Warning: Tamanho de token informado é exageradamente grande em addProduto() Comando-Adicao.h 5jhk2g\n");
+			free(idProduto);
+			free(duracao);
+			free(idContratante);
+			idContratante = NULL;
+			duracao = NULL;
+			idProduto = NULL;
+			return false;
+		}
+
+		nomeProduto = strdup(token);
+
+		if(nomeProduto == NULL)
+		{
+			printf(" Warning: Falha ao copiar de token para nomeProduto em addProduto() Comando-Adicao.h jkehqk57df\n");
+			free(idProduto);
+			free(idContratante);
+			free(duracao);
+			duracao = NULL;
+			idContratante = NULL;
+			idProduto = NULL;
+			return false;
+		}
+
+		token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao tipoProduto nomeProduto
+		if (token == NULL)
+		{
+			printf(" Warning: Tipo de produto não especificado em Comando-Adicao.h addProduto() askbvu8ra8sd7\n");
+			free(idProduto);
+			free(idContratante);
+			free(duracao);
+			free(nomeProduto);
+			nomeProduto = NULL;
+			duracao = NULL;
+			idContratante = NULL;
+			idProduto = NULL;
+			return false;
+		}
+		if (strlen(token) != TAMANHO_TIPO_PRODUTO)
+		{
+			printf(" Warning: Tamanho do tipo do produto está exageradamente grande em Comando-Adicao.h addProduto() virb89s7d8hfs\n");
+			free(idProduto);
+			free(idContratante);
+			free(duracao);
+			free(nomeProduto);
+			nomeProduto = NULL;
+			duracao = NULL;
+			idContratante = NULL;
+			idProduto = NULL;
+			return false;
+		}
+
+		tipoProduto = strdup(token);
+		if (tipoProduto == NULL)
+		{
+			printf(" Warning: Falha ao duplicar tipo de produto em Comando-Adicao.h addProduto() ewiugh89da7dadfsfd\n");
+			free(idProduto);
+			free(idContratante);
+			free(duracao);
+			free(nomeProduto);
+			nomeProduto = NULL;
+			duracao = NULL;
+			idContratante = NULL;
+			idProduto = NULL;
+			return false;
+		}
+
+		token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao tipoProduto nomeProduto
+		if(token == NULL)
+		{
+			if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, NULL, tipoProduto, NULL))//TODO Adicionar descrição de produto
+			{
+				printf(" LOG: Produto adicionado com sucesso ao banco de dados em addProdutoAoBanco() Comando-Adicao.h\n");
+				free(duracao);
+				free(idProduto);
+				free(idContratante);
+				free(tipoProduto);
+				tipoProduto = NULL;
+				idContratante = NULL;
+				idProduto = NULL;
+				duracao = NULL;
+				return true;
+			}
+			else
+			{
+				printf(" Warning: Não foi possivel adicionar produto ao banco de dadoe em addProduto() Comando-Adicao.h bcejqk\n");
+				free(duracao);
+				free(idProduto);
+				free(idContratante);
+				free(tipoProduto);
+				tipoProduto = NULL;
+				idContratante = NULL;
+				idProduto = NULL;
+				duracao = NULL;
+				return false;
+			}
+		}
+		else
+		{
+			// Se o usuario informar descricao de produto
+			if(strlen(token) > TAMANHO_DESCRICAO_PRODUTO)
+			{
+				printf(" Warning: Tamanho de descricao informada é exageradamente grande para produto em Comando-Adicao.h addProduto() q45w687vw\n");
+				free(idProduto);
+				free(idContratante);
+				free(duracao);
+				free(tipoProduto);
+				tipoProduto = NULL;
+				duracao = NULL;
+				idContratante = NULL;
+				idProduto = NULL;
+				return false;
+			}
+
+			descricao = strdup(token);
+
+			if(descricao == NULL)
+			{
+				printf(" Warning: Falha ao copiar de token para descricao em Comando-Adicao.h addProduto() q4r84t32saw\n");
+				free(duracao);
+				free(idProduto);
+				free(idContratante);
+				free(tipoProduto);
+				tipoProduto = NULL;
+				idContratante = NULL;
+				idProduto = NULL;
+				duracao = NULL;
+				return false;
+			}
+
+			if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, descricao, tipoProduto, NULL))
+			{
+				printf(" LOG: Produto adicionado com sucesso ao banco de dados em addProdutoAoBanco() Comando-Adicao.h\n");
+				free(duracao);
+				free(idProduto);
+				free(idContratante);
+				free(descricao);
+				free(tipoProduto);
+				tipoProduto = NULL;
+				descricao = NULL;
+				idContratante = NULL;
+				idProduto = NULL;
+				duracao = NULL;
+				return true;
+			}
+			else
+			{
+				printf(" Warning: Não foi possivel adicionar produto ao banco de dadoe em addProduto() Comando-Adicao.h bcejqk\n");
+				free(duracao);
+				free(idProduto);
+				free(idContratante);
+				free(descricao);
+				free(tipoProduto);
+				tipoProduto = NULL;
+				descricao = NULL;
+				idContratante = NULL;
+				idProduto = NULL;
+				duracao = NULL;
+				return false;
+			}
 		}
 	}
 	else
 	{
-		// Se o usuario informar descricao de produto
-		if(strlen(token) > TAMANHO_DESCRICAO_PRODUTO)
-		{
-			printf(" Warning: Tamanho de descricao informada é exageradamente grande para produto em Comando-Adicao.h addProduto() q45w687vw\n");
-			free(idProduto);
-			free(idContratante);
-			free(duracao);
-			free(tipoProduto);
-			tipoProduto = NULL;
-			duracao = NULL;
-			idContratante = NULL;
-			idProduto = NULL;
-			return false;
-		}
-		char *descricao = NULL;
-		//descricao = malloc(sizeof(char) * (strlen(token) + 1));
-		descricao = strdup(token);
-
-		if(descricao == NULL)
-		{
-			printf(" Warning: Falha ao copiar de token para descricao em Comando-Adicao.h addProduto() q4r84t32saw\n");
-			free(duracao);
-			free(idProduto);
-			free(idContratante);
-			free(tipoProduto);
-			tipoProduto = NULL;
-			idContratante = NULL;
-			idProduto = NULL;
-			duracao = NULL;
-			return false;
-		}
-
-		if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, descricao, tipoProduto))
-		{
-			printf(" LOG: Produto adicionado com sucesso ao banco de dados em addProdutoAoBanco() Comando-Adicao.h\n");
-			free(duracao);
-			free(idProduto);
-			free(idContratante);
-			free(descricao);
-			free(tipoProduto);
-			tipoProduto = NULL;
-			descricao = NULL;
-			idContratante = NULL;
-			idProduto = NULL;
-			duracao = NULL;
-			return true;
-		}
-		else
-		{
-			printf(" Warning: Não foi possivel adicionar produto ao banco de dadoe em addProduto() Comando-Adicao.h bcejqk\n");
-			free(duracao);
-			free(idProduto);
-			free(idContratante);
-			free(descricao);
-			free(tipoProduto);
-			tipoProduto = NULL;
-			descricao = NULL;
-			idContratante = NULL;
-			idProduto = NULL;
-			duracao = NULL;
-			return false;
-		}
-
-		if(descricao != NULL)
-		{
-			free(descricao);
-			descricao = NULL;
-			return false;
-		}
+		printf(" Warning: Usuario não possui privilegios suficientes para executar esse comando em Comando-Adicao.h addProduto()\n");
+		return false;
 	}
 
 	printf(" Warning: Erro desconhecido em addProduto() Comando-Adicao.h chagsjkchsajk\n");
+	if(descricao != NULL)
+	{
+		free(descricao);
+		descricao = NULL;
+		return false;
+	}
 
 	if(idProduto != NULL)
 	{

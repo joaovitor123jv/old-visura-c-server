@@ -69,10 +69,6 @@ int usuario_checarLogin(const char *email, const char *senha);//Retorna o nível
 
 void init_Usuario(Usuario *usuario)
 {
-	if (usuario == NULL)
-	{
-		return;
-	}
 	usuario->login = NULL;
 	usuario->tamanhoLogin = 0;
 	usuario->senha = NULL;

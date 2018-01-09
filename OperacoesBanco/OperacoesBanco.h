@@ -1371,7 +1371,7 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 }
 
 
-bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char *nomeProduto, char *descricao, char *tipoProduto)//DONE COM PROBLEMA
+bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char *nomeProduto, char *descricao, char *tipoProduto, char *categoria)//DONE COM PROBLEMA
 {
 	if(conexao == NULL)
 	{
@@ -1431,9 +1431,8 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 	int tamanho;
 	char *query = NULL;
 	
-	if(descricao == NULL)
+	if (categoria == NULL)// Se a categoria nao for informada
 	{
-		//tamanho = 101 + 1 + strlen(idContratante) + strlen(idProduto) + strlen(duracao) + strlen(nomeProduto) + strlen(tipoProduto);
 		tamanho = 112 + strlen(idContratante) + strlen(duracao) + strlen(nomeProduto) + strlen(tipoProduto);//Otimizado
 		query = (char *)malloc(sizeof(char) * tamanho);
 		
@@ -1481,56 +1480,76 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 		
 		return true;
 	}
-	else
+	else// Se a categoria for informada
 	{
-		// Se a descricao for informada
-		//tamanho = 114 + 1 + strlen(idContratante) + strlen(idProduto) + strlen(duracao) + strlen(nomeProduto) + strlen(descricao) + strlen(tipoProduto);
-		tamanho = 125 + strlen(idContratante) + strlen(duracao) + strlen(nomeProduto) + strlen(descricao) + strlen(tipoProduto);//Otimizado
-		query = (char *)malloc(sizeof(char) * tamanho);
-		
-		if(query == NULL)
+		if(descricao == NULL)// Descricao nao informada
 		{
-			printf(" Warning: Não foi possivel alocar memoria para query em addProdutoAoBanco() OperacoesBanco.h 3kjhv73b\n");
-			return false;
-		}
-		
-		snprintf(query, tamanho, "INSERT INTO produto(idproduto,nomeproduto,duracao,contratante_idcontratante,descricao,tipo) VALUES(\'%s\',\'%s\',%s,%s,\'%s\',\'%s\');", idProduto, nomeProduto, duracao, idContratante, descricao, tipoProduto);
-		
-		if(query == NULL)
-		{
-			printf(" Warning: Não foi possivel formatar query em addProdutoAoBanco() OperacoesBanco.h c3jjhvr87jh\n");
-			return false;
-		}
-		
-		if(mysql_query(conexao, query))//Se ocorrer algum erro
-		{
-			printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addProdutoAoBanco())\n");
-			printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
-			printf("\t Query enviada =  |%s|\n", query);
-			free(query);
-			query = NULL;
-			if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+			// tamanho =114 + strlen(categoria) + strlen(tipoProduto) + strlen(idContratante) + strlen(idProduto) + strlen(nomeProduto) + strlen(duracao) + 1;
+			tamanho = 125 + strlen(categoria) + strlen(tipoProduto) + strlen(idContratante) + strlen(nomeProduto) + strlen(duracao);
+			query = malloc(sizeof(char) * tamanho);
+			if (query == NULL)
 			{
-				printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addProdutoAoBanco() 1qa5456dasd\n");
-				if(conectarBanco())
-				{
-					printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addProdutoAoBanco() asd456\n");
-				}
-				else
-				{
-					conexao = NULL;
-					mysql_close(conexao);
-					mysql_thread_end();
-					free(conexao);
-					printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addProdutoAoBanco() as4d5asd\n");
-				}
+				printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addProdutoAoBanco() sakjdhgrj\n");
+				return false;
 			}
-			return false;
+			snprintf(query, tamanho, "INSERT INTO produto(idproduto,nomeproduto,duracao,contratante_idcontratante,tipo,categoria) VALUES(\'%s\',\'%s\',%s,%s,\'%s\',\'%s\');", idProduto, nomeProduto, duracao, idContratante, tipoProduto, categoria);
+			if (query == NULL)
+			{
+				printf(" Warning: Falha ao formatar string para query em OperacoesBanco.h addProdutoAoBanco() asivrhasd\n");
+				return false;
+			}
+			if (executaQuery(query))
+			{
+				printf(" LOG: Produto adicionado com sucesso ao banco de dados em OperacoesBanco.h addProdutoAoBanco() \n");
+				free(query);
+				query = NULL;
+				return true;
+			}
+			else
+			{
+				printf(" Warning: Falha ao adicionar produto ao banco de dados em OperacoesBanco.h addProdutoAoBanco() askjghedsa");
+				free(query);
+				query = NULL;
+				return false;
+			}
 		}
-		free(query);
-		query = NULL;
-		
-		return true;
+		else// Categoria e descricao informados
+		{
+			// Se a descricao for informada
+			//tamanho = 127 + 1 + strlen(idContratante) + strlen(idProduto) + strlen(duracao) + strlen(nomeProduto) + strlen(descricao) + strlen(tipoProduto) + strlen(categoria);
+			tamanho = 138 + strlen(idContratante) + strlen(duracao) + strlen(nomeProduto) + strlen(descricao) + strlen(tipoProduto) + strlen(categoria);//Otimizado
+			query = (char *)malloc(sizeof(char) * tamanho);
+			
+			if(query == NULL)
+			{
+				printf(" Warning: Não foi possivel alocar memoria para query em addProdutoAoBanco() OperacoesBanco.h 3kjhv73b\n");
+				return false;
+			}
+			
+			snprintf(query, tamanho, "INSERT INTO produto(idproduto,nomeproduto,duracao,contratante_idcontratante,descricao,tipo,categoria) VALUES(\'%s\',\'%s\',%s,%s,\'%s\',\'%s\',\'%s\');", idProduto, nomeProduto, duracao, idContratante, descricao, tipoProduto,categoria);
+			
+			if(query == NULL)
+			{
+				printf(" Warning: Não foi possivel formatar query em addProdutoAoBanco() OperacoesBanco.h c3jjhvr87jh\n");
+				return false;
+			}
+			
+			if (executaQuery(query))
+			{
+				printf(" LOG: Produto adicionado com sucesso ao banco de dados em OperacoesBanco.h addProdutoAoBanco() sakfjhgrasd\n");
+				printf("\n");
+				free(query);
+				query = NULL;
+				return true;
+			}
+			else
+			{
+				printf(" Warning: Falha ao adicionar produto ao banco de dados em OperacoesBanco.h addProdutoAoBanco() sadkjhrasd\n");
+				free(query);
+				query = NULL;
+				return false;
+			}
+		}
 	}
 }
 

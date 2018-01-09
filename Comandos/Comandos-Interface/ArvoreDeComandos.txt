@@ -96,21 +96,32 @@ APP
 		/* FUNÇÕES PARA ADMINISTRADORES - Sujeitas a alterações */
 
 		+	(TIPO_PRODUTO)
-			CHAVE_DE_SEGURANCA
-				idContratante	(ID da empresa que vai adicionar o produto)
-					idProduto
-						duracao	(O tempo que o produto vai durar, em dias)
-							nomeProduto	(nome do produto)
-								(adiciona um produto que vai ser dado como criado pelo contratante referenciado por idContratante, com duracao(inteiro) em dias, e nomeProduto como seu "nome que vai aparecer pro público", deixei descricao como não obrigatória)
+			(SE ESTIVER LOGADO COMO ROOT)
+				CHAVE_DE_SEGURANCA
+					idContratante	(ID da empresa que vai adicionar o produto)
+						idProduto
+							duracao	(O tempo que o produto vai durar, em dias)
+								nomeProduto	(nome do produto)
+									(adiciona um produto que vai ser dado como criado pelo contratante referenciado por idContratante, com duracao(inteiro) em dias, e nomeProduto como seu "nome que vai aparecer pro público", deixei descricao como não obrigatória)
 
-								tipoProduto	(O Tipo do produto em si, se é RA ou RV ou misto... sendo) (obrigatório)
-											(1 == RA)
-											(2 == RV)
-											(3 == RV/RA)
-												(MANDAR O NUMERO.... ou 1, ou 2, ou 3)
+									tipoProduto	(O Tipo do produto em si, se é RA ou RV ou misto... sendo) (obrigatório)
+												(1 == RA)
+												(2 == RV)
+												(3 == RV/RA)
+													(MANDAR O NUMERO.... ou 1, ou 2, ou 3)
 
-									descricaoProduto	(descricao do produto que vai aparecer ao usuario, não obrigatório)
-										(adiciona um produto que vai ser dado como criado pelo contratante referenciado por idContratante, com duracao(inteiro) em dias, e nomeProduto como seu "nome que vai aparecer pro público", deixei descricao como não obrigatória)
+										descricaoProduto	(descricao do produto que vai aparecer ao usuario, não obrigatório)
+											(adiciona um produto que vai ser dado como criado pelo contratante referenciado por idContratante, com duracao(inteiro) em dias, e nomeProduto como seu "nome que vai aparecer pro público", deixei descricao como não obrigatória)
+			(SE ESTIVER LOGADO COMO CONTRATANTE) (empresa cadastrada)
+				idProduto	(id desejado para o produto)
+					duracao	(duracao do produto em dias)
+						nomeProduto	(nome do produto, que será mostrado para os clientes)
+							tipoProduto	(tipo do produto em si, se é RA ou RV ou misto..., sendo)
+										(1 → Produto do tipo Realidade Aumentada)
+										(2 → Produto do tipo Realidade Virtual)
+										(3 → Produto do tipo Realidade Aumentada e Virtual)
+								categoria	(Categoria do produto, sendo dois caracteres quaisquer, não sendo espaço em branco) (não obrigatorio)
+									descricaoProduto	(A descricao que será mostrada no aplicativo, para o produto (não obrigatória))
 
 		$C	(TIPO_CONTRATANTE)
 			CHAVE_DE_SEGURANCA

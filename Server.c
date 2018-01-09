@@ -68,7 +68,7 @@ int main(void)
 			return 0;
 		}
 
-		if(pthread_create(&thread, NULL, Servidor, (void *)&clienteSockfd) != 0)// ERRO aqui
+		if(pthread_create(&thread, NULL, Servidor, (void *)&clienteSockfd) != 0)// Se der erro ao tentar criar a thread
 		{
 			printf(" Falha ao tentar criar Thread\n");
 			printf(" Provavel limite de threads simultâneas atingido\n");
@@ -77,7 +77,7 @@ int main(void)
 		}
 		x++;
 		printf(" LOG:\t\t\t\t\t\t\t\t\t\t\t\t Cliente %d aceito em Server.c main(void)\n", x);
-		pthread_detach(thread);/* Procurar o que essa função faz depois */
+		pthread_detach(thread);/* torna thread independente (destaca thread) */
 	}
 	return 0;
 }

@@ -340,7 +340,6 @@ char *retornaUnicoRetornoDaQuery(char *query)// Se chegou aqui, a conexao está 
 				return strdup("ERRO: nada encontrado");
 			}
 		}
-		
 	}
 }
 
@@ -429,6 +428,47 @@ bool checarIdContratante(char *idContratante)
 		}
 }
 
+char *obterIdContratanteDoBancoPorUsuario(Usuario *usuario)
+{
+	if (usuario == NULL)
+	{
+		return NULL;
+	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		printf(" Warning: Usuario não conectado detectado em OperacoesBanco-FuncoesGenericas.h obterIdContratante()\n");
+		return NULL;
+	}
+	if (!usuario_PermissaoContratante(usuario))
+	{
+		printf(" Warning: Usuario com permissoes insuficientes detectado em OperacoesBanco-FuncoesGenericas.h obterIdContratante() sagei87sd \n");
+		return NULL;
+	}
+	else
+	{
+		int tamanho = 57 + usuario_obterTamanhoLogin(usuario) + 1;
+		char *query = malloc(sizeof(char) * tamanho);
+		if (query == NULL)
+		{
+			printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco-FuncoesGenericas.h obterIdContratante() neoihdsaub\n");
+			return NULL;
+		}
+		snprintf(query, tamanho, "SELECT idcontratante FROM contratante C WHERE C.email=\'%s\';", usuario_obterLogin(usuario));
+		if (query == NULL)
+		{
+			printf(" Warning: Falha ao formatar query em OperacoesBanco-FuncoesGenericas.h obterIdContratante() ashvuieryhsd\n");
+			return NULL;
+		}
+		char *idContratante = retornaUnicoRetornoDaQuery(query);
+		if (idContratante[0] == 'E')
+		{
+			printf(" Warning: Nada encontrado, ou erro interno\n");
+			free(idContratante);
+			idContratante = NULL;
+		}
+		return idContratante;
+	}
+}
 
 
 //retorna TRUE se o produto estiver vencido, false se estiver dentro do prazo de validade
