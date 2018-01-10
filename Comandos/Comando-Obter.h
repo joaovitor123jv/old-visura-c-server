@@ -14,6 +14,7 @@ char *obterTop10ProdutosMelhorAvaliados();//Retorna os 10 produtos melhor avalia
 char *obterDescricaoProduto(Usuario *usuario);// APP 4 Q idProduto
 char *obterNomeProduto(Usuario *usuario);// APP 4 1. idProduto
 char *obterAvaliacaoProduto(Usuario *usuario);// APP 4 kW idProduto                       (Retorna NULL quando ocorre algum erro)
+char *obterInformacoesProduto(Usuario *usuario);
 
 // char *comandoObter(char *email, Usuario *usuario)// APP 4 algumaCoisa
 char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
@@ -26,19 +27,19 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 	if (usuario == NULL)
 	{
 		printf(" Warning: Usuario nulo detectado em Comando-Obter.h comandoObter()\n");
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	if (usuario_obterLogin(usuario) == NULL)
 	{
 		printf(" Warning: usuario nao conectado detectado em Comando-Obter.h comandoObter()\n");
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	char* token = NULL;
 	token = strtok(NULL, " ");
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Obter.h comandoObter()\n");
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 	else
 	{
@@ -48,7 +49,7 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 			if(top10 == NULL)
 			{
 				printf(" Warning: ocorreu um erro ao processar top 10 produtos novos em Comando-Obter.h comandoObter()\n");
-				return NULL;
+				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 			}
 			else
 			{
@@ -62,13 +63,18 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 			if(top == NULL)
 			{
 				printf(" Warning: ocorreu um erro ao processar top 10 melhores produtos em Comando-Obter. comandoObter()\n");
-				return NULL;
+				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 			}
 			else
 			{
 				printf(" LOG: Retorno obtido com sucesso de obterTop10ProdutosMelhorAvaliados() em Comando-Obter.h comandoObter()\n");
 				return top;
 			}
+		}
+		else if(strcmp(token, TIPO_INFORMACOES_PRODUTO) == 0)
+		{
+			printf(" LOG: Requisitando informacoes de produto em Comando-Obter.h comandoObter()\n");
+			return obterInformacoesProduto(usuario);
 		}
 		else if(strcmp(token, TIPO_DESCRICAO_PRODUTO) == 0)// APP 4 Q idProduto
 		{
@@ -91,7 +97,7 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 			else
 			{
 				printf(" Warning: Ocorreu um erro durante a realização do comando de obtenção em Comando-Obter.h comandoObter() asdkjhjbtffs\n");
-				return NULL;
+				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 			}
 		}
 		else if(strcmp(token, TIPO_VISUALIZACAO) == 0)// APP 4 2
@@ -103,7 +109,7 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 			if(token == NULL)
 			{
 				printf(" Warning: Comando insuficiente em Comando-Obter.h comandoObter() 45a654q8e\n");
-				return NULL;
+				return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 			}
 			if (strcmp(token, TIPO_QUANTIDADE) == 0)// APP 4 2 @
 			{
@@ -112,7 +118,7 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 				if(token == NULL)
 				{
 					printf(" Warning: Comando insuficiente em Comando-Obter.h comandoObter() 5q68r87s\n");
-					return NULL;
+					return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 				}
 				if (strcmp(token, TIPO_VISUALIZACAO) == 0)// APP 4 2 @ 2
 				{
@@ -132,13 +138,13 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 					//DESEJA obter QUANTIDADE de VISUALIZACOES de ALGO ESPECIFICO
 					printf(" LOG: Solicitando Obtenção de quantidade de visualizações de algo específico em Comando-Obter.h comandoObter()\n");
 					printf(" Warning: Comando incompleto em Comando-Obter.h comandoObter()\n");
-					return NULL;
+					return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
 				}
 			}
 			else
 			{
 				printf(" Warning: Comando não compreendido (%s) em Comando-Obter.h comandoObter() aq468e7ca\n", token);
-				return false;
+				return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 			}
 		}
 		else if(strcmp(token, TIPO_ID_CIDADE) == 0)// APP 4 $
@@ -154,10 +160,10 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 			return obterIdLocalizacao();
 		}
 		printf(" Warning: Comando inexistente: |%s| em Comando-Obter.h comandoObter() rbjak\n", token);
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 	printf(" ERRO: deu uma merda muito grande aqui em Comando-Obter.h comandoObter() asdejkjhjvkerwbhsajk\n");
-	return NULL;
+	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 }
 
 char *obterIdCidade()
@@ -171,13 +177,13 @@ char *obterIdCidade()
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Obter.h obterIdCidade() dksajdjkheb\n");
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 
 	if( stringMaior(token, TAMANHO_DO_NOME_DA_CIDADE_COM_MAIOR_NOME_DO_MUNDO) )
 	{
 		printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterIdCidade() ebk1ud8\n");
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 	
 	nomeCidade = strdup(token);
@@ -185,7 +191,7 @@ char *obterIdCidade()
 	if(nomeCidade == NULL)
 	{
 		printf(" Warning: Falha ao copiar de token para nomeCidade em Comando-Obter.h obterIdCidade aksjd()\n");
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	
 	token = strtok(NULL, " ");// APP 4 $ nomeCidadeInformado nomeEstadoInformado
@@ -195,7 +201,7 @@ char *obterIdCidade()
 		printf(" Warning: Comando insuficiente em Comando-Obter.h obterIdCidade() 1gha5\n");
 		free(nomeCidade);
 		nomeCidade = NULL;
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 
 	if( !stringTamanhoIgual(token, TAMANHO_ESTADO) )
@@ -203,7 +209,7 @@ char *obterIdCidade()
 		printf(" Warning: Tamanho de Comando incorreto em Comando-Obter.h obterIdCidade() n4yw5\n");
 		free(nomeCidade);
 		nomeCidade = NULL;
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 
 	nomeEstado = strdup(token);
@@ -213,7 +219,7 @@ char *obterIdCidade()
 		printf(" Warning: Falha ao copiar de token para nomeEstado em Comando-Obter.h obterIdCidade() eqkjh3\n");
 		free(nomeCidade);
 		nomeCidade = NULL;
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	else
 	{
@@ -226,7 +232,7 @@ char *obterIdCidade()
 	}
 
 	printf(" ERRO: Deu Ruim em Comando-Obter.h obterIdCidade()jhdsagjhdsaghjjhgjhgq\n");
-	return NULL;
+	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 }
 
 
@@ -237,19 +243,19 @@ char *obterIdContratante()// APP 4 ; cnpj
 	if( token == NULL )
 	{
 		printf(" Warning: Comando insuficiente em Comando-Obter.h obterIdContratante() asjhvbruw0f7878s756f6d\n");
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 //	if( strlen(token) > TAMANHO_CNPJ )
 	if( stringMaior(token, TAMANHO_CNPJ) )
 	{
 		printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterIdContratante() abq78vas98wbjhax\n");
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	char *cnpj = strdup(token);
 	if( cnpj == NULL )
 	{
 		printf(" Warning: Falha ao duplicar email informado em Comando-Obter.h obterIdContratante() abv849a8sd72bhjht65w\n");
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	return obterIdContratanteDoBanco(cnpj);
 }
@@ -260,7 +266,7 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 	if( token == NULL )
 	{
 		printf(" Warning: Comando insuficiente em Comando-Obter.h obterIdLocalizacao() qiuwbv89r4sf\n");
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 
 //	if( strlen(token) > TAMANHO_CHAVE_PRIMARIA )
@@ -273,7 +279,7 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 	if( idCidade == NULL )
 	{
 		printf(" Warning: Falha ao duplicar idCidade em Comando-Obter.h obterIdLocalizacao()\n");
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
 	token = strtok(NULL, " ");// AOO 4 i0 idCidade cep
@@ -282,7 +288,7 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 		printf(" Warning: Comando insuficiente em Comando-Obter.h akiuvbruiasjd\n");
 		free( idCidade );
 		idCidade = NULL;
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 
 	//TODO Adicionar suporte a checagem de tamanho de CEP
@@ -293,7 +299,7 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 		printf(" Warning: Falha ao duplicar dados de cep em Comando-Obter.h obterIdLocalizacao() sadkjahsfjkruiosdidds\n");
 		free( idCidade );
 		idCidade = NULL;
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
 	token = strtok(NULL, " ");// APP 4 i0 idCidade cep bairro
@@ -316,7 +322,7 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 		free( cep );
 		cep = NULL;
 		idCidade = NULL;
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 
 	char *bairro = strdup(token);
@@ -328,7 +334,7 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 		free( cep );
 		cep = NULL;
 		idCidade = NULL;
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
 	token = strtok(NULL, " ");// APP 4 i0 idCidade cep bairro rua
@@ -356,7 +362,7 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 		bairro = NULL;
 		cep = NULL;
 		idCidade = NULL;
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 
 	char *rua = strdup(token);
@@ -369,7 +375,7 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 		bairro = NULL;
 		cep = NULL;
 		idCidade = NULL;
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
 	token = strtok(NULL, " ");// APP 4 i0 idCidade cep bairro rua numero
@@ -399,7 +405,7 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 		bairro = NULL;
 		cep = NULL;
 		idCidade = NULL;
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	 }
 
 	 char *numero = strdup(token);
@@ -414,7 +420,7 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 		bairro = NULL;
 		cep = NULL;
 		idCidade = NULL;
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	 }
 
 	token = strtok(NULL, " ");// APP 4 i0 idCidade cep bairro rua numero complemento
@@ -447,7 +453,7 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 		bairro = NULL;
 		cep = NULL;
 		idCidade = NULL;
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 
 	char *complemento = strdup(token);
@@ -462,7 +468,7 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 		bairro = NULL;
 		cep = NULL;
 		idCidade = NULL;
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
 	char *retorno = obterIdLocalizacaoDoBanco(idCidade, cep, bairro, rua, numero, complemento);
@@ -494,7 +500,7 @@ char *obterTop10NovosProdutos()// APP 4 J
 	if(top10 == NULL)
 	{
 		printf(" Warning: top 10 produtos não obteve resultado em Comando-Obter.h obterTop10NovosProdutos()\n");
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	else
 	{
@@ -502,7 +508,7 @@ char *obterTop10NovosProdutos()// APP 4 J
 		return top10;
 	}
 
-	return NULL;
+	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 }
 
 
@@ -517,13 +523,13 @@ char *obterDescricaoProduto(Usuario *usuario)// APP 4 Q
 	if(token == NULL)
 	{
 		printf(" Warning: comando insuficiente em Comando-Obter.h obterDescricaoProduto() 4f51q\n");
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 //	else if(strlen(token) != TAMANHO_ID_PRODUTO)
 	else if( !stringTamanhoIgual(token, TAMANHO_ID_PRODUTO) )
 	{
 		printf(" Warning: Comando de tamanho incorreto identificado em Comando-Obter.h obterDescricaoProduto()  44h5w11c\n");
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 	else
 	{
@@ -541,7 +547,7 @@ char *obterDescricaoProduto(Usuario *usuario)// APP 4 Q
 		return retorno;
 	}
 	printf(" ERRO: Desconhecido rb1625f0j66 em Comando-Obter.h obterDescricaoProduto()\n");
-	return NULL;// TEMP
+	return RETORNO_ERRO_INTERNO_STR_DINAMICA;// TEMP
 }
 
 
@@ -555,20 +561,20 @@ char *obterNomeProduto(Usuario *usuario)
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em obterNomeProduto() Comando-Obter.h akjbbe\n");
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 //	if(strlen(token) != TAMANHO_ID_PRODUTO)
 	if( !stringTamanhoIgual(token, TAMANHO_ID_PRODUTO) )
 	{
 		printf(" Warning: Comando incorreto em obterNomeProduto() Comando-Obter.h ohrbbzzk\n");
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 
 	char *idProduto = strdup(token);
 	if (idProduto == NULL)
 	{
 		printf(" Warning: Falha ao duplicar produto em Comando-Obter.h obterNomeProduto() aaasd156 \n");
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
 	char *nomeProduto = NULL;
@@ -586,20 +592,20 @@ char *obterAvaliacaoProduto(Usuario *usuario)// APP 4 kW idProduto              
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Obter.h obterAvaliacaoProduto() sadkjhjvrsad\n");
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 //	if(strlen(token) != TAMANHO_ID_PRODUTO)
 	if( !stringTamanhoIgual(token, TAMANHO_ID_PRODUTO) )
 	{
 		printf(" Warning: Comando incorreto detectado em Comando-Obter.h obterAvaliacaoProduto() asdhjkvrsdf\n");
-		return NULL;
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 
 	char *idProduto = strdup(token);
 	if(idProduto == NULL)
 	{
 		printf(" Warning: Não foi possível duplicar token em Comando-Obter.h obterAvaliacaoProduto() qhjjvrsad\n");
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
 	char *retorno;
@@ -615,10 +621,10 @@ char *obterAvaliacaoProduto(Usuario *usuario)// APP 4 kW idProduto              
 		printf(" Warning: Não foi possível obter obter avaliacao do produto do banco em Comando-Obter.h obterAvaliacaoProduto() qw65b41df\n");
 		free(idProduto);
 		idProduto = NULL;
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	printf(" ERRO: Erro desconhecido em Comando-Obter.h obterAvaliacaoProduto() askjhgvrdf\n");
-	return NULL;
+	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 }
 
 char *obterTop10ProdutosMelhorAvaliados()
@@ -634,7 +640,7 @@ char *obterTop10ProdutosMelhorAvaliados()
 	if(top == NULL)
 	{
 		printf(" Warning: top 10 produtos não obteve resultado em Comando-Obter.h obterTop10ProdutosMelhorAvaliados()\n");
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	else
 	{
@@ -642,5 +648,44 @@ char *obterTop10ProdutosMelhorAvaliados()
 		return top;
 	}
 
-	return NULL;
+	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+}
+
+
+char *obterInformacoesProduto(Usuario *usuario)
+{
+	if (usuario == NULL)
+	{
+		printf(" ERRO: usuario nulo detectado em Comando-Obter.h obterInformacoesProduto() sakjh\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		printf(" Warning: usuario nao conectado identificado em Comando-Obter.h obterInformacoesProduto() saviusad\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	char *idProduto = strtok(NULL, " ");
+	if (idProduto == NULL)
+	{
+		printf(" Warning: Comando insuficiente detectado em Comando-Obter.h obterInformacoesProduto() asdsaehtusdr\n");
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+	}
+	if (usuario_PermissaoContratante(usuario))
+	{
+		return obterInformacoesAvancadasDeProdutoDoBanco(usuario, idProduto);
+		// return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
+	}
+	else if(usuario_PermissaoRoot(usuario))
+	{
+		return strdup("Comando ainda não concluído para ROOT... logue como contratante ou usuario normal/anonimo");
+	}
+	else if(usuario_PermissaoCliente(usuario))
+	{
+		return obterInformacoesBasicasDeProdutoDoBanco(usuario, idProduto);
+	}
+	else
+	{
+		return RETORNO_ERRO_NAO_AUTORIZADO_STR_DINAMICA;	
+	}
+	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 }

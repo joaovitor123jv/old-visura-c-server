@@ -147,6 +147,38 @@ APP
 		9&	(TOP_10_MELHORES)
 			(Obtem os 10 produtos melhor avaliados do banco de dados (disponíveis/dentro da validade), retorna seus IDs, separados por espaço)
 		
+		iP	(TIPO_INFORMACOES_PRODUTO)
+			idProduto
+				(se estiver logado como cliente, retorna string no formato:)
+
+				(	nomeProduto descricaoProduto avaliacoesPositivas avaliacoesNegativas quantidadeDeVisualizacoes tipoProduto categoria)
+
+				(		nomeProduto == nome do produto que deve ser mostrado ao cliente, referenciado por idProduto)
+				(		descricaoProduto == descricao do produto que deve ser mostrado ao cliente, referenciado por idproduto)
+				(		avaliacoesPositivas == quantidade de avaliacoes Positivas que o produto possui)
+				(		avaliacoesNegativas == quantidade de avaliacoes Negativas que o produto possui)
+				(		quantidadeDeVisualizacoes == quantidade de visualizacoes anonimas + não anonimas que o produto possui)
+				(		tipoProduto == tipo do produto, se é RA, RV, RA/RV...)
+				(		categoria == categoria do produto... "Tecnologia", "Alimenticios".... referenciados pelas siglas, previamente definidas)
+				(			Exemplo de retorno: )
+				(				Teste_da_coca Teste_de_produto_com_nova_arquitetura 0 0 0 1 CO											)
+
+				(Se estiver logado como contratante, retorna string no formato:)
+				
+				(	nomeProduto descricaoProduto avaliacoesPositivas avaliacoesNegativas quantidadeDeVisualizacoes tipoProduto categoria duracao datacriacao)
+
+				(		nomeProduto == nome do produto que deve ser mostrado ao cliente, referenciado por idProduto)
+				(		descricaoProduto == descricao do produto que deve ser mostrado ao cliente, referenciado por idproduto)
+				(		avaliacoesPositivas == quantidade de avaliacoes Positivas que o produto possui)
+				(		avaliacoesNegativas == quantidade de avaliacoes Negativas que o produto possui)
+				(		quantidadeDeVisualizacoes == quantidade de visualizacoes anonimas + não anonimas que o produto possui)
+				(		tipoProduto == tipo do produto, se é RA, RV, RA/RV...)
+				(		categoria == categoria do produto... "Tecnologia", "Alimenticios".... referenciados pelas siglas, previamente definidas)
+				(		duracao == tempo de duracao maximo do produto para os clientes, em dias, a partir de sua data de criacao)
+				(		datacriacao == quando o produto foi criado, a data de criacao do produto em questão... exemplo válido: "2018-01-09 21:28:14")
+				(			Exemplo de retorno: )
+				(				Teste_da_coca Teste_de_produto_com_nova_arquitetura 0 0 0 1 CO 30 2018-01-09 21:28:14					)
+		
 		Q	(TIPO_DESCRICAO_PRODUTO)
 			idproduto
 				(Obtem a descricao do produto referenciado por idproduto e a retorna, caso esteja dentro da validade para o usuario que está pedindo isso)

@@ -197,7 +197,7 @@
 #define TIPO_FEEDBACK "tr"
 #define TIPO_PONTO "Dj"
 
-
+#define TIPO_INFORMACOES_PRODUTO "iP"
 
 
 
@@ -222,6 +222,13 @@
 #define RETORNO_ERRO_FALTA_DE_MEMORIA -3
 #define RETORNO_NULO -4
 #define RETORNO_NOT_FOUND "NOT_FOUND\0"
+
+#define RETORNO_ERRO_INTERNO_STR_DINAMICA strdup("ERRO: interno, tente novamente");
+#define RETORNO_ERRO_INTERNO_BANCO_STR_DINAMICA strdup("ERRO: interno(banco de dados), tente novamente");
+#define RETORNO_ERRO_NOT_FOUND_STR_DINAMICA strdup("ERRO: nada encontrado");
+#define RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA strdup("ERRO: Comando incorreto/insuficiente detectado");
+#define RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA strdup("ERRO: Comando em construcao");
+#define RETORNO_ERRO_NAO_AUTORIZADO_STR_DINAMICA strdup("ERRO: Operacao nao autorizada");
 
 /* Fim retornos entre funções */
 

@@ -269,6 +269,19 @@ bool usuario_PermissaoAnonimo(Usuario *usuario)
 	}
 }
 
+bool usuario_PermissaoCliente(Usuario *usuario)
+{
+	if (usuario == NULL)
+	{
+		return false;
+	}
+	if (usuario->nivelDePermissao == USUARIO_NIVEL_DE_PERMISSAO_NORMAL || usuario->nivelDePermissao == USUARIO_NIVEL_DE_PERMISSAO_ANONIMO)
+	{
+		return true;
+	}
+	return false;
+}
+
 char *usuario_obterLogin(Usuario *usuario)
 {
 	if( usuario == NULL )
