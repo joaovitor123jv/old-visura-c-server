@@ -262,13 +262,13 @@ void *Servidor(void *cliente)
 			{
 				case ERRO:
 					printf("Warning: Erro na execução do comando\n");
-					enviaMensagemParaCliente("Erro, desconectando (calma, estou arrumando kkk)\0", cliente);
+					enviaMensagemParaCliente("ERRO, desconectando\0", cliente);
 					sairDaThread(false);
 					break;
 
 				case OK:
 					printf("Log: Comando bem-sucedido (Server Thread)\n");
-					enviaMensagemParaCliente("OK\nainda conectado\0", cliente);
+					enviaMensagemParaCliente("OK\0", cliente);
 					break;
 
 				case REQUISITANDO_LOGIN:/* Cliente NÃO AUTORIZADO OK */
