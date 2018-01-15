@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Comandos.h"
+#include "../OperacoesBanco/OperacoesBanco.h"
+#include "../AdaptadorDeString.h"
 
 bool comandoAdicionar(Usuario *usuario);//Retorna true se adicionado com sucesso
 bool addVisualizacao(Usuario *usuario);
@@ -409,7 +411,7 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 			printf(" LOG: Tamanho de senha exageradamente grande Comando-Adicao.h addUsuarioAnonimo()\n");
 			return false;
 		}
-		char *senha = malloc(sizeof(char) * (strlen(token) + 1));//Não esquecer do +1 (é o /0)
+		char *senha = (char *)malloc(sizeof(char) * (strlen(token) + 1));//Não esquecer do +1 (é o /0)
 		if(senha == NULL)
 		{
 			printf(" ERRO: Falha ao alocar memória para senha Comando-Adicao.h addUsuarioAnonimo()\n");
@@ -466,7 +468,7 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 				return false;
 			}
 			printf(" LOG: alocando memoria para email Comando-Adicao.h addUsuarioAnonimo()\n");
-			char *email = malloc(sizeof(char) * (strlen(token) + 1));
+			char *email = (char *)malloc(sizeof(char) * (strlen(token) + 1));
 			if(email != NULL)
 			{
 				strcpy(email, token);
@@ -587,7 +589,7 @@ bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 	}
 
 	char *email = NULL;
-	email = malloc(sizeof(char) * (strlen(token) + 1));// Esse +1 é o do maldito \0
+	email = (char *)malloc(sizeof(char) * (strlen(token) + 1));// Esse +1 é o do maldito \0
 
 	if(email == NULL)
 	{
@@ -645,7 +647,7 @@ bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 		return false;
 	}
 
-	char *senha = malloc(sizeof(char) * (strlen(token) + 1));// + 1 é do \0
+	char *senha = (char *)malloc(sizeof(char) * (strlen(token) + 1));// + 1 é do \0
 
 	if(senha == NULL)
 	{
@@ -706,7 +708,7 @@ bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 		return false;
 	}
 
-	char *sexo = malloc(sizeof(char) * (strlen(token) + 1));
+	char *sexo = (char *)malloc(sizeof(char) * (strlen(token) + 1));
 	if(sexo == NULL)
 	{
 		printf(" Warning: Não foi possivel alocar memoria para sexo em Comando-Adicao.h addUsuario() qef48fsw\n");
@@ -752,7 +754,7 @@ bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 		return false;
 	}
 
-	char *dataNascimento = malloc(sizeof(char) * (strlen(token) + 1));
+	char *dataNascimento = (char *)malloc(sizeof(char) * (strlen(token) + 1));
 	if(dataNascimento == NULL)
 	{
 		printf(" Warning: Falha ao alocar memoria para dataNascimento em Comando-Adicao.h addUsuario() eq54v89qc\n");
@@ -786,7 +788,7 @@ bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 		printf(" LOG: Executando script RUBY para enviar email de confirmação WEB em Comando-Adicao.h addUsuario() aoeh29d09)\n");
 
 		int tamanho = usuario_obterTamanhoLogin(usuario) + TAMANHO_CONFIRMADOR_DE_EMAIL_RUBY + 6 + 1;
-		char *comando = malloc(sizeof(char) * tamanho);
+		char *comando = (char *)malloc(sizeof(char) * tamanho);
 
 		if(comando == NULL)
 		{
@@ -876,7 +878,7 @@ bool addVisualizacao(Usuario *usuario)
 	}
 	
 
-	char *id = malloc(sizeof(char) * (strlen(token) + 1));
+	char *id = (char *)malloc(sizeof(char) * (strlen(token) + 1));
 
 	if(id == NULL)
 	{
@@ -1016,7 +1018,7 @@ bool addCidade()/* APP 2 { */
 		printf(" Warning: Tamanho de estado informado incorreto Comando-Adicao.h addCidade()\n");
 		return false;
 	}
-	char *nomeDoEstado = malloc(sizeof(char) * (strlen(token) + 1));
+	char *nomeDoEstado = (char *)malloc(sizeof(char) * (strlen(token) + 1));
 	if(nomeDoEstado == NULL)
 	{
 		printf(" Warning: Falha ao alocar memoria para nome do estado em Comando-Adicao.h addCidade()\n");
@@ -1047,7 +1049,7 @@ bool addCidade()/* APP 2 { */
 	}
 
 	char *nomeCidade = NULL;
-	nomeCidade = malloc(sizeof(char) * (strlen(token) + 1));
+	nomeCidade = (char *)malloc(sizeof(char) * (strlen(token) + 1));
 	if(nomeCidade == NULL)
 	{
 		printf(" Warning: falha ao alocar memória para nomeCidade em Comando-Adicao.h addCidade()\n");
@@ -2745,7 +2747,7 @@ bool addAvaliacaoAProduto(Usuario *usuario)//DONE       APP 2 kW * idProduto ava
 		return false;
 	}
 
-	char *avaliacao = malloc(sizeof(char) * 2);// o caracter e o \0
+	char *avaliacao = (char *)malloc(sizeof(char) * 2);// o caracter e o \0
 	if (avaliacao == NULL)
 	{
 		printf(" Warning: Falha a alocar memoria para avaliacao em Comando-Adicao.h addAvaliacaoAProduto() c3qw45f89yt87j5sd\n");

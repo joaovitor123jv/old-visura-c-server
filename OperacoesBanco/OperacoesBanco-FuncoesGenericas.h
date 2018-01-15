@@ -230,6 +230,119 @@ bool executaQuery(char *query)
 	return true;
 }
 
+char *obterRetornoUnicoDaQuery(char *query)// ATENÇÃO: Função de uso INTERNO da aplicação, para um retorno direto ao usuario, use retornaUnicoRetornoDaQuery(char *query);
+{
+	if( query == NULL )
+	{
+		printf(" ERRO: query nula em obterRetornoUnicoDaQuery() OperacoesBanco-FuncoesGenericas.h\n");
+		return NULL;
+	}
+	
+	if(mysql_query(conexao, query))
+	{
+		printf(" ERRO: Falha ao executar query em obterRetornoUnicoDaQuery() OperacoesBanco-FuncoesGenericas.h sakdjh\n");
+		printf(" \t%s\n", mysql_error(conexao));
+		return NULL;
+	}
+	
+	MYSQL_RES *resultado = mysql_store_result(conexao);
+	
+	if(resultado == NULL)// Se não houver consulta
+	{
+		printf(" Warning: Resultado nulo em obterRetornoUnicoDaQuery() OperacoesBanco-FuncoesGenericas.h kqht\n");
+		return NULL;
+	}
+	else
+	{
+		
+		if(mysql_num_fields(resultado) != 1)
+		{
+			if(mysql_num_fields(resultado) == 0)
+			{
+				printf(" LOG: Nada encontrado na base de dados para:\n");
+				printf(" \t%s\n", query);
+				printf(" \t em obterRetornoUnicoDaQuery() OperacoesBanco-FuncoesGenericas.h 4rr455\n");
+				mysql_free_result(resultado);
+				free(query);
+				resultado = NULL;
+				query = NULL;
+				return NULL;
+			}
+			else
+			{
+				printf(" Warning: Resultado inconsistente em obterRetornoUnicoDaQuery() OperacoesBanco-FuncoesGenericas.h hekja\n");
+				mysql_free_result(resultado);
+				free(query);
+				query = NULL;
+				resultado = NULL;
+				return NULL;
+			}
+		}
+		else
+		{
+			if(mysql_num_rows(resultado) > 1)
+			{
+				printf(" Warning: Mais de uma cidade com mesmo nome e estado em obterRetornoUnicoDaQuery() OperacoesBanco-FuncoesGenericas.h ekjjha\n");
+				printf(" \tRespostas:\n");
+				MYSQL_ROW linhas;
+				while((linhas = mysql_fetch_row(resultado)) != NULL)
+				{
+					printf(" linhas[0] -> %s\n", linhas[0]);
+				}
+				printf(" \n");
+				char *retorno = strdup(linhas[0]);
+				if (retorno == NULL)
+				{
+					return NULL;
+				}
+				mysql_free_result(resultado);
+				free(query);
+				query = NULL;
+				resultado = NULL;
+				return retorno;//Retorna o ultimo resultado, mesmo se houver erro
+			}
+			else if (mysql_num_rows(resultado) == 1)
+			{
+				MYSQL_ROW linha;
+				
+				linha = mysql_fetch_row(resultado);
+				
+				if(linha == NULL)
+				{
+					printf(" ERRO: Não era pra poder retornar nulo aqui em obterRetornoUnicoDaQuery() OperacoesBanco-FuncoesGenericas.h abv84eu9h89hbd\n");
+					mysql_free_result(resultado);
+					free(query);
+					query = NULL;
+					resultado = NULL;
+					return NULL;
+				}
+				else
+				{
+					char *retorno = strdup(linha[0]);
+					if (retorno == NULL)
+					{
+						return NULL;
+					}
+					mysql_free_result(resultado);
+					free(query);
+					query = NULL;
+					resultado = NULL;
+					return retorno;
+				}
+			}
+			else
+			{
+				printf(" Warning: nenhum resultado encontrado em obterRetornoUnicoDaQuery() OperacoesBanco-FuncoesGenericas.h\n");
+				mysql_free_result(resultado);
+				resultado = NULL;
+				free(query);
+				query = NULL;
+				return NULL;
+			}
+		}
+	}
+}
+
 char *retornaUnicoRetornoDaQuery(char *query)// Se chegou aqui, a conexao está ativa no momento
 {
 	if( query == NULL )
@@ -446,27 +559,7 @@ char *obterIdContratanteDoBancoPorUsuario(Usuario *usuario)
 	}
 	else
 	{
-		int tamanho = 57 + usuario_obterTamanhoLogin(usuario) + 1;
-		char *query = malloc(sizeof(char) * tamanho);
-		if (query == NULL)
-		{
-			printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco-FuncoesGenericas.h obterIdContratante() neoihdsaub\n");
-			return NULL;
-		}
-		snprintf(query, tamanho, "SELECT idcontratante FROM contratante C WHERE C.email=\'%s\';", usuario_obterLogin(usuario));
-		if (query == NULL)
-		{
-			printf(" Warning: Falha ao formatar query em OperacoesBanco-FuncoesGenericas.h obterIdContratante() ashvuieryhsd\n");
-			return NULL;
-		}
-		char *idContratante = retornaUnicoRetornoDaQuery(query);
-		if (idContratante[0] == 'E')
-		{
-			printf(" Warning: Nada encontrado, ou erro interno\n");
-			free(idContratante);
-			idContratante = NULL;
-		}
-		return idContratante;
+		return usuario_obterId(usuario);
 	}
 }
 

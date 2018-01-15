@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <mysql/mysql.h>
+#include "../Usuario.h"
 //#include <stdarg.h>
 
 #ifndef bool
@@ -1484,7 +1485,7 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 		{
 			// tamanho =114 + strlen(categoria) + strlen(tipoProduto) + strlen(idContratante) + strlen(idProduto) + strlen(nomeProduto) + strlen(duracao) + 1;
 			tamanho = 125 + strlen(categoria) + strlen(tipoProduto) + strlen(idContratante) + strlen(nomeProduto) + strlen(duracao);
-			query = malloc(sizeof(char) * tamanho);
+			query = (char *)malloc(sizeof(char) * tamanho);
 			if (query == NULL)
 			{
 				printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addProdutoAoBanco() sakjdhgrj\n");

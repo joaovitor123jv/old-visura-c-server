@@ -7,7 +7,7 @@
 
 
 char *obterIdCidade(void);//APP 4 $
-char *obterIdContratante(void);// APP 4 ;
+char *obterIdContratante(Usuario *usuario);// APP 4 ;
 char *obterIdLocalizacao(void);// APP 4 i0
 
 char *obterTop10NovosProdutos(void);//APP 4 J
@@ -147,7 +147,7 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 		}
 		else if( strcmp(token, TIPO_ID_CONTRATANTE) == 0 )
 		{
-			return obterIdContratante();
+			return obterIdContratante(usuario);
 		}
 		else if( strcmp(token, TIPO_ID_LOCALIZACAO) == 0 )
 		{
@@ -230,12 +230,29 @@ char *obterIdCidade()
 }
 
 
-char *obterIdContratante()// APP 4 ; cnpj
+char *obterIdContratante(Usuario *usuario)// APP 4 ; cnpj
 {
 	char *token = strtok(NULL, " "); // cnpj
 
 	if( token == NULL )
 	{
+		if (usuario == NULL)
+		{
+			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+		}
+		if (usuario_obterLogin(usuario) == NULL)
+		{
+			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+		}
+		if (usuario_PermissaoContratante(usuario))
+		{
+			char *retorno= usuario_obterId(usuario);
+			if (retorno == NULL)
+			{
+				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+			}
+			return retorno;
+		}
 		printf(" Warning: Comando insuficiente em Comando-Obter.h obterIdContratante() asjhvbruw0f7878s756f6d\n");
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}

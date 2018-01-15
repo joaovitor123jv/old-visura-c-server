@@ -1,7 +1,15 @@
-#pragma once
+#ifndef __USUARIO_VISURA__
+	#define __USUARIO_VISURA__
+
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include "Comandos/Comandos.h"
+//#include "OperacoesBanco/OperacoesBanco.h"
+#include <mysql/mysql.h>
+MYSQL *conexao;
+char *obterRetornoUnicoDaQuery(char *query);
 
 #ifndef true
 #define true 1
@@ -60,12 +68,13 @@ struct Usuario
 	char *senha;
 	int tamanhoSenha;
 	int nivelDePermissao;
+	char *id;
 };
 
 typedef struct Usuario Usuario;
 
 bool usuarioPrivilegiado(char *email);
-int usuario_checarLogin(const char *email, const char *senha);//Retorna o nível de permissao do usuario
+int usuario_checarLogin(const char *email, const char *senha, char *id);//Retorna o nível de permissao do usuario
 
 void init_Usuario(Usuario *usuario)
 {
@@ -73,6 +82,7 @@ void init_Usuario(Usuario *usuario)
 	usuario->tamanhoLogin = 0;
 	usuario->senha = NULL;
 	usuario->tamanhoSenha = 0;
+	usuario->id = NULL;
 	usuario->nivelDePermissao = _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
 }
 
@@ -96,7 +106,7 @@ bool new_Usuario(Usuario *usuario, const char *login, const char *senha)
 
 	printf(" LOG: Iniciando criacao de usuario em Usuario.h new_Usuario()\n");
 
-	int nivelDePermissao = usuario_checarLogin(login, senha);
+	int nivelDePermissao = usuario_checarLogin(login, senha, usuario->id);
 	if (nivelDePermissao == _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_)
 	{
 		return false;
@@ -322,6 +332,15 @@ int usuario_obterTamanhoLogin(Usuario *usuario)
 	return usuario->tamanhoLogin;
 }
 
+char *usuario_obterId(Usuario *usuario)
+{
+	if (usuario == NULL)
+	{
+		return NULL;
+	}
+	return usuario->id;
+}
+
 void usuario_mostrarDados(Usuario *usuario)
 {
 	if(usuario == NULL)
@@ -330,9 +349,10 @@ void usuario_mostrarDados(Usuario *usuario)
 		return;
 	}
 	printf(" LOG: *************************DADOS DE USUARIO********************* Usuario.h usuario_mostrarDados()\n");
-	printf(" LOG:              Email: |%s|\n", usuario->login);
-	printf(" LOG:              Senha: |%s|\n", usuario->senha);
-	printf(" LOG: Nível de permissão: |%d|\n", usuario->nivelDePermissao);
+	printf(" LOG:              Email: 	|%s|\n", usuario->login);
+	printf(" LOG:              ID:		|%s|\n", usuario->id);
+	printf(" LOG:              Senha:	|%s|\n", usuario->senha);
+	printf(" LOG: Nível de permissão:	|%d|\n", usuario->nivelDePermissao);
 }
 
 bool usuario_atualizarLogin(Usuario *usuario, char *login)
@@ -375,6 +395,11 @@ bool delete_Usuario(Usuario *usuario)
 		free(usuario->senha);
 		usuario->senha = NULL;
 	}
+	if (usuario->id != NULL)
+	{
+		free(usuario->id);
+		usuario->id = NULL;
+	}
 	free(usuario);
 	usuario = NULL;
 	return true;
@@ -404,7 +429,7 @@ bool reset_Usuario(Usuario *usuario)
 	return true;
 }
 
-int usuario_checarLogin(const char *email, const char *senha)// RETORNA Nível de permissão do usuario
+int usuario_checarLogin(const char *email, const char *senha, char *id)// RETORNA Nível de permissão do usuario
 {
 	if(conexao == NULL)
 	{
@@ -419,6 +444,11 @@ int usuario_checarLogin(const char *email, const char *senha)// RETORNA Nível d
 			printf(" Warning: Falha ao reconectar-se, encerrando interpretação em Usuario.h usuario_checarLogin()\n");
 			return _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
 		}
+	}
+	if (id != NULL)
+	{
+		free(id);
+		id = NULL;
 	}
 	if(email == NULL)
 	{
@@ -452,7 +482,9 @@ int usuario_checarLogin(const char *email, const char *senha)// RETORNA Nível d
 		return _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
 	}
 	
-	if(queryRetornaConteudo(query))
+	id = obterRetornoUnicoDaQuery(query);
+
+	if(id != NULL)
 	{
 		printf(" LOG: Foi encontrado um ID para cliente que satisfaça as seguintes comparações: em Usuario.h usuario_checarLogin()\n");
 		printf(" \t\tcliente.email = |%s|\n", email);
@@ -463,8 +495,9 @@ int usuario_checarLogin(const char *email, const char *senha)// RETORNA Nível d
 	else
 	{
 		//tamanho = 74 + strlen(email) + strlen(senha) + 1;
+		id = NULL;
 		tamanho = 75 + strlen(email) + strlen(senha);
-		query = malloc(sizeof(char) * tamanho);
+		query = (char *)malloc(sizeof(char) * tamanho);
 		if (query == NULL)
 		{
 			return _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
@@ -476,7 +509,8 @@ int usuario_checarLogin(const char *email, const char *senha)// RETORNA Nível d
 			return _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
 		}
 
-		if (queryRetornaConteudo(query))
+		id = obterRetornoUnicoDaQuery(query);
+		if (id != NULL)
 		{
 			printf(" LOG: Foi encontrado um ID para contratante que satisfaça as seguintes comparações: em Usuario.h usuario_checarLogin()\n");
 			query = NULL;
@@ -485,7 +519,11 @@ int usuario_checarLogin(const char *email, const char *senha)// RETORNA Nível d
 		else
 		{
 			query = NULL;
+			id = NULL;
 			return USUARIO_NIVEL_DE_PERMISSAO_NULL;
 		}
 	}
 }
+
+
+#endif //__USUARIO_VISURA__
