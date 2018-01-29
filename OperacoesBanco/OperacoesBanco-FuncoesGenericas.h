@@ -39,6 +39,8 @@
 
 //Retorna TRUE se conectar ao banco com sucesso
 // bool conectarBanco(MYSQL *conexao)
+
+
 bool conectarBanco()
 {
 	if(conexao != NULL)
@@ -343,7 +345,7 @@ char *obterRetornoUnicoDaQuery(char *query)// ATENÇÃO: Função de uso INTERNO
 	}
 }
 
-char *retornaUnicoRetornoDaQuery(char *query)// Se chegou aqui, a conexao está ativa no momento
+char *retornaUnicoRetornoDaQuery(char *query)// Retorna um só resultado de uma query informada pelo usuario e já libera a query... retorna direto ao usuario
 {
 	if( query == NULL )
 	{
@@ -686,4 +688,123 @@ bool produtoVencido(char *idProduto, Usuario *usuario)
 			return true;
 		}
 	}
+}
+
+// Função usada em obterTop10AlgumaCoisa
+// Pega informações da query informada, na primeira linha, concatena e responde ao usuario diretamente, liberando a query;
+char *retornaInformacoesObtidasNaQuery(char *query)
+{
+	if(query == NULL)
+	{
+		printf(" ERRO: query nula em retornaInformacoesObtidasNaQuery() em OperacoesBanco-FuncoesGenericas.h\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	
+	
+	if(mysql_query(conexao, query))
+	{
+		printf(" Warning: falhao ao executar query em OperacoesBanco-FuncoesGenericas.h retornaInformacoesObtidasNaQuery()\n");
+		printf(" \tQuery = |%s|\n", query);
+		free(query);
+		query = NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	
+	MYSQL_RES *resultado = mysql_store_result(conexao);
+	if(resultado == NULL)// Se não houver consulta
+	{
+		printf(" Warning: Consulta não realizada em OperacoesBanco-FuncoesGenericas.h retornaInformacoesObtidasNaQuery()\n");
+		free(query);
+		query = NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	
+	if(mysql_num_fields(resultado) <= 0)
+	{
+		printf(" Warning: Nada encontrado em OperacoesBanco-FuncoesGenericas.h retornaInformacoesObtidasNaQuery()\n");
+		free(query);
+		query = NULL;
+		mysql_free_result(resultado);
+		resultado = NULL;
+		return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;
+	}
+
+	if (mysql_num_rows(resultado) <= 0)
+	{
+		printf(" Warning: nada encontrado em OperacoesBanco-FuncoesGenericas.h retornaInformacoesObtidasNaQuery() abr0a9sfdb\n");
+		free(query);
+		query = NULL;
+		mysql_free_result(resultado);
+		resultado = NULL;
+		return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;
+	}
+
+	// int quantidadeDeCampos = mysql_num_fields(resultado);
+	//Como esse comando vai varrer somente uma linha, não precisa de ter iteração pra isso
+	
+	// MYSQL_ROW linha = NULL;
+	free(query);
+	query = NULL;
+
+
+	MYSQL_ROW linha = mysql_fetch_row(resultado);
+	if (linha == NULL)
+	{
+		printf(" Warning: linha nula depois de fetch em OperacoesBanco.h obterInformacoesBasicasDeProdutoDoBanco() sahve89as7dgerw\n");
+		mysql_free_result(resultado);
+		resultado = NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+
+	int tamanho = mysql_num_fields(resultado) + 1;// o \0 e os espaços entre os comandos
+	int i;
+	for(i = 0;i < mysql_num_fields(resultado);i++)
+	{
+		if (linha[i] == NULL)
+		{
+			// tamanho = strlen("NULL");
+			tamanho = tamanho + 4;
+		}
+		else
+		{
+			tamanho = tamanho + strlen(linha[i]);
+		}
+	}
+
+	char *informacoes = malloc(sizeof(char) * tamanho);
+	if (informacoes == NULL)
+	{
+		printf(" Warning: Falha ao alocar memoria para string de retorno em OperacoesBanco-FuncoesGenericas.h retornaInformacoesObtidasNaQuery() asifuhuiasd\n");
+		mysql_free_result(resultado);
+		resultado = NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	memset(informacoes, '\0', tamanho);
+	for(i = 0;i < mysql_num_fields(resultado);i++)
+	{
+		if (linha[i] == NULL)
+		{
+			strcat(informacoes, "NULL");
+		}
+		else
+		{
+			strcat(informacoes, linha[i]);
+		}
+		if (i != (mysql_num_fields(resultado)-1))
+		{
+			strcat(informacoes, " ");
+		}
+	}
+	if (informacoes == NULL)
+	{
+		printf(" ERRO: Falha ao concatenar informacoes de retorno em OperacoesBanco-FuncoesGenericas.h retornaInformacoesObtidasNaQuery() a165w8b79asd\n");
+		mysql_free_result(resultado);
+		resultado = NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+
+	mysql_free_result(resultado);
+	resultado = NULL;
+	return informacoes;
+
 }

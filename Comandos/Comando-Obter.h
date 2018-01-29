@@ -20,6 +20,8 @@ char *obterNomeProduto(Usuario *usuario);// APP 4 1. idProduto
 char *obterAvaliacaoProduto(Usuario *usuario);// APP 4 kW idProduto                       (Retorna NULL quando ocorre algum erro)
 char *obterInformacoesProduto(Usuario *usuario);
 
+char *obterInformacoesUsuario(Usuario *usuario);
+
 // char *comandoObter(char *email, Usuario *usuario)// APP 4 algumaCoisa
 char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 {
@@ -69,6 +71,10 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 	{
 		printf(" LOG: Requisitando descricao de produto em Comando-Obter.h comandoObter()\n");
 		return obterDescricaoProduto(usuario);
+	}
+	else if(strcmp(token, TIPO_INFORMACOES_MINHAS) == 0)// APP 4 iM
+	{
+		return obterInformacoesUsuario(usuario);
 	}
 	else if(strcmp(token, TIPO_ID_CIDADE) == 0)// APP 4 $
 	{
@@ -710,4 +716,33 @@ char *obterInformacoesProduto(Usuario *usuario)
 		return RETORNO_ERRO_NAO_AUTORIZADO_STR_DINAMICA;	
 	}
 	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+}
+
+char *obterInformacoesUsuario(Usuario *usuario)
+{
+	if (usuario == NULL)
+	{
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if (usuario_PermissaoCliente(usuario))
+	{
+		return obterInformacoesClienteDoBanco(usuario);
+	}
+	else if (usuario_PermissaoContratante(usuario))
+	{
+		return obterInformacoesContratanteDoBanco(usuario);
+		// return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
+	}
+	else if (usuario_PermissaoRoot(usuario))
+	{
+		return "ROOT";
+	}
+	else
+	{
+		return RETORNO_ERRO_NAO_AUTORIZADO_STR_DINAMICA;
+	}
 }

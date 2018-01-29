@@ -74,7 +74,7 @@ struct Usuario
 typedef struct Usuario Usuario;
 
 bool usuarioPrivilegiado(char *email);
-int usuario_checarLogin(const char *email, const char *senha, char *id);//Retorna o nível de permissao do usuario
+int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario);//Retorna o nível de permissao do usuario
 
 void init_Usuario(Usuario *usuario)
 {
@@ -106,7 +106,7 @@ bool new_Usuario(Usuario *usuario, const char *login, const char *senha)
 
 	printf(" LOG: Iniciando criacao de usuario em Usuario.h new_Usuario()\n");
 
-	int nivelDePermissao = usuario_checarLogin(login, senha, usuario->id);
+	int nivelDePermissao = usuario_checarLogin(login, senha, usuario);
 	if (nivelDePermissao == _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_)
 	{
 		return false;
@@ -429,7 +429,7 @@ bool reset_Usuario(Usuario *usuario)
 	return true;
 }
 
-int usuario_checarLogin(const char *email, const char *senha, char *id)// RETORNA Nível de permissão do usuario
+int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario)// RETORNA Nível de permissão do usuario
 {
 	if(conexao == NULL)
 	{
@@ -445,10 +445,10 @@ int usuario_checarLogin(const char *email, const char *senha, char *id)// RETORN
 			return _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
 		}
 	}
-	if (id != NULL)
+	if (usuario->id != NULL)
 	{
-		free(id);
-		id = NULL;
+		free(usuario->id);
+		usuario->id = NULL;
 	}
 	if(email == NULL)
 	{
@@ -482,9 +482,9 @@ int usuario_checarLogin(const char *email, const char *senha, char *id)// RETORN
 		return _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
 	}
 	
-	id = obterRetornoUnicoDaQuery(query);
+	usuario->id = obterRetornoUnicoDaQuery(query);
 
-	if(id != NULL)
+	if(usuario->id != NULL)
 	{
 		printf(" LOG: Foi encontrado um ID para cliente que satisfaça as seguintes comparações: em Usuario.h usuario_checarLogin()\n");
 		printf(" \t\tcliente.email = |%s|\n", email);
@@ -495,7 +495,7 @@ int usuario_checarLogin(const char *email, const char *senha, char *id)// RETORN
 	else
 	{
 		//tamanho = 74 + strlen(email) + strlen(senha) + 1;
-		id = NULL;
+		usuario->id = NULL;
 		tamanho = 75 + strlen(email) + strlen(senha);
 		query = (char *)malloc(sizeof(char) * tamanho);
 		if (query == NULL)
@@ -509,8 +509,8 @@ int usuario_checarLogin(const char *email, const char *senha, char *id)// RETORN
 			return _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
 		}
 
-		id = obterRetornoUnicoDaQuery(query);
-		if (id != NULL)
+		usuario->id = obterRetornoUnicoDaQuery(query);
+		if (usuario->id != NULL)
 		{
 			printf(" LOG: Foi encontrado um ID para contratante que satisfaça as seguintes comparações: em Usuario.h usuario_checarLogin()\n");
 			query = NULL;
@@ -519,7 +519,7 @@ int usuario_checarLogin(const char *email, const char *senha, char *id)// RETORN
 		else
 		{
 			query = NULL;
-			id = NULL;
+			usuario->id = NULL;
 			return USUARIO_NIVEL_DE_PERMISSAO_NULL;
 		}
 	}
