@@ -229,6 +229,11 @@ APP
 									(Obtem o id que referencia a localizacao passada ao banco de dados)
 
 		iM (TIPO_INFORMACOES_MINHAS)
+			(se logado como cliente normal (usuario final), retorna uma string no seguinte formato:)
+				Nome Sobrenome Sexo Telefone dataNascimento pontos idLocalizacao
+
+			(se logado como contratante, retorna uma string no seguinte formato:)
+				Nome CNPJ plano email telefone idLocalizacao
 			(retorna os dados do usuario logado, seja contratante, cliente ou root)
 
 	5	(COMANDO_REMOVER)
