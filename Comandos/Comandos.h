@@ -198,6 +198,7 @@
 #define TIPO_PONTO "Dj"
 
 #define TIPO_INFORMACOES_PRODUTO "iP"
+#define TIPO_INFORMACOES_MINHAS "iM"
 
 
 

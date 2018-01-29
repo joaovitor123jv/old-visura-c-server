@@ -45,119 +45,112 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 		printf(" Warning: Comando insuficiente em Comando-Obter.h comandoObter()\n");
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
-	else
+	else if (stringMaior(token, TAMANHO_TIPO))
 	{
-		if(strcmp(token, TOP_10_NOVOS) == 0)// APP 4 J
+		printf(" Warning: Comando exageradamente grande detectado em Comando-Obter.h comandoObter()\n");
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+	}
+	
+	
+	if(strcmp(token, TOP_10_NOVOS) == 0)// APP 4 J
+	{
+		return obterTop10NovosProdutos();
+	}// --TOP_10_NOVOS
+	else if(strcmp(token, TOP_10_MELHORES) == 0)
+	{
+		return obterTop10ProdutosMelhorAvaliados();//APP 4 9& 
+	}
+	else if(strcmp(token, TIPO_INFORMACOES_PRODUTO) == 0)
+	{
+		printf(" LOG: Requisitando informacoes de produto em Comando-Obter.h comandoObter()\n");
+		return obterInformacoesProduto(usuario);
+	}
+	else if(strcmp(token, TIPO_DESCRICAO_PRODUTO) == 0)// APP 4 Q idProduto
+	{
+		printf(" LOG: Requisitando descricao de produto em Comando-Obter.h comandoObter()\n");
+		return obterDescricaoProduto(usuario);
+	}
+	else if(strcmp(token, TIPO_ID_CIDADE) == 0)// APP 4 $
+	{
+		return obterIdCidade();
+	}
+	else if( strcmp(token, TIPO_ID_CONTRATANTE) == 0 )
+	{
+		return obterIdContratante(usuario);
+	}
+	else if( strcmp(token, TIPO_ID_LOCALIZACAO) == 0 )
+	{
+		return obterIdLocalizacao();
+	}
+	else if(strcmp(token, TIPO_NOME_PRODUTO) == 0)// APP 4 1. idProduto
+	{
+		printf(" LOG: Requisitando nome de produto em Comando-Obter.h comandoObter()\n");
+		return obterNomeProduto(usuario);
+	}
+	else if(strcmp(token, TIPO_AVALIACAO) == 0)// APP 4 kW * idProduto
+	{
+		char *retorno;
+		if((retorno = obterAvaliacaoProduto(usuario)) != NULL)//TODO MECHER ATUALIZAR
 		{
-			return obterTop10NovosProdutos();
-		}// --TOP_10_NOVOS
-		else if(strcmp(token, TOP_10_MELHORES) == 0)
-		{
-			char *top = obterTop10ProdutosMelhorAvaliados();// APP 4 9&
-			if(top == NULL)
-			{
-				printf(" Warning: ocorreu um erro ao processar top 10 melhores produtos em Comando-Obter. comandoObter()\n");
-				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-			}
-			else
-			{
-				printf(" LOG: Retorno obtido com sucesso de obterTop10ProdutosMelhorAvaliados() em Comando-Obter.h comandoObter()\n");
-				return top;
-			}
+			printf(" LOG: Obtenção de produto realizada com sucesso em Comando-Obter.h comandoObter() 1q654f8tgsd\n");
+			return retorno;
 		}
-		else if(strcmp(token, TIPO_INFORMACOES_PRODUTO) == 0)
+		else
 		{
-			printf(" LOG: Requisitando informacoes de produto em Comando-Obter.h comandoObter()\n");
-			return obterInformacoesProduto(usuario);
+			printf(" Warning: Ocorreu um erro durante a realização do comando de obtenção em Comando-Obter.h comandoObter() asdkjhjbtffs\n");
+			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 		}
-		else if(strcmp(token, TIPO_DESCRICAO_PRODUTO) == 0)// APP 4 Q idProduto
-		{
-			printf(" LOG: Requisitando descricao de produto em Comando-Obter.h comandoObter()\n");
-			return obterDescricaoProduto(usuario);
-		}
-		else if(strcmp(token, TIPO_NOME_PRODUTO) == 0)// APP 4 1. idProduto
-		{
-			printf(" LOG: Requisitando nome de produto em Comando-Obter.h comandoObter()\n");
-			return obterNomeProduto(usuario);
-		}
-		else if(strcmp(token, TIPO_AVALIACAO) == 0)// APP 4 kW * idProduto
-		{
-			char *retorno;
-			if((retorno = obterAvaliacaoProduto(usuario)) != NULL)//TODO MECHER ATUALIZAR
-			{
-				printf(" LOG: Obtenção de produto realizada com sucesso em Comando-Obter.h comandoObter() 1q654f8tgsd\n");
-				return retorno;
-			}
-			else
-			{
-				printf(" Warning: Ocorreu um erro durante a realização do comando de obtenção em Comando-Obter.h comandoObter() asdkjhjbtffs\n");
-				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-			}
-		}
-		else if(strcmp(token, TIPO_VISUALIZACAO) == 0)// APP 4 2
-		{
-			// IMPORTANTE: Leia isso como "Desejo obter ALGO relacionado a visualizações"
-			// 		A pergunta que surge com isso: "O que ?"
+	}
+	else if(strcmp(token, TIPO_VISUALIZACAO) == 0)// APP 4 2
+	{
+		// IMPORTANTE: Leia isso como "Desejo obter ALGO relacionado a visualizações"
+		// 		A pergunta que surge com isso: "O que ?"
 
+		token = strtok(NULL, " ");
+		if(token == NULL)
+		{
+			printf(" Warning: Comando insuficiente em Comando-Obter.h comandoObter() 45a654q8e\n");
+			return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+		}
+		if (strcmp(token, TIPO_QUANTIDADE) == 0)// APP 4 2 @
+		{
+			// DESEJA obter a QUANTIDADE de algo relacionado a visualizações
 			token = strtok(NULL, " ");
 			if(token == NULL)
 			{
-				printf(" Warning: Comando insuficiente em Comando-Obter.h comandoObter() 45a654q8e\n");
+				printf(" Warning: Comando insuficiente em Comando-Obter.h comandoObter() 5q68r87s\n");
 				return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 			}
-			if (strcmp(token, TIPO_QUANTIDADE) == 0)// APP 4 2 @
+			if (strcmp(token, TIPO_VISUALIZACAO) == 0)// APP 4 2 @ 2
 			{
-				// DESEJA obter a QUANTIDADE de algo relacionado a visualizações
-				token = strtok(NULL, " ");
-				if(token == NULL)
-				{
-					printf(" Warning: Comando insuficiente em Comando-Obter.h comandoObter() 5q68r87s\n");
-					return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
-				}
-				if (strcmp(token, TIPO_VISUALIZACAO) == 0)// APP 4 2 @ 2
-				{
-					// DESEJA obter a QUANTIDADE de VISUALIZACOES (NÃO ANONIMAS)
-					printf(" LOG: Solicitando Obtenção de quantidade de visualizações de usuario não anonimos em Comando-Obter.h comandoObter()\n");
-					// printf(" Warning: Comando incompleto em Comando-Obter.h obterDados()\n");
-					return obterQuantidadeDeVisualizacoesGerais(usuario);
-				}
-				else if(strcmp(token, TIPO_VISUALIZACAO_ANONIMA_CHAR) == 0)// APP 4 2 @ 3
-				{
-					// DESEJA obter a QUANTIDADE de VISUALIZACOES ANONIMAS
-					printf(" LOG: Solicitando Obtenção de quantidade de visualizações anonimas em Comando-Obter.h comandoObter()\n");
-					return obterQuantidadeDeVisualizacoesAnonimas(usuario);
-				}
-				else if(strcmp(token, TIPO_ESPECIFICO) == 0)// APP 4 2 @ =
-				{
-					//DESEJA obter QUANTIDADE de VISUALIZACOES de ALGO ESPECIFICO
-					printf(" LOG: Solicitando Obtenção de quantidade de visualizações de algo específico em Comando-Obter.h comandoObter()\n");
-					printf(" Warning: Comando incompleto em Comando-Obter.h comandoObter()\n");
-					return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
-				}
+				// DESEJA obter a QUANTIDADE de VISUALIZACOES (NÃO ANONIMAS)
+				printf(" LOG: Solicitando Obtenção de quantidade de visualizações de usuario não anonimos em Comando-Obter.h comandoObter()\n");
+				// printf(" Warning: Comando incompleto em Comando-Obter.h obterDados()\n");
+				return obterQuantidadeDeVisualizacoesGerais(usuario);
 			}
-			else
+			else if(strcmp(token, TIPO_VISUALIZACAO_ANONIMA_CHAR) == 0)// APP 4 2 @ 3
 			{
-				printf(" Warning: Comando não compreendido (%s) em Comando-Obter.h comandoObter() aq468e7ca\n", token);
-				return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+				// DESEJA obter a QUANTIDADE de VISUALIZACOES ANONIMAS
+				printf(" LOG: Solicitando Obtenção de quantidade de visualizações anonimas em Comando-Obter.h comandoObter()\n");
+				return obterQuantidadeDeVisualizacoesAnonimas(usuario);
+			}
+			else if(strcmp(token, TIPO_ESPECIFICO) == 0)// APP 4 2 @ =
+			{
+				//DESEJA obter QUANTIDADE de VISUALIZACOES de ALGO ESPECIFICO
+				printf(" LOG: Solicitando Obtenção de quantidade de visualizações de algo específico em Comando-Obter.h comandoObter()\n");
+				printf(" Warning: Comando incompleto em Comando-Obter.h comandoObter()\n");
+				return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
 			}
 		}
-		else if(strcmp(token, TIPO_ID_CIDADE) == 0)// APP 4 $
+		else
 		{
-			return obterIdCidade();
+			printf(" Warning: Comando não compreendido (%s) em Comando-Obter.h comandoObter() aq468e7ca\n", token);
+			return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 		}
-		else if( strcmp(token, TIPO_ID_CONTRATANTE) == 0 )
-		{
-			return obterIdContratante(usuario);
-		}
-		else if( strcmp(token, TIPO_ID_LOCALIZACAO) == 0 )
-		{
-			return obterIdLocalizacao();
-		}
-		printf(" Warning: Comando inexistente: |%s| em Comando-Obter.h comandoObter() rbjak\n", token);
-		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
-	printf(" ERRO: deu uma merda muito grande aqui em Comando-Obter.h comandoObter() asdejkjhjvkerwbhsajk\n");
-	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+
+	printf(" Warning: Comando inexistente: |%s| em Comando-Obter.h comandoObter() rbjak\n", token);
+	return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 }
 
 char *obterIdCidade()
@@ -699,7 +692,7 @@ char *obterInformacoesProduto(Usuario *usuario)
 		printf(" Warning: Comando insuficiente detectado em Comando-Obter.h obterInformacoesProduto() asdsaehtusdr\n");
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
-	if (usuario_PermissaoContratante(usuario))
+	if (usuario_PermissaoContratante(usuario) || usuario_PermissaoRoot(usuario))// TODO Remover comando de ROOT
 	{
 		return obterInformacoesAvancadasDeProdutoDoBanco(usuario, idProduto);
 		// return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;

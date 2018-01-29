@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
 		else
 		{
 			printf("\n\t\aResposta recebida!!!\n\n\n");
-			printf("\n%s\n", server_reply);
+			printf("\n→%s←\n", server_reply);
 		}
 	}
 	

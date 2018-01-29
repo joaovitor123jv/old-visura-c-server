@@ -142,6 +142,12 @@ APP
 
 	4	(COMANDO_OBTER)
 		J	(TOP_10_NOVOS)
+			1	(TIPO_REALIDADE_AUMENTADA)
+				(obtem os 10 produtos mais recentes em realidade aumentada)
+			2	(TIPO_REALIDADE_VIRTUAL)
+				(obtem os 10 produtos mais recentes em realidade virtual)
+			3	(TIPO_REALIDADE_AUMENTADA_E_VIRTUAL)
+				(obtem os 10 produtos mais recentes em realidade aumentada e virtual)
 			(Obtem os 10 produtos mais recentemente adicionados ao banco de dados e retorna seus respectivos IDs, separados por espaço)
 		
 		9&	(TOP_10_MELHORES)
@@ -209,7 +215,8 @@ APP
 					(retorna o ID da cidade "nomeDaCidade" que está no estado "nomeDoEstado")
 
 		;	(TIPO_ID_CONTRATANTE)
-			cnpj	(o cnpj da empresa que quer obter o ID)(Temporariamente obrigatorio)
+			(Se estiver logado como contratante, retorna diretamente o id que referencia a empresa, sem precisar de usar o cnpj)
+			cnpj	(o cnpj da empresa que quer obter o ID)(Opcional, feito pro root usar em caso que a empresa esquece seus dados)
 				(retorna o id que referencia a empresa(contratante) no banco de dados)
 		
 		i0	(TIPO_ID_LOCALIZACAO)
@@ -220,6 +227,9 @@ APP
 							numero	(opcional, numero definido na localizacao)
 								complemento	(opcional, definido na localizacao)
 									(Obtem o id que referencia a localizacao passada ao banco de dados)
+
+		iM (TIPO_INFORMACOES_MINHAS)
+			(retorna os dados do usuario logado, seja contratante, cliente ou root)
 
 	5	(COMANDO_REMOVER)
 		// Sendo criado no momento
