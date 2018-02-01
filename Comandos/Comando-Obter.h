@@ -739,7 +739,7 @@ char *obterInformacoesUsuario(Usuario *usuario)
 	}
 	else if (usuario_PermissaoRoot(usuario))
 	{
-		return "ROOT";
+		return strdup("ROOT");
 	}
 	else
 	{
