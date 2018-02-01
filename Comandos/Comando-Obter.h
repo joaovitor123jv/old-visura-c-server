@@ -539,14 +539,14 @@ char *obterTop10NovosProdutos(Usuario *usuario)// APP 4 J
 		else if(strcmp(token, TIPO_REALIDADE_AUMENTADA) == 0)// APP 4 J 1
 		{
 			printf(" LOG: Contratante Solicitando top 10 novos produtos, realidade aumentada em Comando-Obter.h obterTop10NovosProdutos()\n");
-			// return obterUltimos10ProdutosAdicionadosRealidadeAumentadaPeloContratanteDoBanco(usuario);
-			return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
+			return obterUltimos10ProdutosAdicionadosRealidadeAumentadaPeloContratanteDoBanco(usuario);
+			// return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
 		}
 		else if(strcmp(token, TIPO_REALIDADE_VIRTUAL) == 0)// APP 4 J 2
 		{
 			printf(" LOG: Contratante Solicitando top 10 novos produtos, realidade virtual em Comando-Obter.h obterTop10NovosProdutos()\n");
-			// return obterUltimos10ProdutosAdicionadosRealidadeVirtualPeloContratanteDoBanco(usuario);
-			return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
+			return obterUltimos10ProdutosAdicionadosRealidadeVirtualPeloContratanteDoBanco(usuario);
+			// return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
 		}
 		else
 		{

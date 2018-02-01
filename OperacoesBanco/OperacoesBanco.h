@@ -3907,21 +3907,72 @@ char *obterUltimos10ProdutosAdicionadosPeloContratanteDoBanco(Usuario *usuario)
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
-	int tamanho = 110 + strlen(usuario_obterId(usuario)) + 1;
+	int tamanho = 160 + strlen(usuario_obterId(usuario)) + 1;
 	char *query = (char *)malloc(sizeof(char) * tamanho);
 	if (query == NULL)
 	{
 		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterUltimos10ProdutosAdicionadosPeloContratanteDoBanco()\n");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
-	snprintf(query, tamanho, "SELECT P.idProduto FROM contratante C JOIN produto P WHERE C.idContratante=%s ORDER BY datacriacao DESC LIMIT 10", usuario_obterLogin(usuario));
+	snprintf(query, tamanho, "SELECT P.idproduto FROM produto P JOIN contratante C ON P.contratante_idcontratante=C.idcontratante WHERE C.idcontratante=%s ORDER BY P.datacriacao DESC LIMIT 10;", usuario_obterId(usuario));
 	if (query == NULL)
 	{
 		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterUltimos10ProdutosAdicionadosPeloContratanteDoBanco()\n");
 	}
-	return retornaNIteracoesDaQuery(strdup("SELECT idProduto from produto;"), 10);
+	return retornaNIteracoesDaQuery(query, 10);
 }
 
+char *obterUltimos10ProdutosAdicionadosRealidadeAumentadaPeloContratanteDoBanco(Usuario *usuario)
+{
+	if (usuario == NULL)
+	{
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+
+	int tamanho = 174 + strlen(usuario_obterId(usuario)) + 1 + 1;
+	char *query = (char *)malloc(sizeof(char) * tamanho);
+	if (query == NULL)
+	{
+		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterUltimos10ProdutosAdicionadosRealidadeAumentadaPeloContratanteDoBanco()\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	snprintf(query, tamanho, "SELECT P.idproduto FROM produto P JOIN contratante C ON P.contratante_idcontratante=C.idcontratante WHERE C.idcontratante=%s AND P.tipo=\'%s\' ORDER BY P.datacriacao DESC LIMIT 10;", usuario_obterId(usuario), TIPO_REALIDADE_AUMENTADA);
+	if (query == NULL)
+	{
+		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterUltimos10ProdutosAdicionadosPeloContratanteDoBanco()\n");
+	}
+	return retornaNIteracoesDaQuery(query, 10);
+}
+
+char *obterUltimos10ProdutosAdicionadosRealidadeVirtualPeloContratanteDoBanco(Usuario *usuario)
+{
+	if (usuario == NULL)
+	{
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+
+	int tamanho = 174 + strlen(usuario_obterId(usuario)) + 1 + 1;
+	char *query = (char *)malloc(sizeof(char) * tamanho);
+	if (query == NULL)
+	{
+		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterUltimos10ProdutosAdicionadosRealidadeAumentadaPeloContratanteDoBanco()\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	snprintf(query, tamanho, "SELECT P.idproduto FROM produto P JOIN contratante C ON P.contratante_idcontratante=C.idcontratante WHERE C.idcontratante=%s AND P.tipo=\'%s\' ORDER BY P.datacriacao DESC LIMIT 10;", usuario_obterId(usuario), TIPO_REALIDADE_VIRTUAL);
+	if (query == NULL)
+	{
+		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterUltimos10ProdutosAdicionadosPeloContratanteDoBanco()\n");
+	}
+	return retornaNIteracoesDaQuery(query, 10);
+}
 
 /* ***FIM COMANDOS DE OBTENÇÃO*** */
 
