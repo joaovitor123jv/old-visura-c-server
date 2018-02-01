@@ -10,7 +10,7 @@ char *obterIdCidade(void);//APP 4 $
 char *obterIdContratante(Usuario *usuario);// APP 4 ;
 char *obterIdLocalizacao(void);// APP 4 i0
 
-char *obterTop10NovosProdutos(void);//APP 4 J
+char *obterTop10NovosProdutos(Usuario *usuario);//APP 4 J
 	//Essa função reencaminha pra APP 4 J (1, 2 e 3)
 
 char *obterTop10ProdutosMelhorAvaliados();//Retorna os 10 produtos melhor avaliados do banco de dados, ou NULL quando dá erro
@@ -56,7 +56,7 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 	
 	if(strcmp(token, TOP_10_NOVOS) == 0)// APP 4 J
 	{
-		return obterTop10NovosProdutos();
+		return obterTop10NovosProdutos(usuario);
 	}// --TOP_10_NOVOS
 	else if(strcmp(token, TOP_10_MELHORES) == 0)
 	{
@@ -497,7 +497,7 @@ char *obterIdLocalizacao(void)// APP 4 i0 idCidade cep bairro rua numero complem
 
 
 // decide quais tipos de produto estão aptos a serem enviados
-char *obterTop10NovosProdutos()// APP 4 J
+char *obterTop10NovosProdutos(Usuario *usuario)// APP 4 J
 {
 	/*
 	 * PADRÃO DE RETORNO: Retorna os id's de produtos separados por um espaco
@@ -505,6 +505,16 @@ char *obterTop10NovosProdutos()// APP 4 J
 	 * Linha 1 ->  "idProduto1 idproduto2 idProduto3 ...\0"
 	 *
 	 */
+	if (usuario == NULL)
+	{
+		printf(" ERRO: erro interno, usuario nulo detectado em Comando-Obter.h obterTop10NovosProdutos()\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		printf(" ERRO: Usuario nao conectado detectado em Comando-Obter.h obterTop10NovosProdutos()\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
 
 	char *token;
 	token = strtok(NULL, " ");
@@ -518,24 +528,52 @@ char *obterTop10NovosProdutos()// APP 4 J
 		printf(" Warning: Tipo de produto exageradamente grande em Comando-Obter.h obterTop10NovosProdutos()\n");
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
-	if (strcmp(token, TIPO_REALIDADE_AUMENTADA_E_VIRTUAL) == 0)// APP 4 J 3
+
+	if (usuario_PermissaoContratante(usuario))
 	{
-		printf(" LOG: Solicitando top 10 novos produtos, realidade aumentada e virtual em Comando-Obter.h obterTop10NovosProdutos()\n");
-		return obterTop10NovosProdutosDoBanco();
-	}
-	else if(strcmp(token, TIPO_REALIDADE_AUMENTADA) == 0)// APP 4 J 1
-	{
-		printf(" LOG: Solicitando top 10 novos produtos, realidade aumentada em Comando-Obter.h obterTop10NovosProdutos()\n");
-		return obterTop10NovosProdutosRealidadeAumentadaDoBanco();
-	}
-	else if(strcmp(token, TIPO_REALIDADE_VIRTUAL) == 0)// APP 4 J 2
-	{
-		printf(" LOG: Solicitando top 10 novos produtos, realidade virtual em Comando-Obter.h obterTop10NovosProdutos()\n");
-		return obterTop10NovosProdutosRealidadeVirtualDoBanco();
+		if (strcmp(token, TIPO_REALIDADE_AUMENTADA_E_VIRTUAL) == 0)// APP 4 J 3
+		{
+			printf(" LOG: Contratante Solicitando top 10 novos produtos, realidade aumentada e virtual em Comando-Obter.h obterTop10NovosProdutos()\n");
+			return obterUltimos10ProdutosAdicionadosPeloContratanteDoBanco(usuario);
+		}
+		else if(strcmp(token, TIPO_REALIDADE_AUMENTADA) == 0)// APP 4 J 1
+		{
+			printf(" LOG: Contratante Solicitando top 10 novos produtos, realidade aumentada em Comando-Obter.h obterTop10NovosProdutos()\n");
+			// return obterUltimos10ProdutosAdicionadosRealidadeAumentadaPeloContratanteDoBanco(usuario);
+			return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
+		}
+		else if(strcmp(token, TIPO_REALIDADE_VIRTUAL) == 0)// APP 4 J 2
+		{
+			printf(" LOG: Contratante Solicitando top 10 novos produtos, realidade virtual em Comando-Obter.h obterTop10NovosProdutos()\n");
+			// return obterUltimos10ProdutosAdicionadosRealidadeVirtualPeloContratanteDoBanco(usuario);
+			return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
+		}
+		else
+		{
+			return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+		}
 	}
 	else
 	{
-		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+		if (strcmp(token, TIPO_REALIDADE_AUMENTADA_E_VIRTUAL) == 0)// APP 4 J 3
+		{
+			printf(" LOG: Solicitando top 10 novos produtos, realidade aumentada e virtual em Comando-Obter.h obterTop10NovosProdutos()\n");
+			return obterTop10NovosProdutosDoBanco();
+		}
+		else if(strcmp(token, TIPO_REALIDADE_AUMENTADA) == 0)// APP 4 J 1
+		{
+			printf(" LOG: Solicitando top 10 novos produtos, realidade aumentada em Comando-Obter.h obterTop10NovosProdutos()\n");
+			return obterTop10NovosProdutosRealidadeAumentadaDoBanco();
+		}
+		else if(strcmp(token, TIPO_REALIDADE_VIRTUAL) == 0)// APP 4 J 2
+		{
+			printf(" LOG: Solicitando top 10 novos produtos, realidade virtual em Comando-Obter.h obterTop10NovosProdutos()\n");
+			return obterTop10NovosProdutosRealidadeVirtualDoBanco();
+		}
+		else
+		{
+			return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+		}
 	}
 }
 

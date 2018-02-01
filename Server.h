@@ -220,10 +220,16 @@ void *Servidor(void *cliente)
 			interpretando = false;
 		}
 		printf(" LOG: Encerrando thread de Servidor em Server.h Servidor()->sairDaThread()\n");
-		reset_Usuario(&usuario);
-		close(*(int *)cliente);
+		// reset_Usuario(&usuario);
+		delete_Usuario(&usuario);
+		if (cliente != NULL)
+		{
+			close(*(int *)cliente);	
+		}
+		cliente = NULL;
 		pthread_exit( (void *) 0 );
 	}
+
 	void interrupcaoForcadaEmThread(int sinal)
 	{
 		printf(" Sinal pego na Thread = |%d| ← \n", sinal);

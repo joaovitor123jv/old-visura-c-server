@@ -400,8 +400,8 @@ bool delete_Usuario(Usuario *usuario)
 		free(usuario->id);
 		usuario->id = NULL;
 	}
-	free(usuario);
-	usuario = NULL;
+	// free(usuario);
+	// usuario = NULL;
 	return true;
 }
 

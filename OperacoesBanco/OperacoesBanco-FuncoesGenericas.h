@@ -98,7 +98,27 @@ bool desconectarBanco()
 	return true;
 }
 
-// Retorna TRUE, se a query retorna algo com conteúdo
+bool conexaoAtiva()
+{
+	if(conexao == NULL)
+	{
+		printf("ERRO DE CONEXÃO (OperacoesBanco-FuncoesGenericas.h) (checarConexao())\n");
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(conectarBanco())
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação em OperacoesBanco-FuncoesGenericas.h checarConexao()()\n");
+			return true;
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
+	}
+	return true;
+}
+
+// Retorna TRUE, se a query retorna algo com conteúdo, libera a query
 bool queryRetornaConteudo(char *query)
 {
 	if(query == NULL)
@@ -234,6 +254,11 @@ bool executaQuery(char *query)
 
 char *obterRetornoUnicoDaQuery(char *query)// ATENÇÃO: Função de uso INTERNO da aplicação, para um retorno direto ao usuario, use retornaUnicoRetornoDaQuery(char *query);
 {
+	if (!conexaoAtiva())
+	{
+		printf(" ERRO: Conexao inativa detectada em OperacoesBanco-FuncoesGenericas.h obterRetornoUnicoDaQuery()\n");
+		return NULL;
+	}
 	if( query == NULL )
 	{
 		printf(" ERRO: query nula em obterRetornoUnicoDaQuery() OperacoesBanco-FuncoesGenericas.h\n");
@@ -347,6 +372,11 @@ char *obterRetornoUnicoDaQuery(char *query)// ATENÇÃO: Função de uso INTERNO
 
 char *retornaUnicoRetornoDaQuery(char *query)// Retorna um só resultado de uma query informada pelo usuario e já libera a query... retorna direto ao usuario
 {
+	if (!conexaoAtiva())
+	{
+		printf(" Warning: Conexao inativa detectada em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery()\n");
+		return RETORNO_ERRO_INTERNO_BANCO_STR_DINAMICA;
+	}
 	if( query == NULL )
 	{
 		printf(" ERRO: query nula em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery()\n");
@@ -462,23 +492,14 @@ char *retornaUnicoRetornoDaQuery(char *query)// Retorna um só resultado de uma 
 // bool checarIdProduto(MYSQL *conexao, char *id)
 bool checarIdProduto(char *id)//OK
 {
-	if(conexao == NULL)
-	{
-		printf("ERRO DE CONEXÃO (OperacoesBanco-FuncoesGenericas.h) (checarIdProduto())\n");
-		printf(" LOG: Tentando reconexão com banco de dados \n");
-		if(conectarBanco())
-		{
-			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
-		}
-		else
-		{
-			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return false;
-		}
-	}
 	if(id == NULL)
 	{
 		printf("ERRO: Não há login para checar (id == NULL) (OperacoesBanco-FuncoesGenericas.h) (checarIdProduto())\n");
+		return false;
+	}
+	if(!conexaoAtiva())
+	{
+		printf(" Warning: conexao inativa detectada em OperacoesBanco-FuncoesGenericas.h checarIdProduto()\n");
 		return false;
 	}
 	if(strlen(id) != 10)
@@ -569,19 +590,24 @@ char *obterIdContratanteDoBancoPorUsuario(Usuario *usuario)
 //retorna TRUE se o produto estiver vencido, false se estiver dentro do prazo de validade
 bool produtoVencido(char *idProduto, Usuario *usuario)
 {
-	if(conexao == NULL)
+	// if(conexao == NULL)
+	// {
+	// 	printf("ERRO DE CONEXÃO (OperacoesBanco-FuncoesGenericas.h) (produtoVencido())\n");
+	// 	printf(" LOG: Tentando reconexão com banco de dados \n");
+	// 	if(conectarBanco())
+	// 	{
+	// 		printf(" LOG: Reconectado com sucesso, continuando interpretação em OperacoesBanco-FuncoesGenericas.h produtoVencido()()\n");
+	// 	}
+	// 	else
+	// 	{
+	// 		printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+	// 		return true;
+	// 	}
+	// }
+	if (!conexaoAtiva())
 	{
-		printf("ERRO DE CONEXÃO (OperacoesBanco-FuncoesGenericas.h) (produtoVencido())\n");
-		printf(" LOG: Tentando reconexão com banco de dados \n");
-		if(conectarBanco())
-		{
-			printf(" LOG: Reconectado com sucesso, continuando interpretação em OperacoesBanco-FuncoesGenericas.h produtoVencido()()\n");
-		}
-		else
-		{
-			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return true;
-		}
+		printf(" Warning: Conexão inativa detectada em OperacoesBanco-FuncoesGenericas.h produtoVencido()\n");
+		return true;
 	}
 	if (idProduto == NULL)
 	{
@@ -699,7 +725,10 @@ char *retornaInformacoesObtidasNaQuery(char *query)
 		printf(" ERRO: query nula em retornaInformacoesObtidasNaQuery() em OperacoesBanco-FuncoesGenericas.h\n");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
-	
+	if (!conexaoAtiva())
+	{
+		return RETORNO_ERRO_INTERNO_BANCO_STR_DINAMICA;
+	}
 	
 	if(mysql_query(conexao, query))
 	{
@@ -806,5 +835,115 @@ char *retornaInformacoesObtidasNaQuery(char *query)
 	mysql_free_result(resultado);
 	resultado = NULL;
 	return informacoes;
+}
 
+/*
+	Comando utilizado pelo obterTop10Alguma coisa
+	Retorna no máximo, o numero de informações (numero de linhas) informado.
+	A query enviada deve ter somente um retorno, ou a função retornará ao usuario somente a primeira coluna desse retorno
+	Essa função retorna diretamente ao usuario
+	
+	Padrão de retorno para retornaNIteracoesDaQuery("SELECT resultado FROM tabela", 4); :
+		resultado1 resultado2 resultado3 resultado4
+*/
+char *retornaNIteracoesDaQuery(char *query, int numeroIteracoes)
+{
+	if (query == NULL)
+	{
+		printf(" Warning: query nula detectada em OperacoesBanco-FuncoesGenericas.h retornaNIteracoesDaQuery()\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if (numeroIteracoes <= 0)
+	{
+		printf(" Warning: numeroIteracoes invalido detectado em OperacoesBanco-FuncoesGenericas.h retornaNIteracoesDaQuery()\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if (!conexaoAtiva())
+	{
+		printf(" Warning: conexao inativa detectada em OperacoesBanco-FuncoesGenericas.h retornaNIteracoesDaQuery()\n");
+		return RETORNO_ERRO_INTERNO_BANCO_STR_DINAMICA;
+	}
+
+	if (!executaQuery(query))
+	{
+		free(query);
+		query = NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+
+	free(query);
+	query = NULL;
+
+	MYSQL_RES *resultado = mysql_store_result(conexao);
+	if (resultado == NULL)
+	{
+		printf(" Warning: Consulta não realizada em OperacoesBanco-FuncoesGenericas.h retornaNIteracoesDaQuery()\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	
+	if(mysql_num_fields(resultado) <= 0)
+	{
+		printf(" Warning: Nada encontrado em OperacoesBanco-FuncoesGenericas.h retornaNIteracoesDaQuery()\n");
+		mysql_free_result(resultado);
+		resultado = NULL;
+		return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;
+	}
+
+	if (mysql_num_rows(resultado) <= 0)
+	{
+		printf(" Warning: nada encontrado em OperacoesBanco-FuncoesGenericas.h retornaNIteracoesDaQuery() abr0a9sfdb\n");
+		mysql_free_result(resultado);
+		resultado = NULL;
+		return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;
+	}
+
+	MYSQL_ROW linha;
+	int contador = 1;
+	int tamanho = 0;
+	char *retorno = NULL;
+
+	linha = mysql_fetch_row(resultado);
+	if (linha[0] == NULL)
+	{
+		return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;
+	}
+	tamanho = strlen(linha[0]) + 2;
+	retorno = (char *)malloc(sizeof(char) * tamanho);
+	if (retorno == NULL)
+	{
+		mysql_free_result(resultado);
+		resultado = NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	strcpy(retorno, linha[0]);
+	// retorno = strdup(linha[0]);
+	strcat(retorno, " ");
+
+	while((linha = mysql_fetch_row(resultado)))
+	{
+		if (contador >= numeroIteracoes)
+		{
+			break;
+		}
+		else
+		{
+			if(linha[0] == NULL)
+			{
+				return RETORNO_ERRO_INTERNO_BANCO_STR_DINAMICA;
+			}
+			tamanho = tamanho + strlen(linha[0]) + 1;
+			retorno = realloc(retorno, tamanho);
+			if (retorno == NULL)
+			{
+				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+			}
+			strcat(retorno, linha[0]);
+			strcat(retorno, " ");
+			printf(" DEBUG: RETORNO = |%s|\n", retorno);
+		}
+		contador = contador + 1;
+	}
+	mysql_free_result(resultado);
+	resultado = NULL;
+	return retorno;
 }

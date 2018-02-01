@@ -24,6 +24,7 @@ void limpaBuffers(void) __attribute__ ((destructor));
 void interrupcaoForcada(int sinal)
 {
 	printf(" Sinal pego = |%d| ← \n", sinal);
+	desconectarBanco();
 	exit(sinal);
 }
 

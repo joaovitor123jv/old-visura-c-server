@@ -313,19 +313,10 @@ bool addCidadeAoBanco(char *nomeDoEstado, char *nomeCidade)//DONE
 		printf(" ERRO: Nome de estado informado == NULL em OperacoesBanco.h addCidadeAoBanco()\n");
 		return false;
 	}
-	if(conexao == NULL)
+	if (!conexaoAtiva())
 	{
-		printf(" ERRO: Não há conexao com o banco de dados em OperacoesBanco.h addCidadeAoBanco()\n");
-		printf(" LOG: Tentando reconexão com banco de dados \n");
-		if(conectarBanco())
-		{
-			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
-		}
-		else
-		{
-			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return false;
-		}
+		printf(" Warning: Conexao com o banco de dados é inexistente em OperacoesBanco.h addCidadeAoBanco()\n");
+		return false;
 	}
 	
 	char *query = NULL;
@@ -409,19 +400,10 @@ bool addCidadeAoBanco(char *nomeDoEstado, char *nomeCidade)//DONE
 
 bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, char *numero, char *complemento)// TODO Limitar criação de localizacoes repetidas
 {
-	if(conexao == NULL)
+	if (!conexaoAtiva())
 	{
-		printf(" Warning: Conexao nula com banco de dados (OperacoesBanco.h addLocalizacaoAoBanco())\n");
-		printf(" LOG: Tentando reconexão com banco de dados \n");
-		if(conectarBanco())
-		{
-			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
-		}
-		else
-		{
-			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return false;
-		}
+		printf(" Warning: Conexao com o banco de dados é inexistente em OperacoesBanco.h addLocalizacaoAoBanco()\n");
+		return false;
 	}
 	if(idCidade == NULL)
 	{
@@ -1185,21 +1167,6 @@ bool addLocalizacaoAoBanco(char* idCidade, char *cep, char *bairro, char *rua, c
 
 bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, char *telefone, char *idLocalizacao, char *senha)//DONE
 {
-	if(conexao == NULL)
-	{
-		printf(" Warning: conexão nula em addContratanteAoBanco() OperacoesBanco.h\n");
-		printf(" LOG: Tentando reconexão com banco de dados \n");
-		if(conectarBanco())
-		{
-			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
-		}
-		else
-		{
-			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return false;
-		}
-	}
-	
 	if(idLocalizacao == NULL)
 	{
 		printf(" Warning: Não foi informado idLocalizacao em addContratanteAoBanco() OperacoesBanco.h \n");
@@ -1226,6 +1193,11 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 	if( senha == NULL )
 	{
 		printf(" Warning: senha informada é nula em addContratanteAoBanco() OperacoesBanco.h sajbveiosd89\n");
+		return false;
+	}
+	if (!conexaoAtiva())
+	{
+		printf(" Warning: Conexao com o banco de dados é inexistente em OperacoesBanco.h addContratanteAoBanco()\n");
 		return false;
 	}
 	
@@ -1372,21 +1344,6 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 
 bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char *nomeProduto, char *descricao, char *tipoProduto, char *categoria)//DONE COM PROBLEMA
 {
-	if(conexao == NULL)
-	{
-		printf(" Warning: Conexao nula em addProdutoAoBanco() OperacoesBanco.h 68sg2\n");
-		printf(" LOG: Tentando reconexão com banco de dados \n");
-		if(conectarBanco())
-		{
-			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
-		}
-		else
-		{
-			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return false;
-		}
-	}
-	
 	if(idContratante == NULL)
 	{
 		printf(" Warning: idContratante == NULL em addProdutoAoBanco() OperacoesBanco.h jhdsak\n");
@@ -1414,6 +1371,11 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 	if (tipoProduto == NULL)
 	{
 		printf(" Warning: Tipo de produto não especificado em addProdutoAoBanco() OperacoesBanco.h asbvur98as7fe\n");
+		return false;
+	}
+	if (!conexaoAtiva())
+	{
+		printf(" Warning: Conexao com o banco de dados é inexistente em OperacoesBanco.h addProdutoAoBanco()\n");
 		return false;
 	}
 	
@@ -1569,19 +1531,10 @@ bool addNomeDeUsuarioAoBanco(Usuario *usuario, char *nome)// TESTAR        APP 2
 		printf(" Warning: Nome recebido é nulo em OperacoesBanco.h addNomeDeUsuarioAoBanco() 4654egg\n");
 		return false;
 	}
-	if (conexao == NULL)
+	if (!conexaoAtiva())
 	{
-		printf(" Warning: Conexao nula detectada em OperacoesBanco.h addNomeDeUsuarioAoBanco() 56456q489b87ts\n");
-		printf(" LOG: Tentando reconexão com banco de dados em OperacoesBanco.h addNomeDeUsuarioAoBanco()\n");
-		if(conectarBanco())
-		{
-			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
-		}
-		else
-		{
-			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return false;
-		}
+		printf(" Warning: Conexao com o banco de dados é inexistente em OperacoesBanco.h addNomeDeUsuarioAoBanco()\n");
+		return false;
 	}
 	
 
@@ -1602,41 +1555,55 @@ bool addNomeDeUsuarioAoBanco(Usuario *usuario, char *nome)// TESTAR        APP 2
 		printf(" Warning: nao foi possível formatar query em OperacoesBanco.h addNomeDeUsuarioAoBanco() cqhkhbjvr\n");
 		return false;
 	}
-	
-	if(mysql_query(conexao, query))
-	{
 
-		printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addNomeDeUsuarioAoBanco())\n");
-		printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
-		printf("\t Query enviada =  |%s|\n", query);
+	if (!executaQuery(query))
+	{
+		printf(" Warning: Falha ao adicionar nome de usuario ao banco de dados em OperacoesBanco.h addNomeDeUsuarioAoBanco()\n");
 		free(query);
 		query = NULL;
-		if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
-		{
-			printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addNomeDeUsuarioAoBanco() 1qa5456dasd\n");
-			if(conectarBanco())
-			{
-				printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addNomeDeUsuarioAoBanco() asd456\n");
-			}
-			else
-			{
-				conexao = NULL;
-				mysql_close(conexao);
-				mysql_thread_end();
-				free(conexao);
-				printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addNomeDeUsuarioAoBanco() as4d5asd\n");
-			}
-		}
 		return false;
 	}
 	else
 	{
-		printf(" LOG: Nome %s adicionado ao usuario %s com sucesso em Comando-Adicao.h addNomeDeUsuarioAoBanco\n", nome, usuario_obterLogin(usuario));
+		printf(" LOG: Nome de Usuario adicionado com sucesso ao banco de dados em OperacoesBanco.h addNomeDeUsuarioAoBanco()\n");
 		free(query);
 		query = NULL;
 		return true;
 	}
+	
+	// if(mysql_query(conexao, query))
+	// {
 
+	// 	printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addNomeDeUsuarioAoBanco())\n");
+	// 	printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
+	// 	printf("\t Query enviada =  |%s|\n", query);
+	// 	free(query);
+	// 	query = NULL;
+	// 	if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+	// 	{
+	// 		printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addNomeDeUsuarioAoBanco() 1qa5456dasd\n");
+	// 		if(conectarBanco())
+	// 		{
+	// 			printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addNomeDeUsuarioAoBanco() asd456\n");
+	// 		}
+	// 		else
+	// 		{
+	// 			conexao = NULL;
+	// 			mysql_close(conexao);
+	// 			mysql_thread_end();
+	// 			free(conexao);
+	// 			printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addNomeDeUsuarioAoBanco() as4d5asd\n");
+	// 		}
+	// 	}
+	// 	return false;
+	// }
+	// else
+	// {
+	// 	printf(" LOG: Nome %s adicionado ao usuario %s com sucesso em Comando-Adicao.h addNomeDeUsuarioAoBanco\n", nome, usuario_obterLogin(usuario));
+	// 	free(query);
+	// 	query = NULL;
+	// 	return true;
+	// }
 }
 
 bool addSobrenomeDeUsuarioAoBanco(Usuario *usuario, char *sobrenome)//TESTAR          APP 2 & Y sobrenome
@@ -1656,19 +1623,10 @@ bool addSobrenomeDeUsuarioAoBanco(Usuario *usuario, char *sobrenome)//TESTAR    
 		printf(" Warning: Nome recebido é nulo em OperacoesBanco.h addSobrenomeDeUsuarioAoBanco() 4654egg\n");
 		return false;
 	}
-	if (conexao == NULL)
+	if (!conexaoAtiva())
 	{
-		printf(" Warning: Conexao nula detectada em OperacoesBanco.h addSobrenomeDeUsuarioAoBanco() 56456q489b87ts\n");
-		printf(" LOG: Tentando reconexão com banco de dados em OperacoesBanco.h addSobrenomeDeUsuarioAoBanco()\n");
-		if(conectarBanco())
-		{
-			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
-		}
-		else
-		{
-			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return false;
-		}
+		printf(" Warning: Conexao com o banco de dados é inexistente em OperacoesBanco.h addSobrenomeDeUsuarioAoBanco()\n");
+		return false;
 	}
 	
 
@@ -2452,104 +2410,106 @@ char *obterIdContratanteDoBanco(char *cnpj)// APP 4 ; cnpj
 		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdContratanteDoBanco() bqjek\n");
 		return strdup("ERRO interno, tente novamente");
 	}
+
+	return retornaUnicoRetornoDaQuery(query);
 	
-	if(mysql_query(conexao, query))
-	{
-		printf(" ERRO: Falha ao executar query em OperacoesBanco.h obterIdContratanteDoBanco() sakdjh\n");
-		printf(" \t%s\n", mysql_error(conexao));
-		return strdup("ERRO interno, tente novamente");
-	}
+	// if(mysql_query(conexao, query))
+	// {
+	// 	printf(" ERRO: Falha ao executar query em OperacoesBanco.h obterIdContratanteDoBanco() sakdjh\n");
+	// 	printf(" \t%s\n", mysql_error(conexao));
+	// 	return strdup("ERRO interno, tente novamente");
+	// }
 	
-	MYSQL_RES *resultado = mysql_store_result(conexao);
+	// MYSQL_RES *resultado = mysql_store_result(conexao);
 	
-	if(resultado == NULL)// Se não houver consulta
-	{
-		printf(" Warning: Resultado nulo em OperacoesBanco.h obterIdContratanteDoBanco() kqht\n");
-		return strdup("ERRO interno, tente novamente");
-	}
-	else
-	{
+	// if(resultado == NULL)// Se não houver consulta
+	// {
+	// 	printf(" Warning: Resultado nulo em OperacoesBanco.h obterIdContratanteDoBanco() kqht\n");
+	// 	return strdup("ERRO interno, tente novamente");
+	// }
+	// else
+	// {
 		
-		if(mysql_num_fields(resultado) != 1)
-		{
-			if(mysql_num_fields(resultado) == 0)
-			{
-				printf(" LOG: Nada encontrado na base de dados para:\n");
-				printf(" \t%s\n", query);
-				printf(" \t em OperacoesBanco.h obterIdContratanteDoBanco() 4rr455\n");
-				mysql_free_result(resultado);
-				free(query);
-				resultado = NULL;
-				query = NULL;
-				return strdup("ERRO: Nada encontrado");
-			}
-			else
-			{
-				printf(" Warning: Resultado inconsistente em OperacoesBanco.h obterIdContratanteDoBanco() hekja\n");
-				mysql_free_result(resultado);
-				free(query);
-				query = NULL;
-				resultado = NULL;
-				return strdup("ERRO interno, tente novamente");
-			}
-		}
-		else
-		{
-			if(mysql_num_rows(resultado) != 1)
-			{
-				printf(" Warning: Mais de uma cidade com mesmo nome e estado em OperacoesBanco.h obterIdContratanteDoBanco() ekjjha\n");
-				printf(" \tRespostas:\n");
-				MYSQL_ROW linhas;
-				while((linhas = mysql_fetch_row(resultado)) != NULL)
-				{
-					printf(" linhas[0] -> %s\n", linhas[0]);
-				}
-				printf(" \n");
-				char *retorno = strdup(linhas[0]);
-				if (retorno == NULL)
-				{
-					return strdup("ERRO interno, tente novamente");
-				}
-				mysql_free_result(resultado);
-				free(query);
-				query = NULL;
-				resultado = NULL;
-				// return linhas[0];//Retorna o ultimo resultado, mesmo se houver erro
-				return retorno;
-			}
-			else
-			{
-				MYSQL_ROW linha;
+	// 	if(mysql_num_fields(resultado) != 1)
+	// 	{
+	// 		if(mysql_num_fields(resultado) == 0)
+	// 		{
+	// 			printf(" LOG: Nada encontrado na base de dados para:\n");
+	// 			printf(" \t%s\n", query);
+	// 			printf(" \t em OperacoesBanco.h obterIdContratanteDoBanco() 4rr455\n");
+	// 			mysql_free_result(resultado);
+	// 			free(query);
+	// 			resultado = NULL;
+	// 			query = NULL;
+	// 			return strdup("ERRO: Nada encontrado");
+	// 		}
+	// 		else
+	// 		{
+	// 			printf(" Warning: Resultado inconsistente em OperacoesBanco.h obterIdContratanteDoBanco() hekja\n");
+	// 			mysql_free_result(resultado);
+	// 			free(query);
+	// 			query = NULL;
+	// 			resultado = NULL;
+	// 			return strdup("ERRO interno, tente novamente");
+	// 		}
+	// 	}
+	// 	else
+	// 	{
+	// 		if(mysql_num_rows(resultado) != 1)
+	// 		{
+	// 			printf(" Warning: Mais de uma cidade com mesmo nome e estado em OperacoesBanco.h obterIdContratanteDoBanco() ekjjha\n");
+	// 			printf(" \tRespostas:\n");
+	// 			MYSQL_ROW linhas;
+	// 			while((linhas = mysql_fetch_row(resultado)) != NULL)
+	// 			{
+	// 				printf(" linhas[0] -> %s\n", linhas[0]);
+	// 			}
+	// 			printf(" \n");
+	// 			char *retorno = strdup(linhas[0]);
+	// 			if (retorno == NULL)
+	// 			{
+	// 				return strdup("ERRO interno, tente novamente");
+	// 			}
+	// 			mysql_free_result(resultado);
+	// 			free(query);
+	// 			query = NULL;
+	// 			resultado = NULL;
+	// 			// return linhas[0];//Retorna o ultimo resultado, mesmo se houver erro
+	// 			return retorno;
+	// 		}
+	// 		else
+	// 		{
+	// 			MYSQL_ROW linha;
 				
-				linha = mysql_fetch_row(resultado);
+	// 			linha = mysql_fetch_row(resultado);
 				
-				if(linha == NULL)
-				{
-					printf(" ERRO: Não era pra poder retornar nulo aqui abv84eu9h89hbd\n");
-					mysql_free_result(resultado);
-					free(query);
-					query = NULL;
-					resultado = NULL;
-					return strdup("ERRO interno, tente novamente");
-				}
-				else
-				{
-					char *retorno = strdup(linha[0]);
-					if (retorno == NULL)
-					{
-						return strdup("ERRO interno, tente novamente");
-					}
-					mysql_free_result(resultado);
-					free(query);
-					query = NULL;
-					resultado = NULL;
-					return retorno;
-				}
-			}
-		}
+	// 			if(linha == NULL)
+	// 			{
+	// 				printf(" ERRO: Não era pra poder retornar nulo aqui abv84eu9h89hbd\n");
+	// 				mysql_free_result(resultado);
+	// 				free(query);
+	// 				query = NULL;
+	// 				resultado = NULL;
+	// 				return strdup("ERRO interno, tente novamente");
+	// 			}
+	// 			else
+	// 			{
+	// 				char *retorno = strdup(linha[0]);
+	// 				if (retorno == NULL)
+	// 				{
+	// 					return strdup("ERRO interno, tente novamente");
+	// 				}
+	// 				mysql_free_result(resultado);
+	// 				free(query);
+	// 				query = NULL;
+	// 				resultado = NULL;
+	// 				return retorno;
+	// 			}
+	// 		}
+	// 	}
 		
-	}
-	return strdup("ERRO interno(desconhecido), tente novamente");
+	// }
+	// return strdup("ERRO interno(desconhecido), tente novamente");
 }
 
 char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)/* APP 4 CHAVE_DE_SEGURANCA_PHP $ { nomeCidadeInformada nomeEstadoInformado*/
@@ -2599,106 +2559,107 @@ char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)/* APP 4 CHAVE_DE_
 		return strdup("ERRO interno, tente novamente");
 	}
 	
-	if(mysql_query(conexao, query))
-	{
-		printf(" ERRO: Falha ao executar query em OperacoesBanco.h obterIdCidadeDoBanco() sakdjh\n");
-		printf(" \t%s\n", mysql_error(conexao));
-		return strdup("ERRO interno, tente novamente");
-	}
+	return retornaUnicoRetornoDaQuery(query);
+	// if(mysql_query(conexao, query))
+	// {
+	// 	printf(" ERRO: Falha ao executar query em OperacoesBanco.h obterIdCidadeDoBanco() sakdjh\n");
+	// 	printf(" \t%s\n", mysql_error(conexao));
+	// 	return strdup("ERRO interno, tente novamente");
+	// }
 	
-	MYSQL_RES *resultado = mysql_store_result(conexao);
+	// MYSQL_RES *resultado = mysql_store_result(conexao);
 	
-	if(resultado == NULL)// Se não houver consulta
-	{
-		printf(" Warning: Resultado nulo em OperacoesBanco.h obterIdCidadeDoBanco() kqht\n");
-		return strdup("ERRO interno, tente novamente");
-	}
-	else
-	{
+	// if(resultado == NULL)// Se não houver consulta
+	// {
+	// 	printf(" Warning: Resultado nulo em OperacoesBanco.h obterIdCidadeDoBanco() kqht\n");
+	// 	return strdup("ERRO interno, tente novamente");
+	// }
+	// else
+	// {
 		
-		//		MYSQL_FIELD *campos;
-		//		campos = mysql_fetch_fields(resultado);//Passa campos com resposta para a variavel campos
+	// 	//		MYSQL_FIELD *campos;
+	// 	//		campos = mysql_fetch_fields(resultado);//Passa campos com resposta para a variavel campos
 		
-		if(mysql_num_fields(resultado) != 1)
-		{
-			if(mysql_num_fields(resultado) != 1)
-			{
-				printf(" LOG: Banco processou a query de forma errada, aparentemente...:\n");
-				printf(" \t%s\n", query);
-				printf(" \t em OperacoesBanco.h obterIdCidadeDoBanco() 4rr455\n");
-				mysql_free_result(resultado);
-				free(query);
-				resultado = NULL;
-				query = NULL;
-				return strdup("ERRO interno, tente novamente");
-			}
-			else
-			{
-				printf(" Warning: Resultado inconsistente em OperacoesBanco.h obterIdCidadeDoBanco() hekja\n");
-				mysql_free_result(resultado);
-				free(query);
-				query = NULL;
-				resultado = NULL;
-				return strdup("ERRO interno, tente novamente");
-			}
-		}
-		else
-		{
-			if(mysql_num_rows(resultado) > 1)
-			{
-				printf(" Warning: Mais de uma cidade com mesmo nome e estado em OperacoesBanco.h obterIdCidadeDoBanco() ekjjha\n");
-				printf(" \tRespostas:\n");
-				MYSQL_ROW linhas;
-				while((linhas = mysql_fetch_row(resultado)) != NULL)
-				{
-					printf(" linhas[0] -> %s\n", linhas[0]);
-				}
-				printf(" \n");
-				char *retorno = strdup(linhas[0]);
-				mysql_free_result(resultado);
-				free(query);
-				query = NULL;
-				resultado = NULL;
-				//return linhas[0];//Retorna o primeiro resultado, mesmo se houver erro
-				return retorno;
-			}
-			else if (mysql_num_rows(resultado) == 1)
-			{
-				MYSQL_ROW linha;
+	// 	if(mysql_num_fields(resultado) != 1)
+	// 	{
+	// 		if(mysql_num_fields(resultado) != 1)
+	// 		{
+	// 			printf(" LOG: Banco processou a query de forma errada, aparentemente...:\n");
+	// 			printf(" \t%s\n", query);
+	// 			printf(" \t em OperacoesBanco.h obterIdCidadeDoBanco() 4rr455\n");
+	// 			mysql_free_result(resultado);
+	// 			free(query);
+	// 			resultado = NULL;
+	// 			query = NULL;
+	// 			return strdup("ERRO interno, tente novamente");
+	// 		}
+	// 		else
+	// 		{
+	// 			printf(" Warning: Resultado inconsistente em OperacoesBanco.h obterIdCidadeDoBanco() hekja\n");
+	// 			mysql_free_result(resultado);
+	// 			free(query);
+	// 			query = NULL;
+	// 			resultado = NULL;
+	// 			return strdup("ERRO interno, tente novamente");
+	// 		}
+	// 	}
+	// 	else
+	// 	{
+	// 		if(mysql_num_rows(resultado) > 1)
+	// 		{
+	// 			printf(" Warning: Mais de uma cidade com mesmo nome e estado em OperacoesBanco.h obterIdCidadeDoBanco() ekjjha\n");
+	// 			printf(" \tRespostas:\n");
+	// 			MYSQL_ROW linhas;
+	// 			while((linhas = mysql_fetch_row(resultado)) != NULL)
+	// 			{
+	// 				printf(" linhas[0] -> %s\n", linhas[0]);
+	// 			}
+	// 			printf(" \n");
+	// 			char *retorno = strdup(linhas[0]);
+	// 			mysql_free_result(resultado);
+	// 			free(query);
+	// 			query = NULL;
+	// 			resultado = NULL;
+	// 			//return linhas[0];//Retorna o primeiro resultado, mesmo se houver erro
+	// 			return retorno;
+	// 		}
+	// 		else if (mysql_num_rows(resultado) == 1)
+	// 		{
+	// 			MYSQL_ROW linha;
 				
-				linha = mysql_fetch_row(resultado);
+	// 			linha = mysql_fetch_row(resultado);
 				
-				if(linha == NULL)
-				{
-					printf(" ERRO: Não era pra poder retornar nulo aqui em OperacoesBanco.h obterIdCidadeDoBanco()\n");
-					mysql_free_result(resultado);
-					free(query);
-					query = NULL;
-					resultado = NULL;
-					return strdup("ERRO interno, tente novamente, caso persista, chama eu");
-				}
-				else
-				{
-					char *retorno = strdup(linha[0]);
-					mysql_free_result(resultado);
-					free(query);
-					query = NULL;
-					resultado = NULL;
-					printf(" LOG: Retornando id de cidade em OperacoesBanco.h obterIdCidadeDoBanco()\n");
-					return retorno;
-				}
-			}
-			else
-			{
-				mysql_free_result(resultado);
-				free(query);
-				query = NULL;
-				return strdup("ERRO, cidade nao encontrada na base de dados");
-			}
-		}
+	// 			if(linha == NULL)
+	// 			{
+	// 				printf(" ERRO: Não era pra poder retornar nulo aqui em OperacoesBanco.h obterIdCidadeDoBanco()\n");
+	// 				mysql_free_result(resultado);
+	// 				free(query);
+	// 				query = NULL;
+	// 				resultado = NULL;
+	// 				return strdup("ERRO interno, tente novamente, caso persista, chama eu");
+	// 			}
+	// 			else
+	// 			{
+	// 				char *retorno = strdup(linha[0]);
+	// 				mysql_free_result(resultado);
+	// 				free(query);
+	// 				query = NULL;
+	// 				resultado = NULL;
+	// 				printf(" LOG: Retornando id de cidade em OperacoesBanco.h obterIdCidadeDoBanco()\n");
+	// 				return retorno;
+	// 			}
+	// 		}
+	// 		else
+	// 		{
+	// 			mysql_free_result(resultado);
+	// 			free(query);
+	// 			query = NULL;
+	// 			return strdup("ERRO, cidade nao encontrada na base de dados");
+	// 		}
+	// 	}
 		
-	}
-	return strdup("ERRO interno(desconhecido), tente novamente");
+	// }
+	// return strdup("ERRO interno(desconhecido), tente novamente");
 }
 
 char *obterTop10NovosProdutosDoBanco()//DONE
@@ -2734,124 +2695,126 @@ char *obterTop10NovosProdutosDoBanco()//DONE
 		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n");
 		return strdup("ERRO interno, tente novamente");
 	}
+
+	return retornaNIteracoesDaQuery(query, 10);
 	
-	if(mysql_query(conexao, query))
-	{
-		printf(" Warning: falhao ao executar query em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n");
-		free(query);
-		query = NULL;
-		return strdup("ERRO interno, tente novamente");
-	}
+	// if(mysql_query(conexao, query))
+	// {
+	// 	printf(" Warning: falhao ao executar query em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n");
+	// 	free(query);
+	// 	query = NULL;
+	// 	return strdup("ERRO interno, tente novamente");
+	// }
 	
-	MYSQL_RES *resultado = mysql_store_result(conexao);
-	if(resultado == NULL)// Se não houver consulta
-	{
-		printf(" Warning: Consulta não realizada em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n");
-		free(query);
-		query = NULL;
-		return strdup("ERRO interno, tente novamente");
-	}
+	// MYSQL_RES *resultado = mysql_store_result(conexao);
+	// if(resultado == NULL)// Se não houver consulta
+	// {
+	// 	printf(" Warning: Consulta não realizada em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n");
+	// 	free(query);
+	// 	query = NULL;
+	// 	return strdup("ERRO interno, tente novamente");
+	// }
 	
-	if(mysql_num_fields(resultado) == 0)
-	{
-		printf(" Warning: Nada encontrado em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n");
-		free(query);
-		query = NULL;
-		mysql_free_result(resultado);
-		resultado = NULL;
-		return strdup("ERRO: Nada encontrado");
-	}
+	// if(mysql_num_fields(resultado) == 0)
+	// {
+	// 	printf(" Warning: Nada encontrado em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n");
+	// 	free(query);
+	// 	query = NULL;
+	// 	mysql_free_result(resultado);
+	// 	resultado = NULL;
+	// 	return strdup("ERRO: Nada encontrado");
+	// }
 	
-	MYSQL_ROW linha = NULL;
-	char *retorno = NULL;
+	// MYSQL_ROW linha = NULL;
+	// char *retorno = NULL;
 	
-	tamanho = ((mysql_num_rows(resultado) * 10) + 1 + mysql_num_rows(resultado)-1);
+	// tamanho = ((mysql_num_rows(resultado) * 10) + 1 + mysql_num_rows(resultado)-1);
 	
-	retorno = (char *)malloc(sizeof(char) * tamanho);// numero de resultados * tamanho de cada resultado + \0 + numero de resultados -1
+	// retorno = (char *)malloc(sizeof(char) * tamanho);// numero de resultados * tamanho de cada resultado + \0 + numero de resultados -1
 	
-	if(retorno == NULL)
-	{
-		printf(" Warning: Falha ao alocar memoria para retorno em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n");
-		free(query);
-		query = NULL;
-		mysql_free_result(resultado);
-		resultado = NULL;
-		return strdup("ERRO interno, tente novamente");
-	}
-	memset(retorno, '\0', tamanho);
+	// if(retorno == NULL)
+	// {
+	// 	printf(" Warning: Falha ao alocar memoria para retorno em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n");
+	// 	free(query);
+	// 	query = NULL;
+	// 	mysql_free_result(resultado);
+	// 	resultado = NULL;
+	// 	return strdup("ERRO interno, tente novamente");
+	// }
+	// memset(retorno, '\0', tamanho);
 	
-	//	 int i = 0;
-	bool achouAlgumaCoisa = false;
+	// //	 int i = 0;
+	// bool achouAlgumaCoisa = false;
 	
-	while((linha = mysql_fetch_row(resultado)) != NULL)
-	{
-		//		snprintf(retorno, tamanho, "%s %s", retorno, linha);
+	// while((linha = mysql_fetch_row(resultado)) != NULL)
+	// {
+	// 	//		snprintf(retorno, tamanho, "%s %s", retorno, linha);
 		
-		printf(" LOG: LINHA OBTIDA = |%s| em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n", linha[0]);
-		if(strlen(linha[0]) > 0)
-		{
-			if (strlen(linha[0]) != TAMANHO_ID_PRODUTO)
-			{
-				free(query);
-				query = NULL;
-				mysql_free_result(resultado);
-				resultado = NULL;
-				free(retorno);
-				retorno = NULL;
-				return strdup("ERRO interno, ou nada encontrado");
-			}
-			strcat(retorno, linha[0]);
-		}
+	// 	printf(" LOG: LINHA OBTIDA = |%s| em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n", linha[0]);
+	// 	if(strlen(linha[0]) > 0)
+	// 	{
+	// 		if (strlen(linha[0]) != TAMANHO_ID_PRODUTO)
+	// 		{
+	// 			free(query);
+	// 			query = NULL;
+	// 			mysql_free_result(resultado);
+	// 			resultado = NULL;
+	// 			free(retorno);
+	// 			retorno = NULL;
+	// 			return strdup("ERRO interno, ou nada encontrado");
+	// 		}
+	// 		strcat(retorno, linha[0]);
+	// 	}
 		
-		printf(" LOG: Retorno = |%s| até agora em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n", retorno);
+	// 	printf(" LOG: Retorno = |%s| até agora em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n", retorno);
 		
-		if(retorno == NULL)
-		{
-			printf(" Warning: Falha ao formatar resultado em OperacoesBanco.h obterTop10NovosProdutosDoBanco() vbrjka\n");
-			free(query);
-			mysql_free_result(resultado);
-			resultado = NULL;
-			query = NULL;
-			return strdup("ERRO interno, tente novamente");
-		}
-		if(strlen(retorno) < tamanho - 1)
-		{
-			strcat(retorno, " ");
-		}
-		if (!achouAlgumaCoisa)
-		{
-			achouAlgumaCoisa = true;
-		}
-	}
+	// 	if(retorno == NULL)
+	// 	{
+	// 		printf(" Warning: Falha ao formatar resultado em OperacoesBanco.h obterTop10NovosProdutosDoBanco() vbrjka\n");
+	// 		free(query);
+	// 		mysql_free_result(resultado);
+	// 		resultado = NULL;
+	// 		query = NULL;
+	// 		return strdup("ERRO interno, tente novamente");
+	// 	}
+	// 	if(strlen(retorno) < tamanho - 1)
+	// 	{
+	// 		strcat(retorno, " ");
+	// 	}
+	// 	if (!achouAlgumaCoisa)
+	// 	{
+	// 		achouAlgumaCoisa = true;
+	// 	}
+	// }
 	
-	if(retorno == NULL)
-	{
-		printf(" ERRO: Falha ao obter dados em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n");
-		free(query);
-		mysql_free_result(resultado);
-		resultado = NULL;
-		query = NULL;
-		return strdup("ERRO interno, tente novamente");
-	}
-	else
-	{
-		free(query);
-		mysql_free_result(resultado);
-		resultado = NULL;
-		query = NULL;
-		if (!achouAlgumaCoisa)
-		{
-			if (retorno != NULL)
-			{
-				free(retorno);
-				retorno = NULL;
-			}
-			return strdup("ERRO, nada encontrado");
-		}
-		return retorno;
-	}
+	// if(retorno == NULL)
+	// {
+	// 	printf(" ERRO: Falha ao obter dados em OperacoesBanco.h obterTop10NovosProdutosDoBanco()\n");
+	// 	free(query);
+	// 	mysql_free_result(resultado);
+	// 	resultado = NULL;
+	// 	query = NULL;
+	// 	return strdup("ERRO interno, tente novamente");
+	// }
+	// else
+	// {
+	// 	free(query);
+	// 	mysql_free_result(resultado);
+	// 	resultado = NULL;
+	// 	query = NULL;
+	// 	if (!achouAlgumaCoisa)
+	// 	{
+	// 		if (retorno != NULL)
+	// 		{
+	// 			free(retorno);
+	// 			retorno = NULL;
+	// 		}
+	// 		return strdup("ERRO, nada encontrado");
+	// 	}
+	// 	return retorno;
+	// }
 	
-	return strdup("ERRO interno, tente novamente");
+	// return strdup("ERRO interno, tente novamente");
 }
 
 char *obterTop10NovosProdutosRealidadeAumentadaDoBanco()//DONE
@@ -2887,124 +2850,126 @@ char *obterTop10NovosProdutosRealidadeAumentadaDoBanco()//DONE
 		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco()\n");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
+
+	return retornaNIteracoesDaQuery(query, 10);
 	
-	if(mysql_query(conexao, query))
-	{
-		printf(" Warning: falhao ao executar query em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco()\n");
-		free(query);
-		query = NULL;
-		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-	}
+	// if(mysql_query(conexao, query))
+	// {
+	// 	printf(" Warning: falhao ao executar query em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco()\n");
+	// 	free(query);
+	// 	query = NULL;
+	// 	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	// }
 	
-	MYSQL_RES *resultado = mysql_store_result(conexao);
-	if(resultado == NULL)// Se não houver consulta
-	{
-		printf(" Warning: Consulta não realizada em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco()\n");
-		free(query);
-		query = NULL;
-		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-	}
+	// MYSQL_RES *resultado = mysql_store_result(conexao);
+	// if(resultado == NULL)// Se não houver consulta
+	// {
+	// 	printf(" Warning: Consulta não realizada em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco()\n");
+	// 	free(query);
+	// 	query = NULL;
+	// 	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	// }
 	
-	if(mysql_num_fields(resultado) == 0)
-	{
-		printf(" Warning: Nada encontrado em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco()\n");
-		free(query);
-		query = NULL;
-		mysql_free_result(resultado);
-		resultado = NULL;
-		return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;
-	}
+	// if(mysql_num_fields(resultado) == 0)
+	// {
+	// 	printf(" Warning: Nada encontrado em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco()\n");
+	// 	free(query);
+	// 	query = NULL;
+	// 	mysql_free_result(resultado);
+	// 	resultado = NULL;
+	// 	return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;
+	// }
 	
-	MYSQL_ROW linha = NULL;
-	char *retorno = NULL;
+	// MYSQL_ROW linha = NULL;
+	// char *retorno = NULL;
 	
-	tamanho = ((mysql_num_rows(resultado) * 10) + 1 + mysql_num_rows(resultado)-1);
+	// tamanho = ((mysql_num_rows(resultado) * 10) + 1 + mysql_num_rows(resultado)-1);
 	
-	retorno = (char *)malloc(sizeof(char) * tamanho);// numero de resultados * tamanho de cada resultado + \0 + numero de resultados -1
+	// retorno = (char *)malloc(sizeof(char) * tamanho);// numero de resultados * tamanho de cada resultado + \0 + numero de resultados -1
 	
-	if(retorno == NULL)
-	{
-		printf(" Warning: Falha ao alocar memoria para retorno em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco()\n");
-		free(query);
-		query = NULL;
-		mysql_free_result(resultado);
-		resultado = NULL;
-		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-	}
-	memset(retorno, '\0', tamanho);
+	// if(retorno == NULL)
+	// {
+	// 	printf(" Warning: Falha ao alocar memoria para retorno em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco()\n");
+	// 	free(query);
+	// 	query = NULL;
+	// 	mysql_free_result(resultado);
+	// 	resultado = NULL;
+	// 	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	// }
+	// memset(retorno, '\0', tamanho);
 	
-	//	 int i = 0;
-	bool achouAlgumaCoisa = false;
+	// //	 int i = 0;
+	// bool achouAlgumaCoisa = false;
 	
-	while((linha = mysql_fetch_row(resultado)) != NULL)
-	{
-		//		snprintf(retorno, tamanho, "%s %s", retorno, linha);
+	// while((linha = mysql_fetch_row(resultado)) != NULL)
+	// {
+	// 	//		snprintf(retorno, tamanho, "%s %s", retorno, linha);
 		
-		printf(" LOG: LINHA OBTIDA = |%s| em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco()\n", linha[0]);
-		if(strlen(linha[0]) > 0)
-		{
-			if (strlen(linha[0]) != TAMANHO_ID_PRODUTO)
-			{
-				free(query);
-				query = NULL;
-				mysql_free_result(resultado);
-				resultado = NULL;
-				free(retorno);
-				retorno = NULL;
-				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-			}
-			strcat(retorno, linha[0]);
-		}
+	// 	printf(" LOG: LINHA OBTIDA = |%s| em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco()\n", linha[0]);
+	// 	if(strlen(linha[0]) > 0)
+	// 	{
+	// 		if (strlen(linha[0]) != TAMANHO_ID_PRODUTO)
+	// 		{
+	// 			free(query);
+	// 			query = NULL;
+	// 			mysql_free_result(resultado);
+	// 			resultado = NULL;
+	// 			free(retorno);
+	// 			retorno = NULL;
+	// 			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	// 		}
+	// 		strcat(retorno, linha[0]);
+	// 	}
 		
-		printf(" LOG: Retorno = |%s| até agora em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco()\n", retorno);
+	// 	printf(" LOG: Retorno = |%s| até agora em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco()\n", retorno);
 		
-		if(retorno == NULL)
-		{
-			printf(" Warning: Falha ao formatar resultado em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco() vbrjka\n");
-			free(query);
-			mysql_free_result(resultado);
-			resultado = NULL;
-			query = NULL;
-			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-		}
-		if(strlen(retorno) < tamanho - 1)
-		{
-			strcat(retorno, " ");
-		}
-		if (!achouAlgumaCoisa)
-		{
-			achouAlgumaCoisa = true;
-		}
-	}
+	// 	if(retorno == NULL)
+	// 	{
+	// 		printf(" Warning: Falha ao formatar resultado em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco() vbrjka\n");
+	// 		free(query);
+	// 		mysql_free_result(resultado);
+	// 		resultado = NULL;
+	// 		query = NULL;
+	// 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	// 	}
+	// 	if(strlen(retorno) < tamanho - 1)
+	// 	{
+	// 		strcat(retorno, " ");
+	// 	}
+	// 	if (!achouAlgumaCoisa)
+	// 	{
+	// 		achouAlgumaCoisa = true;
+	// 	}
+	// }
 	
-	if(retorno == NULL)
-	{
-		printf(" ERRO: Falha ao obter dados em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco()\n");
-		free(query);
-		mysql_free_result(resultado);
-		resultado = NULL;
-		query = NULL;
-		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-	}
-	else
-	{
-		free(query);
-		mysql_free_result(resultado);
-		resultado = NULL;
-		query = NULL;
-		if (!achouAlgumaCoisa)
-		{
-			if (retorno != NULL)
-			{
-				free(retorno);
-				retorno = NULL;
-			}
-			return strdup("ERRO, nada encontrado");
-		}
-		return retorno;
-	}
+	// if(retorno == NULL)
+	// {
+	// 	printf(" ERRO: Falha ao obter dados em OperacoesBanco.h obterTop10NovosProdutosRealidadeAumentadaDoBanco()\n");
+	// 	free(query);
+	// 	mysql_free_result(resultado);
+	// 	resultado = NULL;
+	// 	query = NULL;
+	// 	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	// }
+	// else
+	// {
+	// 	free(query);
+	// 	mysql_free_result(resultado);
+	// 	resultado = NULL;
+	// 	query = NULL;
+	// 	if (!achouAlgumaCoisa)
+	// 	{
+	// 		if (retorno != NULL)
+	// 		{
+	// 			free(retorno);
+	// 			retorno = NULL;
+	// 		}
+	// 		return strdup("ERRO, nada encontrado");
+	// 	}
+	// 	return retorno;
+	// }
 	
-	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	// return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 }
 
 char *obterTop10NovosProdutosRealidadeVirtualDoBanco()//DONE
@@ -3041,124 +3006,126 @@ char *obterTop10NovosProdutosRealidadeVirtualDoBanco()//DONE
 		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco()\n");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
+
+	return retornaNIteracoesDaQuery(query, 10);
 	
-	if(mysql_query(conexao, query))
-	{
-		printf(" Warning: falhao ao executar query em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco()\n");
-		free(query);
-		query = NULL;
-		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-	}
+	// if(mysql_query(conexao, query))
+	// {
+	// 	printf(" Warning: falhao ao executar query em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco()\n");
+	// 	free(query);
+	// 	query = NULL;
+	// 	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	// }
 	
-	MYSQL_RES *resultado = mysql_store_result(conexao);
-	if(resultado == NULL)// Se não houver consulta
-	{
-		printf(" Warning: Consulta não realizada em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco()\n");
-		free(query);
-		query = NULL;
-		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-	}
+	// MYSQL_RES *resultado = mysql_store_result(conexao);
+	// if(resultado == NULL)// Se não houver consulta
+	// {
+	// 	printf(" Warning: Consulta não realizada em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco()\n");
+	// 	free(query);
+	// 	query = NULL;
+	// 	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	// }
 	
-	if(mysql_num_fields(resultado) == 0)
-	{
-		printf(" Warning: Nada encontrado em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco()\n");
-		free(query);
-		query = NULL;
-		mysql_free_result(resultado);
-		resultado = NULL;
-		return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;
-	}
+	// if(mysql_num_fields(resultado) == 0)
+	// {
+	// 	printf(" Warning: Nada encontrado em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco()\n");
+	// 	free(query);
+	// 	query = NULL;
+	// 	mysql_free_result(resultado);
+	// 	resultado = NULL;
+	// 	return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;
+	// }
 	
-	MYSQL_ROW linha = NULL;
-	char *retorno = NULL;
+	// MYSQL_ROW linha = NULL;
+	// char *retorno = NULL;
 	
-	tamanho = ((mysql_num_rows(resultado) * 10) + 1 + mysql_num_rows(resultado)-1);
+	// tamanho = ((mysql_num_rows(resultado) * 10) + 1 + mysql_num_rows(resultado)-1);
 	
-	retorno = (char *)malloc(sizeof(char) * tamanho);// numero de resultados * tamanho de cada resultado + \0 + numero de resultados -1
+	// retorno = (char *)malloc(sizeof(char) * tamanho);// numero de resultados * tamanho de cada resultado + \0 + numero de resultados -1
 	
-	if(retorno == NULL)
-	{
-		printf(" Warning: Falha ao alocar memoria para retorno em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco()\n");
-		free(query);
-		query = NULL;
-		mysql_free_result(resultado);
-		resultado = NULL;
-		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-	}
-	memset(retorno, '\0', tamanho);
+	// if(retorno == NULL)
+	// {
+	// 	printf(" Warning: Falha ao alocar memoria para retorno em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco()\n");
+	// 	free(query);
+	// 	query = NULL;
+	// 	mysql_free_result(resultado);
+	// 	resultado = NULL;
+	// 	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	// }
+	// memset(retorno, '\0', tamanho);
 	
-	//	 int i = 0;
-	bool achouAlgumaCoisa = false;
+	// //	 int i = 0;
+	// bool achouAlgumaCoisa = false;
 	
-	while((linha = mysql_fetch_row(resultado)) != NULL)
-	{
-		//		snprintf(retorno, tamanho, "%s %s", retorno, linha);
+	// while((linha = mysql_fetch_row(resultado)) != NULL)
+	// {
+	// 	//		snprintf(retorno, tamanho, "%s %s", retorno, linha);
 		
-		printf(" LOG: LINHA OBTIDA = |%s| em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco()\n", linha[0]);
-		if(strlen(linha[0]) > 0)
-		{
-			if (strlen(linha[0]) != TAMANHO_ID_PRODUTO)
-			{
-				free(query);
-				query = NULL;
-				mysql_free_result(resultado);
-				resultado = NULL;
-				free(retorno);
-				retorno = NULL;
-				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-			}
-			strcat(retorno, linha[0]);
-		}
+	// 	printf(" LOG: LINHA OBTIDA = |%s| em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco()\n", linha[0]);
+	// 	if(strlen(linha[0]) > 0)
+	// 	{
+	// 		if (strlen(linha[0]) != TAMANHO_ID_PRODUTO)
+	// 		{
+	// 			free(query);
+	// 			query = NULL;
+	// 			mysql_free_result(resultado);
+	// 			resultado = NULL;
+	// 			free(retorno);
+	// 			retorno = NULL;
+	// 			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	// 		}
+	// 		strcat(retorno, linha[0]);
+	// 	}
 		
-		printf(" LOG: Retorno = |%s| até agora em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco()\n", retorno);
+	// 	printf(" LOG: Retorno = |%s| até agora em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco()\n", retorno);
 		
-		if(retorno == NULL)
-		{
-			printf(" Warning: Falha ao formatar resultado em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco() vbrjka\n");
-			free(query);
-			mysql_free_result(resultado);
-			resultado = NULL;
-			query = NULL;
-			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-		}
-		if(strlen(retorno) < tamanho - 1)
-		{
-			strcat(retorno, " ");
-		}
-		if (!achouAlgumaCoisa)
-		{
-			achouAlgumaCoisa = true;
-		}
-	}
+	// 	if(retorno == NULL)
+	// 	{
+	// 		printf(" Warning: Falha ao formatar resultado em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco() vbrjka\n");
+	// 		free(query);
+	// 		mysql_free_result(resultado);
+	// 		resultado = NULL;
+	// 		query = NULL;
+	// 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	// 	}
+	// 	if(strlen(retorno) < tamanho - 1)
+	// 	{
+	// 		strcat(retorno, " ");
+	// 	}
+	// 	if (!achouAlgumaCoisa)
+	// 	{
+	// 		achouAlgumaCoisa = true;
+	// 	}
+	// }
 	
-	if(retorno == NULL)
-	{
-		printf(" ERRO: Falha ao obter dados em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco()\n");
-		free(query);
-		mysql_free_result(resultado);
-		resultado = NULL;
-		query = NULL;
-		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-	}
-	else
-	{
-		free(query);
-		mysql_free_result(resultado);
-		resultado = NULL;
-		query = NULL;
-		if (!achouAlgumaCoisa)
-		{
-			if (retorno != NULL)
-			{
-				free(retorno);
-				retorno = NULL;
-			}
-			return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;
-		}
-		return retorno;
-	}
+	// if(retorno == NULL)
+	// {
+	// 	printf(" ERRO: Falha ao obter dados em OperacoesBanco.h obterTop10NovosProdutosRealidadeVirtualDoBanco()\n");
+	// 	free(query);
+	// 	mysql_free_result(resultado);
+	// 	resultado = NULL;
+	// 	query = NULL;
+	// 	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	// }
+	// else
+	// {
+	// 	free(query);
+	// 	mysql_free_result(resultado);
+	// 	resultado = NULL;
+	// 	query = NULL;
+	// 	if (!achouAlgumaCoisa)
+	// 	{
+	// 		if (retorno != NULL)
+	// 		{
+	// 			free(retorno);
+	// 			retorno = NULL;
+	// 		}
+	// 		return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;
+	// 	}
+	// 	return retorno;
+	// }
 	
-	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	// return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 }
 
 char *obterTop10ProdutosMelhorAvaliadosDoBanco()
@@ -3192,106 +3159,106 @@ char *obterTop10ProdutosMelhorAvaliadosDoBanco()
 		return strdup("ERRO interno, tente novamente");
 	}
 
-	// return retornaInformacoesObtidasNaQuery(query);
+	return retornaNIteracoesDaQuery(query, 10);
 
-	if(mysql_query(conexao, query))
-	{
-		printf(" Warning: falhao ao executar query: |%s| em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n", query);
-		free(query);
-		query = NULL;
-		return strdup("ERRO interno, tente novamente");
-	}
+	// if(mysql_query(conexao, query))
+	// {
+	// 	printf(" Warning: falhao ao executar query: |%s| em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n", query);
+	// 	free(query);
+	// 	query = NULL;
+	// 	return strdup("ERRO interno, tente novamente");
+	// }
 
-	free(query);
-	query = NULL;//Não preciso mais de query daqui pra frente
+	// free(query);
+	// query = NULL;//Não preciso mais de query daqui pra frente
 	
-	MYSQL_RES *resultado = mysql_store_result(conexao);
-	if(resultado == NULL)// Se não houver consulta
-	{
-		printf(" Warning: Consulta não realizada em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
-		return strdup("ERRO interno, tente novamente");
-	}
+	// MYSQL_RES *resultado = mysql_store_result(conexao);
+	// if(resultado == NULL)// Se não houver consulta
+	// {
+	// 	printf(" Warning: Consulta não realizada em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
+	// 	return strdup("ERRO interno, tente novamente");
+	// }
 	
-	if(mysql_num_fields(resultado) == 0)
-	{
-		printf(" Warning: Nada encontrado em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
-		mysql_free_result(resultado);
-		resultado = NULL;
-		return strdup("ERRO nada encontrado");
-	}
+	// if(mysql_num_fields(resultado) == 0)
+	// {
+	// 	printf(" Warning: Nada encontrado em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
+	// 	mysql_free_result(resultado);
+	// 	resultado = NULL;
+	// 	return strdup("ERRO nada encontrado");
+	// }
 	
-	MYSQL_ROW linha = NULL;
-	char *retorno = NULL;
+	// MYSQL_ROW linha = NULL;
+	// char *retorno = NULL;
 	
-	tamanho = ((mysql_num_rows(resultado) * 10) + 1 + mysql_num_rows(resultado)-1);
+	// tamanho = ((mysql_num_rows(resultado) * 10) + 1 + mysql_num_rows(resultado)-1);
 	
-	retorno = (char *)malloc(sizeof(char) * tamanho);// numero de resultados * tamanho de cada resultado + \0 + numero de resultados -1
+	// retorno = (char *)malloc(sizeof(char) * tamanho);// numero de resultados * tamanho de cada resultado + \0 + numero de resultados -1
 	
-	if(retorno == NULL)
-	{
-		printf(" Warning: Falha ao alocar memoria para retorno em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
-		mysql_free_result(resultado);
-		resultado = NULL;
-		return strdup("ERRO interno, tente novamente");
-	}
-	memset(retorno, '\0', tamanho);
+	// if(retorno == NULL)
+	// {
+	// 	printf(" Warning: Falha ao alocar memoria para retorno em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
+	// 	mysql_free_result(resultado);
+	// 	resultado = NULL;
+	// 	return strdup("ERRO interno, tente novamente");
+	// }
+	// memset(retorno, '\0', tamanho);
 	
-	//	 int i = 0;
-	bool achouAlgumaCoisa = false;
+	// //	 int i = 0;
+	// bool achouAlgumaCoisa = false;
 	
-	while((linha = mysql_fetch_row(resultado)) != NULL)
-	{
-		//		snprintf(retorno, tamanho, "%s %s", retorno, linha);
+	// while((linha = mysql_fetch_row(resultado)) != NULL)
+	// {
+	// 	//		snprintf(retorno, tamanho, "%s %s", retorno, linha);
 		
-		printf(" LOG: LINHA OBTIDA = |%s| em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n", linha[0]);
-		if(strlen(linha[0]) > 0)
-		{
-			strcat(retorno, linha[0]);
-		}
+	// 	printf(" LOG: LINHA OBTIDA = |%s| em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n", linha[0]);
+	// 	if(strlen(linha[0]) > 0)
+	// 	{
+	// 		strcat(retorno, linha[0]);
+	// 	}
 		
-		printf(" LOG: Retorno = |%s| até agora em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n", retorno);
+	// 	printf(" LOG: Retorno = |%s| até agora em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n", retorno);
 		
-		if(retorno == NULL)
-		{
-			printf(" Warning: Falha ao formatar resultado em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco() vbrjka\n");
-			mysql_free_result(resultado);
-			resultado = NULL;
-			return strdup("ERRO interno, tente novamente");
-		}
-		if(strlen(retorno) < tamanho - 1)
-		{
-			strcat(retorno, " ");
-		}
-		if (!achouAlgumaCoisa)
-		{
-			achouAlgumaCoisa = true;
-		}
-	}
+	// 	if(retorno == NULL)
+	// 	{
+	// 		printf(" Warning: Falha ao formatar resultado em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco() vbrjka\n");
+	// 		mysql_free_result(resultado);
+	// 		resultado = NULL;
+	// 		return strdup("ERRO interno, tente novamente");
+	// 	}
+	// 	if(strlen(retorno) < tamanho - 1)
+	// 	{
+	// 		strcat(retorno, " ");
+	// 	}
+	// 	if (!achouAlgumaCoisa)
+	// 	{
+	// 		achouAlgumaCoisa = true;
+	// 	}
+	// }
 	
-	if(retorno == NULL)
-	{
-		printf(" ERRO: Falha ao obter dados em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
-		mysql_free_result(resultado);
-		resultado = NULL;
-		return strdup("ERRO interno, tente novamente");
-	}
-	else
-	{
-		mysql_free_result(resultado);
-		resultado = NULL;
-		if (!achouAlgumaCoisa)
-		{
-			if (retorno != NULL)
-			{
-				free(retorno);
-				retorno=NULL;
-			}
-			return strdup("ERRO, nada encontrado");
-		}
-		return retorno;
-	}
+	// if(retorno == NULL)
+	// {
+	// 	printf(" ERRO: Falha ao obter dados em OperacoesBanco.h obterTop10ProdutosMelhorAvaliadosDoBanco()\n");
+	// 	mysql_free_result(resultado);
+	// 	resultado = NULL;
+	// 	return strdup("ERRO interno, tente novamente");
+	// }
+	// else
+	// {
+	// 	mysql_free_result(resultado);
+	// 	resultado = NULL;
+	// 	if (!achouAlgumaCoisa)
+	// 	{
+	// 		if (retorno != NULL)
+	// 		{
+	// 			free(retorno);
+	// 			retorno=NULL;
+	// 		}
+	// 		return strdup("ERRO, nada encontrado");
+	// 	}
+	// 	return retorno;
+	// }
 	
-	return strdup("ERRO interno(desconhecido), tente novamente");
+	// return strdup("ERRO interno(desconhecido), tente novamente");
 }
 
 char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
@@ -3811,7 +3778,7 @@ char *obterInformacoesBasicasDeProdutoDoBanco(Usuario *usuario, char *idProduto)
 	
 	//int tamanho = 130+10+1;
 	int tamanho = 141;
-	char *query = malloc(sizeof(char) * tamanho);
+	char *query = (char *)malloc(sizeof(char) * tamanho);
 	if (query == NULL)
 	{
 		printf("\n");
@@ -3866,7 +3833,7 @@ char *obterInformacoesAvancadasDeProdutoDoBanco(Usuario *usuario, char *idProdut
 	
 	//int tamanho = 150+10+1;
 	int tamanho = 161;
-	char *query = malloc(sizeof(char) * tamanho);
+	char *query = (char *)malloc(sizeof(char) * tamanho);
 	if (query == NULL)
 	{
 		printf("\n");
@@ -3882,52 +3849,79 @@ char *obterInformacoesAvancadasDeProdutoDoBanco(Usuario *usuario, char *idProdut
 	return retornaInformacoesObtidasNaQuery(query);
 }
 
- char *obterInformacoesClienteDoBanco(Usuario *usuario)
- {
- 	if (usuario == NULL)
- 	{
- 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
- 	}
- 	int tamanho = strlen(usuario_obterId(usuario)) + 134 + 1;
- 	char *query = malloc(sizeof(char) * tamanho);
- 	if (query == NULL)
- 	{
- 		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterInformacoesClienteDoBanco()\n");
- 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
- 	}
- 	snprintf(query, tamanho, "SELECT C.nome,C.sobrenome,C.sexo,C.telefone,C.datanascimento,C.pontos,C.localizacao_idlocalizacao FROM cliente C WHERE C.idcliente=\'%s\';", usuario_obterId(usuario));
+char *obterInformacoesClienteDoBanco(Usuario *usuario)
+{
+	if (usuario == NULL)
+	{
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	int tamanho = strlen(usuario_obterId(usuario)) + 134 + 1;
+	char *query = (char *)malloc(sizeof(char) * tamanho);
+	if (query == NULL)
+	{
+		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterInformacoesClienteDoBanco()\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	snprintf(query, tamanho, "SELECT C.nome,C.sobrenome,C.sexo,C.telefone,C.datanascimento,C.pontos,C.localizacao_idlocalizacao FROM cliente C WHERE C.idcliente=\'%s\';", usuario_obterId(usuario));
  	// printf(" Query = |%s|\n", query);
  	// printf(" Tamanho da query |%ld|\n", strlen(query));
- 	if (query == NULL)
- 	{
- 		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterInformacoesClienteDoBanco()\n");
- 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
- 	}
- 	return retornaInformacoesObtidasNaQuery(query);
- }
+	if (query == NULL)
+	{
+		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterInformacoesClienteDoBanco()\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	return retornaInformacoesObtidasNaQuery(query);
+}
 
- char *obterInformacoesContratanteDoBanco(Usuario *usuario)
- {
- 	if (usuario == NULL)
- 	{
- 		printf(" Warning: Usuario nulo detectado em OperacoesBanco.h obterInformacoesContratanteDoBanco()\n");
- 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
- 	}
- 	int tamanho = strlen(usuario_obterId(usuario)) + 120 + 1;
- 	char *query = malloc(sizeof(char) * tamanho);
- 	if (query == NULL)
- 	{
- 		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterInformacoesContratanteDoBanco()\n");
- 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
- 	}
- 	snprintf(query, tamanho, "SELECT C.nome,C.cnpj,C.plano,C.email,C.telefone,C.localizacao_idlocalizacao FROM contratante C WHERE C.idContratante=\'%s\';", usuario_obterId(usuario));
- 	if (query == NULL)
- 	{
- 		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterInformacoesContratanteDoBanco()\n");
- 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
- 	}
- 	return retornaInformacoesObtidasNaQuery(query);
- }
+char *obterInformacoesContratanteDoBanco(Usuario *usuario)
+{
+	if (usuario == NULL)
+	{
+		printf(" Warning: Usuario nulo detectado em OperacoesBanco.h obterInformacoesContratanteDoBanco()\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	int tamanho = strlen(usuario_obterId(usuario)) + 120 + 1;
+	char *query = (char *)malloc(sizeof(char) * tamanho);
+	if (query == NULL)
+	{
+		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterInformacoesContratanteDoBanco()\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	snprintf(query, tamanho, "SELECT C.nome,C.cnpj,C.plano,C.email,C.telefone,C.localizacao_idlocalizacao FROM contratante C WHERE C.idContratante=\'%s\';", usuario_obterId(usuario));
+	if (query == NULL)
+	{
+		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterInformacoesContratanteDoBanco()\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	return retornaInformacoesObtidasNaQuery(query);
+}
+
+char *obterUltimos10ProdutosAdicionadosPeloContratanteDoBanco(Usuario *usuario)
+{
+	if (usuario == NULL)
+	{
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+
+	int tamanho = 110 + strlen(usuario_obterId(usuario)) + 1;
+	char *query = (char *)malloc(sizeof(char) * tamanho);
+	if (query == NULL)
+	{
+		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterUltimos10ProdutosAdicionadosPeloContratanteDoBanco()\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	snprintf(query, tamanho, "SELECT P.idProduto FROM contratante C JOIN produto P WHERE C.idContratante=%s ORDER BY datacriacao DESC LIMIT 10", usuario_obterLogin(usuario));
+	if (query == NULL)
+	{
+		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterUltimos10ProdutosAdicionadosPeloContratanteDoBanco()\n");
+	}
+	return retornaNIteracoesDaQuery(strdup("SELECT idProduto from produto;"), 10);
+}
+
 
 /* ***FIM COMANDOS DE OBTENÇÃO*** */
 
