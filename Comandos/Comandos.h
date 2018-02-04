@@ -1,5 +1,8 @@
-#pragma once
+// #pragma once
+#ifndef __COMANDOS__
+#define __COMANDOS__
 /* Definições rotineiras */
+
 #ifndef bool
 #define bool char
 #endif
@@ -235,3 +238,4 @@
 /* Fim retornos entre funções */
 
 
+#endif //__COMANDOS__

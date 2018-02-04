@@ -1,4 +1,4 @@
-#pragma once
+// #pragma once
 #ifndef __OPERACOES_BANCO__
 #define __OPERACOES_BANCO__
 
@@ -1516,23 +1516,29 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 
 bool addProdutoAListaDeDesejosDoClienteAoBanco(Usuario *usuario, char *idProduto)
 {
-	if (usuario == NULL)
-	{
-		printf(" Warning: usuario nulo detectado em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() aqo8ry8bdsf\n");
-		return false;
-	}
-	if (usuario_obterLogin(usuario) == NULL)
-	{
-		printf(" Warning: usuario não conectado detectado em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() asjkdhsajkd\n");
-		return false;
-	}
 	if (idProduto == NULL)
 	{
 		printf(" Warning: Produto nulo detectado em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() r0o9sad0890br\n");
 		return false;
 	}
-	int tamanho = strlen(idProduto) + 1;
+	if (usuario == NULL)
+	{
+		printf(" Warning: usuario nulo detectado em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() aqo8ry8bdsf\n");
+		free(idProduto);
+		idProduto = NULL;
+		return false;
+	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		printf(" Warning: usuario não conectado detectado em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() asjkdhsajkd\n");
+		free(idProduto);
+		idProduto = NULL;
+		return false;
+	}
+	int tamanho = 85 + strlen(idProduto)+ strlen(usuario_obterId(usuario)) + 1;
 	char *query = (char *)malloc(sizeof(char) * tamanho);
+
+	//Checa se o usuario já possui o item na lista de desejos   _START_
 	if (query == NULL)
 	{
 		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() aoijb89asdfe\n");
@@ -1540,13 +1546,62 @@ bool addProdutoAListaDeDesejosDoClienteAoBanco(Usuario *usuario, char *idProduto
 		idProduto = NULL;
 		return false;
 	}
-	snprintf(query, tamanho, "", idProduto, usuario_obterId(usuario));
+	snprintf(query, tamanho, "SELECT L.idproduto FROM listaDesejos L WHERE L.cliente_idcliente=%s AND L.idproduto=\'%s\';", usuario_obterId(usuario), idProduto);
 	if (query == NULL)
 	{
+		printf(" Warning: Falha ao formatar query para execução em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() asadvgreihuskjrbhasdhy");
 		free(idProduto);
 		idProduto = NULL;
 		return false;
 	}
+	if (queryRetornaConteudo(query))
+	{
+		printf(" LOG: Cliente já possui produto em sua lista de desejos em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() aqoifub980as\n");
+		free(idProduto);
+		idProduto = NULL;
+		return false;
+	}//Checa se o usuario já possui o item na lista de desejos _END_
+	else
+	{
+		printf(" LOG: Cliente ainda nao possui produto na sua lista de desejos em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() advr09981\n");
+		// tamanho = 67 + strlen(usuario_obterId(usuario)) + strlen(idProduto) + 1;
+		tamanho = 78 + strlen(usuario_obterId(usuario));
+		query = (char *)malloc(sizeof(char) * tamanho);
+		if (query == NULL)
+		{
+			printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() v987asd89v4vbjhgvcylç\n");
+			free(idProduto);
+			idProduto = NULL;
+			return false;
+		}
+		snprintf(query, tamanho, "INSERT INTO listaDesejos(idProduto, cliente_idcliente) VALUES(\'%s\',%s);", idProduto, usuario_obterId(usuario));
+		if (query == NULL)
+		{
+			printf(" Warning: Falha ao formatar query em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() vr408dybn7tneweuih6\n");
+			free(idProduto);
+			idProduto = NULL;
+			return false;
+		}
+		if (!executaQuery(query))
+		{
+			printf(" Warning: falha ao executar query, produto não adicionado à lista de desejos em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() dwebr5990nuhsjy\n");
+			free(query);
+			query = NULL;
+			free(idProduto);
+			idProduto = NULL;
+			return false;
+		}
+		else
+		{
+			printf(" LOG: produto adicionaro à lista de desejos em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() 0wrh8h9hjgidsaohu6uj\n");
+			free(query);
+			query = NULL;
+			free(idProduto);
+			idProduto = NULL;
+			return true;
+		}
+	}
+	
 }
 
 bool addNomeDeUsuarioAoBanco(Usuario *usuario, char *nome)// TESTAR        APP 2 & # nome
@@ -4011,6 +4066,6 @@ char *obterUltimos10ProdutosAdicionadosRealidadeVirtualPeloContratanteDoBanco(Us
 
 /* ***FIM COMANDOS DE OBTENÇÃO*** */
 
-#endif
+#endif //__OPERACOES_BANCO__
 
 
