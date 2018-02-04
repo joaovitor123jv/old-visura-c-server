@@ -1514,6 +1514,41 @@ bool addProdutoAoBanco(char *idContratante, char *idProduto, char *duracao, char
 	}
 }
 
+bool addProdutoAListaDeDesejosDoClienteAoBanco(Usuario *usuario, char *idProduto)
+{
+	if (usuario == NULL)
+	{
+		printf(" Warning: usuario nulo detectado em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() aqo8ry8bdsf\n");
+		return false;
+	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		printf(" Warning: usuario não conectado detectado em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() asjkdhsajkd\n");
+		return false;
+	}
+	if (idProduto == NULL)
+	{
+		printf(" Warning: Produto nulo detectado em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() r0o9sad0890br\n");
+		return false;
+	}
+	int tamanho = strlen(idProduto) + 1;
+	char *query = (char *)malloc(sizeof(char) * tamanho);
+	if (query == NULL)
+	{
+		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() aoijb89asdfe\n");
+		free(idProduto);
+		idProduto = NULL;
+		return false;
+	}
+	snprintf(query, tamanho, "", idProduto, usuario_obterId(usuario));
+	if (query == NULL)
+	{
+		free(idProduto);
+		idProduto = NULL;
+		return false;
+	}
+}
+
 bool addNomeDeUsuarioAoBanco(Usuario *usuario, char *nome)// TESTAR        APP 2 & # nome
 {
 	if (usuario == NULL)

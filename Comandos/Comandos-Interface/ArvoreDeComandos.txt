@@ -78,6 +78,9 @@ APP
 			T	(TIPO_DATA)
 				dataInformada	(formato DD/MM/AAAA )
 					(Adiciona ou altera a data de nascimento do cliente logado (somente usuario registrado))
+			LD	(TIPO_LISTA_DE_DESEJOS)
+				idProduto
+					(Adiciona produto referenciado por idProduto à lista de desejos do usuario, retorna ERRO se não estiver logado como usuario)
 			
 		{	(TIPO_CIDADE)
 			nomeDoEstado	(na verdade... sigla, sempre em maiúsculo, duas letras... exemplos: "SP", "GO", "MT" (todos os estados brasileiros estão adicionados no banco))

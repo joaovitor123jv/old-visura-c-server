@@ -158,6 +158,7 @@
 #define TIPO_DESCRICAO_PRODUTO "Q"
 #define TIPO_CATEGORIA "7z"
 
+#define TIPO_LISTA_DESEJOS "LD"
 
 #define TIPO_LOCALIZACAO "l0"
 #define TIPO_NUMERO "n"

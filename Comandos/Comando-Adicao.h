@@ -2489,7 +2489,29 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 		return false;
 	}
 
-	if (strcmp(token, TIPO_NOME) == 0)// APP 2 & # nomeInformado
+	if (strcmp(token, TIPO_LISTA_DESEJOS) == 0)// APP 2 & LD idProduto		//Adiciona produto à lista de desejos
+	{
+		printf(" LOG: cliente solicitando adicao de informação à sua lista de desejos em Comando-Adicao.h addInformacoesAUsuario()\n");
+		if (!usuario_PermissaoCliente(usuario))
+		{
+			printf(" LOG: Usuario conectado não é cliente comum, portanto, nao pode ter lista de desejos em Comando-Adicao.h addInformacoesAUsuario() ao8ry8sad\n");
+			return false;
+		}
+		token = strtok(NULL, " ");
+		if (token == NULL)
+		{
+			printf(" Warning: Comando insuficiente em Comando-Adicao.h addInformacoesAUsuario() asiuvrhu9as87ras\n");
+			return false;
+		}
+		if (!stringTamanhoIgual(token, TAMANHO_ID_PRODUTO))
+		{
+			printf(" Warning: idProduto de tamanho incorreto informado em Comando-Adicao.h addInformacoesAUsuario() aiurey7898asd32\n");
+			return false;
+		}
+		char *idProduto = strdup(token);
+		return addProdutoAListaDeDesejosDoClienteAoBanco(usuario, idProduto);
+	}
+	else if (strcmp(token, TIPO_NOME) == 0)// APP 2 & # nomeInformado	//Adiciona ou substitui o nome do usuario pelo nome informado
 	{
 		printf(" LOG: cliente solicitando adição de informação: NOME em Comando-Adicao.h addInformacoesAUsuario()\n");
 		token = strtok(NULL, " ");
@@ -2498,7 +2520,7 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 			printf(" Warning: Comando insuficiente em Comando-Adicao.h addInformacoesAUsuario() 654q898fgf\n");
 			return false;
 		}
-		if(strlen(token) > TAMANHO_NOME)
+		if (stringMaior(token, TAMANHO_NOME))
 		{
 			printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addInformacoesAUsuario() cjhkjhjekqaweg\n");
 			return false;
@@ -2529,7 +2551,7 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 		}
 		return false;	
 	}
-	else if(strcmp(token, TIPO_PONTO) == 0)// APP 2 & Dj quantidadeDePontos
+	else if(strcmp(token, TIPO_PONTO) == 0)// APP 2 & Dj quantidadeDePontos		//Adiciona numero de pontos ao usuario
 	{
 		token = strtok(NULL, " ");
 		if(token == NULL)
@@ -2567,7 +2589,7 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 		}
 		
 	}
-	else if(strcmp(token, TIPO_SOBRENOME) == 0)// APP 2 & Y sobrenomeInformado
+	else if(strcmp(token, TIPO_SOBRENOME) == 0)// APP 2 & Y sobrenomeInformado		//Adiciona ou substitui o sobrenome do usuario pelo sobrenome informado
 	{
 		printf(" LOG: cliente solicitando adição de informação: SOBRENOME em Comando-Adicao.h addInformacoesAUsuario()\n");
 		token = strtok(NULL, " ");
@@ -2607,7 +2629,7 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 		}
 		return false;	
 	}
-	else if(strcmp(token, TIPO_SEXO) == 0)// APP 2 & SQ sexoInformado
+	else if(strcmp(token, TIPO_SEXO) == 0)// APP 2 & SQ sexoInformado		//Adiciona ou substitui o sexo do usuario pelo sexo informado
 	{
 		printf(" LOG: cliente solicitando adição de informação: SEXO em Comando-Adicao.h addInformacoesAUsuario()\n");
 		token = strtok(NULL, " ");
@@ -2647,7 +2669,7 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 		}
 		return false;	
 	}
-	else if(strcmp(token, TIPO_DATA) == 0)// APP 2 & T dataInformada
+	else if(strcmp(token, TIPO_DATA) == 0)// APP 2 & T dataInformada		//Adiciona ou substitui a data de nascimento do usuario pela data informada
 	{
 		printf(" LOG: Cliente solicitando adição de data de nascimento a usuario em Comando-Adicao.h addInformacoesAUsuario()\n");
 		token = strtok(NULL, " ");

@@ -279,6 +279,7 @@ bool usuario_PermissaoAnonimo(Usuario *usuario)
 	}
 }
 
+//Retorna TRUE, se o usuario tiver permissao de acesso normal ou anonimo
 bool usuario_PermissaoCliente(Usuario *usuario)
 {
 	if (usuario == NULL)
