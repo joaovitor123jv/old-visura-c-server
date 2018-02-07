@@ -1585,19 +1585,13 @@ bool addProdutoAListaDeDesejosDoClienteAoBanco(Usuario *usuario, char *idProduto
 		if (!executaQuery(query))
 		{
 			printf(" Warning: falha ao executar query, produto não adicionado à lista de desejos em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() dwebr5990nuhsjy\n");
-			free(query);
-			query = NULL;
-			free(idProduto);
-			idProduto = NULL;
+			liberar(query, idProduto);
 			return false;
 		}
 		else
 		{
 			printf(" LOG: produto adicionaro à lista de desejos em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() 0wrh8h9hjgidsaohu6uj\n");
-			free(query);
-			query = NULL;
-			free(idProduto);
-			idProduto = NULL;
+			liberar(query, idProduto);
 			return true;
 		}
 	}
@@ -1660,40 +1654,6 @@ bool addNomeDeUsuarioAoBanco(Usuario *usuario, char *nome)// TESTAR        APP 2
 		query = NULL;
 		return true;
 	}
-	
-	// if(mysql_query(conexao, query))
-	// {
-
-	// 	printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) (addNomeDeUsuarioAoBanco())\n");
-	// 	printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
-	// 	printf("\t Query enviada =  |%s|\n", query);
-	// 	free(query);
-	// 	query = NULL;
-	// 	if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
-	// 	{
-	// 		printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h addNomeDeUsuarioAoBanco() 1qa5456dasd\n");
-	// 		if(conectarBanco())
-	// 		{
-	// 			printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco.h addNomeDeUsuarioAoBanco() asd456\n");
-	// 		}
-	// 		else
-	// 		{
-	// 			conexao = NULL;
-	// 			mysql_close(conexao);
-	// 			mysql_thread_end();
-	// 			free(conexao);
-	// 			printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h addNomeDeUsuarioAoBanco() as4d5asd\n");
-	// 		}
-	// 	}
-	// 	return false;
-	// }
-	// else
-	// {
-	// 	printf(" LOG: Nome %s adicionado ao usuario %s com sucesso em Comando-Adicao.h addNomeDeUsuarioAoBanco\n", nome, usuario_obterLogin(usuario));
-	// 	free(query);
-	// 	query = NULL;
-	// 	return true;
-	// }
 }
 
 bool addSobrenomeDeUsuarioAoBanco(Usuario *usuario, char *sobrenome)//TESTAR          APP 2 & Y sobrenome
@@ -2256,11 +2216,6 @@ bool addPontosDeUsuarioAoBanco(Usuario *usuario, char *quantidade)
 			return false;
 		}
 	}
-	// if(email == NULL)
-	// {
-	// 	printf(" Warning: email == NULL em OperacoesBanco.h addPontosDeUsuarioAoBanco() cqufh20nasdi\n");
-	// 	return false;
-	// }
 	if (usuario == NULL)
 	{
 		printf(" Warning: Usuario nulo detectado em OperacoesBanco.h addPontosDeUsuarioAoBanco()\n");

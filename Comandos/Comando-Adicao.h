@@ -115,7 +115,7 @@ bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 					printf(" Warning: Falha ao tentar adicionar usuario\n");
 					return false;
 				}
-				
+
 			}
 			else
 			{
@@ -242,6 +242,11 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 		printf(" Warning: Comando \"Insuficiente\" Comando-Adicao.h addUsuarioAnonimo()\n");
 		return false;
 	}
+	if (stringMaior(token, TAMANHO_TIPO))
+	{
+		printf(" Warning: Comando exageradamente grande (parametro tipo) detectado em Comando-Adicao.h addUsuarioAnonimo()\n");
+		return false;
+	}
 	if(strcmp(token, TIPO_LOGIN) == 0)// APP 2 1 2 sakdhasjkdn 7
 	{
 		printf(" LOG: Cliente informando login Comando-Adicao.h addUsuarioAnonimo()\n");
@@ -252,122 +257,69 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 			return false;
 		}
 		printf(" LOG: Alocando memória para email Comando-Adicao.h addUsuarioAnonimo()\n");
-		if(strlen(token) > TAMANHO_LOGIN)
+		if (stringMaior(token, TAMANHO_LOGIN))
 		{
 			printf(" LOG: Tamanho de email exageradamente grande Comando-Adicao.h addUsuarioAnonimo()\n");
 			return false;
 		}
-		char *email = (char *)malloc(sizeof(char) * (strlen(token) + 1));//Não esquecer do +1 (é o /0)
+		char *email = strdup(token);
 		if(email == NULL)
 		{
-			printf(" ERRO: Falha ao alocar memória para email Comando-Adicao.h addUsuarioAnonimo()\n");
-			return false;
-		}
-		printf(" LOG: Memoria alocada, copiando de token para email Comando-Adicao.h addUsuarioAnonimo()\n");
-		strcpy(email, token);
-		if(strcmp(email, token) != 0)
-		{
 			printf(" Warning: Falha ao copiar de token para email Comando-Adicao.h addUsuarioAnonimo()\n");
-			if(email != NULL)
-			{
-				free(email);
-				email = NULL;
-			}
 			return false;
 		}
-		printf(" LOG: String copiada Comando-Adicao.h\n");
 		token = strtok(NULL, " ");//APP 2 1 2 asdkjhaskd 7 loginDoUsuario 9
 		if(token == NULL)
 		{
 			printf(" Warning: Comando insuficiente (Comando-Adicao.h) addUsuarioAnonimo() (2)\n");
-			free(email);
-			email = NULL;
+			liberar(email);
 			return false;
 		}
 		if(strcmp(token, TIPO_SENHA) != 0)//APP 2 1 2 asdhasjdkh 7 logindousuario 9
 		{
 			printf(" Warning: Comando insuficiente Comando-Adicao.h addUsuarioAnonimo() (3)\n");
-			free(email);
-			email = NULL;
+			liberar(email);
 			return false;
 		}
 		token = strtok(NULL, "\0");//APP 2 1 2 asdhasjdkh 7 logindousuario 9 senhaInformada
 		if(token == NULL)
 		{
 			printf(" Warning: Comando insuficiente Comando-Adicao.h addUsuarioAnonimo() (4)\n");
-			free(email);
-			email = NULL;
+			liberar(email);
 			return false;
 		}
 		else//Minimiza erros
 		{
-			if(strlen(token) != TAMANHO_SENHA_PADRAO_USUARIO_ANONIMO)
+			if ( ! stringTamanhoIgual(token, TAMANHO_SENHA_PADRAO_USUARIO_ANONIMO))
 			{
 				printf(" Warning: Senha incorreta Comando-Adicao.h addUsuarioAnonimo() (1)\n");
-				free(email);
-				email = NULL;
+				liberar(email);
 				return false;
 			}
 			if(strcmp(token, SENHA_PADRAO_USUARIO_ANONIMO) == 0)//se senha informada for igual à senha padrao de usuario anonimo
 			{
 				printf(" LOG: alocando memoria para senha Comando-Adicao.h addUsuarioAnonimo()\n");
-				char *senha = (char *)malloc(sizeof(char) * (strlen(token) + 1));
+				char *senha = strdup(token);
 				if(senha != NULL)
 				{
-					strcpy(senha, token);
-					if(senha != NULL)
+					printf(" LOG: Solicitando adicao de usuario à base de dados Comando-Adicao.h addUsuarioAnonimo()\n");
+					if(addUsuarioAnonimoAoBanco(email))//SUCESSO usuario criado (manda usuario para adição direta no banco)
 					{
-						if(strcmp(senha, token) == 0)
-						{
-							printf(" LOG: Solicitando adicao de usuario à base de dados Comando-Adicao.h addUsuarioAnonimo()\n");
-							if(addUsuarioAnonimoAoBanco(email))//SUCESSO usuario criado (manda usuario para adição direta no banco)
-							{
-								printf(" LOG: Usuario cadastrado com sucesso Comando-Adicao.h addUsuarioAnonimo()\n");
-								free(email);
-								email = NULL;
-								free(senha);
-								senha = NULL;
-								return true;
-							}
-							else
-							{
-								printf(" Warning: Fala ao adicionar usuario ao banco de dados Comando-Adicao.h addUsuarioAnonimo()\n");
-								free(email);
-								email = NULL;
-								free(senha);
-								senha = NULL;
-								return false;
-							}
-
-						}
-						else
-						{
-							printf(" ERRO: Copia de strings falhou, Abortando operação Comando-Adicao.h addUsuarioAnonimo()\n");
-							free(email);
-							email = NULL;
-							free(senha);
-							senha = NULL;
-							return false;
-						}
+						printf(" LOG: Usuario cadastrado com sucesso Comando-Adicao.h addUsuarioAnonimo()\n");
+						liberar(email, senha);
+						return true;
 					}
 					else
 					{
-						printf(" ERRO: não foi possível copiar string de token para senha Comando-Adicao.h addUsuarioAnonimo()\n");
-						free(email);
-						email= NULL;
-						if(senha != NULL)
-						{
-							free(senha);
-							senha = NULL;
-						}
+						printf(" Warning: Fala ao adicionar usuario ao banco de dados Comando-Adicao.h addUsuarioAnonimo()\n");
+						liberar(email, senha);
 						return false;
 					}
 				}
 				else
 				{
 					printf(" ERRO: Não foi possivel alocar memoria para senha Comando-Adicao.h addUsuarioAnonimo()\n");
-					free(email);
-					email = NULL;
+					liberar(email);
 					return false;
 				}
 			}
@@ -375,161 +327,17 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 			{
 				printf(" Warning: Senha padrao de usuario anonimo nao confirmada Comando-Adicao.h addUsuarioAnonimo()\n");
 				printf(" \t\t Abortando! (usuario não será criado)\n");
-				free(email);
-				email = NULL;
+				liberar(email);
 				return false;
 			}
 			printf(" ERRO: Desconhecido em Comando-Adicao.h addUsuarioAnonimo() (2)\n");
 			printf(" \t\tAbortando! (usuario não será criado)\n");
-			if(email != NULL)
-			{
-				free(email);
-			}
-			email = NULL;
+			liberar(email);
 			return false;//TEMP
 		}
-		if(email != NULL)
-		{
-			free(email);
-			email = NULL;
-			printf(" ERRO: Desconhecido em Comando-Adicao.h addUsuarioAnonimo() (1)\n");
-			return false;
-		}
-	}
-	else if(strcmp(token, TIPO_SENHA) == 0)// APP 2 1 2 asdjsadklsa 9
-	{
-		printf(" LOG: Cliente informando senha Comando-Adicao.h addUsuarioAnonimo()\n");
-		token = strtok(NULL, " ");
-		if(token == NULL)// APP 2 1 2 askdjsakd 9 logindousuario
-		{
-			printf(" Warning: Comando insuficiente Comando-Adicao.h addUsuarioAnonimo() (1)\n");
-			return false;
-		}
-		printf(" LOG: Alocando memória para senha Comando-Adicao.h addUsuarioAnonimo()\n");
-		if(strlen(token) > TAMANHO_SENHA_PADRAO_USUARIO_ANONIMO)
-		{
-			printf(" LOG: Tamanho de senha exageradamente grande Comando-Adicao.h addUsuarioAnonimo()\n");
-			return false;
-		}
-		char *senha = (char *)malloc(sizeof(char) * (strlen(token) + 1));//Não esquecer do +1 (é o /0)
-		if(senha == NULL)
-		{
-			printf(" ERRO: Falha ao alocar memória para senha Comando-Adicao.h addUsuarioAnonimo()\n");
-			return false;
-		}
-		if(strcmp(senha, SENHA_PADRAO_USUARIO_ANONIMO) != 0)
-		{
-			printf(" Warning: Senha informada é incorreta em Comando-Adicao.h addUsuarioAnonimo() (senha primeiro)\n");
-			return false;
-		}
-		printf(" LOG: Memoria alocada, copiando de token para senha Comando-Adicao.h addUsuarioAnonimo()\n");
-		strcpy(senha, token);
-		if(strcmp(senha, token) != 0)
-		{
-			printf(" Warning: Falha ao copiar de token para senha Comando-Adicao.h addUsuarioAnonimo()\n");
-			if(senha != NULL)
-			{
-				free(senha);
-				senha = NULL;
-			}
-			return false;
-		}
-		printf(" LOG: String copiada Comando-Adicao.h\n");
-		token = strtok(NULL, " ");//APP 2 1 2 asdkjhaskd 7 loginDoUsuario 9
-		if(token == NULL)
-		{
-			printf(" Warning: Comando insuficiente (Comando-Adicao.h) addUsuarioAnonimo() (2)\n");
-			free(senha);
-			senha = NULL;
-			return false;
-		}
-		if(strcmp(token, TIPO_LOGIN) != 0)//APP 2 1 2 asdhasjdkh 7 logindousuario 9
-		{
-			printf(" Warning: Comando insuficiente Comando-Adicao.h addUsuarioAnonimo() (3)\n");
-			free(senha);
-			senha = NULL;
-			return false;
-		}
-		token = strtok(NULL, "\0");//APP 2 1 2 asdhasjdkh 7 logindousuario 9 senhaInformada
-		if(token == NULL)
-		{
-			printf(" Warning: Comando insuficiente Comando-Adicao.h addUsuarioAnonimo() (4)\n");
-			free(senha);
-			senha = NULL;
-			return false;
-		}
-		else//Minimiza erros
-		{
-			if(strlen(token) > TAMANHO_LOGIN)
-			{
-				printf(" Warning: Login exageradamente grande em Comando-Adicao.h addUsuarioAnonimo() (1)\n");
-				free(senha);
-				senha = NULL;
-				return false;
-			}
-			printf(" LOG: alocando memoria para email Comando-Adicao.h addUsuarioAnonimo()\n");
-			char *email = (char *)malloc(sizeof(char) * (strlen(token) + 1));
-			if(email != NULL)
-			{
-				strcpy(email, token);
-				if(email != NULL)
-				{
-					if(strcmp(senha, token) == 0)
-					{
-						printf(" LOG: Solicitando adicao de usuario à base de dados Comando-Adicao.h addUsuarioAnonimo()\n");
-						if(addUsuarioAnonimoAoBanco(email))//SUCESSO usuario criado (manda usuario para adição direta no banco)
-						{
-							printf(" LOG: Usuario cadastrado com sucesso Comando-Adicao.h addUsuarioAnonimo()\n");
-							free(email);
-							email = NULL;
-							free(senha);
-							senha = NULL;
-							return true;
-						}
-						else
-						{
-							printf(" Warning: Fala ao adicionar usuario ao banco de dados Comando-Adicao.h addUsuarioAnonimo()\n");
-							free(email);
-							email = NULL;
-							free(senha);
-							senha = NULL;
-							return false;
-						}
-
-					}
-					else
-					{
-						printf(" ERRO: Copia de strings falhou, Abortando operação Comando-Adicao.h addUsuarioAnonimo()\n");
-						free(email);
-						email = NULL;
-						free(senha);
-						senha = NULL;
-						return false;
-					}
-				}
-				else
-				{
-					printf(" ERRO: não foi possível copiar string de token para email Comando-Adicao.h addUsuarioAnonimo()\n");
-					free(senha);
-					senha= NULL;
-					if(senha != NULL)
-					{
-						free(email);
-						email = NULL;
-					}
-					return false;
-				}
-			}
-			else
-			{
-				printf(" ERRO: Não foi possivel alocar memoria para email Comando-Adicao.h addUsuarioAnonimo()\n");
-				free(senha);
-				senha = NULL;
-				return false;
-			}
-		printf(" ERRO: Desconhecido em (Comando-Adicao.h) addUsuarioAnonimo()\n");
-		return false;//TEMP
-		}
+		liberar(email);
+		printf(" ERRO: Desconhecido em Comando-Adicao.h addUsuarioAnonimo() (1)\n");
+		return false;
 	}
 	else
 	{
@@ -540,11 +348,6 @@ bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
 
 bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 {
-	// if(emailAnterior == NULL)
-	// {
-	// 	printf(" Warning: Email informado é nulo, não será possivel converter usuario anonimo em usuario registrado dessa forma, abortando em Comando-Adicao.h addUsuario()\n");
-	// 	return false;
-	// }
 	if (usuario == NULL)
 	{
 		printf(" Warning: Usuario nulo detectado em Comando-Adicao.h addUsuario() asdbra\n");
@@ -582,22 +385,14 @@ bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() kkqhhasbnv\n");
 		return false;
 	}
-	else if( strlen(token) > TAMANHO_LOGIN)
+	else if (stringMaior(token, TAMANHO_LOGIN))
 	{
 		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() sakjv31sx0\n");
 		return false;
 	}
 
-	char *email = NULL;
-	email = (char *)malloc(sizeof(char) * (strlen(token) + 1));// Esse +1 é o do maldito \0
+	char *email = strdup(token);
 
-	if(email == NULL)
-	{
-		printf(" Warning: Falha ao alocar memoria para email em Comando-Adicao.h addUsuario() sajhbr15550ddsr\n");
-		return false;
-	}
-
-	strcpy(email, token);
 	if(email == NULL)
 	{
 		printf(" Warning: falha ao copiar de token para email em Comando-Adicao.h addUsuario() asd45r6v1sd0\n");
@@ -608,62 +403,48 @@ bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() chj3wds140g5qaw\n");
-		free(email);
-		email = NULL;
+		liberar(email);
 		return false;
 	}
-	else if(strlen(token) > TAMANHO_TIPO)
+	else if (stringMaior(token, TAMANHO_TIPO))
 	{
 		printf(" Warning: Comando exageradamente grande em Comand-Adicao.h addUsuario()\n");
-		free(email);
-		email = NULL;
+		liberar(email);
 		return false;
 	}
 	else if(strcmp(token, TIPO_SENHA) != 0)
 	{
 		printf(" Warning: Comando incorreto em Comand-Adicao.h addUsuario()\n");
-		free(email);
-		email = NULL;
+		liberar(email);
 		return false;
 	}
 
 	// AINDA NÃO IMPLEMENTADO DESSA FORMA → APP 2 1 1 7 emailInformado 9 senhaCriptografadaAqui     IT's SHOW TIME ! //TODO
 	// ALTERNATIVA EM USO → APP 2 1 1 7 emailInformado 9 senhaCruaInformada
-	
+
 	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado 9 senhaCruaInformada
 
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() 5a1e55q\n");
-		free(email);
-		email = NULL;
+		// free(email);
+		// email = NULL;
+		liberar(email);
 		return false;
 	}
 	else if(strlen(token) > TAMANHO_SENHA)
 	{
 		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() 1q54r2s\n");
-		free(email);
-		email = NULL;
+		liberar(email);
 		return false;
 	}
 
-	char *senha = (char *)malloc(sizeof(char) * (strlen(token) + 1));// + 1 é do \0
-
-	if(senha == NULL)
-	{
-		printf(" Warning: Não foi possivel alocar memoria para senha em Comando-Adicao.h addUsuario() q45e8c1aaqeh\n");
-		free(email);
-		email = NULL;
-		return false;
-	}
-
-	strcpy(senha, token);
+	char *senha = strdup(token);
 
 	if(senha == NULL)
 	{
 		printf(" Warning: Falha ao copiar de token para senha em Comando-Adicao.h addUsuario()  qe848vrw\n");
-		free(email);
-		email = NULL;
+		liberar(email);
 		return false;
 	}
 
@@ -675,108 +456,45 @@ bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 		{
 			printf(" LOG: Usuario adicionado com sucesso ao banco de dados em Comando-Adicao.h addUsuario() a654q87e\n");
 			usuario_atualizarLogin(usuario, email);
-			free(email);
-			free(senha);
-			senha = NULL;
-			email = NULL;
+			liberar(email, senha);
 			return true;
 		}
 		else
 		{
 			printf(" Warning: falha ao adicionar usuario ao banco de dados em Comand-Adicao.h addUsuario() (sexo não informado)\n");
-			free(email);
-			free(senha);
-			senha = NULL;
-			email = NULL;
+			liberar(email, senha);
 			return false;
 		}
-		/* printf(" Warning: Comando insuficiente em Comando-Adicao.h addUsuario() 4q8e1h058\n");
-		free(email);
-		free(senha);
-		senha = NULL;
-		email = NULL;
-		return false; */
 	}
 
 	if(strlen(token) > TAMANHO_SEXO_CLIENTE)
 	{
 		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() vqe5489wer20\n");
-		free(email);
-		free(senha);
-		senha = NULL;
-		email = NULL;
+		liberar(email, senha);
 		return false;
 	}
 
-	char *sexo = (char *)malloc(sizeof(char) * (strlen(token) + 1));
-	if(sexo == NULL)
-	{
-		printf(" Warning: Não foi possivel alocar memoria para sexo em Comando-Adicao.h addUsuario() qef48fsw\n");
-		free(email);
-		free(senha);
-		senha = NULL;
-		email = NULL;
-		return false;
-	}
-
-	strcpy(sexo, token);
-	if(sexo == NULL)
-	{
-		printf(" Warning: Erro ao copiar de token para sexo em Comando-Adicao.h addUsuario()  cqeewf48v92q0\n");
-		free(email);
-		free(senha);
-		senha = NULL;
-		email = NULL;
-		return false;
-	}
+	char *sexo = strdup(token);
 
 	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado 9 senhaCruaInformada sexoInformado dataNascimentoInformada
 	if(token == NULL)
 	{
-		free(email);
-		free(senha);
-		free(sexo);
-		sexo = NULL;
-		senha = NULL;
-		email = NULL;
+		liberar(email, senha, sexo);
 		return false;
 	}
 
 	if(strlen(token) > TAMANHO_DATA)
 	{
 		printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addUsuario() asd15e9q8x\n");
-		free(email);
-		free(senha);
-		free(sexo);
-		sexo = NULL;
-		senha = NULL;
-		email = NULL;
+		liberar(email, senha, sexo);
 		return false;
 	}
 
-	char *dataNascimento = (char *)malloc(sizeof(char) * (strlen(token) + 1));
-	if(dataNascimento == NULL)
-	{
-		printf(" Warning: Falha ao alocar memoria para dataNascimento em Comando-Adicao.h addUsuario() eq54v89qc\n");
-		free(email);
-		free(senha);
-		free(sexo);
-		sexo = NULL;
-		senha = NULL;
-		email = NULL;
-		return false;
-	}
-
-	strcpy(dataNascimento, token);
+	char * dataNascimento = strdup(token);
 	if(dataNascimento == NULL)
 	{
 		printf(" Warning: Falha ao copiar de token para dataNascimento em Comando-Adicao.h addUsuario() jhqiujbcx983\n");
-		free(email);
-		free(senha);
-		free(sexo);
-		sexo = NULL;
-		senha = NULL;
-		email = NULL;
+		liberar(email, senha, sexo);
 		return false;
 	}
 
@@ -811,45 +529,24 @@ bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 				comando = NULL;
 			}
 		}
-
-		free(email);
-		free(senha);
-		free(sexo);
-		free(dataNascimento);
-		dataNascimento = NULL;
-		sexo = NULL;
-		senha = NULL;
-		email = NULL;
+		liberar(email, senha, sexo, dataNascimento);
 		return true;
 	}
 	else
 	{
 		printf(" Warning: Falha ao adicionar usuario ao banco de dados em Comando-Adicao.h addUsuario() qh38v9q2ubhd\n");
-		free(email);
-		free(senha);
-		free(sexo);
-		free(dataNascimento);
-		dataNascimento = NULL;
-		sexo = NULL;
-		senha = NULL;
-		email = NULL;
+		liberar(email, senha, sexo, dataNascimento);
 		return false;		
 	}
 
 	printf(" ERRO: DEU MERDA em Comando-Adicao.h addUsuario()\n");
 	return false;
-	// return false;  // Teoricamente nunca vai chegar aqui, mas vai que...
 }
 
 
 //bool addVisualizacao(char *email, bool usuarioAnonimo)/* APP 2 2 idProduto quantidade*/
 bool addVisualizacao(Usuario *usuario)
 {
-	// if(email == NULL)
-	// {
-	// 	printf("Email == NULL (Comando-Adicao.h) addVisualizacao()\n");
-	// 	return false;
-	// }
 	if (usuario == NULL)
 	{
 		printf(" Warning: Usuario nulo detectado em Comando-Adicao.h addVisualizacao()\n");
@@ -861,145 +558,71 @@ bool addVisualizacao(Usuario *usuario)
 		return false;
 	}
 
-	// printf("*************************COMANDO ADICAO ********************\n");
-	
+	if(!conexaoAtiva())
+	{
+		printf(" ERRO: CONEXAO NULA COM O BANCO DE DADOS (Comando-Adicao.h) (addVisualizacao())\n");
+		return false;
+	}
+
+	printf("*************************COMANDO ADICAO ******************** em Comando-Adicao.h comandoAdicao()\n");
+
 	char* token = strtok(NULL, " ");// APP 2 2 idProduto
-	
+
 	if(token == NULL)
 	{
 		printf(" ERRO: Comando incompleto (1) addVisualizacao() (Comando-Adicao.h)\n");
 		return false;
 	}
-	
-	if(strlen(token) != 10)/* APP 2 2 idProduto */
+
+	if ( ! stringTamanhoIgual(token, TAMANHO_ID_PRODUTO))// APP 2 2 idProduto
 	{
 		printf(" Warning: Argumento contém quantidade inválida de caracteres Comando-Adicao.h addVisualizacao()\n");
 		return false;
 	}
-	
 
-	char *id = (char *)malloc(sizeof(char) * (strlen(token) + 1));
-
-	if(id == NULL)
-	{
-		printf(" Warning: ñão foi possivel alocar memoria de ID Comando-Adicao.h addVisualizacao()\n");
-		return false;
-	}
-	
-	strcpy(id, token);
+	char *id = strdup(token);
 
 	if(id == NULL)
 	{
 		printf(" ERRO: ao alocar memória de ID (10B) addVisualizacao() (Comando-Adicao.h) \n");
 		return false;
 	}
-	
 
-	if(conexao == NULL)
-	{
-		// printf("ERRO: Falha ao alocar memória para conexao\n");
-		printf(" ERRO: CONEXAO NULA COM O BANCO DE DADOS (Comando-Adicao.h) (addVisualizacao())\n");
-		return false;
-	}
-
-	// if(!checarIdProduto(conexao, id))
 	if(!checarIdProduto(id))
 	{
 		printf(" ERRO: Produto não existe na base de dados Comando-Adicao.h addVisualizacao()\n");
-		// mysql_close(conexao);
-		// free(conexao);
-		// conexao = NULL;
-		free(id);
-		id = NULL;
+		liberar(id);
 		return false;
 	}
-
-	// Calcula a quantidade de cliques informada no quinto argumento
-	token = NULL;
 
 	token = strtok(NULL, " ");// APP 2 2 idProduto quantidade
 	if(token == NULL)/* APP 2 2 idProduto quantidade */
 	{
-		printf(" ERRO: Comando incompleto  (2)  addVisualizacao() (Comando-Adicao.h)\n");
-		printf("\t\tEncerrando Conexão Comando-Adicao.h addVisualizacao()\n");
-		
-		// mysql_close(conexao);
-		// free(conexao);
-		// conexao = NULL;
-		free(id);
-		id = NULL;
+		printf(" ERRO: Comando incompleto (faltou quantidade)  addVisualizacao() (Comando-Adicao.h)\n");
+		liberar(id);
 		return false;
 	}
-
-	// //Converte quantidade dada em string para quantidade dada em inteiro
-	// int quantidade = 0;
-	// if(token[0] - '0' < 10 && token[0] - '0' >= 0)// seleciona somente numeros (a faixa na tabela ASC de 0 a 9)
-	// {
-	// 	quantidade = token[0] - '0';
-	// 	// printf("CARACTER %c\n", 160);
-	// 	// char caracter = 'c';
-	// 	// printf("O caracter %c equivale ao numero %d na tabela asc\n", caracter, caracter);
-	// 	// printf(" primeira quantidade → %d\n", quantidade);
-	// }
-	// else
-	// {
-	// 	printf(" Warning: Comando incorreto (addVisualizacao) (Comando-Adicao.h)\n");
-		
-	// 	free(id);
-	// 	id = NULL;
-	// 	return false;
-	// }
-
-	// int i = 1;
-
-	// while(token[i] != '\0')
-	// {
-	// 	if(token[i] - '0' < 10 && token[i] - '0' >= 0)
-	// 	{
-	// 		quantidade = quantidade * 10;
-	// 		quantidade = (token[i] - '0') + quantidade;
-	// 	}
-	// 	else
-	// 	{
-	// 		printf(" ERRO: Comando incorreto (dentro do while) (%d vez)  addVisualizacao() (Comando-Adicao.h)\n", i);
-			
-	// 		free(id);
-	// 		id = NULL;
-	// 		return false;
-	// 	}
-	// 	i++;
-	// }
-	// //FIM Converte quantidade dada em string para quantidade dada em inteiro
 
 	char *quantidade = strdup(token);
 
 	if(quantidade == NULL)
 	{
 		printf(" Warning: Não foi possível duplicar token para quantidade em Comando-Adicao.h addVisualizacao()\n");
-		free(id);
-		id = NULL;
+		liberar(id);
 		return false;
 	}
-
-	//Quandidade de cliques calculada corretamente
 
 	//CONDIÇÕES PARA GERAR LOG, SOMENTE
 	if(!addVisualizacoesAoBanco(id, quantidade, usuario))
 	{
 		printf(" ERRO: Não foi possível atualizar a base de dados addVisualizacao() (Comando-Adicao.h)\n");
-		free(id);
-		free(quantidade);
-		quantidade = NULL;
-		id = NULL;
+		liberar(id, quantidade);
 		return false;
 	}
 	else
 	{
 		printf(" LOG: Dados atualizados Comando-Adicao.h addVisualizacao()\n");
-		free(id);
-		free(quantidade);
-		quantidade = NULL;
-		id = NULL;
+		liberar(id, quantidade);
 		return true;
 	}
 }
@@ -1108,293 +731,176 @@ bool addLocalizacao()/* APP 2 l0 */
 		printf(" Warning: falha ao copiar de token para idCidade em Comando-Adicao.h addLocalizacao() qibuwey5\n");
 		return false;
 	}
-	 token = strtok(NULL, " ");// APP 2 l0 idCidade cep
-	 if (token == NULL)
-	 {
-	 	printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() viubrusdh6wer5\n");
-	 	free(idCidade);
-	 	idCidade = NULL;
-	 	return false;
-	 }
-	 if (strlen(token) != TAMANHO_CEP)
-	 {
-	 	printf(" Warning: Cliente passou algo que não é o CEP em Comando-Adicao.h addLocalizacao() dsajhbveasd\n");
-	 	free(idCidade);
-	 	idCidade = NULL;
-	 	return false;
-	 }
-	 char *cep = strdup(token);
-	 if (cep == NULL)
-	 {
-	 	printf(" Warning: Falha ao duplicar cep para token em Comando-Adicao.h addLocalizacao() ivubudg\n");
-	 	free(idCidade);
-	 	idCidade = NULL;
-	 	return false;
-	 }
+	token = strtok(NULL, " ");// APP 2 l0 idCidade cep
+	if (token == NULL)
+	{
+		printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() viubrusdh6wer5\n");
+		liberar(idCidade);
+		return false;
+	}
+	if (strlen(token) != TAMANHO_CEP)
+	{
+		printf(" Warning: Cliente passou algo que não é o CEP em Comando-Adicao.h addLocalizacao() dsajhbveasd\n");
+		liberar(idCidade);
+		return false;
+	}
+	char *cep = strdup(token);
+	if (cep == NULL)
+	{
+		printf(" Warning: Falha ao duplicar cep para token em Comando-Adicao.h addLocalizacao() ivubudg\n");
+		liberar(idCidade);
+		return false;
+	}
 
-	 token = strtok(NULL, " ");// APP 2 l0 idCidade cep bairro
-	 if (token == NULL)// Informando idCidade e CEP
-	 {
-	 	printf(" LOG: Cliente só informou idCidade e CEP em Comando-Adicao.h addLocalizacao() aiuhgu tsdf\n");
-	 	if (addLocalizacaoAoBanco(idCidade, cep, NULL, NULL, NULL, NULL))
-	 	{
-	 		printf(" LOG: localizacao adicionada ao banco de dados com sucesso em Comando-Adicao.h addLocalizacao() ekjhgbdsf\n");
-	 		free(idCidade);
-	 		free(cep);
-	 		cep = NULL;
-	 		idCidade = NULL;
-	 		return true;
-	 	}
-	 	else
-	 	{
-	 		printf(" Warning: Ocorreu ao menos um erro ao tentar adicionar localizacao ao banco de dados em Comando-Adicao.h addLocalizacao() akjghjvksdf\n");
-	 		free(idCidade);
-	 		free(cep);
-	 		cep = NULL;
-	 		idCidade = NULL;
-	 		return false;
-	 	}
-	 }
-	 else
-	 {
-	 	if (strlen(token) > TAMANHO_BAIRRO)
-	 	{
-	 		printf(" Warning: Tamanho de bairro informado é exageradamente grande em Comando-Adicao.h addLocalizacao() dsakjburiasd\n");
-	 		free(idCidade);
-	 		free(cep);
-	 		cep = NULL;
-	 		idCidade = NULL;
-	 		return false;
-	 	}
-	 	char *bairro = strdup(token);
-	 	if (bairro == NULL)
-	 	{
-	 		printf(" Warning: Falha ao duplicar bairro em Comando-Adicao.h addLocalizacao() askjhbv rusidfsd\n");
-	 		free(idCidade);
-	 		free(cep);
-	 		cep = NULL;
-	 		idCidade = NULL;
-	 		return false;
-	 	}
+	token = strtok(NULL, " ");// APP 2 l0 idCidade cep bairro
+	if (token == NULL)// Informando idCidade e CEP
+	{
+		printf(" LOG: Cliente só informou idCidade e CEP em Comando-Adicao.h addLocalizacao() aiuhgu tsdf\n");
+		if (addLocalizacaoAoBanco(idCidade, cep, NULL, NULL, NULL, NULL))
+		{
+			printf(" LOG: localizacao adicionada ao banco de dados com sucesso em Comando-Adicao.h addLocalizacao() ekjhgbdsf\n");
+			liberar(idCidade, cep);
+			return true;
+		}
+		else
+		{
+			printf(" Warning: Ocorreu ao menos um erro ao tentar adicionar localizacao ao banco de dados em Comando-Adicao.h addLocalizacao() akjghjvksdf\n");
+			liberar(idCidade, cep);
+			return false;
+		}
+	}
+	else
+	{
+		if (strlen(token) > TAMANHO_BAIRRO)
+		{
+			printf(" Warning: Tamanho de bairro informado é exageradamente grande em Comando-Adicao.h addLocalizacao() dsakjburiasd\n");
+			liberar(idCidade, cep);
+			return false;
+		}
+		char *bairro = strdup(token);
+		if (bairro == NULL)
+		{
+			printf(" Warning: Falha ao duplicar bairro em Comando-Adicao.h addLocalizacao() askjhbv rusidfsd\n");
+			liberar(idCidade, cep);
+			return false;
+		}
 
-	 	token = strtok(NULL, " ");// APP 2 l0 idCidade cep bairro rua
-	 	if (token == NULL)// Informando idCidade, CEP e bairro
-	 	{
-	 		printf(" LOG: Cliente informou idCidade cep e bairro em Comando-Adicao.h addLocalizacao() ivubursfth\n");
-	 		if (addLocalizacaoAoBanco(idCidade, cep, bairro, NULL, NULL, NULL))
-	 		{
-	 			printf(" LOG: localizacao adicionada ao banco de dados com sucesso em Comando-Adicao.h addLocalizacao() ekjhgbdsf\n");
-		 		free(idCidade);
-		 		free(cep);
-		 		free(bairro);
-		 		bairro = NULL;
-		 		cep = NULL;
-		 		idCidade = NULL;
-		 		return true;
-	 		}
-	 		else
-	 		{
-	 			printf(" Warning: Falha ao adicionar localizacao ao banco em Comando-Adicao.h addLocalizacao() adkjhgbhjirbasd\n");
-	 			free(idCidade);
-	 			free(cep);
-	 			free(bairro);
-	 			bairro = NULL;
-	 			cep = NULL;
-	 			idCidade = NULL;
-	 			return false;
-	 		}
-	 	}
-	 	else
-	 	{
-	 		if (strlen(token) > TAMANHO_RUA)
-	 		{
-	 			printf(" Warning: Tamanho da rua informada é exageradamente grande em Comando-Adicao.h addLocalizacao() askjbvrkasd\n");
-	 			free(idCidade);
-	 			free(cep);
-	 			free(bairro);
-	 			bairro = NULL;
-	 			cep = NULL;
-	 			idCidade = NULL;
-	 			return false;
-	 		}
-	 		char *rua = strdup(token);
-	 		if (rua == NULL)
-	 		{
-	 			printf(" Warning: Falha ao duplicar rua em Comando-Adicao.h addLocalizacao() sakjvbehsads\n");
-	 			free(idCidade);
-	 			free(cep);
-	 			free(bairro);
-	 			bairro = NULL;
-	 			cep = NULL;
-	 			idCidade = NULL;
-	 			return false;
-	 		}
+		token = strtok(NULL, " ");// APP 2 l0 idCidade cep bairro rua
+		if (token == NULL)// Informando idCidade, CEP e bairro
+		{
+			printf(" LOG: Cliente informou idCidade cep e bairro em Comando-Adicao.h addLocalizacao() ivubursfth\n");
+			if (addLocalizacaoAoBanco(idCidade, cep, bairro, NULL, NULL, NULL))
+			{
+				printf(" LOG: localizacao adicionada ao banco de dados com sucesso em Comando-Adicao.h addLocalizacao() ekjhgbdsf\n");
+				liberar(idCidade, cep, bairro);
+				return true;
+			}
+			else
+			{
+				printf(" Warning: Falha ao adicionar localizacao ao banco em Comando-Adicao.h addLocalizacao() adkjhgbhjirbasd\n");
+				liberar(idCidade, cep, bairro);
+				return false;
+			}
+		}
+		else
+		{
+			if (strlen(token) > TAMANHO_RUA)
+			{
+				printf(" Warning: Tamanho da rua informada é exageradamente grande em Comando-Adicao.h addLocalizacao() askjbvrkasd\n");
+				liberar(idCidade, cep, bairro);
+				return false;
+			}
+			char *rua = strdup(token);
+			if (rua == NULL)
+			{
+				printf(" Warning: Falha ao duplicar rua em Comando-Adicao.h addLocalizacao() sakjvbehsads\n");
+				liberar(idCidade, cep, bairro);
+				return false;
+			}
 
-	 		token = strtok(NULL, " ");// APP 2 l0 idCidade cep bairro rua numero
-	 		if (token == NULL)// Se informar idCidade, cep, bairro e rua
-	 		{
-	 			printf(" LOG: Cliente informou idCidade cep, bairro e rua em Comando-Adicao.h addLocalizacao() askbvjiuisdfg\n");
-	 			if (addLocalizacaoAoBanco(idCidade, cep, bairro, rua, NULL, NULL))
-	 			{
-	 				printf(" LOG: Localizacao adicionada ao banco de dados com sucesso em Comando-Adicao.h addLocalizacao() sauvgbuirvsdf\n");
-	 				free(idCidade);
-	 				free(cep);
-	 				free(bairro);
-	 				free(rua);
-	 				rua = NULL;
-	 				bairro = NULL;
-	 				cep = NULL;
-	 				idCidade = NULL;
-	 				return true;
-	 			}
-	 			else
-	 			{
-	 				printf(" Warning: Falha ao adicionar localizacao em Comando-Adicao.h addLocalizacao() ewuinuisf\n");
-	 				free(idCidade);
-	 				free(cep);
-	 				free(bairro);
-	 				free(rua);
-	 				rua = NULL;
-	 				bairro = NULL;
-	 				cep = NULL;
-	 				idCidade = NULL;
-	 				return false;
-	 			}
-	 		}
-	 		else
-	 		{
-	 			if (strlen(token) > TAMANHO_NUMERO)
-	 			{
-	 				printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addLocalizacao() askjbvruisdgjh589sad\n");
-	 				free(idCidade);
-	 				free(cep);
-	 				free(bairro);
-	 				free(rua);
-	 				rua = NULL;
-	 				bairro = NULL;
-	 				cep = NULL;
-	 				idCidade = NULL;
-	 				return false;
-	 			}
-	 			char *numero = strdup(token);
-	 			if (numero == NULL)
-	 			{
-	 				printf(" Warning: Falha ao duplicar numero em Comando-Adicao.h addLocalizacao() aksjb uiasdgr\n");
-	 				free(idCidade);
-	 				free(cep);
-	 				free(bairro);
-	 				free(rua);
-	 				rua = NULL;
-	 				bairro = NULL;
-	 				cep = NULL;
-	 				idCidade = NULL;
-	 				return false;
-	 			}
+			token = strtok(NULL, " ");// APP 2 l0 idCidade cep bairro rua numero
+			if (token == NULL)// Se informar idCidade, cep, bairro e rua
+			{
+				printf(" LOG: Cliente informou idCidade cep, bairro e rua em Comando-Adicao.h addLocalizacao() askbvjiuisdfg\n");
+				if (addLocalizacaoAoBanco(idCidade, cep, bairro, rua, NULL, NULL))
+				{
+					printf(" LOG: Localizacao adicionada ao banco de dados com sucesso em Comando-Adicao.h addLocalizacao() sauvgbuirvsdf\n");
+					liberar(idCidade, cep, bairro, rua);
+					return true;
+				}
+				else
+				{
+					printf(" Warning: Falha ao adicionar localizacao em Comando-Adicao.h addLocalizacao() ewuinuisf\n");
+					liberar(idCidade, cep, bairro);
+					return false;
+				}
+			}
+			else
+			{
+				if (strlen(token) > TAMANHO_NUMERO)
+				{
+					printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addLocalizacao() askjbvruisdgjh589sad\n");
+					liberar(idCidade, cep, bairro);
+					return false;
+				}
+				char *numero = strdup(token);
+				if (numero == NULL)
+				{
+					printf(" Warning: Falha ao duplicar numero em Comando-Adicao.h addLocalizacao() aksjb uiasdgr\n");
+					liberar(idCidade, cep, bairro);
+					return false;
+				}
 
-	 			token = strtok(NULL, " ");// APP 2 l0 idCidade cep bairro rua numero complemento
-	 			if (token == NULL)// Se informar idCidade, cep, bairro, rua e numero
-	 			{
-	 				printf(" LOG: Cliente informou idCidade, cep, bairro, rua e numero em Comando-Adicao.h addLocalizacao() kjubrui9dfjt\n");
-	 				if (addLocalizacaoAoBanco(idCidade, cep, bairro, rua, numero, NULL))
-	 				{
-	 					printf(" LOG: Localizacao adicionada com sucesso ao banco de dados em Comando-Adicao.h addLocalizacao() askjbvruyiasxfrgb\n");
-	 					free(idCidade);
-	 					free(cep);
-	 					free(bairro);
-	 					free(rua);
-	 					free(numero);
-	 					numero = NULL;
-	 					rua = NULL;
-	 					bairro = NULL;
-	 					cep = NULL;
-	 					idCidade = NULL;
-	 					return true;
-	 				}
-	 				else
-	 				{
-	 					printf(" Warning:Falha ao adicionar localizacao em Comando-Adicao.h addLocalizacao() askjbvruyiasxfrgb\n");
-	 					free(idCidade);
-	 					free(cep);
-	 					free(bairro);
-	 					free(rua);
-	 					free(numero);
-	 					numero = NULL;
-	 					rua = NULL;
-	 					bairro = NULL;
-	 					cep = NULL;
-	 					idCidade = NULL;
-	 					return false;
-	 				}
-	 			}
-	 			else// Se informar idCidade, cep, bairro, rua, numero e complemento
-	 			{
-	 				printf(" LOG: Cliente informando todos os dados em Comando-Adicao.h addLocalizacao() dkjghbuiuisdf\n");
-	 				if (strlen(token) > TAMANHO_COMPLEMENTO)
-	 				{
-	 					printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addLocalizacao() askjvnruisdbtb165 \n");
-	 					free(idCidade);
-	 					free(cep);
-	 					free(bairro);
-	 					free(rua);
-	 					free(numero);
-	 					numero = NULL;
-	 					rua = NULL;
-	 					bairro = NULL;
-	 					cep = NULL;
-	 					idCidade = NULL;
-	 					return false;
-	 				}
-	 				char *complemento = strdup(token);
-	 				if (complemento == NULL)
-	 				{
-	 					printf(" Warning: Falha ao duplicar complemento em Comando-Adicao.h addLocalizacao() asjhvjdkeh892df\n");
-	 					free(idCidade);
-	 					free(cep);
-	 					free(bairro);
-	 					free(rua);
-	 					free(numero);
-	 					numero = NULL;
-	 					rua = NULL;
-	 					bairro = NULL;
-	 					cep = NULL;
-	 					idCidade = NULL;
-	 					return false;
-	 				}
+				token = strtok(NULL, " ");// APP 2 l0 idCidade cep bairro rua numero complemento
+				if (token == NULL)// Se informar idCidade, cep, bairro, rua e numero
+				{
+					printf(" LOG: Cliente informou idCidade, cep, bairro, rua e numero em Comando-Adicao.h addLocalizacao() kjubrui9dfjt\n");
+					if (addLocalizacaoAoBanco(idCidade, cep, bairro, rua, numero, NULL))
+					{
+						printf(" LOG: Localizacao adicionada com sucesso ao banco de dados em Comando-Adicao.h addLocalizacao() askjbvruyiasxfrgb\n");
+						liberar(idCidade, cep, bairro, numero);
+						return true;
+					}
+					else
+					{
+						printf(" Warning:Falha ao adicionar localizacao em Comando-Adicao.h addLocalizacao() askjbvruyiasxfrgb\n");
+						liberar(idCidade, cep, bairro, numero);
+						return false;
+					}
+				}
+				else// Se informar idCidade, cep, bairro, rua, numero e complemento
+				{
+					printf(" LOG: Cliente informando todos os dados em Comando-Adicao.h addLocalizacao() dkjghbuiuisdf\n");
+					if (strlen(token) > TAMANHO_COMPLEMENTO)
+					{
+						printf(" Warning: Comando exageradamente grande em Comando-Adicao.h addLocalizacao() askjvnruisdbtb165 \n");
+						liberar(idCidade, cep, bairro, numero);
+						return false;
+					}
+					char *complemento = strdup(token);
+					if (complemento == NULL)
+					{
+						printf(" Warning: Falha ao duplicar complemento em Comando-Adicao.h addLocalizacao() asjhvjdkeh892df\n");
+						liberar(idCidade, cep, bairro, numero);
+						return false;
+					}
 
-	 				if (addLocalizacaoAoBanco(idCidade, cep, bairro, rua, numero, complemento))
-	 				{
-	 					printf(" LOG: Localizacao adicionada com sucesso ao banco de dados em Comando-Adicao.h addLocalizacao() askjbvru8sd784sdf\n");
-	 					free(idCidade);
-	 					free(cep);
-	 					free(bairro);
-	 					free(rua);
-	 					free(numero);
-	 					numero = NULL;
-	 					rua = NULL;
-	 					bairro = NULL;
-	 					cep = NULL;
-	 					idCidade = NULL;
-	 					return true;
-	 				}
-	 				else
-	 				{
-	 					printf(" Warning: Falha ao adicionar localizacao ao banco de dados em Comando-Adicao.h addLocalizacao() asbvuei872df\n");
-	 					free(idCidade);
-	 					free(cep);
-	 					free(bairro);
-	 					free(rua);
-	 					free(numero);
-	 					numero = NULL;
-	 					rua = NULL;
-	 					bairro = NULL;
-	 					cep = NULL;
-	 					idCidade = NULL;
-	 					return false;
-	 				}
-	 			}
-	 		}
-	 	}
-	 }
+					if (addLocalizacaoAoBanco(idCidade, cep, bairro, rua, numero, complemento))
+					{
+						printf(" LOG: Localizacao adicionada com sucesso ao banco de dados em Comando-Adicao.h addLocalizacao() askjbvru8sd784sdf\n");
+						liberar(idCidade, cep, bairro, numero, complemento);
+						return true;
+					}
+					else
+					{
+						printf(" Warning: Falha ao adicionar localizacao ao banco de dados em Comando-Adicao.h addLocalizacao() asbvuei872df\n");
+						liberar(idCidade, cep, bairro, numero, complemento);
+						return false;
+					}
+				}
+			}
+		}
+	}
 }
 
 
@@ -1765,7 +1271,7 @@ bool addContratante()// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email s
 	}
 
 	//Caso dê um erro TOTALMENTE imprevisível
-	
+
 	if( cnpj != NULL )
 	{
 		free( cnpj );
@@ -1809,6 +1315,7 @@ bool addContratante()// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email s
 }
 
 char *obterIdContratanteDoBancoPorUsuario(Usuario *usuario);
+
 bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 {
 	if (usuario == NULL)
@@ -1853,101 +1360,67 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 		if (token == NULL)
 		{
 			printf(" Warning: Comando insuficiente detectado em Comando-Adicao.h addProduto() aoi8hbv89a78sd\n");
-			free(idProduto);
-			idProduto = NULL;
+			liberar(idProduto);
 			return false;
 		}
 		if (stringMaior(token, TAMANHO_DURACAO))
 		{
 			printf(" Warning: Comando exageradamente grande detectado em Comando-Adicao.h addProduto() ashbvr98as7d3\n");
-			free(idProduto);
-			idProduto = NULL;
+			liberar(idProduto);
 			return false;
 		}
 		duracao = strdup(token);
 		if (duracao == NULL)
 		{
 			printf(" Warning: Falha ao duplicar duracao em Comando-Adicao.h addProduto()\n");
-			free(idProduto);
-			idProduto = NULL;
+			liberar(idProduto);
 			return false;
 		}
 		token = strtok(NULL, " ");// APP 2 + idProduto duracao nomeProduto
 		if (token == NULL)
 		{
 			printf(" Warning: Comando insuficiente em Comando-Adicao.h addProduto() sahvuroiuyasd\n");
-			free(idProduto);
-			free(duracao);
-			duracao = NULL;
-			idProduto = NULL;
+			liberar(idProduto, duracao);
 			return false;
 		}
 		if (stringMaior(token, TAMANHO_NOME_PRODUTO))
 		{
 			printf(" Warning: Tamanho de nome de produto exageradamente grande em Comando-Adicao.h addProduto() akbh7r98a7sd\n");
-			free(idProduto);
-			free(duracao);
-			duracao = NULL;
-			idProduto = NULL;
+			liberar(idProduto, duracao);
 			return false;
 		}
 		nomeProduto = strdup(token);
 		if (nomeProduto == NULL)
 		{
 			printf(" Warning: falha ao duplicar nome de produto em Comando-Adicao.h addProduto() ahvr89a7sr\n");
-			free(idProduto);
-			free(duracao);
-			duracao = NULL;
-			idProduto = NULL;
+			liberar(idProduto, duracao);
 			return false;
 		}
 		token = strtok(NULL, " ");// APP 2 + idProduto duracao nomeProduto tipoProduto
 		if (token == NULL)
 		{
 			printf(" Warning: Comando insuficiente detectado em Comando-Adicao.h addProduto() averuiuasy\n");
-			free(duracao);
-			duracao = NULL;
-			free(idProduto);
-			idProduto = NULL;
-			free(nomeProduto);
-			nomeProduto = NULL;
+			liberar(idProduto, duracao, nomeProduto);
 			return false;
 		}
 		if (stringMaior(token, TAMANHO_TIPO_PRODUTO))
 		{
 			printf(" Warning: Tamanho do tipo de produto é exageradamente grande em Comando-Adicao.h addProduto() a09878dar\n");
-			free(idProduto);
-			free(duracao);
-			free(nomeProduto);
-			nomeProduto = NULL;
-			duracao = NULL;
-			idProduto = NULL;
+			liberar(idProduto, duracao, nomeProduto);
 			return false;
 		}
 		tipoProduto = strdup(token);
 		if (tipoProduto == NULL)
 		{
 			printf(" Warning: Falha ao duplicar tipo de produto em Comando-Adicao.h addProduto() asioubv879asd4\n");
-			free(idProduto);
-			free(duracao);
-			free(nomeProduto);
-			nomeProduto = NULL;
-			duracao = NULL;
-			idProduto = NULL;
+			liberar(idProduto, duracao, nomeProduto);
 			return false;
 		}
 		idContratante = obterIdContratanteDoBancoPorUsuario(usuario);
 		if (idContratante == NULL)
 		{
 			printf(" Warning: Falha ao obter id de contratante do banco de dados em Comando-Adicao.h addProduto() askbgvr8u9asud\n");
-			free(idProduto);
-			free(duracao);
-			free(nomeProduto);
-			free(tipoProduto);
-			tipoProduto = NULL;
-			duracao = NULL;
-			nomeProduto = NULL;
-			idProduto = NULL;
+			liberar(idProduto, duracao, nomeProduto, tipoProduto);
 			return false;
 		}
 		token = strtok(NULL, " ");// APP 2 + idProduto duracao nomeProduto tipoProduto categoriaProduto
@@ -1957,34 +1430,16 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 			if ( addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, NULL, tipoProduto, NULL) )
 			{
 				printf(" LOG: Produto adicionado ao banco de dados com sucesso em Comando-Adicao.h addProduto() asdjhfsf\n");
-				free(idProduto);
-				free(duracao);
-				free(nomeProduto);
-				free(idContratante);
-				free(tipoProduto);
-				tipoProduto = NULL;
-				idContratante = NULL;
-				duracao = NULL;
-				nomeProduto = NULL;
-				idProduto = NULL;
+				liberar(idProduto, duracao, nomeProduto, tipoProduto, idContratante);
 				return true;
 			}
 			else
 			{
 				printf(" Warning: Falha ao adicionar produto ao banco de dados em Comando-Adicao.h addProduto() askjhsdsa\n");
-				free(idProduto);
-				free(duracao);
-				free(nomeProduto);
-				free(idContratante);
-				free(tipoProduto);
-				tipoProduto = NULL;
-				idContratante = NULL;
-				duracao = NULL;
-				nomeProduto = NULL;
-				idProduto = NULL;
+				liberar(idProduto, duracao, nomeProduto, tipoProduto, idContratante);
 				return false;
 			}
-			
+
 		}
 		else
 		{
@@ -1992,32 +1447,14 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 			if (stringMaior(token, TAMANHO_CATEGORIA))
 			{
 				printf(" Warning: Categoria de tamanho exageradamente grande em Comando-Adicao.h addProduto() askjhguias\n");
-				free(idProduto);
-				free(duracao);
-				free(nomeProduto);
-				free(idContratante);
-				free(tipoProduto);
-				tipoProduto = NULL;
-				idContratante = NULL;
-				duracao = NULL;
-				nomeProduto = NULL;
-				idProduto = NULL;
+				liberar(idProduto, duracao, nomeProduto, tipoProduto, idContratante);
 				return false;
 			}
 			categoria = strdup(token);
 			if (categoria == NULL)
 			{
 				printf(" Warning: Falha ao duplicar categoria em Comando-Adicao.h addProduto() sajobrasd\n");
-				free(idProduto);
-				free(duracao);
-				free(nomeProduto);
-				free(idContratante);
-				free(tipoProduto);
-				tipoProduto = NULL;
-				idContratante = NULL;
-				duracao = NULL;
-				nomeProduto = NULL;
-				idProduto = NULL;
+				liberar(idProduto, duracao, nomeProduto, tipoProduto, idContratante);
 				return false;
 			}
 			token = strtok(NULL, " ");
@@ -2027,33 +1464,13 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 				if (addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, NULL, tipoProduto, categoria))
 				{
 					printf(" LOG: Produto adicionado ao banco de dados com sucesso em Comando-Adicao.h addProduto() asvber98as7d3\n");
-					free(idProduto);
-					free(duracao);
-					free(nomeProduto);
-					free(idContratante);
-					free(tipoProduto);
-					tipoProduto = NULL;
-					idContratante = NULL;
-					duracao = NULL;
-					nomeProduto = NULL;
-					idProduto = NULL;
+					liberar(idProduto, duracao, nomeProduto, tipoProduto, idContratante, categoria);
 					return true;
 				}
 				else
 				{
 					printf(" Warning: Falha ao adicionar produto ao banco de dados em Comando-Adicao.h addProduto() saouyr8usd\n");
-					free(idProduto);
-					free(duracao);
-					free(nomeProduto);
-					free(idContratante);
-					free(tipoProduto);
-					free(categoria);
-					categoria = NULL;
-					tipoProduto = NULL;
-					idContratante = NULL;
-					duracao = NULL;
-					nomeProduto = NULL;
-					idProduto = NULL;
+					liberar(idProduto, duracao, nomeProduto, tipoProduto, idContratante, categoria);
 					return false;
 				}
 			}
@@ -2062,74 +1479,26 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 				if (stringMaior(token, TAMANHO_DESCRICAO_PRODUTO))
 				{
 					printf(" Warning: Descricao exageradamente grande em Comando-Adicao.h addProduto() askjdhjkr\n");
-					free(idProduto);
-					free(duracao);
-					free(nomeProduto);
-					free(idContratante);
-					free(tipoProduto);
-					free(categoria);
-					categoria = NULL;
-					tipoProduto = NULL;
-					idContratante = NULL;
-					duracao = NULL;
-					nomeProduto = NULL;
-					idProduto = NULL;
+					liberar(idProduto, duracao, nomeProduto, tipoProduto, idContratante, categoria);
 					return false;
 				}
 				descricao = strdup(token);
 				if (descricao == NULL)
 				{
 					printf(" Warning: Falha ao duplicar descricao em Comando-Adicao.h addProduto() sakjr0asd\n");
-					free(idProduto);
-					free(duracao);
-					free(nomeProduto);
-					free(idContratante);
-					free(tipoProduto);
-					free(categoria);
-					categoria = NULL;
-					tipoProduto = NULL;
-					idContratante = NULL;
-					duracao = NULL;
-					nomeProduto = NULL;
-					idProduto = NULL;
+					liberar(idProduto, duracao, nomeProduto, tipoProduto, idContratante, categoria);
 					return false;
 				}
 				if (addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, descricao, tipoProduto, categoria))
 				{
 					printf(" LOG: Produto adicionado ao banco de dados com sucesso em Comando-Adicao.h addProduto() asiurbhuiasd\n");
-					free(idProduto);
-					free(duracao);
-					free(nomeProduto);
-					free(idContratante);
-					free(tipoProduto);
-					free(categoria);
-					free(descricao);
-					descricao = NULL;
-					categoria = NULL;
-					tipoProduto = NULL;
-					idContratante = NULL;
-					duracao = NULL;
-					nomeProduto = NULL;
-					idProduto = NULL;
+					liberar(idProduto, duracao, nomeProduto, tipoProduto, idContratante, categoria, descricao);
 					return true;
 				}
 				else
 				{
 					printf(" Warning: Falha ao adicionar produto ao banco de dados em Comando-Adicao.h addProduto() eoasb7890sad\n");
-					free(idProduto);
-					free(duracao);
-					free(nomeProduto);
-					free(idContratante);
-					free(tipoProduto);
-					free(categoria);
-					free(descricao);
-					descricao = NULL;
-					categoria = NULL;
-					tipoProduto = NULL;
-					idContratante = NULL;
-					duracao = NULL;
-					nomeProduto = NULL;
-					idProduto = NULL;
+					liberar(idProduto, duracao, nomeProduto, tipoProduto, idContratante, categoria, descricao);
 					return true;
 				}
 			}
@@ -2138,9 +1507,9 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 		return false;
 
 	}
-	else if (usuario_PermissaoRoot(usuario))
+	else if (usuario_PermissaoRoot(usuario))	//TODO: Implementar suporte à adicao de categoria a produto quando logado como ROOT
 	{
-		
+
 		token = strtok(NULL, " ");//APP 2 + CHAVE_DE_SEGURANCA_PHP
 		if(token == NULL)
 		{
@@ -2148,12 +1517,13 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 			return false;
 		}
 
-		if(strlen(token) != TAMANHO_CHAVE_DE_SEGURANCA_PHP)
+		// if(strlen(token) != TAMANHO_CHAVE_DE_SEGURANCA_PHP)
+		if ( ! stringTamanhoIgual(token, TAMANHO_CHAVE_DE_SEGURANCA_PHP))
 		{
 			printf(" Warning: Chave de segurança informada incorreta em addProduto() Comando-Adicao.h cjqkkgjrwv \n");
 			return false;
 		}
-		
+
 		if(strcmp(token, CHAVE_DE_SEGURANCA_PHP) != 0)
 		{
 			printf(" Warning: Chave de segurança informada possui tamanho correto, mas não bate em addProduto() Comando-Adicao.h bkqvej\n");
@@ -2167,7 +1537,8 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 			return false;
 		}
 
-		if(strlen(token) > TAMANHO_CHAVE_PRIMARIA)
+		// if(strlen(token) > TAMANHO_CHAVE_PRIMARIA)
+		if (stringMaior(token, TAMANHO_CHAVE_PRIMARIA))
 		{
 			printf(" Warning: Tamanho de chave primaria informada exageradamente grande em addProduto() Comando-Adicao.h 47dbj\n");
 			return false;
@@ -2186,16 +1557,15 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 		if(token == NULL)
 		{
 			printf(" Warning: Comando insuficiente em addProduto() Comando-Adicao.h cbne4kj\n");
-			free(idContratante);
-			idContratante = NULL;
+			liberar(idContratante);
 			return false;
 		}
 
-		if(strlen(token) != TAMANHO_ID_PRODUTO)
+		// if(strlen(token) != TAMANHO_ID_PRODUTO)
+		if ( ! stringTamanhoIgual(token, TAMANHO_ID_PRODUTO) )
 		{
 			printf(" Warning: Comando informado é exageradamente grande em addProduto() Comando-Adicao.h bk5j2h\n");
-			free(idContratante);
-			idContratante = NULL;
+			liberar(idContratante);
 			return false;
 		}
 
@@ -2204,8 +1574,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 		if( idProduto == NULL )
 		{
 			printf(" Warning: Faha ao duplicar string de token para idProduto em Comando-Adicao.h addProduto() djasdhjkvbka\n");
-			free(idContratante);
-			idContratante = NULL;
+			liberar(idContratante);
 			return false;
 		}
 
@@ -2214,20 +1583,15 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 		if(token == NULL)
 		{
 			printf(" Warning: Comando insuficiente em addProduto() Comando-Adicao.h 3jh6\n");
-			free(idContratante);
-			free(idProduto);
-			idProduto = NULL;
-			idContratante = NULL;
+			liberar(idContratante, idProduto);
 			return false;
 		}
 
-		if(strlen(token) > TAMANHO_DURACAO)
+		// if(strlen(token) > TAMANHO_DURACAO)
+		if (stringMaior(token, TAMANHO_DURACAO))
 		{
 			printf(" Warning: Comando informado exageradamente grande em addProduto() Comando-Adicao.h ehjik\n");
-			free(idProduto);
-			free(idContratante);
-			idContratante = NULL;
-			idProduto = NULL;
+			liberar(idContratante, idProduto);
 			return false;
 		}
 
@@ -2236,36 +1600,24 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 		if(duracao == NULL)
 		{
 			printf(" Warning: Não foi possivel copiar de token para duracao em addProduto() Comando-Adicao.h sadkjh4\n");
-			free(idContratante);
-			free(idProduto);
-			idProduto = NULL;
-			idContratante = NULL;
+			liberar(idContratante, idProduto);
 			return false;
 		}
 
-		
+
 		token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao nomeProduto
 		if(token == NULL)
 		{
 			printf(" Warning: Comando insuficiente em addProduto() Comando-Adicao.h\n");
-			free(idProduto);
-			free(idContratante);
-			free(duracao);
-			duracao = NULL;
-			idContratante = NULL;
-			idProduto = NULL;
+			liberar(idContratante, idProduto, duracao);
 			return false;
 		}
 
-		if(strlen(token) > TAMANHO_NOME)
+		// if(strlen(token) > TAMANHO_NOME)
+		if (stringMaior(token, TAMANHO_NOME))
 		{
 			printf(" Warning: Tamanho de token informado é exageradamente grande em addProduto() Comando-Adicao.h 5jhk2g\n");
-			free(idProduto);
-			free(duracao);
-			free(idContratante);
-			idContratante = NULL;
-			duracao = NULL;
-			idProduto = NULL;
+			liberar(idContratante, idProduto, duracao);
 			return false;
 		}
 
@@ -2274,40 +1626,22 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 		if(nomeProduto == NULL)
 		{
 			printf(" Warning: Falha ao copiar de token para nomeProduto em addProduto() Comando-Adicao.h jkehqk57df\n");
-			free(idProduto);
-			free(idContratante);
-			free(duracao);
-			duracao = NULL;
-			idContratante = NULL;
-			idProduto = NULL;
+			liberar(idContratante, idProduto, duracao);
 			return false;
 		}
 
-		token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao tipoProduto nomeProduto
+		token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao nomeProduto tipoProduto
 		if (token == NULL)
 		{
 			printf(" Warning: Tipo de produto não especificado em Comando-Adicao.h addProduto() askbvu8ra8sd7\n");
-			free(idProduto);
-			free(idContratante);
-			free(duracao);
-			free(nomeProduto);
-			nomeProduto = NULL;
-			duracao = NULL;
-			idContratante = NULL;
-			idProduto = NULL;
+			liberar(idContratante, idProduto, duracao, nomeProduto);
 			return false;
 		}
-		if (strlen(token) != TAMANHO_TIPO_PRODUTO)
+		// if (strlen(token) != TAMANHO_TIPO_PRODUTO)
+		if (stringMaior(token, TAMANHO_TIPO_PRODUTO))
 		{
 			printf(" Warning: Tamanho do tipo do produto está exageradamente grande em Comando-Adicao.h addProduto() virb89s7d8hfs\n");
-			free(idProduto);
-			free(idContratante);
-			free(duracao);
-			free(nomeProduto);
-			nomeProduto = NULL;
-			duracao = NULL;
-			idContratante = NULL;
-			idProduto = NULL;
+			liberar(idContratante, idProduto, duracao, nomeProduto);
 			return false;
 		}
 
@@ -2315,61 +1649,33 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 		if (tipoProduto == NULL)
 		{
 			printf(" Warning: Falha ao duplicar tipo de produto em Comando-Adicao.h addProduto() ewiugh89da7dadfsfd\n");
-			free(idProduto);
-			free(idContratante);
-			free(duracao);
-			free(nomeProduto);
-			nomeProduto = NULL;
-			duracao = NULL;
-			idContratante = NULL;
-			idProduto = NULL;
+			liberar(idContratante, idProduto, duracao, nomeProduto);
 			return false;
 		}
 
-		token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao tipoProduto nomeProduto
+		token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao nomeProduto tipoProduto descricaoProduto
 		if(token == NULL)
 		{
 			if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, NULL, tipoProduto, NULL))//TODO Adicionar descrição de produto
 			{
 				printf(" LOG: Produto adicionado com sucesso ao banco de dados em addProdutoAoBanco() Comando-Adicao.h\n");
-				free(duracao);
-				free(idProduto);
-				free(idContratante);
-				free(tipoProduto);
-				tipoProduto = NULL;
-				idContratante = NULL;
-				idProduto = NULL;
-				duracao = NULL;
+				liberar(idContratante, idProduto, duracao, nomeProduto, tipoProduto);
 				return true;
 			}
 			else
 			{
 				printf(" Warning: Não foi possivel adicionar produto ao banco de dadoe em addProduto() Comando-Adicao.h bcejqk\n");
-				free(duracao);
-				free(idProduto);
-				free(idContratante);
-				free(tipoProduto);
-				tipoProduto = NULL;
-				idContratante = NULL;
-				idProduto = NULL;
-				duracao = NULL;
+				liberar(idContratante, idProduto, duracao, nomeProduto, tipoProduto);
 				return false;
 			}
 		}
 		else
 		{
-			// Se o usuario informar descricao de produto
-			if(strlen(token) > TAMANHO_DESCRICAO_PRODUTO)
+			// Se o usuario informar descricao do produto
+			if (stringMaior(token, TAMANHO_DESCRICAO_PRODUTO))
 			{
 				printf(" Warning: Tamanho de descricao informada é exageradamente grande para produto em Comando-Adicao.h addProduto() q45w687vw\n");
-				free(idProduto);
-				free(idContratante);
-				free(duracao);
-				free(tipoProduto);
-				tipoProduto = NULL;
-				duracao = NULL;
-				idContratante = NULL;
-				idProduto = NULL;
+				liberar(idContratante, idProduto, duracao, nomeProduto, tipoProduto);
 				return false;
 			}
 
@@ -2378,45 +1684,20 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 			if(descricao == NULL)
 			{
 				printf(" Warning: Falha ao copiar de token para descricao em Comando-Adicao.h addProduto() q4r84t32saw\n");
-				free(duracao);
-				free(idProduto);
-				free(idContratante);
-				free(tipoProduto);
-				tipoProduto = NULL;
-				idContratante = NULL;
-				idProduto = NULL;
-				duracao = NULL;
+				liberar(idContratante, idProduto, duracao, nomeProduto, tipoProduto);
 				return false;
 			}
 
 			if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, descricao, tipoProduto, NULL))
 			{
 				printf(" LOG: Produto adicionado com sucesso ao banco de dados em addProdutoAoBanco() Comando-Adicao.h\n");
-				free(duracao);
-				free(idProduto);
-				free(idContratante);
-				free(descricao);
-				free(tipoProduto);
-				tipoProduto = NULL;
-				descricao = NULL;
-				idContratante = NULL;
-				idProduto = NULL;
-				duracao = NULL;
+				liberar(idContratante, idProduto, duracao, nomeProduto, tipoProduto, descricao);
 				return true;
 			}
 			else
 			{
 				printf(" Warning: Não foi possivel adicionar produto ao banco de dadoe em addProduto() Comando-Adicao.h bcejqk\n");
-				free(duracao);
-				free(idProduto);
-				free(idContratante);
-				free(descricao);
-				free(tipoProduto);
-				tipoProduto = NULL;
-				descricao = NULL;
-				idContratante = NULL;
-				idProduto = NULL;
-				duracao = NULL;
+				liberar(idContratante, idProduto, duracao, nomeProduto, tipoProduto, descricao);
 				return false;
 			}
 		}
@@ -2428,36 +1709,8 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 	}
 
 	printf(" Warning: Erro desconhecido em addProduto() Comando-Adicao.h chagsjkchsajk\n");
-	if(descricao != NULL)
-	{
-		free(descricao);
-		descricao = NULL;
-		return false;
-	}
 
-	if(idProduto != NULL)
-	{
-		free(idProduto);
-		idProduto = NULL;
-	}
-
-	if(duracao != NULL)
-	{
-		free(duracao);
-		duracao = NULL;
-	}
-
-	if(idContratante != NULL)
-	{
-		free(idContratante);
-		idContratante = NULL;
-	}
-
-	if (tipoProduto != NULL)
-	{
-		free(tipoProduto);
-		tipoProduto = NULL;
-	}
+	liberar(descricao, idProduto, duracao, idContratante, tipoProduto);
 
 	return false;
 }
@@ -2474,7 +1727,7 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 		printf(" Warning: usuario não conectado detectado em Comando-Adicao.h addInformacoesAUsuario()\n");
 		return false;
 	}
-	
+
 	char *token = strtok(NULL, " ");//APP 2 & tipoInformacao
 
 	if (token == NULL)
@@ -2537,15 +1790,17 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 			if(addNomeDeUsuarioAoBanco(usuario, nome))
 			{
 				printf(" LOG: Informação de nome adicionada com sucesso ao banco de dados em Comando-Adicao.h addInformacoesAUsuario() 546q\n");
-				free(nome);
-				nome = NULL;
+				// free(nome);
+				// nome = NULL;
+				liberar(nome);
 				return true;
 			}
 			else
 			{
 				printf(" Warning: Falha ao adicionar nome de usuario ao banco de dados em Comando-Adicao.h addInformacoesAUsuario() qkjhkebr\n");
-				free(nome);
-				nome = NULL;
+				// free(nome);
+				// nome = NULL;
+				liberar(nome);
 				return false;
 			}
 		}
@@ -2575,19 +1830,21 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 			if(addPontosDeUsuarioAoBanco(usuario, quantidade))
 			{
 				printf(" LOG: Pontos adicionados com sucesso a usuario em Comando-Adicao.h addInformacoesAUsuario() cnqiunasd\n");
-				free(quantidade);
-				quantidade = NULL;
+				// free(quantidade);
+				// quantidade = NULL;
+				liberar(quantidade);
 				return true;
 			}
 			else
 			{
 				printf(" Warning: Falha ao adicionar pontos ao banco de dados detectada em Comando-Adicao.h addInformacoesAUsuario() qi44h1898dn\n");
-				free(quantidade);
-				quantidade = NULL;
+				// free(quantidade);
+				// quantidade = NULL;
+				liberar(quantidade);
 				return false;
 			}
 		}
-		
+
 	}
 	else if(strcmp(token, TIPO_SOBRENOME) == 0)// APP 2 & Y sobrenomeInformado		//Adiciona ou substitui o sobrenome do usuario pelo sobrenome informado
 	{
@@ -2615,15 +1872,17 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 			if(addSobrenomeDeUsuarioAoBanco(usuario, sobrenome))
 			{
 				printf(" LOG: Informação de nome adicionada com sucesso ao banco de dados em Comando-Adicao.h addInformacoesAUsuario() 546q\n");
-				free(sobrenome);
-				sobrenome = NULL;
+				// free(sobrenome);
+				// sobrenome = NULL;
+				liberar(sobrenome);
 				return true;
 			}
 			else
 			{
 				printf(" Warning: Falha ao adicionar nome de usuario ao banco de dados em Comando-Adicao.h addInformacoesAUsuario() qkjhkebr\n");
-				free(sobrenome);
-				sobrenome = NULL;
+				// free(sobrenome);
+				// sobrenome = NULL;
+				liberar(sobrenome);
 				return false;
 			}
 		}
@@ -2655,15 +1914,17 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 			if(addSexoDeUsuarioAoBanco(usuario, sexo))
 			{
 				printf(" LOG: Informação de nome adicionada com sucesso ao banco de dados em Comando-Adicao.h addInformacoesAUsuario() 546q\n");
-				free(sexo);
-				sexo = NULL;
+				// free(sexo);
+				// sexo = NULL;
+				liberar(sexo);
 				return true;
 			}
 			else
 			{
 				printf(" Warning: Falha ao adicionar nome de usuario ao banco de dados em Comando-Adicao.h addInformacoesAUsuario() qkjhkebr\n");
-				free(sexo);
-				sexo = NULL;
+				// free(sexo);
+				// sexo = NULL;
+				liberar(sexo);
 				return false;
 			}
 		}
@@ -2689,15 +1950,17 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 			if(addDataNascimentoDeUsuarioAoBanco(usuario, dataNascimento))
 			{
 				printf(" LOG: Data de nascimento adicionada com sucesso em Comando-Adicao.h addInformacoesAUsuario()\n");
-				free(dataNascimento);
-				dataNascimento = NULL;
+				// free(dataNascimento);
+				// dataNascimento = NULL;
+				liberar(dataNascimento);
 				return true;
 			}
 			else
 			{
 				printf(" Warning: Falha ao adicionar data de nascimento de usuario ao banco de dados em Comano-Adicao.h addInformacoesAUsuario()\n");
-				free(dataNascimento);
-				dataNascimento = NULL;
+				// free(dataNascimento);
+				// dataNascimento = NULL;
+				liberar(dataNascimento);
 				return false;
 			}
 		}
@@ -2712,9 +1975,9 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 
 
 /* A avaliação do usuario é dada por um caracter:
-		1  → para avaliação positiva
-		0  → para avaliacao negativa
-*/
+   1  → para avaliação positiva
+   0  → para avaliacao negativa
+ */
 bool addAvaliacaoAProduto(Usuario *usuario)//DONE       APP 2 kW * idProduto avaliacaoDoUsuario
 {
 	if (usuario == NULL)
@@ -2750,22 +2013,25 @@ bool addAvaliacaoAProduto(Usuario *usuario)//DONE       APP 2 kW * idProduto ava
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addAvaliacaoAProduto() jklsadve\n");
-		free(idProduto);
-		idProduto = NULL;
+		// free(idProduto);
+		// idProduto = NULL;
+		liberar(idProduto);
 		return false;
 	}
 	if (token[1] != '\0')
 	{
 		printf(" Warning: Comando incorreto em Comando-Adicao.h addAvaliacaoAProduto() ckjergbry\n");
-		free(idProduto);
-		idProduto = NULL;
+		// free(idProduto);
+		// idProduto = NULL;
+		liberar(idProduto);
 		return false;
 	}
 	if(!(token[0] == '0' || token[0] == '1') || token[1]!= '\0')//OTIMIZANDO !!!
 	{
 		printf(" Warning: Comando incorreto em (argumento invalido) Comando-Adicao.h addAvaliacaoAProduto().\n");
-		free(idProduto);
-		idProduto = NULL;
+		// free(idProduto);
+		// idProduto = NULL;
+		liberar(idProduto);
 		return false;
 	}
 
@@ -2773,8 +2039,9 @@ bool addAvaliacaoAProduto(Usuario *usuario)//DONE       APP 2 kW * idProduto ava
 	if (avaliacao == NULL)
 	{
 		printf(" Warning: Falha a alocar memoria para avaliacao em Comando-Adicao.h addAvaliacaoAProduto() c3qw45f89yt87j5sd\n");
-		free(idProduto);
-		idProduto = NULL;
+		// free(idProduto);
+		// idProduto = NULL;
+		liberar(idProduto);
 		return false;
 	}
 	avaliacao[0] = token[0];
@@ -2783,19 +2050,21 @@ bool addAvaliacaoAProduto(Usuario *usuario)//DONE       APP 2 kW * idProduto ava
 	if(addAvaliacaoAProdutoAoBanco(usuario, idProduto, avaliacao))
 	{
 		printf(" LOG: Avaliacao adicionada ao banco com sucesso em Comando-Adicao.h addAvaliacaoAProduto() 46q5w4vb\n");
-		free(idProduto);
-		free(avaliacao);
-		avaliacao = NULL;
-		idProduto = NULL;
+		// free(idProduto);
+		// free(avaliacao);
+		// avaliacao = NULL;
+		// idProduto = NULL;
+		liberar(idProduto, avaliacao);
 		return true;
 	}
 	else
 	{
 		printf(" Warning: Falha ao adicionar avaliação ao banco de dados em Comando-Adicao.h addAvaliacaoAProduto() kjqhjkhve\n");
-		free(idProduto);
-		free(avaliacao);
-		avaliacao = NULL;
-		idProduto = NULL;
+		// free(idProduto);
+		// free(avaliacao);
+		// avaliacao = NULL;
+		// idProduto = NULL;
+		liberar(idProduto, avaliacao);
 		return false;
 	}
 }
@@ -2840,75 +2109,83 @@ bool addFeedbackAProduto(Usuario *usuario)// APP 2 tr * idProduto tituloDoFeedba
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addFeedbackAProduto() sv489s51hrd\n");
-		free(idProduto);
-		idProduto = NULL;
+		// free(idProduto);
+		// idProduto = NULL;
+		liberar(idProduto);
 		return false;
 	}
 	if(strlen(token) > TAMANHO_TITULO_FEEDBACK)
 	{
 		printf(" Warning: Comando exageradamente grande detectado em addFeedbackAProduto() Comando-Adicao.h sahjkr\n");
-		free(idProduto);
-		idProduto = NULL;
+		// free(idProduto);
+		// idProduto = NULL;
+		liberar(idProduto);
 		return false;
 	}
 	char *titulo = strdup(token);
 	if(titulo == NULL)
 	{
 		printf(" Warning: Falha ao duplicar token para titulo em addFeedbackAProduto() Comando-Adicao,h asgjhrs\n");
-		free(idProduto);
-		idProduto = NULL;
+		// free(idProduto);
+		// idProduto = NULL;
+		liberar(idProduto);
 		return false;
 	}
 	token = strtok(NULL, " ");// APP 2 tr * idproduto tituloFeedBack conteudoFeedback
 	if (token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addFeedBackAProduto() shgjvrsd\n");
-		free(idProduto);
-		free(titulo);
-		titulo = NULL;
-		idProduto = NULL;
+		// free(idProduto);
+		// free(titulo);
+		// titulo = NULL;
+		// idProduto = NULL;
+		liberar(idProduto, titulo);
 		return false;
 	}
 	if (strlen(token) > TAMANHO_CONTEUDO_FEEDBACK)
 	{
 		printf(" Warning: Comando exageradamente grande detectado em Comando-Adicao.h addFeedbackAProduto() gjhrh4aq32j0d\n");
-		free(idProduto);
-		free(titulo);
-		titulo = NULL;
-		idProduto = NULL;
+		// free(idProduto);
+		// free(titulo);
+		// titulo = NULL;
+		// idProduto = NULL;
+		liberar(idProduto, titulo);
 		return false;
 	}
 	char *conteudo = strdup(token);
 	if(conteudo == NULL)
 	{
 		printf(" Warning: Falha ao duplicar conteudo de token para conteudo em Comando-Adicao.h addFeedBackAProduto() askhjgv5rd0f15\n");
-		free(idProduto);
-		free(titulo);
-		titulo = NULL;
-		idProduto = NULL;
+		// free(idProduto);
+		// free(titulo);
+		// titulo = NULL;
+		// idProduto = NULL;
+		liberar(idProduto, titulo);
 		return false;
 	}
 
 	if (addFeedBackDeProdutoAoBanco(usuario, idProduto, titulo, conteudo))
 	{
 		printf(" LOG: Feedback adicionado ao banco de dados com sucesso em Comando-Adicao.h addFeedbackAProduto() vhjkfdg\n");
-		free(idProduto);
-		free(titulo);
-		free(conteudo);
-		conteudo = NULL;
-		idProduto = NULL;
-		titulo = NULL;
+		// free(idProduto);
+		// free(titulo);
+		// free(conteudo);
+		// conteudo = NULL;
+		// idProduto = NULL;
+		// titulo = NULL;
+		liberar(idProduto, titulo, conteudo);
 		return true;
 	}
 	else
 	{
 		printf(" Warning: Feedback não foi adicionado ao banco de dados em Comando-Adicao.h addFeedBackAProduto() asjkghjkvbrds\n");
-		free(idProduto);
-		free(titulo);
-		free(conteudo);
-		conteudo = NULL;
-		idProduto = NULL;
-		titulo = NULL;
+		// free(idProduto);
+		// free(titulo);
+		// free(conteudo);
+		// conteudo = NULL;
+		// idProduto = NULL;
+		// titulo = NULL;
+		liberar(idProduto, titulo, conteudo);
 		return false;
 	}
 	printf(" ERRO: erro desconhecido detectado em Comando-Adicao.h addFeedBackAProduto() ashjgvrsafrh41586210bvds\n");

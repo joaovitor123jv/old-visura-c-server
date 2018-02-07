@@ -54,13 +54,14 @@ APP
 								senhaPadraoUsuarioAnonimo
 									(Adiciona usuario Anonimo com loginInformado e senhaPadraoUsuarioAnonimo)
 									(loginInformado não pode conter nenhum caracter '@' ou espaços)
-								
-					9	(TIPO_SENHA)
-						senhaPadraoUsuarioAnonimo
-							7	(TIPO_LOGIN)
-								loginInformado
-									(Adiciona usuario Anonimo com loginInformado e senhaPadraoUsuarioAnonimo)
-									(loginInformado não pode conter nenhum caracter '@' ou espaços)
+
+					// REMOVIDO por ser desnecessario			
+					// 9	(TIPO_SENHA)
+					//	senhaPadraoUsuarioAnonimo
+					//		7	(TIPO_LOGIN)
+					//			loginInformado
+					//				(Adiciona usuario Anonimo com loginInformado e senhaPadraoUsuarioAnonimo)
+					//				(loginInformado não pode conter nenhum caracter '@' ou espaços)
 
 		&	(TIPO_INFORMACAO) (NÃO COMPLETO (e não vai ficar completo nunca kkk))
 			#	(TIPO_NOME)

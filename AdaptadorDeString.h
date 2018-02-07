@@ -1,7 +1,10 @@
-#pragma once
+#ifndef __AdaptadorDeString__
+#define __AdaptadorDeString__
+
 #include<stdlib.h>
 #include<stdio.h>
 #include<string.h>
+#include<stdarg.h>//Pra aceitar multiplos argumentos
 
 #ifndef _TESTAR_SEM_FILA_
 #include "Fila/Fila.h"
@@ -224,7 +227,30 @@ bool stringTamanhoIgual(char *string, int tamanho)
 
 
 
+// Depois que isso estiver pronto, padronizar pra não usar aqui, colocar em códigos separados
+void liberar(void *var1, ...)
+{
+	if (var1 == NULL)
+	{
+		return;
+	}
+
+	va_list variaveis;
+	char *temp;
+	va_start(variaveis, var1);
+
+	while ((temp = va_arg(variaveis, char *)))  
+	{
+		if (temp != NULL)
+		{
+			free(temp);
+			temp = NULL;	
+		}
+	}
+
+  va_end(variaveis);
+  return;
+}
 
 
-
-
+#endif //__AdaptadorDeString__
