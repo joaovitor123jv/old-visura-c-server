@@ -88,7 +88,6 @@ int fazerBind(int sockfd, struct sockaddr *serverAddr)
 	}
 }
 
-
 int configuraServidor()
 {
 	int sockfd = -1;//Inicializado com -1 por causa do for
@@ -152,54 +151,35 @@ int configuraServidor()
 }
 
 
-
-
-
-bool mensagemDeEscapeDetectada(const char *mensagem)// Verifica se a mensagem é "APP sair", de forma otimizada
-{
-	//	strcmp(mensagem, "APP sair");
-	if(mensagem == NULL)
-	{
-		return true;
-	}
-	else if(mensagem[0] != 'A')
-	{
-		return true;
-	}
-	else if( mensagem[1] != 'P' )
-	{
-		return true;
-	}
-	else if( mensagem[2] != 'P' )
-	{
-		return true;
-	}
-	else if(mensagem[3] != ' ')
-	{
-		return true;
-	}
-	else if(mensagem[4] == 's')
-	{
-		if( mensagem[5] == 'a' )
-		{
-			if( mensagem[6] == 'i' )
-			{
-				if( mensagem[7] == 'r' )
-				{
-					return true;
-				}
-			}
-		}
-	}
-	return false;
-}
-
-
 bool enviaMensagemParaCliente(const char *mensagem, void *cliente)
 {
-	write( *(int *)cliente, mensagem, strlen(mensagem) + 1 );
-	printf(" LOG: Mensagem enviada |%s|, em Server.h enviaMensagemParaCliente()\n", mensagem);
-	return true;
+	#ifdef __COM_CRIPTOGRAFIA__
+		// char *encrypted = (unsigned char *)malloc(sizeof(unsigned char) * 4098);
+		// int encrypted_length= private_encrypt(mensagem,strlen((const char *)mensagem),getChavePublica(),encrypted);
+		// if(encrypted_length == -1)
+		// {
+		// 	printf(" ERRO:Erro ao criptografar mensagem em Server.h recebeMensagemDeCliente()\n");
+		// }
+		printf(" ERRO: COMANDO ESSENCIAL INCOMPLETO em Server.h enviaMensagemParaCliente()\n");
+		return false;
+	#else
+		write( *(int *)cliente, mensagem, strlen(mensagem) + 1 );
+		printf(" LOG: Mensagem enviada |%s|, em Server.h enviaMensagemParaCliente()\n", mensagem);
+		return true;
+	#endif
+}
+
+bool recebeMensagemDeCliente(char *mensagem, void *cliente)
+{
+	#ifdef __COM_CRIPTOGRAFIA__
+		printf(" ERRO: COMANDO ESSENCIAL INCOMPLETO em Server.h recebeMensagemDeCliente()\n");
+		return false;
+	#else
+		memset(mensagem, '\0', BUFFER_CLIENTE);
+		read(*(int*)cliente, mensagem, BUFFER_CLIENTE);	
+		printf(" LOG: Mensagem recebida |%s|, em Server.h recebeMensagemDeCliente()\n", mensagem);
+		return true;
+	#endif
 }
 
 
@@ -240,16 +220,7 @@ void *Servidor(void *cliente)
 	printf(" LOG: Aguardando por mensagens\n");
 	while(true)
 	{
-		memset(bufferCliente, '\0', BUFFER_CLIENTE);
-		if(mensagem != NULL)
-		{
-			mensagem = NULL;
-		}
-
-		read(*(int*)cliente, bufferCliente, sizeof(bufferCliente));
-		printf(" RECEBIDO: |%s|\n", bufferCliente);
-
-		
+		recebeMensagemDeCliente(bufferCliente, cliente);
 
 		/* Se a mensagem recebida não for incompatível com nenhum comando */
 		if( !mensagemDeEscapeDetectada(bufferCliente) )
@@ -302,7 +273,6 @@ void *Servidor(void *cliente)
 					break;
 
 				case REQUISITANDO_OBTENCAO:
-					// mensagem = comandoObter(email, &usuario);
 					mensagem = comandoObter(&usuario);
 					interpretando = false;
 					bool precisaLiberar = true;

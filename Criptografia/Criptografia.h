@@ -112,7 +112,7 @@ int public_decrypt(unsigned char * enc_data,int data_len,unsigned char * key, un
 
 void printLastError(char *msg)
 {
-	char * err = malloc(130);;
+	char * err = (char *)malloc(130);
 	ERR_load_crypto_strings();
 	ERR_error_string(ERR_get_error(), err);
 	printf("*****************(Criptografia.h) (printLastError)\n");
@@ -165,4 +165,4 @@ unsigned char* getChavePrivada()
 		"-----END RSA PRIVATE KEY-----\n";
 }
 
-#endif
+#endif // CRIPTOGRAFIA

@@ -10,7 +10,9 @@
 #include "Fila/Fila.h"
 #endif
 
-
+#ifdef __COM_CRIPTOGRAFIA__
+	#include "Criptografia/Criptografia.h"
+#endif
 
 #ifndef bool
 #define bool char
@@ -250,6 +252,45 @@ void liberar(void *var1, ...)
 
   va_end(variaveis);
   return;
+}
+
+bool mensagemDeEscapeDetectada(const char *mensagem)// Verifica se a mensagem é "APP sair", de forma otimizada
+{
+	//	strcmp(mensagem, "APP sair");
+	if(mensagem == NULL)
+	{
+		return true;
+	}
+	else if(mensagem[0] != 'A')
+	{
+		return true;
+	}
+	else if( mensagem[1] != 'P' )
+	{
+		return true;
+	}
+	else if( mensagem[2] != 'P' )
+	{
+		return true;
+	}
+	else if(mensagem[3] != ' ')
+	{
+		return true;
+	}
+	else if(mensagem[4] == 's')
+	{
+		if( mensagem[5] == 'a' )
+		{
+			if( mensagem[6] == 'i' )
+			{
+				if( mensagem[7] == 'r' )
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
 }
 
 
