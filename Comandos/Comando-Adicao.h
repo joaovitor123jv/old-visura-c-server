@@ -1591,7 +1591,9 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 		if (stringMaior(token, TAMANHO_DURACAO))
 		{
 			printf(" Warning: Comando informado exageradamente grande em addProduto() Comando-Adicao.h ehjik\n");
-			liberar(idContratante, idProduto);
+			//liberar(idContratante, idProduto);
+			free(idContratante);
+			free(idProduto);
 			return false;
 		}
 
