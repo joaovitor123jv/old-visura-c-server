@@ -164,6 +164,7 @@ bool enviaMensagemParaCliente(const char *mensagem, void *cliente)
 		return false;
 	#else
 		write( *(int *)cliente, mensagem, strlen(mensagem) + 1 );
+		printf(" ************** ****************** *******************\n");
 		printf(" LOG: Mensagem enviada |%s|, em Server.h enviaMensagemParaCliente()\n", mensagem);
 		return true;
 	#endif
@@ -281,7 +282,8 @@ void *Servidor(void *cliente)
 						precisaLiberar = false;
 						mensagem = RETORNO_ERRO_CHAR;
 					}
-					write( *(int *)cliente, mensagem, strlen(mensagem) +1);
+//					write( *(int *)cliente, mensagem, strlen(mensagem) +1);
+					enviaMensagemParaCliente(mensagem, cliente);
 					if(precisaLiberar)
 					{
 						if(strcmp(mensagem, RETORNO_NOT_FOUND) == 0)
