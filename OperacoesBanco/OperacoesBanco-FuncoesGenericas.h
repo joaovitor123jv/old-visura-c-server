@@ -380,14 +380,14 @@ char *retornaUnicoRetornoDaQuery(char *query)// Retorna um só resultado de uma 
 	if( query == NULL )
 	{
 		printf(" ERRO: query nula em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery()\n");
-		return strdup("ERRO interno, tente novamente");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	
 	if(mysql_query(conexao, query))
 	{
 		printf(" ERRO: Falha ao executar query em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery() sakdjh\n");
 		printf(" \t%s\n", mysql_error(conexao));
-		return strdup("ERRO interno, tente novamente");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	
 	MYSQL_RES *resultado = mysql_store_result(conexao);
@@ -395,7 +395,7 @@ char *retornaUnicoRetornoDaQuery(char *query)// Retorna um só resultado de uma 
 	if(resultado == NULL)// Se não houver consulta
 	{
 		printf(" Warning: Resultado nulo em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery() kqht\n");
-		return strdup("ERRO interno, tente novamente");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	else
 	{
@@ -411,7 +411,7 @@ char *retornaUnicoRetornoDaQuery(char *query)// Retorna um só resultado de uma 
 				free(query);
 				resultado = NULL;
 				query = NULL;
-				return strdup("ERRO: nada encontrado");
+				return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;
 			}
 			else
 			{
@@ -420,7 +420,7 @@ char *retornaUnicoRetornoDaQuery(char *query)// Retorna um só resultado de uma 
 				free(query);
 				query = NULL;
 				resultado = NULL;
-				return strdup("ERRO interno, tente novamente");
+				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 			}
 		}
 		else
@@ -438,7 +438,7 @@ char *retornaUnicoRetornoDaQuery(char *query)// Retorna um só resultado de uma 
 				char *retorno = strdup(linhas[0]);
 				if (retorno == NULL)
 				{
-					return strdup("ERRO interno, tente novamente");
+					return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 				}
 				mysql_free_result(resultado);
 				free(query);
@@ -454,19 +454,19 @@ char *retornaUnicoRetornoDaQuery(char *query)// Retorna um só resultado de uma 
 				
 				if(linha == NULL)
 				{
-					printf(" ERRO: Não era pra poder retornar nulo aqui abv84eu9h89hbd\n");
+					printf(" ERRO: Não era pra poder retornar nulo aqui abv84eu9h89hbd em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery()\n");
 					mysql_free_result(resultado);
 					free(query);
 					query = NULL;
 					resultado = NULL;
-					return strdup("ERRO interno, tente novamente");
+					return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 				}
 				else
 				{
 					char *retorno = strdup(linha[0]);
 					if (retorno == NULL)
 					{
-						return strdup("ERRO interno, tente novamente");
+						return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 					}
 					mysql_free_result(resultado);
 					free(query);
@@ -477,12 +477,12 @@ char *retornaUnicoRetornoDaQuery(char *query)// Retorna um só resultado de uma 
 			}
 			else
 			{
-				printf(" Warning: nenhum endereco localizado\n");
+				printf(" Warning: nenhum objeto localizado em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery()\n");
 				mysql_free_result(resultado);
 				resultado = NULL;
 				free(query);
 				query = NULL;
-				return strdup("ERRO: nada encontrado");
+				return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;
 			}
 		}
 	}

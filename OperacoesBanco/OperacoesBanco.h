@@ -2468,14 +2468,14 @@ char *obterIdContratanteDoBanco(char *cnpj)// APP 4 ; cnpj
 		else
 		{
 			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return strdup("ERRO interno(banco de dados), tente novamente");
+			return RETORNO_ERRO_INTERNO_BANCO_STR_DINAMICA;
 		}
 	}
 
 	if( cnpj == NULL )
 	{
 		printf(" Warning: Cliente não informou cnpj em OperacoesBanco.h obterIdContratanteDoBanco() asvbeuasd\n");
-		return strdup("ERRO interno, tente novamente");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
 
@@ -2485,7 +2485,7 @@ char *obterIdContratanteDoBanco(char *cnpj)// APP 4 ; cnpj
 	if(query == NULL)
 	{
 		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdContratanteDoBanco() qkjeh\n");
-		return strdup("ERRO interno, tente novamente");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
 	snprintf(query, tamanho, "SELECT C.idcontratante FROM contratante C WHERE C.cnpj=\'%s\';", cnpj);
@@ -2494,7 +2494,7 @@ char *obterIdContratanteDoBanco(char *cnpj)// APP 4 ; cnpj
 	if(query == NULL)
 	{
 		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdContratanteDoBanco() bqjek\n");
-		return strdup("ERRO interno, tente novamente");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
 	return retornaUnicoRetornoDaQuery(query);
