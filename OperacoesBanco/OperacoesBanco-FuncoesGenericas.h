@@ -264,6 +264,8 @@ char *obterRetornoUnicoDaQuery(char *query)// ATENÇÃO: Função de uso INTERNO
 		printf(" ERRO: query nula em obterRetornoUnicoDaQuery() OperacoesBanco-FuncoesGenericas.h\n");
 		return NULL;
 	}
+
+	printf(" LOG: Executando query: |%s| em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery()\n", query);
 	
 	if(mysql_query(conexao, query))
 	{
