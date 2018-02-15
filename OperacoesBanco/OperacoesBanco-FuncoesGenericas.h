@@ -265,7 +265,7 @@ char *obterRetornoUnicoDaQuery(char *query)// ATENÇÃO: Função de uso INTERNO
 		return NULL;
 	}
 
-	printf(" LOG: Executando query: |%s| em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery()\n", query);
+	printf(" LOG: Executando query: |%s| em OperacoesBanco-FuncoesGenericas.h obterRetornoUnicoDaQuery()\n", query);
 	
 	if(mysql_query(conexao, query))
 	{
@@ -384,6 +384,7 @@ char *retornaUnicoRetornoDaQuery(char *query)// Retorna um só resultado de uma 
 		printf(" ERRO: query nula em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery()\n");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
+	printf(" LOG: Executando query: |%s| em OperacoesBanco-FuncoesGenericas.h obterRetornoUnicoDaQuery()\n", query);
 	
 	if(mysql_query(conexao, query))
 	{
@@ -440,12 +441,14 @@ char *retornaUnicoRetornoDaQuery(char *query)// Retorna um só resultado de uma 
 				char *retorno = strdup(linhas[0]);
 				if (retorno == NULL)
 				{
+					printf(" Warning: Erro interno em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery() q9hnyugvxd\n");
 					return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 				}
 				mysql_free_result(resultado);
 				free(query);
 				query = NULL;
 				resultado = NULL;
+				printf(" LOG: Retornando informações em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery() q9hnyugvxd\n");
 				return retorno;//Retorna o ultimo resultado, mesmo se houver erro
 			}
 			else if (mysql_num_rows(resultado) == 1)
@@ -468,12 +471,14 @@ char *retornaUnicoRetornoDaQuery(char *query)// Retorna um só resultado de uma 
 					char *retorno = strdup(linha[0]);
 					if (retorno == NULL)
 					{
+						printf(" ERRO: Falha ao duplicar linha[0] em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery() arty0hgvsy\n");
 						return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 					}
 					mysql_free_result(resultado);
 					free(query);
 					query = NULL;
 					resultado = NULL;
+					printf(" LOG: Retornando ao cliente em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery() qty9nh7c\n");
 					return retorno;
 				}
 			}
