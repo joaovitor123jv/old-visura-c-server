@@ -276,26 +276,10 @@ void *Servidor(void *cliente)
 				case REQUISITANDO_OBTENCAO:
 					mensagem = comandoObter(&usuario);
 					interpretando = false;
-					bool precisaLiberar = true;
-					if(mensagem == NULL)
-					{
-						precisaLiberar = false;
-						mensagem = RETORNO_ERRO_CHAR;
-					}
+					mensagem = RETORNO_ERRO_INTERNO_STR_DINAMICA;
 //					write( *(int *)cliente, mensagem, strlen(mensagem) +1);
 					enviaMensagemParaCliente(mensagem, cliente);
-					if(precisaLiberar)
-					{
-						if(strcmp(mensagem, RETORNO_NOT_FOUND) == 0)
-						{
-							mensagem = NULL;
-						}
-						else
-						{
-							free(mensagem);
-							mensagem = NULL;
-						}
-					}
+					liberar(mensagem);
 					break;
 
 				case REQUISITANDO_REMOCAO:

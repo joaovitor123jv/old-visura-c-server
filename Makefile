@@ -1,3 +1,4 @@
+#SESSÃO PRINCIPAL ******************************************************************************** ↓
 OUTPUT_FILE=server
 
 DEFINE_OUTPUT_FILE_NAME=-o
@@ -17,8 +18,8 @@ DEBUGGER=-g
 
 COMPILE=gcc
 
-USE_OTIMIZACAO=-o3
-#USE_OTIMIZACAO=
+#USE_OTIMIZACAO=-o3
+USE_OTIMIZACAO=
 
 LIKE_A_LIBRARY=-c
 
@@ -27,9 +28,11 @@ WARNINGS=-Wall
 #STANDARD=--std=c11
 
 
-all: Fila_Objeto
+all: $(FILA_OBJ) 
 	@echo "Compilando MAIN"
 	$(COMPILE) $(WARNINGS) $(USE_OTIMIZACAO) $(STANDARD) $(MAIN_FILE) $(DEFINE_OUTPUT_FILE_NAME) $(OUTPUT_FILE) $(LINKERS) $(FILA_OBJ)
+
+build: all
 	rm *.o
 
 debug: 
@@ -43,10 +46,8 @@ run: all
 clean:
 	rm *.o
 
-Fila_Objeto: 
+$(FILA_OBJ): 
 	@echo "Compilando Fila"
 	$(COMPILE) $(LIKE_A_LIBRARY) Fila/Fila.c
 
-
-
-
+#SESSÃO PRINCIPAL ******************************************************************************** ↑
