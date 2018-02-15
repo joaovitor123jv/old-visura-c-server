@@ -276,7 +276,7 @@ void *Servidor(void *cliente)
 				case REQUISITANDO_OBTENCAO:
 					mensagem = comandoObter(&usuario);
 					interpretando = false;
-					mensagem = RETORNO_ERRO_INTERNO_STR_DINAMICA;
+//					mensagem = RETORNO_ERRO_INTERNO_STR_DINAMICA;
 //					write( *(int *)cliente, mensagem, strlen(mensagem) +1);
 					enviaMensagemParaCliente(mensagem, cliente);
 					liberar(mensagem);
