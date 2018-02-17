@@ -230,29 +230,27 @@ bool stringTamanhoIgual(char *string, int tamanho)
 
 
 // Depois que isso estiver pronto, padronizar pra não usar aqui, colocar em códigos separados
-void liberar(void *var1, ...)
-{
-	if (var1 == NULL)
-	{
-		return;
+
+//#define free(p) { free(p); p=NULL; }
+/* 
+void liberar(void *var1, ...) 
+{ 
+	if (var1 == NULL) 
+	{ 
+		return; 
 	}
-
-	va_list variaveis;
-	char *temp;
-	va_start(variaveis, var1);
-
+	va_list variaveis; 
+	char *temp; 
+	va_start(variaveis, var1); 
 	while ((temp = va_arg(variaveis, char *)))  
-	{
-		if (temp != NULL)
-		{
-			free(temp);
-			temp = NULL;	
-		}
-	}
-
-  va_end(variaveis);
-  return;
-}
+	{ 
+		if (temp != NULL) 
+		{ 
+			free(temp); 
+		} 
+	} 
+	va_end(variaveis); 
+} */
 
 bool mensagemDeEscapeDetectada(const char *mensagem)// Verifica se a mensagem é "APP sair", de forma otimizada
 {

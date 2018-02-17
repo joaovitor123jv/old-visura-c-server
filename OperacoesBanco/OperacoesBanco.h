@@ -1626,13 +1626,21 @@ bool addProdutoAListaDeDesejosDoClienteAoBanco(Usuario *usuario, char *idProduto
 		if (!executaQuery(query))
 		{
 			printf(" Warning: falha ao executar query, produto não adicionado à lista de desejos em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() dwebr5990nuhsjy\n");
-			liberar(query, idProduto);
+			//liberar(query, idProduto);
+			free( query );
+			free( idProduto );
+			query = NULL;
+			idProduto = NULL;
 			return false;
 		}
 		else
 		{
 			printf(" LOG: produto adicionaro à lista de desejos em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() 0wrh8h9hjgidsaohu6uj\n");
-			liberar(query, idProduto);
+			//liberar(query, idProduto);
+			free( query );
+			free( idProduto );
+			query = NULL;
+			idProduto = NULL;
 			return true;
 		}
 	}

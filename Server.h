@@ -279,7 +279,8 @@ void *Servidor(void *cliente)
 //					mensagem = RETORNO_ERRO_INTERNO_STR_DINAMICA;
 //					write( *(int *)cliente, mensagem, strlen(mensagem) +1);
 					enviaMensagemParaCliente(mensagem, cliente);
-					liberar(mensagem);
+//					liberar(mensagem);
+					free(mensagem);
 					break;
 
 				case REQUISITANDO_REMOCAO:
