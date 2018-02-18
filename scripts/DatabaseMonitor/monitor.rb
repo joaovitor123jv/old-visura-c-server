@@ -2,7 +2,7 @@
 
 require 'mysql2'
 
-@tempo_entre_logs = 1
+@tempo_entre_logs = 15
 
 @database_password = "essaSenhaEsoPraInteFaCeSaBeRPorQuESiM"
 @database_host = "localhost"

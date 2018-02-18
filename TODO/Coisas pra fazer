@@ -1,4 +1,3 @@
-→Adaptar codigo para nova arquitetura de usuario
 →redesenhar funcionamento da variavel "interpretando"
 →Checar strtok em multithread
 →Criar alternativa ao strtok
@@ -9,12 +8,13 @@
 →Pesquisar e testar TCP Hand-off e Spoofing
 →Implementar TCPSpoof
 →Procurar saber mais sobre ZIMBRA (Gerenciador de e-mail)
+
 →Estabelecer comando pra confirmar e-mail
 →Implementar confirma-email
+
 →Otimizar dados de confirmacao de email
 →Definir intervalo de tempo de Logs (15s é pouco)
 →Pesquisar algoritimos de definicao de perfil
-→Implementar obter id contratante
 →Implementar update plano contratante
 →Implementar obterPlanoContratante
 →Revisar indices de plano produto

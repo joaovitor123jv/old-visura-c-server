@@ -194,27 +194,23 @@ void *Servidor(void *cliente)
 	Usuario usuario;
 	init_Usuario(&usuario);
 
-	void sairDaThread(bool liberaInterpretacao)
+	void sairDaThread()
 	{
-		if(liberaInterpretacao)
-		{
-			interpretando = false;
-		}
 		printf(" LOG: Encerrando thread de Servidor em Server.h Servidor()->sairDaThread()\n");
 		// reset_Usuario(&usuario);
 		delete_Usuario(&usuario);
 		if (cliente != NULL)
 		{
 			close(*(int *)cliente);	
+			cliente = (void *)NULL;
 		}
-		cliente = NULL;
 		pthread_exit( (void *) 0 );
 	}
 
 	void interrupcaoForcadaEmThread(int sinal)
 	{
 		printf(" Sinal pego na Thread = |%d| ← \n", sinal);
-		sairDaThread(false);
+		sairDaThread();
 	}
 	signal(SIGINT, interrupcaoForcadaEmThread);
 	
@@ -241,7 +237,7 @@ void *Servidor(void *cliente)
 				case ERRO:
 					printf("Warning: Erro na execução do comando\n");
 					enviaMensagemParaCliente("ERRO, desconectando\0", cliente);
-					sairDaThread(false);
+					sairDaThread();
 					break;
 
 				case OK:
@@ -252,35 +248,54 @@ void *Servidor(void *cliente)
 				case REQUISITANDO_LOGIN:/* Cliente NÃO AUTORIZADO OK */
 					printf(" Cliente Requisitou Login, mas Não foi atendido (Server Thread)\n");
 					enviaMensagemParaCliente("ERRO: Não autorizado, desconectando\0", cliente);
-					sairDaThread(true);
+					interpretando = false;
+					sairDaThread();
 					break;
 
-				case REQUISITANDO_ADICAO:/* OK */
-					printf(" Cliente requisitou adicao\n");
-					enviaMensagemParaCliente("ERRO: Adicao recusada, desconectando\0", cliente);
-					sairDaThread(false);
+				// case REQUISITANDO_ADICAO:/* OK */
+				// 	printf(" Cliente requisitou adicao\n");
+				// 	enviaMensagemParaCliente("ERRO: Adicao recusada, desconectando\0", cliente);
+				// 	sairDaThread(false);
+				// 	break;
+				case RETORNO_ERRO_INTERNO:/* se ocorrer algum erro de memória, por exemplo */
+					interpretando = false;
+					printf(" Warning: Erro interno identificado em Server.h Servidor() qt658f7tgf34\n");
+					enviaMensagemParaCliente(RETORNO_ERRO_INTERNO_STR, cliente);
+					sairDaThread();
+					break;
+				
+				case RETORNO_COMANDO_INCORRETO:/* Se algum parâmetro estiver errado */
+					interpretando = false;
+					printf(" Warning: Operação falhou, parâmetros incorretos detectados. em Server.h Servidor() 20ty9uwe\n");
+					enviaMensagemParaCliente( RETORNO_COMANDO_INCORRETO_STR , cliente);
+					sairDaThread();
+					break;
+				
+				case RETORNO_NAO_AUTORIZADO:
+					interpretando = false;				
+					printf(" Warning: Não autorizado a executar essa operação em Server.h Servidor() q0r59hnthrueqgf\n");
+					enviaMensagemParaCliente(RETORNO_ERRO_NAO_AUTORIZADO_STR, cliente);
+					sairDaThread();
 					break;
 
 				case LOGIN_NAO_AUTORIZADO:
 					printf(" Warning: Falha ao logar em Server.h Servidor()\n");
 					enviaMensagemParaCliente("ERRO: usuario ou senha incorretos, desconectando.", cliente);
-					sairDaThread(false);
+					sairDaThread();
 					break;
 
 				case ERRO_DE_EXECUCAO:
 					printf(" Warning: Falha ao executar comando em Server.h Servidor()\n");
 					enviaMensagemParaCliente("ERRO: Falha na execucao do comando, desconectando.", cliente);
-					sairDaThread(false);
+					sairDaThread();
 					break;
 
 				case REQUISITANDO_OBTENCAO:
 					mensagem = comandoObter(&usuario);
 					interpretando = false;
-//					mensagem = RETORNO_ERRO_INTERNO_STR_DINAMICA;
-//					write( *(int *)cliente, mensagem, strlen(mensagem) +1);
 					enviaMensagemParaCliente(mensagem, cliente);
-//					liberar(mensagem);
 					free(mensagem);
+					mensagem = NULL;
 					break;
 
 				case REQUISITANDO_REMOCAO:
@@ -300,14 +315,15 @@ void *Servidor(void *cliente)
 					else
 					{
 						enviaMensagemParaCliente("Você nn pode fazer isso, muahahahaha \\o/\0", cliente);
-						sairDaThread(true);
+						interpretando = false;
+						sairDaThread();
 					}
 					break;
 
 				default:
 					printf(" Não foi possivel interpretar comando (Server.h) (Servidor()) Resultado == %d\n", resultado );
 					enviaMensagemParaCliente("Comando não compreendido, desconectando\0", cliente);
-					sairDaThread(false);
+					sairDaThread();
 					break;
 			}
 		}
@@ -315,7 +331,7 @@ void *Servidor(void *cliente)
 		{
 			printf(" LOG: Mensagem de escape detectada em Server.h Servidor()\n");
 			enviaMensagemParaCliente("Voce pediu pra sair... Conexao encerrada\0", cliente);
-			sairDaThread(false);
+			sairDaThread();
 		}
 	}
 }

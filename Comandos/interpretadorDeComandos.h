@@ -148,7 +148,8 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 	{
 		case COMANDO_ADICIONAR:
 			printf(" LOG: Requisitando \"COMANDO_ADICIONAR\" em interpretadorDeComandos.h interpretaComando()\n");
-			if(comandoAdicionar(usuario))
+			int retorno = comandoAdicionar(usuario);
+			if( retorno == RETORNO_OK )
 			{
 				printf(" LOG: comando adicionar deu certo interpretadorDeComandos.h (interpretaComando())\n");
 				interpretando = false;
@@ -159,7 +160,8 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 			{
 				printf(" LOG: comando adicionar NÃO deu certo interpretadorDeComandos.h (interpretaComando())\n");
 				interpretando = false;
-				*resultado = REQUISITANDO_ADICAO;
+				// *resultado = REQUISITANDO_ADICAO;
+				*resultado = retorno;
 				return NULL;
 			}
 			break;

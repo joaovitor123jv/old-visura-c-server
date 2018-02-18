@@ -18,18 +18,13 @@ char *obterTop10ProdutosMelhorAvaliados();//Retorna os 10 produtos melhor avalia
 char *obterDescricaoProduto(Usuario *usuario);// APP 4 Q idProduto
 char *obterNomeProduto(Usuario *usuario);// APP 4 1. idProduto
 char *obterAvaliacaoProduto(Usuario *usuario);// APP 4 kW idProduto                       (Retorna NULL quando ocorre algum erro)
-char *obterInformacoesProduto(Usuario *usuario);
+char *obterInformacoesProduto(Usuario *usuario);// APP 4 iP idProduto			//Retorna informações do produto separadas por espaço, de acordo com o nível de permissão de usuario
 
 char *obterInformacoesUsuario(Usuario *usuario);
 
-// char *comandoObter(char *email, Usuario *usuario)// APP 4 algumaCoisa
 char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 {
 	printf(" ********************** obterDados()\n");
-	// if(email == NULL)
-	// {
-	// 	printf(" Warning: email == NULL em Comando-Obter.h obterDados() a465e\n");
-	// }
 	if (usuario == NULL)
 	{
 		printf(" Warning: Usuario nulo detectado em Comando-Obter.h comandoObter()\n");

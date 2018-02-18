@@ -12,7 +12,6 @@
 #include <arpa/inet.h>
 #include <sys/ioctl.h>
 #include <pthread.h>
-// void pthread_kill_other_threads_np(void);
 
 #include<signal.h>
 

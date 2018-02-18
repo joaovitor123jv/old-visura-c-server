@@ -954,3 +954,5 @@ char *retornaNIteracoesDaQuery(char *query, int numeroIteracoes)
 	resultado = NULL;
 	return retorno;
 }
+
+

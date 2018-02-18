@@ -5,7 +5,8 @@
 #include "../OperacoesBanco/OperacoesBanco.h"
 #include "../AdaptadorDeString.h"
 
-bool comandoAdicionar(Usuario *usuario);//Retorna true se adicionado com sucesso
+int comandoAdicionar(Usuario *usuario);//Retorna true se adicionado com sucesso
+
 bool addVisualizacao(Usuario *usuario);
 //bool addVisualizacao(char *email, bool usuarioAnonimo);//Retorna true se adicionado com sucesso
 // bool addIndice(char *nomearquivo);
@@ -26,11 +27,12 @@ bool addAvaliacaoAProduto(Usuario *usuario);//Retorna TRUE se adicionado com suc
 bool addFeedbackAProduto(Usuario *usuario);//Retorna TRUE se adicionado com sucesso
 
 
-bool comandoAdicionar(Usuario *usuario)/* APP 2 */
+int comandoAdicionar(Usuario *usuario)/* APP 2 */
 {
 	if (usuario == NULL)
 	{
 		printf(" ERRO: Usuario nulo detectado em Comando-Adicao.h comandoAdicionar()\n");
+		return RETORNO_ERRO_INTERNO;
 	}
 	printf(" LOG: **************COMANDO_ADICAO*************** em Comando-Adicao.h comandoAdicionar()\n");
 	usuario_mostrarDados(usuario);
@@ -40,7 +42,7 @@ bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 	if(token == NULL)
 	{
 		printf(" ERRO: Comando incorreto (Comando-Adicao.h) comandoAdicionar()\n");
-		return false;
+		return RETORNO_ERRO_INTERNO;
 	}
 
 	if(strcmp(token, TIPO_VISUALIZACAO) == 0)/* APP 2 2  (Solicitação de adicao de Visualizacao)*/
@@ -49,12 +51,12 @@ bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 		if(addVisualizacao(usuario))
 		{
 			printf(" LOG: Passou pelo OK Comando-Adicao.h comandoAdicionar()\n");
-			return true;
+			return RETORNO_OK;
 		}
 		else
 		{
 			printf(" LOG: Passou pelo ELSE Comando-Adicao.h comandoAdicionar()\n");
-			return false;
+			return RETORNO_ADICAO_RECUSADA;
 		}
 	}
 	else if(strcmp(token, TIPO_AVALIACAO) == 0)/* APP 2 kW * idProduto avaliacaoProduto */
@@ -62,12 +64,12 @@ bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 		if(addAvaliacaoAProduto(usuario))
 		{
 			printf(" LOG: Avaliação cadastrada com sucesso em Comando-Adicao.h comandoAdicionar()\n");
-			return true;
+			return RETORNO_OK;
 		}
 		else
 		{
 			printf(" Warning: Falha ao adicionar avaliação ao produto requisitado em Comando-Adicao.h comandoAdicionar()\n");
-			return false;
+			return RETORNO_ADICAO_RECUSADA;
 		}
 	}
 	else if(strcmp(token, TIPO_FEEDBACK) == 0)// APP 2 tr * idProduto textoDoFeedBack
@@ -75,12 +77,12 @@ bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 		if(addFeedbackAProduto(usuario))
 		{
 			printf(" LOG: Feedback adicionado com sucesso ao banco de dados em Comando-Adicao.h comandoAdicionar() 4a68easd\n");
-			return true;
+			return RETORNO_OK;
 		}
 		else
 		{
 			printf(" Warning: Feedback não foi adicionado ao banco de dados em Comando-Adicao.h comandoAdicionar() asdkhjkvr\n");
-			return false;
+			return RETORNO_ADICAO_RECUSADA;
 		}
 	}
 	else if(strcmp(token, TIPO_USUARIO) == 0)/* APP 2 1 Solicitação de criacao de usuario */
@@ -90,7 +92,7 @@ bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 		if(token == NULL)
 		{
 			printf(" Warning: Comando incorreto(2) Comando-Adicao.h comandoAdicionar()\n");
-			return false;
+			return RETORNO_COMANDO_INCORRETO;
 		}
 		if(strcmp(token, TIPO_USUARIO_ANONIMO) == 0)/* APP 2 1 2 Solicitação de criação de usuário anônimo */
 		{
@@ -99,7 +101,7 @@ bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 			if(token == NULL)
 			{
 				printf(" Warning: Comando incorreto(3) Comando-Adicao.h comandoAdicionar()\n");
-				return false;
+				return RETORNO_COMANDO_INCORRETO;
 			}
 			if(strcmp(token, CHAVE_DE_SEGURANCA_PHP) == 0)/* APP 2 1 2 asdkjsahdjksahdjksadkj Solicitação de criação de usuário anônimo, informando chave */
 			{
@@ -108,47 +110,39 @@ bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 				if(addUsuarioAnonimo())
 				{
 					printf(" LOG: Cliente adicionado com sucesso Comando-Adicao.h comandoAdicionar()\n");
-					return true;
+					return RETORNO_OK;
 				}
 				else
 				{
 					printf(" Warning: Falha ao tentar adicionar usuario\n");
-					return false;
+					return RETORNO_ADICAO_RECUSADA;
 				}
 
 			}
 			else
 			{
 				printf(" LOG: Não autorizado Comando-Adicao comandoAdicionar()\n");
-				return false;
+				return RETORNO_NAO_AUTORIZADO;
 			}
 		}
 		else if( (strcmp(token, TIPO_USUARIO) == 0) && true)/* APP 2 1 1 Solicitação de criação de usuário não-anônimo && usuarioAnonimo */
 		{
 			printf("------------>regular Comando-Adicao.h comandoAdicionar()\n");
-			// token = strtok(NULL, " ");
-			// if(token == NULL)
-			// {
-			// 	printf(" Warning: Comando incorreto(4) Comando-Adicao.h comandoAdicionar()\n");
-			// 	return false;
-			// }
-
-			// Colocar aqui mais tarde suporte a autenticação (TALVEZ)
 			if(addUsuario(usuario))
 			{
 				printf(" LOG: Adicao executada com sucesso em Comando-Adicao.h comandoAdicionar()\n");
-				return true;
+				return RETORNO_OK;
 			}
 			else
 			{
 				printf(" Warning: Ocorreram erros e o usuario não pôde ser adicionado em Comando-Adicao.h comandoAdicionar()\n");
-				return false;
+				return RETORNO_ADICAO_RECUSADA;
 			}
 		}
 		else
 		{
 			printf(" LOG: Usuario não é anonimo ou operação desconhecida em Comando-Adicao.h comandoAdicionar()\n");
-			return false;
+			return RETORNO_NAO_AUTORIZADO;
 		}
 	}
 	else if(strcmp(token, TIPO_INFORMACAO) == 0)/* APP 2 & TIPO_DE_INFORMACAO */
@@ -157,12 +151,12 @@ bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 		if(addInformacoesAUsuario(usuario))
 		{	
 			printf(" LOG: Informações adicionadas com sucesso ao banco em Comand-Adicao.h comandoAdicionar()\n");
-			return true;
+			return RETORNO_OK;
 		}
 		else
 		{
 			printf(" Warning: Falha ao adicionar informações a usuario em Comando-Adicao.h comandoAdicionar()\n");
-			return false;
+			return RETORNO_ADICAO_RECUSADA;
 		}
 	}
 	else if(strcmp(token, TIPO_PRODUTO) == 0)/* APP 2 +    -> Solicita criação de produto na base de dados */
@@ -171,12 +165,12 @@ bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 		if(addProduto(usuario))
 		{
 			printf(" LOG: Produto adicionado com sucesso em comandoAdicionar() Comando-Adicao.h\n");
-			return true;
+			return RETORNO_OK;
 		}
 		else
 		{
 			printf(" Warning: Não foi possivel adicionar produto ao banco de dados em comandoAdicionar() Comando-Adicao.h\n");
-			return false;
+			return RETORNO_ADICAO_RECUSADA;
 		}
 	}
 	else if(strcmp(token, TIPO_CIDADE) == 0)/* APP 2 { */
@@ -184,12 +178,12 @@ bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 		if(addCidade())
 		{
 			printf(" LOG: Cidade adicionada com sucesso (Comando-Adicao.h) comandoAdicionar()\n");
-			return true;
+			return RETORNO_OK;
 		}
 		else
 		{
 			printf(" Warning: Falha ao adicionar cidade (Comando-Adicao.h) comandoAdicionar()\n");
-			return false;
+			return RETORNO_ADICAO_RECUSADA;
 		}
 	}
 	else if(strcmp(token, TIPO_LOCALIZACAO) == 0)/* APP 2 l0 */
@@ -198,15 +192,15 @@ bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 		if(addLocalizacao())
 		{
 			printf(" LOG: Localizacao adicionada com sucesso Comando-Adicao.h comandoAdicionar()!\n");
-			return true;
+			return RETORNO_OK;
 		}
 		else
 		{
 			printf(" Warning: Não foi possivel adicionar localizacao em Comando-Adicao.h comandoAdicionar()\n");
-			return false;
+			return RETORNO_ADICAO_RECUSADA;
 		}
 		printf(" Warning: Exceção não manipulável Comando-Adicao.h comandoAdicionar() (TIPO_LOCALIZACAO)\n");
-		return false;
+		return RETORNO_ERRO_INTERNO;
 	}
 	else if(strcmp(token, TIPO_CONTRATANTE) == 0)//APP 2 $C 
 	{
@@ -214,23 +208,23 @@ bool comandoAdicionar(Usuario *usuario)/* APP 2 */
 		if(addContratante())
 		{
 			printf(" LOG: Contratante adicionada com sucesso em Comando-Adicao.h comandoAdicionar()\n");
-			return true;
+			return RETORNO_OK;
 		}
 		else
 		{
 			printf(" Warning: Não foi possível adicionar contratante em Comando-Adicao.h comandoAdicionar()\n");
-			return false;
+			return RETORNO_ADICAO_RECUSADA;
 		}
 		printf(" ERRO: Exceção não manipulada em Comando-Adicao.h comandoAdicionar() QNR\n");
-		return false;
+		return RETORNO_ERRO_INTERNO;
 	}
 	else
 	{
 		printf(" ERRO: TIPO DE ADIÇAO DESCONHECIDA (Comando-Adicao.h) comandoAdicionar()\n");
-		return false;
+		return RETORNO_COMANDO_INCORRETO;
 	}
 	printf(" ERRO: Algum erro desconhecido ocorreu em Comando-Adicao.h comandoAdicionar()\n");
-	return false;
+	return RETORNO_ERRO_INTERNO;
 }
 
 bool addUsuarioAnonimo()// APP 2 1 2 asdkhasdjkas
