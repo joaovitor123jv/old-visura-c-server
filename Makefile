@@ -44,10 +44,51 @@ run: all
 	./server
 
 clean:
-	rm *.o
+	rm -f *.o
 
 $(FILA_OBJ): 
 	@echo "Compilando Fila"
 	$(COMPILE) $(LIKE_A_LIBRARY) Fila/Fila.c
 
 #SESSÃO PRINCIPAL ******************************************************************************** ↑
+#SESSÃO DE DOCUMENTACAO ************************************************************************** ↓
+DOC_SOURCES=doc/src
+CHANGE_TO_DOC_SOURCE=cd $(DOC_SOURCES)
+
+#Limpa todos os arquivos .pdf gerados por "make documentation"
+forget:
+	@echo "Atenção ! removendo documentação"
+	@echo "Removendo doc/ComandosMakefile.pdf"
+	@rm -f doc/ComandosMakefile.pdf
+	@echo "Removendo doc/OrganizacaoCodigo.pdf"
+	@rm -f doc/OrganizacaoCodigo.pdf
+
+doc/ComandosMakefile.pdf:
+	@echo "Gerando documentação de opções de Makefile"
+	@$(CHANGE_TO_DOC_SOURCE) ; pdflatex ComandosMakefile.tex
+	@$(CHANGE_TO_DOC_SOURCE) ; mv ComandosMakefile.pdf ../
+
+doc/OrganizacaoCodigo.pdf:
+	@echo "Gerando documentação de organização de código"
+	@$(CHANGE_TO_DOC_SOURCE) ; pdflatex OrganizacaoCodigo.tex
+	@$(CHANGE_TO_DOC_SOURCE) ; mv OrganizacaoCodigo.pdf ../
+
+documentation: doc/ComandosMakefile.pdf doc/OrganizacaoCodigo.pdf
+	@echo "Gerando meta-documentação (índice)"
+	@echo "Toda a documentação necessária foi gerada com sucesso !"
+	@echo "Limpando arquivos residuais da compilação da documentação"
+	@$(CHANGE_TO_DOC_SOURCE) ; rm -f ComandosMakefile.log
+	@$(CHANGE_TO_DOC_SOURCE) ; rm -f texput.log
+	@$(CHANGE_TO_DOC_SOURCE) ; rm -f ComandosMakefile.aux
+	@echo "Todos os arquivos residuais da compilação foram removidos"
+	@echo "Compilação finalizada"
+
+
+
+
+
+
+full: documentation build
+	@echo "Compilação geral concluida"
+
+

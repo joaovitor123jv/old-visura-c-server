@@ -1,0 +1,80 @@
+\documentclass[onecolumn,12pt]{article}
+
+%Adiciona suporte a cores
+\usepackage{color}
+%\usepackage[brazil]{babel}
+
+%traduz palavras utilizadas por padrão para português
+%\usepackage[portuguese]{babel}
+
+%Adiciona suporte a acentuação, na hora de escrever
+\usepackage[utf8]{inputenc}
+
+%Adiciona suporte a acentuação na hora de copiar texto
+\usepackage[T1]{fontenc}
+
+
+
+%\title{Documenta\c{c}\~{a}o - Comandos de Makefile}
+
+\title{Documentação - Organização de Cógido}
+
+%\date{2018-02-21}
+\author{João Vitor Antoniassi Segantin}
+
+\begin{document}
+	\maketitle
+	\begin{abstract}
+		Este documento visa explicar a organização de códigos fonte, e oferecer um breve resumo sobre a importância de cada arquivo de código-fonte.\par
+		Ao final da leitura desse documento, você será capaz de decidir posições novas de códigos-fonte oriundos de atualizações, implementações de funcionalidades, e/ou re-organizações possíveis.
+		Seja bem-vindo(a) ao projeto Visu-RA!
+	\end{abstract}
+	\newpage
+	\indent
+	
+    \section{Da organização}
+    	A organização dos códigos é dada por sua utilidade, seu efeito no projeto.\par
+    	Cada arquivo foi separado intencionalmente, a fim de facilitar possíveis extensões, e mudanças de arquiteturas, visando um baixo custo e alto desempenho, a manutenção da organização é de vital importância a todo o projeto. \par
+    	Faz-se necessário entender que, os códigos de banco de dados, e os códigos de lógica, estão separados intencionalmente, a fim de obter futura integração com um sistema de Big-Data, independende de Banco de Dados.\par
+    	O projeto da interface completo, está situado num repositório privado em bitbucket, caso queira ter acesso a atualizações e coisas do tipo, peça acesso ao seu superior, informando o motido do acesso, seus dados pessoais e quando, precisará desse acesso.\par
+    	Como todo repositório git, esse projeto está subversionado, com o intuito de evitar problemas com más implementações. Antes de solicitar um "merge" ou dar "commit", assegure-se de que pelo ou menos duas pessoas tenham visto e autorizado seu commit.\par
+    	Lembre-se, está mechendo com milhões de dados, e operações importantes.
+    
+    	\subsection{Arquivos de Bancos de Dados}
+    		Os arquivos com relação a banco de dados são divididos, em duas partes básicas, os \textbf{arquivos SQL}, que servem para a criação do banco de dados em si, alterações diretas em banco e arquivos de inserção de dados fictíceos para testes, e os \textbf{arquivos de Código-Fonte}, arquivos headers, e bibliotecas do projeto para manipulação do banco de dados.\par
+    		Os arquivos de código-fonte, do banco de dados, foram separados do projeto inicial, para facilitar a implementação de um futuro Big-Data.
+    		\subsubsection{Arquivos SQL}
+    			Os arquivos SQL estão localizados no diretório \textbf{Banco/}, são eles:
+    			\begin{itemize}
+    				\item Banco-final.sql\par
+    					Utilizado para a geração do banco de dados MySQL.
+    				\item Banco-raw.sql\par
+    					Arquivo oriundo do "POST-FORWARD script" da ferramente "MySQL Workbench", pode também criar o banco, mas, este ficará com nome "mydb", que não é o padrão reconhecido pela interface. Sua utilização para criação de um banco de dados é recomendada, em caso de re-implementação, ou alteração da estrutura do banco, utilizando a ferramente MySQL workbench. Esse deve ser alterado e salvo como Banco-final.sql, substituindo as ocorrências de "mydb" por "teste"
+    				\item produzir-dados.sql\par
+    					Script para criação dos dados essenciais para a utilização do Banco de dados pela interface. Cria somente os dados necessários.
+    				\item produzir-dados-testes.sql\par
+    					Script para criação de dados de testes. Para seu funcionamento ideal, é necessário que "produzir-dados.sql" seja chamado anteriormente.
+    			\end{itemize}
+    		\subsubsection{Arquivos de Código-Fonte}
+    			Os arquivos de código-fonte estão contidos no diretório \textbf{OperacoesBanco/}, são eles:
+    			\begin{itemize}
+    				\item OperacoesBanco.h\par
+    					Arquivo que contém funções específicas para obtenção, adição e alteração de dados ao banco de dados.
+    				\item OperacoesBanco-Visualizacao.h\par
+    					Arquivo que contém funções específicas para obtenção, adição e alteração de dados ao banco de dados, especificamente relacionados a visualizações.
+    				\item OperacoesBanco-FuncoesGenericas.h\par
+    					Arquivo que contém funções generalizadas, utilizadas por todo o restante do código, como conectarBanco().
+    			\end{itemize}
+    	
+%    \begin{large}
+%    \end{large} \par
+
+%    \footnote{Isso aqui \'{e} pra estar no fim da p\'{a}gina.}
+    \newpage
+    \begin{large}
+    	Desejo-lhe uma excelente experiência com o Visu-RA.
+    \end{large}
+
+
+
+\end{document}
