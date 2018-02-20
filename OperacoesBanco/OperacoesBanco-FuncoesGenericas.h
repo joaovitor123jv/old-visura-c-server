@@ -135,7 +135,7 @@ bool queryRetornaConteudo(char *query)
 		free(query);
 		query = NULL;
 
-		if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+		if(mysql_errno(conexao) == ERRO_CONEXAO_ENCERRADA_MYSQL)// SERVER MYSQL SUMIU
 		{
 			printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h checarSeVoltaAlgumaCoisaDaQuery()\n");
 			if(conectarBanco())
@@ -230,7 +230,7 @@ bool executaQuery(char *query)
 		printf(" ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) checarSeVoltaAlgumaCoisaDaQuery()\n");
 		printf(" ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
 		printf(" Query executada: |%s|\n", query);
-		if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+		if(mysql_errno(conexao) == ERRO_CONEXAO_ENCERRADA_MYSQL)// SERVER MYSQL SUMIU
 		{
 			printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h checarSeVoltaAlgumaCoisaDaQuery()\n");
 			if(conectarBanco())
@@ -406,12 +406,32 @@ char *retornaUnicoRetornoDaQuery(char *query)// Retorna um só resultado de uma 
 	}
 	printf(" LOG: Executando query: |%s| em OperacoesBanco-FuncoesGenericas.h obterRetornoUnicoDaQuery()\n", query);
 	
-	if(mysql_query(conexao, query))
+	bool tentarDenovo = false;
+	int tentativas = 0;
+	do
 	{
-		printf(" ERRO: Falha ao executar query em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery() sakdjh\n");
-		printf("  ERRO MYSQL Nº%d =\t|%s|\n", mysql_errno(conexao), mysql_error(conexao));
-		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-	}
+		if(mysql_query(conexao, query))
+		{
+			if( mysql_errno(conexao) == ERRO_CONEXAO_ENCERRADA_MYSQL)
+			{
+				printf(" ERRO: Conexão com o banco de dados encerrada detectada em OperacoesBanco-FuncoesGenericas.h obterRetornoUnicoDaQuery() artb9vcn\n");
+				conexao = NULL;
+				conectarBanco();
+				if( tentativas > 2 )
+				{
+					tentarDenovo = false;
+				}
+				else
+				{
+					tentarDenovo = true;
+				}
+				tentativas = tentativas + 1;
+			}
+			printf(" ERRO: Falha ao executar query em retornaUnicoRetornoDaQuery() OperacoesBanco-FuncoesGenericas.h sakdjh\n");
+			printf(" ERRO MYSQL nº%d = \t|%s|\n", mysql_errno(conexao) ,mysql_error(conexao));
+			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+		}
+	}while(tentarDenovo);
 	
 	MYSQL_RES *resultado = mysql_store_result(conexao);
 	
@@ -757,14 +777,32 @@ char *retornaInformacoesObtidasNaQuery(char *query)
 		return RETORNO_ERRO_INTERNO_BANCO_STR_DINAMICA;
 	}
 	
-	if(mysql_query(conexao, query))
+	bool tentarDenovo = false;
+	int tentativas = 0;
+	do
 	{
-		printf(" Warning: falhao ao executar query em OperacoesBanco-FuncoesGenericas.h retornaInformacoesObtidasNaQuery()\n");
-		printf(" \tQuery = |%s|\n", query);
-		free(query);
-		query = NULL;
-		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-	}
+		if(mysql_query(conexao, query))
+		{
+			if( mysql_errno(conexao) == ERRO_CONEXAO_ENCERRADA_MYSQL)
+			{
+				printf(" ERRO: Conexão com o banco de dados encerrada detectada em OperacoesBanco-FuncoesGenericas.h obterRetornoUnicoDaQuery() artb9vcn\n");
+				conexao = NULL;
+				conectarBanco();
+				if( tentativas > 2 )
+				{
+					tentarDenovo = false;
+				}
+				else
+				{
+					tentarDenovo = true;
+				}
+				tentativas = tentativas + 1;
+			}
+			printf(" ERRO: Falha ao executar query em retornaInformacoesObtidasNaQuery() OperacoesBanco-FuncoesGenericas.h sakdjh\n");
+			printf(" ERRO MYSQL nº%d = \t|%s|\n", mysql_errno(conexao) ,mysql_error(conexao));
+			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+		}
+	}while(tentarDenovo);
 	
 	MYSQL_RES *resultado = mysql_store_result(conexao);
 	if(resultado == NULL)// Se não houver consulta
