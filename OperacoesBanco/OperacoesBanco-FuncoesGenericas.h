@@ -266,13 +266,33 @@ char *obterRetornoUnicoDaQuery(char *query)// ATENÇÃO: Função de uso INTERNO
 	}
 
 	printf(" LOG: Executando query: |%s| em OperacoesBanco-FuncoesGenericas.h obterRetornoUnicoDaQuery()\n", query);
+	bool tentarDenovo = false;
+	int tentativas = 0;
 	
-	if(mysql_query(conexao, query))
+	do
 	{
-		printf(" ERRO: Falha ao executar query em obterRetornoUnicoDaQuery() OperacoesBanco-FuncoesGenericas.h sakdjh\n");
-		printf(" \t%s\n", mysql_error(conexao));
-		return NULL;
-	}
+		if(mysql_query(conexao, query))
+		{
+			if( mysql_errno(conexao) == ERRO_CONEXAO_ENCERRADA_MYSQL)
+			{
+				printf(" ERRO: Conexão com o banco de dados encerrada detectada em OperacoesBanco-FuncoesGenericas.h obterRetornoUnicoDaQuery() artb9vcn\n");
+				conexao = NULL;
+				conectarBanco();
+				if( tentativas > 2 )
+				{
+					tentarDenovo = false;
+				}
+				else
+				{
+					tentarDenovo = true;
+				}
+				tentativas = tentativas + 1;
+			}
+			printf(" ERRO: Falha ao executar query em obterRetornoUnicoDaQuery() OperacoesBanco-FuncoesGenericas.h sakdjh\n");
+			printf(" ERRO MYSQL nº%d = \t|%s|\n", mysql_errno(conexao) ,mysql_error(conexao));
+			return NULL;
+		}
+	}while(tentarDenovo);
 	
 	MYSQL_RES *resultado = mysql_store_result(conexao);
 	

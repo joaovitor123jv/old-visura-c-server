@@ -26,6 +26,10 @@
 #define OK 0
 #endif
 
+#ifndef ERRO_CONEXAO_ENCERRADA_MYSQL
+#define ERRO_CONEXAO_ENCERRADA_MYSQL 2006
+#endif
+
 #ifndef LOGIN_NAO_AUTORIZADO
 #define LOGIN_NAO_AUTORIZADO 155
 #endif
