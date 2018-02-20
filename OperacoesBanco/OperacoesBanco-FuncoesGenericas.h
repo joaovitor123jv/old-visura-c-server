@@ -389,7 +389,7 @@ char *retornaUnicoRetornoDaQuery(char *query)// Retorna um só resultado de uma 
 	if(mysql_query(conexao, query))
 	{
 		printf(" ERRO: Falha ao executar query em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery() sakdjh\n");
-		printf(" \t%s\n", mysql_error(conexao));
+		printf("  ERRO MYSQL Nº%d =\t|%s|\n", mysql_errno(conexao), mysql_error(conexao));
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	
