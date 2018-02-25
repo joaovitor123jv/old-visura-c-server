@@ -88,7 +88,7 @@ documentation: doc/ComandosMakefile.pdf doc/OrganizacaoCodigo.pdf
 
 
 
-full: documentation build
+full: forget documentation build
 	@echo "Compilação geral concluida"
 
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.2.20)  20 FEB 2018 13:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.2.20)  21 FEB 2018 11:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -359,7 +359,7 @@ Package: fontenc 2005/09/27 v1.99g Standard LaTeX package
 File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding T1 on input line 48.
 ))
-No file OrganizacaoCodigo.aux.
+(./OrganizacaoCodigo.aux)
 \openout1 = `OrganizacaoCodigo.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 25.
@@ -374,6 +374,7 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 25.
 LaTeX Font Info:    ... okay on input line 25.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 25.
 LaTeX Font Info:    ... okay on input line 25.
+
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count88
@@ -394,48 +395,78 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 26.
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 49.
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 51.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 49.
- [2]
-Overfull \hbox (0.96002pt too wide) in paragraph at lines 52--53
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 51.
+
+Overfull \hbox (0.96002pt too wide) in paragraph at lines 54--55
 []\T1/cmr/m/n/12 Arquivo ori-undo do "POST-FORWARD script" da fer-ra-mente "MyS
 QL
  []
 
-
-Overfull \hbox (4.37993pt too wide) in paragraph at lines 66--67
+[3]
+Overfull \hbox (4.37993pt too wide) in paragraph at lines 68--69
 []\T1/cmr/m/n/12 Arquivo que con-tém funções gen-er-al-izadas, uti-lizadas por 
 todo o restante
  []
 
-[3] [4] (./OrganizacaoCodigo.aux) ) 
+[4]
+Overfull \hbox (53.81375pt too wide) in paragraph at lines 91--92
+[]\T1/cmr/m/n/12 Cuida da lóg-ica de obtenção de da-dos gerais, como "obter-Top
+10NovosProdutos()",
+ []
+
+
+Overfull \hbox (40.52968pt too wide) in paragraph at lines 97--97
+\T1/cmr/m/n/12 O ar-quivo re-spon-sável pela lóg-ica de re-moção de da-dos, é o
+ \T1/cmr/bx/n/12 "Comandos/Comando-
+ []
+
+[5]
+Overfull \hbox (35.44592pt too wide) in paragraph at lines 108--109
+[]\T1/cmr/m/n/12 Esse ar-quivo é iden-ti-fi-cado por \T1/cmr/bx/n/12 "Co-man-do
+s/interpretadorDeComandos.h"\T1/cmr/m/n/12 . 
+ []
+
+[6]
+Overfull \hbox (4.9938pt too wide) in paragraph at lines 133--136
+[]\T1/cmr/m/n/12 Também é re-spon-sável pela cri-ação de no-vas chaves RSA para
+ cada usuário,
+ []
+
+[7]
+Overfull \hbox (68.61107pt too wide) in paragraph at lines 158--159
+\T1/cmr/m/n/12 para a trans-fer-en-cia de ar-quivos. Uti-lizado para tes-tar o 
+"ArmazenamentoDePacotes-
+ []
+
+[8] [9] (./OrganizacaoCodigo.aux) ) 
 Here is how much of TeX's memory you used:
- 1489 strings out of 494953
- 16861 string characters out of 6180977
- 68041 words of memory out of 5000000
+ 1491 strings out of 494953
+ 16905 string characters out of 6180977
+ 69041 words of memory out of 5000000
  4805 multiletter control sequences out of 15000+600000
  12060 words of font info for 28 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 23i,6n,19p,510b,187s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 23i,6n,19p,510b,189s stack positions out of 5000i,500n,10000p,200000b,80000s
  </home/joao/.texmf-var/fonts/pk/ljfour/jkna
-ppen/ec/ecbx1200.600pk> </home/joao/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx
-1440.600pk> </home/joao/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1728.600pk> 
+ppen/ec/ecbx1440.600pk> </home/joao/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx
+1200.600pk> </home/joao/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1728.600pk> 
 </home/joao/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/joao/
 .texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1095.600pk> </home/joao/.texmf-var/f
 onts/pk/ljfour/jknappen/ec/ecbx1095.600pk> </home/joao/.texmf-var/fonts/pk/ljfo
 ur/jknappen/ec/ecrm1440.600pk> </home/joao/.texmf-var/fonts/pk/ljfour/jknappen/
 ec/ecrm2074.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmsy10.pfb>
-Output written on OrganizacaoCodigo.pdf (4 pages, 84324 bytes).
+Output written on OrganizacaoCodigo.pdf (9 pages, 118846 bytes).
 PDF statistics:
- 280 PDF objects out of 1000 (max. 8388607)
- 45 compressed objects within 1 object stream
+ 371 PDF objects out of 1000 (max. 8388607)
+ 57 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
