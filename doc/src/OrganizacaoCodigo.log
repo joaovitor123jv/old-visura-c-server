@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.2.20)  21 FEB 2018 11:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.2.27)  8 MAR 2018 18:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **OrganizacaoCodigo.tex
 (./OrganizacaoCodigo.tex
 LaTeX2e <2016/02/01>
-Babel <3.9q> and hyphenation patterns for 3 language(s) loaded.
+Babel <3.9q> and hyphenation patterns for 4 language(s) loaded.
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
 (/usr/share/texlive/texmf-dist/tex/latex/base/size12.clo
@@ -447,25 +447,25 @@ Overfull \hbox (68.61107pt too wide) in paragraph at lines 158--159
 
 [8] [9] (./OrganizacaoCodigo.aux) ) 
 Here is how much of TeX's memory you used:
- 1491 strings out of 494953
- 16905 string characters out of 6180977
- 69041 words of memory out of 5000000
- 4805 multiletter control sequences out of 15000+600000
+ 1491 strings out of 494929
+ 16905 string characters out of 6180142
+ 69131 words of memory out of 5000000
+ 4815 multiletter control sequences out of 15000+600000
  12060 words of font info for 28 fonts, out of 8000000 for 9000
- 14 hyphenation exceptions out of 8191
+ 16 hyphenation exceptions out of 8191
  23i,6n,19p,510b,189s stack positions out of 5000i,500n,10000p,200000b,80000s
- </home/joao/.texmf-var/fonts/pk/ljfour/jkna
-ppen/ec/ecbx1440.600pk> </home/joao/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx
-1200.600pk> </home/joao/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1728.600pk> 
-</home/joao/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/joao/
-.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1095.600pk> </home/joao/.texmf-var/f
-onts/pk/ljfour/jknappen/ec/ecbx1095.600pk> </home/joao/.texmf-var/fonts/pk/ljfo
-ur/jknappen/ec/ecrm1440.600pk> </home/joao/.texmf-var/fonts/pk/ljfour/jknappen/
-ec/ecrm2074.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmsy10.pfb>
-Output written on OrganizacaoCodigo.pdf (9 pages, 118846 bytes).
+ </home/joaovitor/.texmf-var/fonts/pk/ljfour
+/jknappen/ec/ecbx1440.600pk> </home/joaovitor/.texmf-var/fonts/pk/ljfour/jknapp
+en/ec/ecbx1200.600pk> </home/joaovitor/.texmf-var/fonts/pk/ljfour/jknappen/ec/e
+cbx1728.600pk> </home/joaovitor/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200
+.600pk> </home/joaovitor/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1095.600pk>
+ </home/joaovitor/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1095.600pk> </home
+/joaovitor/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1440.600pk> </home/joaovi
+tor/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm2074.600pk></usr/share/texlive/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on OrganizacaoCodigo.pdf (9 pages, 118239 bytes).
 PDF statistics:
- 371 PDF objects out of 1000 (max. 8388607)
+ 369 PDF objects out of 1000 (max. 8388607)
  57 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)

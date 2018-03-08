@@ -139,6 +139,8 @@
 #define TIPO_LOGIN "7"
 #define TIPO_SENHA "9"
 
+#define TIPO_INFORMACAO_PAGINADA "##"
+
 #define TIPO_VISUALIZACAO "2"
 #define TIPO_VISUALIZACAO_ANONIMA 3
 #define TIPO_VISUALIZACAO_ANONIMA_CHAR "3"
@@ -198,6 +200,9 @@
 #define TIPO_INFORMACOES_PRODUTO "iP"
 #define TIPO_INFORMACOES_MINHAS "iM"
 
+#define TIPO_ID_DE_PRODUTO_POR_EMPRESA "33"
+#define TIPO_ID_DE_EMPRESA_POR_PRODUTO "EP"
+
 
 
 
@@ -252,6 +257,7 @@
 #define RETORNO_ERRO_NAO_AUTORIZADO_STR "ERRO: Operacao nao autorizada"
 
 /* Fim retornos entre funções */
+
 
 
 #endif //__COMANDOS__

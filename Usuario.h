@@ -8,7 +8,13 @@
 #include "Comandos/Comandos.h"
 //#include "OperacoesBanco/OperacoesBanco.h"
 #include <mysql/mysql.h>
-MYSQL *conexao;
+
+
+#ifndef CONEXAO_COM_BANCO_DE_DADOS_DEFINIDA
+	#define CONEXAO_COM_BANCO_DE_DADOS_DEFINIDA
+	MYSQL *conexao;
+#endif
+
 char *obterRetornoUnicoDaQuery(char *query);
 
 #ifndef true
@@ -206,6 +212,7 @@ bool usuarioRoot(char *email)
 	}
 }
 
+//Retorna true, se usuario for usuario Normal.
 bool usuario_PermissaoPrivilegiada(Usuario *usuario)
 {
 	if( usuario == NULL )
@@ -223,6 +230,7 @@ bool usuario_PermissaoPrivilegiada(Usuario *usuario)
 	}
 }
 
+//Retorna true, se usuario tiver permissão ROOT
 bool usuario_PermissaoRoot(Usuario *usuario)
 {
 	if( usuario == NULL )
@@ -240,6 +248,7 @@ bool usuario_PermissaoRoot(Usuario *usuario)
 	}
 }
 
+//Retorna true se usuario for Contratante
 bool usuario_PermissaoContratante(Usuario *usuario)
 {
 	if (usuario == NULL)
@@ -259,6 +268,7 @@ bool usuario_PermissaoContratante(Usuario *usuario)
 	}
 }
 
+//Retorna TRUE, se usuário for Anônimo
 bool usuario_PermissaoAnonimo(Usuario *usuario)
 {
 	if (usuario == NULL)
@@ -293,6 +303,7 @@ bool usuario_PermissaoCliente(Usuario *usuario)
 	return false;
 }
 
+//Retorna um char * contendo o e-mail (login) do usuario, ou NULL caso não tenha sido criado
 char *usuario_obterLogin(Usuario *usuario)
 {
 	if( usuario == NULL )
@@ -303,6 +314,8 @@ char *usuario_obterLogin(Usuario *usuario)
 	return usuario->login;
 }
 
+
+//retorna um char * contendo a senha do usuario, ou NULL caso não tenha sido criado.
 char *usuario_obterSenha(Usuario *usuario)
 {
 	if( usuario == NULL )
@@ -526,5 +539,21 @@ int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario)/
 	}
 }
 
+
+bool usuarioValido(Usuario *usuario, const char *localizacao)
+{
+	if (usuario == NULL)
+	{
+		printf(" Warning: Usuario nulo detectado em %s\n", localizacao);
+		return false;
+	}
+	if (usuario_obterLogin(usuario) == NULL	)
+	{
+		printf(" Warning: Usuario não conectado detectado em %s\n", localizacao);
+		return false;
+	}
+	printf(" LOG: Usuario validado em %s\n", localizacao);
+	return true;
+}
 
 #endif //__USUARIO_VISURA__

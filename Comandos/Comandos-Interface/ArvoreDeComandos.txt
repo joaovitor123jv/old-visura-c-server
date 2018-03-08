@@ -156,6 +156,28 @@ APP
 		
 		9&	(TOP_10_MELHORES)
 			(Obtem os 10 produtos melhor avaliados do banco de dados (disponíveis/dentro da validade), retorna seus IDs, separados por espaço)
+
+
+		##	(TIPO_INFORMACAO_PAGINADA)
+			33	(TIPO_ID_PRODUTO_POR_EMPRESA)
+				(Obtem 10 produtos da empresa, de acordo com o numero da pagina passada. Caso não seja passado nenhum numero, a primeira página será retornada)
+				(Retorna no formato:						)
+				(	produto1 produto2 produto3 produto4 produto5 ...	)
+
+				numeroPagina
+					(CASO ESTEJA LOGADO COMO EMPRESA, RETORNA OS PRODUTOS DA EMPRESA LOGADA, na página especificada)
+
+
+					idEmpresa
+						(Retorna 10 produtos, na página numeroPagina, da empresa referenciada por idEmpresa)
+						(idEmpresa  !=  loginEmpresa)
+						(idEmpresa  == Numero da empresa, para controle interno no banco de dados)
+						(loginEmpresa == Email para login da empresa no sistema)
+						(retorno dado por   APP 4 ; cnpj)
+						(Recomento a leitura de      APP 4 EP idProduto)
+
+				(CASO ESTEJA LOGADO COMO EMPRESA, RETORNA OS PRODUTOS DA EMPRESA LOGADA)
+
 		
 		iP	(TIPO_INFORMACOES_PRODUTO)
 			idProduto
@@ -220,6 +242,7 @@ APP
 
 		;	(TIPO_ID_CONTRATANTE)
 			(Se estiver logado como contratante, retorna diretamente o id que referencia a empresa, sem precisar de usar o cnpj)
+
 			cnpj	(o cnpj da empresa que quer obter o ID)(Opcional, feito pro root usar em caso que a empresa esquece seus dados)
 				(retorna o id que referencia a empresa(contratante) no banco de dados)
 		
@@ -239,6 +262,10 @@ APP
 			(se logado como contratante, retorna uma string no seguinte formato:)
 				Nome CNPJ plano email telefone idLocalizacao
 			(retorna os dados do usuario logado, seja contratante, cliente ou root)
+		
+		EP	(TIPO_ID_EMPRESA_POR_PRODUTO)
+			idProduto
+				(Retorna o ID da empresa que é responsável pelo produto "idProduto")
 
 	5	(COMANDO_REMOVER)
 		// Sendo criado no momento

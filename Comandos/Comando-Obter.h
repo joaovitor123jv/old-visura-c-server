@@ -20,7 +20,13 @@ char *obterNomeProduto(Usuario *usuario);// APP 4 1. idProduto
 char *obterAvaliacaoProduto(Usuario *usuario);// APP 4 kW idProduto                       (Retorna NULL quando ocorre algum erro)
 char *obterInformacoesProduto(Usuario *usuario);// APP 4 iP idProduto			//Retorna informações do produto separadas por espaço, de acordo com o nível de permissão de usuario
 
+char *obter10ProdutosDaEmpresa(Usuario *usuario);
+
+char *obterInformacaoPaginada(Usuario *usuario);
+
 char *obterInformacoesUsuario(Usuario *usuario);
+
+char *obterIdDeEmpresaDadoProduto(Usuario *usuario);
 
 char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 {
@@ -70,6 +76,15 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 	else if(strcmp(token, TIPO_INFORMACOES_MINHAS) == 0)// APP 4 iM
 	{
 		return obterInformacoesUsuario(usuario);
+	}
+	else if( strcmp(token, TIPO_INFORMACAO_PAGINADA) == 0 )// APP 4 ##
+	{
+		return obterInformacaoPaginada(usuario);
+	}
+	else if( strcmp(token, TIPO_ID_DE_EMPRESA_POR_PRODUTO) == 0 )// APP 4 EP idProduto
+	{
+		printf(" LOG: Requisitando ID de empresa, dado id de produto em Comando-Obter.h comandoObter() kjhgt\n");
+		return obterIdDeEmpresaDadoProduto(usuario);
 	}
 	else if(strcmp(token, TIPO_ID_CIDADE) == 0)// APP 4 $
 	{
@@ -779,3 +794,130 @@ char *obterInformacoesUsuario(Usuario *usuario)
 		return RETORNO_ERRO_NAO_AUTORIZADO_STR_DINAMICA;
 	}
 }
+
+
+char *obter10ProdutosDaEmpresa(Usuario *usuario)//APP 4 ## 33
+{
+	if( usuario == NULL )
+	{
+		printf(" ERRO: Usuario nulo detectado em Comando-Obter.h obter10ProdutosDaEmpresa() askjve3\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if( usuario_obterLogin(usuario) == NULL)
+	{
+		printf(" ERRO: Usuario não conectado detectado em Comando-Obter.h obter10ProdutosDaEmpresa() q09tbj\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	// if( !usuario_PermissaoContratante(usuario) )
+	// {
+	// 	printf(" Warning: Usuario normal tentou acessar comando disponível somente para contratante em Comando-Obter.h obter10ProdutosDaEmpresa() aisubru2wqiw\n");
+	// 	return RETORNO_ERRO_NAO_AUTORIZADO_STR_DINAMICA;
+	// }
+
+char *token;
+token = strtok(NULL, " ");
+		if( token == NULL )
+		{
+			return obter10ProdutosDaEmpresaDoBanco(usuario, strdup("1"), NULL);
+		}
+		char *pagina = strdup(token);
+		if (usuario_PermissaoCliente(usuario) || usuario_PermissaoAnonimo(usuario))
+		{
+			token = strtok(NULL, " ");
+			if (token == NULL)
+			{
+				printf(" Warning: Comando insuficiente em Comando-Obter.h obterInformacaoPaginada() dfwjbht\n");
+				return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+			}
+			if (stringMaior(token, TAMANHO_DE_INTEIRO_EM_BANCO_DE_DADOS))
+			{
+				printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterInformacaoPaginada() bouithfjt\n");
+				return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+			}
+			char *idContratante = strdup(token);
+			return obter10ProdutosDaEmpresaDoBanco(usuario, pagina, idContratante);	
+		}
+		return obter10ProdutosDaEmpresaDoBanco(usuario, pagina, NULL);
+
+
+
+
+
+
+	return obter10ProdutosDaEmpresaDoBanco(usuario, pagina, NULL);
+}
+
+
+
+
+/** 
+ * @brief  Redirecionador, cuida de funções que retornam informações que podem ser paginadas
+ * @note   Wrapper
+ * @param  *usuario: 
+ * @retval Mensagem para o usuario
+ */
+char *obterInformacaoPaginada(Usuario *usuario)// APP 4 ##
+{
+	if (!usuarioValido(usuario, "Comando-Obter.h obterInformacaoPaginada() 156rf"))
+	{
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	char *token = strtok(NULL, " ");
+	if( token == NULL )
+	{
+		printf(" ERRO: Comando insuficiente detectado em Comando-Obter.h obterInformacaoPaginada() savrn90gt\n");
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+	}
+	if( stringMaior(token, TAMANHO_TIPO) )
+	{
+		printf(" ERRO: Comando exageradamente grande detectado em Comando-Obter.h obterInformacaoPaginada() askjrni0sd\n");
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+	}
+	if( strcmp(token, TIPO_ID_DE_PRODUTO_POR_EMPRESA) == 0 )//APP 4 ## 33
+	{
+		return obter10ProdutosDaEmpresa(usuario);
+	}
+	else
+	{
+		return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
+	}
+}
+
+
+
+char *obterIdDeEmpresaDadoProduto(Usuario *usuario)
+{
+	if (!usuarioValido(usuario, "Comando-Obter.h obterIdDeEmpresaDadoProduto() ndvjko"))
+	{
+		printf("Usuario invalido detectado nessa merda\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	printf(" asjkdhskjahdjksahdkjashdkjashkjdashjkdsahjkdhasjkdhsakjdhsajkdk\n");
+	char *token = strtok(NULL, " ");//APP 4 EP idProduto
+	if (token == NULL)
+	{
+		printf(" Warning: Comando insuficiente detectado em Comando-Obter.h obterIdDeEmpresaDadoProduto() daskjbte\n");
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+	}
+	if (!stringTamanhoIgual(token, TAMANHO_ID_PRODUTO))
+	{
+		printf(" Warning: Coamndo incorreto detectado em Comando-Obter.h obterIdDeEmpresaDadoProduto() daskjbter\n");
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+	}
+	char *idProduto = strdup(token);
+	if (idProduto == NULL)
+	{
+		printf(" Warning: Falha ao duplicar string em Comando-Obter.h obterIdDeEmpresaDadoProduto() vbruoiwehgtug\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	printf(" LOG: Obtendo retorno de id de empresa do banco de dados em Comando-Obter.h obterIdDeEmpresaDadoProduto() djkgbr\n");
+	// return retornaIdDeEmpresaDadoProdutoDoBanco(usuario, idContratante);
+	return retornaIdDeEmpresaDadoProdutoDoBanco(usuario, idProduto);
+
+	// return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+}
+
+
+
+
+

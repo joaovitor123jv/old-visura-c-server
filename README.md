@@ -22,3 +22,5 @@ Execute o comando "make", que ele compilará todos os códigos necessários, e f
 
 
 Para mais informações a respeito de opções de compilação e coisas do tipo, consulte a documentação.
+
+Fazer obter10ProdutosRelacionadosAEmpresaDoBanco()

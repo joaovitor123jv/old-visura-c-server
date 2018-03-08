@@ -6,6 +6,9 @@
 #include<stdlib.h>
 #include<mysql/mysql.h>
 
+#include "../AdaptadorDeString.h"
+#include "../Usuario.h"
+
 #ifndef true
 #define true 1
 #endif
@@ -35,10 +38,12 @@
 #define DATABASE_DEFAULT_SOCKET NULL
 #define DATABASE_DEFAULT_FLAGS 0
 
-//MYSQL *conexao;
 
-//Retorna TRUE se conectar ao banco com sucesso
-// bool conectarBanco(MYSQL *conexao)
+#ifndef CONEXAO_COM_BANCO_DE_DADOS_DEFINIDA
+	#define CONEXAO_COM_BANCO_DE_DADOS_DEFINIDA
+	MYSQL *conexao;
+#endif
+
 
 
 bool conectarBanco()
@@ -392,7 +397,13 @@ char *obterRetornoUnicoDaQuery(char *query)// ATENÇÃO: Função de uso INTERNO
 	}
 }
 
-char *retornaUnicoRetornoDaQuery(char *query)// Retorna um só resultado de uma query informada pelo usuario e já libera a query... retorna direto ao usuario
+/** 
+ * @brief  Retorna uma informação obtida na query na primeira posição
+ * @note   Libera a query
+ * @param  *query: 
+ * @retval char *
+ */
+char *retornaUnicoRetornoDaQuery(char *query)
 {
 	if (!conexaoAtiva())
 	{
@@ -865,7 +876,7 @@ char *retornaInformacoesObtidasNaQuery(char *query)
 		}
 	}
 
-	char *informacoes = malloc(sizeof(char) * tamanho);
+	char *informacoes = (char *)malloc(sizeof(char) * tamanho);
 	if (informacoes == NULL)
 	{
 		printf(" Warning: Falha ao alocar memoria para string de retorno em OperacoesBanco-FuncoesGenericas.h retornaInformacoesObtidasNaQuery() asifuhuiasd\n");
@@ -911,6 +922,14 @@ char *retornaInformacoesObtidasNaQuery(char *query)
 	Padrão de retorno para retornaNIteracoesDaQuery("SELECT resultado FROM tabela", 4); :
 		resultado1 resultado2 resultado3 resultado4
 */
+
+/** 
+ * @brief  Retorna uma informação concatenada numeroIteracoes vezes, libera query
+ * @note   Usada pela função obterTop10produtos...
+ * @param  *query: 
+ * @param  numeroIteracoes: 
+ * @retval retorna direto ao usuario (char *)
+ */
 char *retornaNIteracoesDaQuery(char *query, int numeroIteracoes)
 {
 	if (query == NULL)
@@ -997,7 +1016,7 @@ char *retornaNIteracoesDaQuery(char *query, int numeroIteracoes)
 				return RETORNO_ERRO_INTERNO_BANCO_STR_DINAMICA;
 			}
 			tamanho = tamanho + strlen(linha[0]) + 1;
-			retorno = realloc(retorno, tamanho);
+			retorno = (char *)realloc(retorno, tamanho);
 			if (retorno == NULL)
 			{
 				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
@@ -1014,3 +1033,70 @@ char *retornaNIteracoesDaQuery(char *query, int numeroIteracoes)
 }
 
 
+/** 
+ * @brief  Retorna informações paginadas
+ * @note   Diga quais informações precisa (sem o ; do final), e a função faz o resto
+ * @param  *query: "SELECT * FROM isto "
+ * @param  *pagina: "1" == LIMIT 1, 10;  "2" == LIMIT 11, 20
+ * @retval informações concatenadas direto pro usuario
+ */
+char *retornaPaginado(char *query, char *pagina)
+{
+	if (query == NULL)
+	{
+		printf(" ERRO: Query nula detectada em OperacoesBanco-FuncoesGenericas.h retornaPaginado() as1b8982\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if (pagina == NULL)
+	{
+		printf(" ERRO: Pagina nula detectada em OperacoesBanco-FuncoesGenericas.h retornaPaginado() asgf54ro9hsdf\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if (stringMenor(query, 0))
+	{
+		printf(" ERRO: String muito pequena detectada em OperacoesBanco-FuncoesGenericas.h retornaPaginado() ruiogwhnu\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	int pagint = atoi(pagina);
+	char *x = intToString((pagint - 1) * 10);
+	if (x == NULL)
+	{
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	char *y = intToString(((pagint - 1) * 10) + 10);
+	if (y == NULL)
+	{
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+
+	int tamanho = strlen(query) + strlen(x) + strlen(y) + 10 + 1;
+	char *novaQuery = (char *)calloc(sizeof(char), tamanho);
+	
+	if (novaQuery == NULL)
+	{
+		printf(" ERRO: Falha ao realocar memoria em OperacoesBanco-FuncoesGenericas.h retornaPaginado() kjasdhbvjrjh\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+
+	printf(" DEBUG: Query recebida: |%s| em OperacoesBanco-FuncoesGenericas.h retornaPaginado() asjlbt\n", query);
+	snprintf(novaQuery, tamanho, "%s LIMIT %s,%s;", query, x, y);
+	if (novaQuery == NULL)
+	{
+		printf(" ERRO: Falha ao formatar string em OperacoesBanco-FuncoesGenericas.h retornaPaginado() vkdfjsuri\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	printf(" DEBUG: Query formatada: |%s| em OperacoesBanco-FuncoesGenericas.h retornaPaginado() asjlbt\n", query);
+
+	free(query);
+	free(x);
+	free(y);
+	free(pagina);
+	pagina = NULL;
+	y = NULL;
+	x = NULL;
+	query = NULL;
+
+	return retornaNIteracoesDaQuery(novaQuery, 10);
+
+
+}

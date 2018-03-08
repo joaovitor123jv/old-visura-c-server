@@ -3970,6 +3970,170 @@ char *obterUltimos10ProdutosAdicionadosRealidadeVirtualPeloContratanteDoBanco(Us
 	return retornaNIteracoesDaQuery(query, 10);
 }
 
+/** 
+ * @brief  Retorna ao usuario 10 produtos da empresa, definidos em "pagina"
+ * @note   
+ * @param  *usuario: 
+ * @param  *pagina: 
+ * @retval 
+ */
+char *obter10ProdutosDaEmpresaDoBanco(Usuario *usuario, char *pagina, char *idContratante)
+{
+	if( usuario == NULL )
+	{
+		printf(" ERRO: Usuario nulo detectado em OperacoesBanco.h obter10ProdutosDaEmpresaDoBanco() asvdurw\n");
+		if (pagina != NULL)
+		{
+			free(pagina);
+			pagina = NULL;
+		}
+		if (idContratante != NULL)
+		{
+			free(idContratante);
+			idContratante = NULL;
+		}
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if( usuario_obterLogin(usuario) == NULL )
+	{
+		printf(" ERRO: Usuario nao conectado detectado em OperacoesBanco.h obter10ProdutosDaEmpresaDoBanco() asouvnbrjd\n");
+		if (pagina != NULL)
+		{
+			free(pagina);
+			pagina = NULL;
+		}
+		if (idContratante != NULL)
+		{
+			free(idContratante);
+			idContratante = NULL;
+		}
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if( pagina == NULL )
+	{
+		printf(" ERRO: Pagina nula detectada em OperacoesBanco.h obter10ProdutosDaEmpresaDoBanco() 0h28tbn\n");
+		if (idContratante != NULL)
+		{
+			free(idContratante);
+			idContratante = NULL;
+		}
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if ( !usuario_PermissaoContratante(usuario) )
+	{
+		printf(" WARNING: Comando permite consultas de produtos antigos de empresas em OperacoesBanco.h obter10ProdutosDaEmpresaDoBanco() eqiugnrehy\n");
+		if (idContratante == NULL)
+		{
+			printf(" Warning: Comando insuficiente detectado em OperacoesBanco.h obter10ProdutosDaEmpresaDoBanco() a616t8j4sda\n");
+			free(pagina);
+			pagina = NULL;
+			return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+		}
+
+		int tamanho = 160 + 2 + strlen(idContratante);
+		char * query = (char *)calloc(sizeof(char), tamanho);
+		if (query == NULL)
+		{
+			printf(" Warning: Falha ao alocar memoria para string em OperacoesBanco.h obter10ProdutosDaEmpresaDoBanco() skljnhteuiore50\n");
+			free(idContratante);
+			idContratante = NULL;
+			free(pagina);
+			pagina = NULL;
+			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+		}
+
+		snprintf(query, tamanho, "SELECT P.idproduto,P.datacriacao FROM produto P JOIN contratante C ON P.contratante_idcontratante=C.idcontratante WHERE C.idcontratante=\'%s\' ORDER BY P.datacriacao", idContratante);
+		
+		if (query == NULL)
+		{
+			printf(" Warning: Falha ao formatar string em OperacoesBanco.h obter10ProdutosDaEmpresaDoBanco() kasdjghr\n");
+			free(idContratante);
+			idContratante = NULL;
+			free(pagina);
+			pagina = NULL;
+			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+		}
+
+		return retornaPaginado(query, pagina);
+
+	}
+	else
+	{
+		printf(" LOG: Autorização concedida continuando comando em OperacoesBanco.h obter10ProdutosDaEmpresaDoBanco() asdlkfhgrf\n");
+
+		int tamanho = 160 + 2 + strlen(usuario_obterId(usuario));
+		char * query = (char *)calloc(sizeof(char), tamanho);
+		if (query == NULL)
+		{
+			printf(" Warning: Falha ao alocar memoria para string em OperacoesBanco.h obter10ProdutosDaEmpresaDoBanco() skljnhteuiore50\n");
+			free(pagina);
+			pagina = NULL;
+			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+		}
+
+		snprintf(query, tamanho, "SELECT P.idproduto,P.datacriacao FROM produto P JOIN contratante C ON P.contratante_idcontratante=C.idcontratante WHERE C.idcontratante=\'%s\' ORDER BY P.datacriacao", usuario_obterId(usuario));
+		
+		if (query == NULL)
+		{
+			printf(" Warning: Falha ao formatar string em OperacoesBanco.h obter10ProdutosDaEmpresaDoBanco() kasdjghr\n");
+			free(pagina);
+			pagina = NULL;
+			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+		}
+
+		return retornaPaginado(query, pagina);
+	}
+}
+
+
+/** 
+ * @brief  Retorna o ID da empresa responsável pelo produto idProduto
+ * @note   Retorna direto ao usuario
+ * @param  *usuario: 
+ * @param  *idproduto: 
+ * @retval int
+ */
+char *retornaIdDeEmpresaDadoProdutoDoBanco(Usuario *usuario, char *idProduto)
+{
+	if (!usuarioValido(usuario, "OperacoesBanco.h retornaIdDeEmpresaDadoProdutoDoBanco() sajhjkrh"))
+	{
+		if (idProduto != NULL)
+		{
+			free(idProduto);
+			idProduto = NULL;
+		}
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if (idProduto == NULL )
+	{
+		printf(" Warning: idProduto == NULL em OperacoesBanco.h retornaIdDeEmpresaDadoProdutoDoBanco() askjhbjtdg\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	// int tamanho = 124 + 1 + TAMANHO_ID_PRODUTO;
+	int tamanho = 135;
+	char *query = (char *)calloc(sizeof(char), tamanho);
+	if (query == NULL)
+	{
+		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h retornaIdDeEmpresaDadoProdutoDoBanco() akejghjkdsf\n");
+		free(idProduto);
+		idProduto = NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+
+	snprintf(query, tamanho, "SELECT C.idcontratante FROM contratante C JOIN produto P ON P.contratante_idcontratante=C.idcontratante WHERE P.idproduto=\'%s\';", idProduto);
+
+	free(idProduto);
+	idProduto = NULL;
+
+	if (query == NULL)
+	{
+		printf(" Warning: Falha ao formatar query em OperacoesBanco.h retornaIdDeEmpresaDadoProdutoDoBanco() askjghrig\n");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+
+	return retornaUnicoRetornoDaQuery(query);
+}
+
 /* ***FIM COMANDOS DE OBTENÇÃO*** */
 
 #endif //__OPERACOES_BANCO__
