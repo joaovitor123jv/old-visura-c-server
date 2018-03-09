@@ -282,7 +282,11 @@ void *Servidor(void *cliente)
 
 				case REQUISITANDO_REMOCAO:
 					printf(" Warning: Falha ao concluir comando de remocao em Server.h Servidor()\n");
-					enviaMensagemParaCliente("Remoção Negada\nainda conectado\0", cliente);
+					// enviaMensagemParaCliente("Remoção Negada\nainda conectado\0", cliente);
+					char *tete = RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
+					enviaMensagemParaCliente( tete, cliente);
+					free(tete);
+					tete = NULL;
 					break;
 
 				case REQUISITANDO_ROOT:
@@ -296,7 +300,7 @@ void *Servidor(void *cliente)
 					}
 					else
 					{
-						enviaMensagemParaCliente("Você nn pode fazer isso, muahahahaha \\o/\0", cliente);
+						enviaMensagemParaCliente("ERRO: Você nn pode fazer isso, muahahahaha \\o/\0", cliente);
 						interpretando = false;
 						sairDaThread();
 					}
@@ -304,7 +308,7 @@ void *Servidor(void *cliente)
 
 				default:
 					printf(" Não foi possivel interpretar comando (Server.h) (Servidor()) Resultado == %d\n", resultado );
-					enviaMensagemParaCliente("Comando não compreendido, desconectando\0", cliente);
+					enviaMensagemParaCliente("ERRO: Comando não compreendido, desconectando\0", cliente);
 					sairDaThread();
 					break;
 			}
@@ -312,7 +316,7 @@ void *Servidor(void *cliente)
 		else
 		{
 			printf(" LOG: Mensagem de escape detectada em Server.h Servidor()\n");
-			enviaMensagemParaCliente("Voce pediu pra sair... Conexao encerrada\0", cliente);
+			enviaMensagemParaCliente("ERRO: Voce pediu pra sair... Conexao encerrada\0", cliente);
 			sairDaThread();
 		}
 	}
