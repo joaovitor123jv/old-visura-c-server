@@ -2007,7 +2007,16 @@ bool addAvaliacaoAProdutoAoBanco(Usuario *usuario, char *idProduto, char *avalia
 	else if(checou == RETORNO_NULO)
 	{
 		printf(" Warning: não existe visualização para esse usuario em OperacoesBanco.h addAvaliacaoAProdutoAoBanco()\n");
-		return false;
+		if(addVisualizacoesAoBanco(idProduto, strdup("1"), usuario))
+		{
+			geraLog(LOG, "Visualização adicionada a usuario", "OperacoesBanco.h addAvaliacaoAProdutoAoBanco()");
+		}
+		else
+		{
+			geraLog(ERRO, "Falha ao adicionar visualização ao usuario", "OperacoesBanco.h addAvaliacaoAProdutoAoBanco()");
+			return false;
+		}
+		// return false;
 	}
 	else
 	{
@@ -2027,7 +2036,7 @@ bool addAvaliacaoAProdutoAoBanco(Usuario *usuario, char *idProduto, char *avalia
 	snprintf(query, tamanho, "UPDATE visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente SET V.avaliacaoDoUsuario=%c WHERE V.produto_idproduto=\'%s\' AND C.email=\'%s\';", avaliacao[0], idProduto, usuario_obterLogin(usuario) );
 	if(query == NULL)
 	{
-		printf(" Warning: Falhao ao formatar query para executar em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() qkjhhdjkasd\n");
+		printf(" Warning: Falha ao formatar query para executar em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() qkjhhdjkasd\n");
 		return false;
 	}
 
@@ -2097,6 +2106,10 @@ bool addAvaliacaoAProdutoAoBanco(Usuario *usuario, char *idProduto, char *avalia
 			printf(" LOG: Avaliacao adicionada com sucesso ao banco de dados em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() chkah389s9827\n");
 			free(query);
 			query = NULL;
+			return true;
+		}
+		else if(avaliacao[0] == '2')
+		{
 			return true;
 		}
 		else

@@ -73,10 +73,6 @@ int comandoAdicionar(Usuario *usuario)/* APP 2 */
 			return RETORNO_ADICAO_RECUSADA;
 		}
 	}
-	else if(strcmp(token, TIPO_AVALIACAO) == 0)
-	{
-		return addInformacoesAUsuario(usuario);
-	}
 	else if(strcmp(token, TIPO_FEEDBACK) == 0)// APP 2 tr * idProduto textoDoFeedBack
 	{
 		if(addFeedbackAProduto(usuario))

@@ -289,6 +289,11 @@ void *Servidor(void *cliente)
 					tete = NULL;
 					break;
 
+				case RETORNO_ADICAO_RECUSADA:
+					geraLog(LOG, "Adicao recusada detectada", "Server.h Servidor()");
+					enviaMensagemParaCliente("ERRO: Adição recusada", cliente);
+					break;
+
 				case REQUISITANDO_ROOT:
 					if( usuario_PermissaoRoot(&usuario) )
 					{
