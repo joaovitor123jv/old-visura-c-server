@@ -2553,6 +2553,7 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 /* A avaliação do usuario é dada por um caracter:
    1  → para avaliação positiva
    0  → para avaliacao negativa
+   2  → para avaliação neutra
  */
 bool addAvaliacaoAProduto(Usuario *usuario)//DONE       APP 2 kW * idProduto avaliacaoDoUsuario
 {
@@ -2604,7 +2605,7 @@ bool addAvaliacaoAProduto(Usuario *usuario)//DONE       APP 2 kW * idProduto ava
 		//liberar(idProduto);
 		return false;
 	}
-	if(!(token[0] == '0' || token[0] == '1') || token[1]!= '\0')//OTIMIZANDO !!!
+	if(!(token[0] == '0' || token[0] == '1' || token[0] == '2') || token[1]!= '\0')//OTIMIZANDO !!!
 	{
 		printf(" Warning: Comando incorreto em (argumento invalido) Comando-Adicao.h addAvaliacaoAProduto().\n");
 		free(idProduto);
