@@ -22,6 +22,23 @@
 #define ERRO -1
 #endif
 
+
+#ifndef LOG
+#define LOG 10
+#endif
+
+#ifndef WARNING
+#define WARNING 15
+#endif
+
+#ifndef DEBUG
+#define DEBUG 555
+#endif
+
+#ifndef EXTRA
+#define EXTRA 159159
+#endif
+
 #ifndef OK
 #define OK 0
 #endif
@@ -43,10 +60,14 @@
 #define ERRO_DE_EXECUCAO 157
 #endif
 
-/* Variável de CONTROLE */
-/***********************************IMPORTANTE********************************************/
-/*************************/bool interpretando = false;/***********************************/
-/*****************************************************************************************/
+
+
+#define BUFFER_ADICAO_CONTEUDO 1024*5
+#define BUFFER_CLIENTE 1024//(aceitou 1024*1024 (1MB))
+#define PORTA 7420
+
+#define QTD_CLIENTE 5 /* Quantidade de clientes máxima aceita */
+
 
 
 /********************************************************************|
@@ -206,7 +227,18 @@
 
 
 
-#define BUFFER_ADICAO_CONTEUDO 1024*5
+
+
+
+
+
+
+
+
+
+
+
+
 
 #define TOP_10_NOVOS "J"
 #define TOP_10_MELHORES "9&"

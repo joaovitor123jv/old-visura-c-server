@@ -19,6 +19,16 @@ void interrupcaoForcada(int sinal);
 void limpaBuffers(void) __attribute__ ((destructor));
 
 
+#ifndef ___INTERPRETANDO___
+/* Variável de CONTROLE */
+/***********************************IMPORTANTE********************************************/
+/****************************/char interpretando = 0;/************************************/
+/***************************bool interpretando = false;***********************************/
+/*****************************************************************************************/
+#define ___INTERPRETANDO___
+#endif //___INTERPRETANDO___
+
+
 #include "Server.h"
 
 
@@ -32,6 +42,28 @@ void interrupcaoForcada(int sinal)
 
 bool inicializaMonitorDeBancoDeDados();
 
+
+// #define TESTANDO
+
+
+#ifdef TESTANDO
+	#include "AdaptadorDeString/AdaptadorDeString.h"
+	int main(void)
+	{
+		Tokenizer *token;
+		// init_Tokenizer(token, "Testando esse comando aqui porque sim, porra", ' ');
+		token = new_Tokenizer("Eu quero testar essa porra, C, ajuda aí tio kkkkkkk", ' ');
+		
+		printf(" sakjdhjaksdhjksahdkjsahkdjas\n");
+		char *teste;
+		while(teste = tokenizer_getNext(token))
+		{
+			printf("%s\n", teste);
+		}
+	}
+#endif //TESTANDO
+
+#ifndef TESTANDO
 int main(void)
 {
 	//system("clear");
@@ -136,3 +168,5 @@ bool inicializaMonitorDeBancoDeDados()/* Abre uma thread e executa o monitor do 
 	}
 	return false;
 }
+
+#endif // NOT TESTANDO

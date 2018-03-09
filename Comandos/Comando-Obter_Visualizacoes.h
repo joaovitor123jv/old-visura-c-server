@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../AdaptadorDeString.h"
+#include "../AdaptadorDeString/AdaptadorDeString.h"
 #include "Comandos.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
 

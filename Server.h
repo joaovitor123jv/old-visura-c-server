@@ -2,27 +2,9 @@
 #include <unistd.h>
 #include<signal.h>
 
-#define BUFFER_CLIENTE 1024//(aceitou 1024*1024 (1MB))
-
 // #include "GerenciadorDeThreads.h"
 
 #include "Comandos/interpretadorDeComandos.h"
-
-#define PORTA 7420
-
-#define QTD_CLIENTE 5 /* Quantidade de clientes máxima aceita */
-#ifndef true
-#define true 1
-#endif
-
-#ifndef false
-#define false 0
-#endif
-
-#ifndef bool
-#define bool char
-#endif
-
 
 
 int abreSocket()

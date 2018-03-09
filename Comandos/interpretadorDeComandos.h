@@ -3,7 +3,7 @@
 #include "Comandos.h"
 
 
-#include "../AdaptadorDeString.h"
+#include "../AdaptadorDeString/AdaptadorDeString.h"
 
 #include <mysql/mysql.h>
 MYSQL *conexao;
@@ -28,7 +28,7 @@ int comandoAtualizar(char *comando);
 // char* interpretaComando(char *comando, bool *autorizado, int *resultado, char* email, bool *usuarioAnonimo, Usuario *usuario)
 char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario *usuario)
 {
-	interpretando = true;
+	// interpretando = true;
 	char *nomeAplicacao = NULL;
 	int tipoComando;
 	char *login = NULL;
@@ -37,7 +37,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 
 	if(autorizado == NULL)
 	{
-		interpretando = false;
+		// interpretando = false;
 		printf("ERRO INDEFINIDO (interpretadorDeComandos.h) (interpretaComando())\n");
 		*resultado = ERRO;
 		return NULL;
@@ -45,16 +45,26 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 	
 	if(comando == NULL)
 	{
-		interpretando = false;
+		// interpretando = false;
 		*resultado = ERRO;
 		return NULL;
 	}
 
-	nomeAplicacao = strtok(comando, " ");/* Separa a primeira palavra */
+	geraLog(LOG, "Gerando TOKENIZER AQUI !!!", "interpretadorDeComandos.h interpretaComando()");
+	usuario_setTokenizer(usuario, comando);
+	if (usuario_getTokenizer(usuario) == NULL)
+	{
+		printf(" ASKHDASGHDASGHDJKASGJKGFJHASGDHJKASGDHJKASGBJKAGDHJKAGDHJASGDHJASGDHJKDAS\n");
+	}
+
+	// nomeAplicacao = strtok(comando, " ");/* Separa a primeira palavra */
+
+	nomeAplicacao = usuario_getNextToken(usuario);
+
 	if( nomeAplicacao == NULL )
 	{
 		printf(" Warning: Comando nulo detectado em interpretadorDeComandos.h interpretaComando()\n");
-		interpretando = false;
+		// interpretando = false;
 		*resultado = ERRO;
 		return NULL;
 	}
@@ -62,14 +72,15 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 	if( !stringTamanhoIgual(nomeAplicacao, TAMANHO_CHAVE_APLICACAO) )
 	{
 		printf(" Warning: Tamanho de chave de aplicacao incompativel em interpretadorDeComandos.h interpretaComando()\n");
-		interpretando = false;
+		printf(" DEBUG: CHAVE = |%s|\n", nomeAplicacao);
+		// interpretando = false;
 		*resultado = ERRO;
 		return NULL;
 	}
 
 	if(strcmp(nomeAplicacao, CHAVE_APLICACAO) != 0)/* CHAVE DE Aplicacao */
 	{
-		interpretando = false;
+		// interpretando = false;
 		printf(" NOME DA APLICACAO INCORRETO, INTERROMPENDO CONEXAO (interpretadorDeComandos.h)\n");
 		*resultado = ERRO;
 		return NULL;
@@ -84,14 +95,14 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 
 		if( login  != NULL )
 		{
-			interpretando = false;
+			// interpretando = false;
 			*autorizado = true;
 			*resultado = OK;
 			return login;
 		}
 		else
 		{
-			interpretando = false;
+			// interpretando = false;
 			*autorizado = false;
 			*resultado = LOGIN_NAO_AUTORIZADO;
 			return NULL;
@@ -109,7 +120,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 	{
 		printf(" ERRO: FALHA FATAL usuario não conectado detectado em interpretadorDeComandos.h interpretaComando()\n");
 		exit(1);
-		interpretando = false;
+		// interpretando = false;
 		*resultado = ERRO;
 		return NULL;
 	}
@@ -121,7 +132,8 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 	}
 
 
-	nomeAplicacao = strtok(NULL, " ");
+	// nomeAplicacao = strtok(NULL, " ");
+	nomeAplicacao = usuario_getNextToken(usuario);
 
 //	if(strlen(nomeAplicacao) > TAMANHO_COMANDO)/* checa se há mais de uma letra na segunda "palavra" */
 	if( stringMaior(nomeAplicacao, TAMANHO_COMANDO) )

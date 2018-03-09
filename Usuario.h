@@ -6,6 +6,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include "Comandos/Comandos.h"
+#include "AdaptadorDeString/AdaptadorDeString.h"
 //#include "OperacoesBanco/OperacoesBanco.h"
 #include <mysql/mysql.h>
 
@@ -75,6 +76,7 @@ struct Usuario
 	int tamanhoSenha;
 	int nivelDePermissao;
 	char *id;
+	Tokenizer *tokenizer;
 };
 
 typedef struct Usuario Usuario;
@@ -90,6 +92,7 @@ void init_Usuario(Usuario *usuario)
 	usuario->tamanhoSenha = 0;
 	usuario->id = NULL;
 	usuario->nivelDePermissao = _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
+	usuario->tokenizer = NULL;
 }
 
 bool new_Usuario(Usuario *usuario, const char *login, const char *senha)
@@ -175,7 +178,24 @@ bool new_Usuario(Usuario *usuario, const char *login, const char *senha)
 	{
 		usuario->nivelDePermissao = nivelDePermissao;
 	}
+	// usuario->tokenizer = NULL;
 
+	return true;
+}
+
+bool usuarioValido(Usuario *usuario, const char *localizacao)
+{
+	if (usuario == NULL)
+	{
+		geraLog(WARNING, "Usuario nulo detectado", localizacao);
+		return false;
+	}
+	if (usuario->login == NULL	)
+	{
+		geraLog(WARNING, "Usuario nao conectado detectado", localizacao);
+		return false;
+	}
+	geraLog(LOG, "Usuario validado", localizacao);
 	return true;
 }
 
@@ -355,6 +375,65 @@ char *usuario_obterId(Usuario *usuario)
 	return usuario->id;
 }
 
+Tokenizer *usuario_getTokenizer(Usuario *usuario)
+{
+	if (usuario == NULL)
+	{
+		geraLog(WARNING, "Usuario nulo detectado", "Usuario.h usuario_getTokenizer()");
+		return NULL;
+	}
+	if (usuario->tokenizer == NULL)
+	{
+		geraLog(WARNING, "Usuario nao possui tokenizer", "Usuario.h usuario_getTokenizer()");
+		return NULL;
+	}
+	return usuario->tokenizer;
+}
+
+char *usuario_getNextToken(Usuario *usuario)
+{
+	if (usuario == NULL)
+	{
+		geraLog(WARNING, "Usuario nulo detectado", "Usuario.h usuario_getNextToken()");
+		return NULL;
+	}
+	if (usuario->tokenizer == NULL)
+	{
+		geraLog(WARNING, "Usuario nao possui tokenizer", "Usuario.h usuario_getNextToken()");
+		return NULL;
+	}
+	return tokenizer_getNext(usuario->tokenizer);
+}
+
+void usuario_setTokenizer(Usuario *usuario, const char *comando)
+{
+	if (usuario == NULL)
+	{
+		geraLog(WARNING, "Usuario nulo detectado", "Usuario.h usuario_setTokenizer()");
+		return;
+	}
+	else
+	{
+		if (usuario->tokenizer != NULL)
+		{
+			delete_Tokenizer(usuario->tokenizer);
+			usuario->tokenizer = NULL;
+			
+		}
+		usuario->tokenizer = new_Tokenizer(comando, ' ');
+		if (usuario->tokenizer == NULL)
+		{
+			geraLog( ERRO, "Falha ao gerar tokenizer para usuario", "Usuario.h usuario_setTokenizer()");
+			return;
+		}
+		else
+		{
+			geraLog( LOG, "usuario agora possui Tokenizer", "Usuario.h usuario_setTokenizer()");
+			return;
+		}
+	}
+}
+
 void usuario_mostrarDados(Usuario *usuario)
 {
 	if(usuario == NULL)
@@ -501,8 +580,8 @@ int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario)/
 	if(usuario->id != NULL)
 	{
 		printf(" LOG: Foi encontrado um ID para cliente que satisfaça as seguintes comparações: em Usuario.h usuario_checarLogin()\n");
-		printf(" \t\tcliente.email = |%s|\n", email);
-		printf(" \t\tcliente.senha = |%s|\n", senha);
+		printf(" \t\tcliente.email = |%s|\n", (const char *)email);
+		printf(" \t\tcliente.senha = |%s|\n", (const char *)senha);
 		query = NULL;
 		return USUARIO_NIVEL_DE_PERMISSAO_NORMAL;
 	}
@@ -540,20 +619,8 @@ int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario)/
 }
 
 
-bool usuarioValido(Usuario *usuario, const char *localizacao)
-{
-	if (usuario == NULL)
-	{
-		printf(" Warning: Usuario nulo detectado em %s\n", localizacao);
-		return false;
-	}
-	if (usuario_obterLogin(usuario) == NULL	)
-	{
-		printf(" Warning: Usuario não conectado detectado em %s\n", localizacao);
-		return false;
-	}
-	printf(" LOG: Usuario validado em %s\n", localizacao);
-	return true;
-}
+
+
+
 
 #endif //__USUARIO_VISURA__

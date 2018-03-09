@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <mysql/mysql.h>
 #include "Comandos.h"
-#include "../AdaptadorDeString.h"
+#include "../AdaptadorDeString/AdaptadorDeString.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
 #include "../OperacoesBanco/OperacoesBanco-FuncoesGenericas.h"
 #include "../Usuario.h"
@@ -21,6 +21,7 @@ char *comandoLogin(Usuario *usuario)
 	// int contador = 0;
 
 	token = strtok(NULL, " ");
+	token = usuario_getNextToken(usuario);
 
 	if(token != NULL)
 	{
@@ -28,6 +29,7 @@ char *comandoLogin(Usuario *usuario)
 		{
 			printf(" LOG: cliente solicitando login (interpretadordecomandos.h) (comandoLogin)\n");
 			email = strtok(NULL, " ");
+			email = usuario_getNextToken(usuario);
 			if(email == NULL)
 			{
 				printf(" Warning: Email NULO (comandoLogin) (Comando-Login.h)\n");
@@ -40,6 +42,7 @@ char *comandoLogin(Usuario *usuario)
 			}
 			
 			senha = strtok(NULL, "\0");
+			senha = usuario_getNextToken(usuario);
 			if(senha == NULL)
 			{
 				printf(" Warning: Senha NULA (comandoLogin) (Comando-Login.h)\n");

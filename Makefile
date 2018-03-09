@@ -28,16 +28,17 @@ WARNINGS=-Wall
 #STANDARD=--std=c11
 
 
-all: $(FILA_OBJ) 
+all: AdaptadorDeString.o $(FILA_OBJ)
 	@echo "Compilando MAIN"
-	$(COMPILE) $(WARNINGS) $(USE_OTIMIZACAO) $(STANDARD) $(MAIN_FILE) $(DEFINE_OUTPUT_FILE_NAME) $(OUTPUT_FILE) $(LINKERS) $(FILA_OBJ)
+	$(COMPILE) $(WARNINGS) $(USE_OTIMIZACAO) $(STANDARD) $(MAIN_FILE) $(DEFINE_OUTPUT_FILE_NAME) $(OUTPUT_FILE) $(LINKERS) $^
 
 build: all
 	rm *.o
 
 debug: 
 	$(COMPILE) $(DEBUGGER) $(LIKE_A_LIBRARY) Fila/Fila.c
-	$(COMPILE) $(DEBUGGER) $(WARNINGS) $(STANDARD) $(MAIN_FILE) $(DEFINE_OUTPUT_FILE_NAME) $(OUTPUT_FILE) $(LINKERS) $(FILA_OBJ)
+	$(COMPILE) $(DEBUGGER) $(LIKE_A_LIBRARY) AdaptadorDeString/AdaptadorDeString.c
+	$(COMPILE) $(DEBUGGER) $(WARNINGS) $(STANDARD) $(MAIN_FILE) $(DEFINE_OUTPUT_FILE_NAME) $(OUTPUT_FILE) $(LINKERS) AdaptadorDeString.o $(FILA_OBJ)
 	valgrind --leak-check=full --track-origins=yes ./server
 
 run: all
@@ -45,6 +46,12 @@ run: all
 
 clean:
 	rm -f *.o
+
+AdaptadorDeString/AdaptadorDeString.c: AdaptadorDeString/AdaptadorDeString.h
+
+AdaptadorDeString.o: AdaptadorDeString/AdaptadorDeString.c
+	@echo "Compilando AdaptadorDeString"
+	$(COMPILE) $(LIKE_A_LIBRARY) $^ $(DEFINE_OUTPUT_FILE_NAME) $@
 
 $(FILA_OBJ): 
 	@echo "Compilando Fila"

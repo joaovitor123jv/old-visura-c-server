@@ -6,7 +6,7 @@
 #include<stdlib.h>
 #include<mysql/mysql.h>
 
-#include "../AdaptadorDeString.h"
+#include "../AdaptadorDeString/AdaptadorDeString.h"
 #include "../Usuario.h"
 
 #ifndef true
