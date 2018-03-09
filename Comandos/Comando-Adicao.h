@@ -18,7 +18,7 @@ bool addContratante(Usuario *usuario);//Retorna true se adicionado com sucesso
 
 bool addProduto(Usuario *usuario);//Retorna true se adicionado com sucesso
 
-bool addCidade();//Retorna true se adicionado com sucesso
+bool addCidade(Usuario *usuario);//Retorna true se adicionado com sucesso
 bool addLocalizacao(Usuario *usuario);//Retorna true se adicionado com sucesso
 
 bool addInformacoesAUsuario(Usuario *usuario);//Retorna true se adicionado com sucesso
@@ -72,6 +72,10 @@ int comandoAdicionar(Usuario *usuario)/* APP 2 */
 			printf(" Warning: Falha ao adicionar avaliação ao produto requisitado em Comando-Adicao.h comandoAdicionar()\n");
 			return RETORNO_ADICAO_RECUSADA;
 		}
+	}
+	else if(strcmp(token, TIPO_AVALIACAO) == 0)
+	{
+		return addInformacoesAUsuario(usuario);
 	}
 	else if(strcmp(token, TIPO_FEEDBACK) == 0)// APP 2 tr * idProduto textoDoFeedBack
 	{
@@ -178,7 +182,7 @@ int comandoAdicionar(Usuario *usuario)/* APP 2 */
 	}
 	else if(strcmp(token, TIPO_CIDADE) == 0)/* APP 2 { */
 	{
-		if(addCidade())
+		if(addCidade(usuario))
 		{
 			printf(" LOG: Cidade adicionada com sucesso (Comando-Adicao.h) comandoAdicionar()\n");
 			return RETORNO_OK;
