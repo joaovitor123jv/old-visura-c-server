@@ -129,7 +129,7 @@ bool new_Usuario(Usuario *usuario, const char *login, const char *senha)
 	usuario->tamanhoLogin = strlen(login);
 
 
-	usuario->login = strdup(login);
+	usuario->login = strdup(login);//Perdendo BYTE AQUI
 	if(usuario->login == NULL)
 	{
 		printf(" Warning: Falha ao duplicar login em Usuario.h new_Usuario()\n");

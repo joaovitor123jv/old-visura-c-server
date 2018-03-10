@@ -114,11 +114,15 @@ bool deletarProduto(Usuario *usuario, char *idProduto)
 	if (!executaQuery(query))
 	{
 		geraLog(WARNING, "Falha ao executar query", localizacao);
+		free(query);
+		query = NULL;
 		return false;
 	}
 	else
 	{
 		geraLog(LOG, "Produto deletado do banco de dados com sucesso", localizacao);
+		free(query);
+		query = NULL;
 		return true;
 	}
 }
