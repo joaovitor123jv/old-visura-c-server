@@ -523,6 +523,11 @@ bool reset_Usuario(Usuario *usuario)
 		usuario->senha = NULL;
 		usuario->tamanhoSenha = 0;
 	}
+	if (usuario->tokenizer != NULL)
+	{
+		delete_Tokenizer(usuario->tokenizer);
+		usuario->tokenizer = NULL;
+	}
 	usuario->nivelDePermissao = _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
 	return true;
 }
