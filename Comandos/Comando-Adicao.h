@@ -37,9 +37,7 @@ int comandoAdicionar(Usuario *usuario)/* APP 2 */
 	printf(" LOG: **************COMANDO_ADICAO*************** em Comando-Adicao.h comandoAdicionar()\n");
 	usuario_mostrarDados(usuario);
 
-	char *token;
-	// token = strtok(NULL, " ");
-	token = usuario_getNextToken(usuario);
+	char *token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
 		printf(" ERRO: Comando incorreto (Comando-Adicao.h) comandoAdicionar()\n");
@@ -89,7 +87,6 @@ int comandoAdicionar(Usuario *usuario)/* APP 2 */
 	else if(strcmp(token, TIPO_USUARIO) == 0)/* APP 2 1 Solicitação de criacao de usuario */
 	{
 		printf(" LOG: Solicitando adição de usuario ");
-		token = strtok(NULL, " ");
 		token = usuario_getNextToken(usuario);
 		if(token == NULL)
 		{
@@ -99,7 +96,6 @@ int comandoAdicionar(Usuario *usuario)/* APP 2 */
 		if(strcmp(token, TIPO_USUARIO_ANONIMO) == 0)/* APP 2 1 2 Solicitação de criação de usuário anônimo */
 		{
 			printf("------------>anônimo Comando-Adicao.h comandoAdicionar()\n");
-			token = strtok(NULL, " ");
 			token = usuario_getNextToken(usuario);
 			if(token == NULL)
 			{
@@ -233,8 +229,7 @@ int comandoAdicionar(Usuario *usuario)/* APP 2 */
 bool addUsuarioAnonimo(Usuario *usuario)// APP 2 1 2 asdkhasdjkas
 {
 	printf("\n*********************addUsuarioAnonimo()********************\n");
-	char *token = strtok(NULL, " ");
-	token = usuario_getNextToken(usuario);
+	char *token = usuario_getNextToken(usuario);
 	if(token == NULL)// APP 2 1 2 sakjdhsa 7
 	{
 		printf(" Warning: Comando \"Insuficiente\" Comando-Adicao.h addUsuarioAnonimo()\n");
@@ -248,7 +243,7 @@ bool addUsuarioAnonimo(Usuario *usuario)// APP 2 1 2 asdkhasdjkas
 	if(strcmp(token, TIPO_LOGIN) == 0)// APP 2 1 2 sakdhasjkdn 7
 	{
 		printf(" LOG: Cliente informando login Comando-Adicao.h addUsuarioAnonimo()\n");
-		token = strtok(NULL, " ");//APP 2 1 2 askjdhhh1127868c 7 logindousuario
+		//APP 2 1 2 askjdhhh1127868c 7 logindousuario
 		token = usuario_getNextToken(usuario);
 		if(token == NULL)// APP 2 1 2 askdjsakd 7 logindousuario
 		{
@@ -267,7 +262,7 @@ bool addUsuarioAnonimo(Usuario *usuario)// APP 2 1 2 asdkhasdjkas
 			printf(" Warning: Falha ao copiar de token para email Comando-Adicao.h addUsuarioAnonimo()\n");
 			return false;
 		}
-		token = strtok(NULL, " ");//APP 2 1 2 asdkjhaskd 7 loginDoUsuario 9
+		//APP 2 1 2 asdkjhaskd 7 loginDoUsuario 9
 		token = usuario_getNextToken(usuario);
 		if(token == NULL)
 		{
@@ -285,7 +280,7 @@ bool addUsuarioAnonimo(Usuario *usuario)// APP 2 1 2 asdkhasdjkas
 			email = NULL;
 			return false;
 		}
-		token = strtok(NULL, "\0");//APP 2 1 2 asdhasjdkh 7 logindousuario 9 senhaInformada
+		//APP 2 1 2 asdhasjdkh 7 logindousuario 9 senhaInformada
 		token = usuario_getNextToken(usuario);
 		if(token == NULL)
 		{
@@ -385,7 +380,7 @@ bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 	}
 
 	char *token = NULL;
-	token = strtok(NULL, " ");// APP 2 1 1 7            (7 == TIPO_LOGIN)
+	// APP 2 1 1 7            (7 == TIPO_LOGIN)
 	token = usuario_getNextToken(usuario);
 
 	if(token == NULL)
@@ -405,7 +400,7 @@ bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado
+	// APP 2 1 1 7 emailInformado
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
@@ -426,7 +421,7 @@ bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado 9    (9 == TIPO_SENHA)
+	// APP 2 1 1 7 emailInformado 9    (9 == TIPO_SENHA)
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
@@ -456,7 +451,7 @@ bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 	// AINDA NÃO IMPLEMENTADO DESSA FORMA → APP 2 1 1 7 emailInformado 9 senhaCriptografadaAqui     IT's SHOW TIME ! //TODO
 	// ALTERNATIVA EM USO → APP 2 1 1 7 emailInformado 9 senhaCruaInformada
 
-	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado 9 senhaCruaInformada
+	// APP 2 1 1 7 emailInformado 9 senhaCruaInformada
 	token = usuario_getNextToken(usuario);
 
 	if(token == NULL)
@@ -487,7 +482,7 @@ bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado 9 senhaCruaInformada sexoInformado]
+	// APP 2 1 1 7 emailInformado 9 senhaCruaInformada sexoInformado]
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
@@ -528,7 +523,7 @@ bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 
 	char *sexo = strdup(token);
 
-	token = strtok(NULL, " ");// APP 2 1 1 7 emailInformado 9 senhaCruaInformada sexoInformado dataNascimentoInformada
+	// APP 2 1 1 7 emailInformado 9 senhaCruaInformada sexoInformado dataNascimentoInformada
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
@@ -635,6 +630,7 @@ bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 //bool addVisualizacao(char *email, bool usuarioAnonimo)/* APP 2 2 idProduto quantidade*/
 bool addVisualizacao(Usuario *usuario)
 {
+	char *token;
 	if (usuario == NULL)
 	{
 		printf(" Warning: Usuario nulo detectado em Comando-Adicao.h addVisualizacao()\n");
@@ -654,7 +650,7 @@ bool addVisualizacao(Usuario *usuario)
 
 	printf("*************************COMANDO ADICAO ******************** em Comando-Adicao.h comandoAdicao()\n");
 
-	char* token = strtok(NULL, " ");// APP 2 2 idProduto
+	// APP 2 2 idProduto
 	token = usuario_getNextToken(usuario);
 
 	if(token == NULL)
@@ -686,7 +682,7 @@ bool addVisualizacao(Usuario *usuario)
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2 2 idProduto quantidade
+	// APP 2 2 idProduto quantidade
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)/* APP 2 2 idProduto quantidade */
 	{
@@ -734,7 +730,7 @@ bool addVisualizacao(Usuario *usuario)
 bool addCidade(Usuario *usuario)/* APP 2 { */
 {
 	char *token = NULL;
-	token = strtok(NULL, " ");/* APP 2 { nomeDoEstado */
+	/* APP 2 { nomeDoEstado */
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
@@ -764,7 +760,7 @@ bool addCidade(Usuario *usuario)/* APP 2 { */
 		printf(" Warning: Executada copia incorreta de token para nomeDoEstado em Comando-Adicao.h addCidade()\n");
 		return false;
 	}
-	token = strtok(NULL, " ");/* APP 2 { nomeDoEstado nomeDaCidade */
+	/* APP 2 { nomeDoEstado nomeDaCidade */
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
@@ -820,8 +816,7 @@ bool addCidade(Usuario *usuario)/* APP 2 { */
 
 bool addLocalizacao(Usuario *usuario)/* APP 2 l0 */
 {
-	char *token = strtok(NULL, " ");// APP 2 l0 idCidade
-	token = usuario_getNextToken(usuario);
+	char *token = usuario_getNextToken(usuario);// APP 2 l0 idCidade
 	if (token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Adicao.h addLocalizacao() eiuhbase\n");
@@ -838,7 +833,7 @@ bool addLocalizacao(Usuario *usuario)/* APP 2 l0 */
 		printf(" Warning: falha ao copiar de token para idCidade em Comando-Adicao.h addLocalizacao() qibuwey5\n");
 		return false;
 	}
-	token = strtok(NULL, " ");// APP 2 l0 idCidade cep
+	// APP 2 l0 idCidade cep
 	token = usuario_getNextToken(usuario);
 	if (token == NULL)
 	{
@@ -866,7 +861,7 @@ bool addLocalizacao(Usuario *usuario)/* APP 2 l0 */
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2 l0 idCidade cep bairro
+	// APP 2 l0 idCidade cep bairro
 	token = usuario_getNextToken(usuario);
 	if (token == NULL)// Informando idCidade e CEP
 	{
@@ -916,7 +911,7 @@ bool addLocalizacao(Usuario *usuario)/* APP 2 l0 */
 			return false;
 		}
 
-		token = strtok(NULL, " ");// APP 2 l0 idCidade cep bairro rua
+		// APP 2 l0 idCidade cep bairro rua
 		token = usuario_getNextToken(usuario);
 		if (token == NULL)// Informando idCidade, CEP e bairro
 		{
@@ -974,7 +969,7 @@ bool addLocalizacao(Usuario *usuario)/* APP 2 l0 */
 				return false;
 			}
 
-			token = strtok(NULL, " ");// APP 2 l0 idCidade cep bairro rua numero
+			// APP 2 l0 idCidade cep bairro rua numero
 			token = usuario_getNextToken(usuario);
 			if (token == NULL)// Se informar idCidade, cep, bairro e rua
 			{
@@ -1040,7 +1035,7 @@ bool addLocalizacao(Usuario *usuario)/* APP 2 l0 */
 					return false;
 				}
 
-				token = strtok(NULL, " ");// APP 2 l0 idCidade cep bairro rua numero complemento
+				// APP 2 l0 idCidade cep bairro rua numero complemento
 				token = usuario_getNextToken(usuario);
 				if (token == NULL)// Se informar idCidade, cep, bairro, rua e numero
 				{
@@ -1162,7 +1157,7 @@ bool addContratante(Usuario *usuario)// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cn
 {
 	printf("\t********************ADICAO DE CONTRATANTE***************************\n");
 	char *token;
-	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP
+	// APP 2 $C CHAVE_DE_SEGURANCA_PHP
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
@@ -1181,7 +1176,7 @@ bool addContratante(Usuario *usuario)// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cn
 	}
 	// A partir daqui o usuário está autorizado (chave aprovada e usuario conectado)
 
-	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome
+	// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
@@ -1202,7 +1197,7 @@ bool addContratante(Usuario *usuario)// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cn
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome cnpj
+	// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome cnpj
 	token = usuario_getNextToken(usuario);
 	if( token == NULL )
 	{
@@ -1223,7 +1218,7 @@ bool addContratante(Usuario *usuario)// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cn
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano
+	// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
@@ -1256,7 +1251,7 @@ bool addContratante(Usuario *usuario)// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cn
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email
+	// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
@@ -1298,7 +1293,7 @@ bool addContratante(Usuario *usuario)// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cn
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email senha
+	// APP 2 $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email senha
 	token = usuario_getNextToken(usuario);
 
 	if(token == NULL)
@@ -1343,7 +1338,7 @@ bool addContratante(Usuario *usuario)// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cn
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email senha idLocalizacao
+	// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email senha idLocalizacao
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
@@ -1395,7 +1390,7 @@ bool addContratante(Usuario *usuario)// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cn
 		return false;
 	}
 
-	strtok(NULL, " ");// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email senha idLocalizacao telefone
+	// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cnpj plano email senha idLocalizacao telefone
 	token = usuario_getNextToken(usuario);
 
 	if(token == NULL)
@@ -1599,7 +1594,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 
 	if (usuario_PermissaoContratante(usuario))
 	{
-		token = strtok(NULL, " ");// APP 2 + idProduto
+		// APP 2 + idProduto
 		token = usuario_getNextToken(usuario);
 		if (token == NULL)
 		{
@@ -1617,7 +1612,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 			printf(" ERRO: Falha ao duplicar string de idProduto em Comando-Adicao.h addProduto() asibb8r9asd\n");
 			return false;
 		}
-		token = strtok(NULL, " ");// APP 2 + idProduto duracao
+		// APP 2 + idProduto duracao
 		token = usuario_getNextToken(usuario);
 		if (token == NULL)
 		{
@@ -1644,7 +1639,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 			idProduto = NULL;
 			return false;
 		}
-		token = strtok(NULL, " ");// APP 2 + idProduto duracao nomeProduto
+		// APP 2 + idProduto duracao nomeProduto
 		token = usuario_getNextToken(usuario);
 		if (token == NULL)
 		{
@@ -1677,7 +1672,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 			duracao = NULL;
 			return false;
 		}
-		token = strtok(NULL, " ");// APP 2 + idProduto duracao nomeProduto tipoProduto
+		// APP 2 + idProduto duracao nomeProduto tipoProduto
 		token = usuario_getNextToken(usuario);
 		if (token == NULL)
 		{
@@ -1731,7 +1726,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 			tipoProduto = NULL;
 			return false;
 		}
-		token = strtok(NULL, " ");// APP 2 + idProduto duracao nomeProduto tipoProduto categoriaProduto
+		// APP 2 + idProduto duracao nomeProduto tipoProduto categoriaProduto
 		token = usuario_getNextToken(usuario);
 		if (token == NULL)// Se o cliente não informar categoria de produto
 		{
@@ -1806,7 +1801,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 				idContratante = NULL;
 				return false;
 			}
-			token = strtok(NULL, " ");
+			
 			token = usuario_getNextToken(usuario);
 			if (token == NULL)
 			{
@@ -1936,7 +1931,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 	else if (usuario_PermissaoRoot(usuario))	//TODO: Implementar suporte à adicao de categoria a produto quando logado como ROOT
 	{
 
-		token = strtok(NULL, " ");//APP 2 + CHAVE_DE_SEGURANCA_PHP
+		//APP 2 + CHAVE_DE_SEGURANCA_PHP
 		token = usuario_getNextToken(usuario);
 		if(token == NULL)
 		{
@@ -1957,7 +1952,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 			return false;
 		}
 
-		token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante
+		// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante
 		token = usuario_getNextToken(usuario);
 		if(token == NULL)
 		{
@@ -1980,7 +1975,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 			return false;
 		}
 
-		token = strtok(NULL, " ");// APP 2 * CHAVE_DE_SEGURANCA_PHP idContratante idProduto
+		// APP 2 * CHAVE_DE_SEGURANCA_PHP idContratante idProduto
 		token = usuario_getNextToken(usuario);
 
 		if(token == NULL)
@@ -2013,7 +2008,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 			return false;
 		}
 
-		token = strtok(NULL, " ");// APP 2 * CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao
+		// APP 2 * CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao
 		token = usuario_getNextToken(usuario);
 
 		if(token == NULL)
@@ -2053,7 +2048,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 		}
 
 
-		token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao nomeProduto
+		// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao nomeProduto
 		token = usuario_getNextToken(usuario);
 		if(token == NULL)
 		{
@@ -2097,7 +2092,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 			return false;
 		}
 
-		token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao nomeProduto tipoProduto
+		// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao nomeProduto tipoProduto
 		token = usuario_getNextToken(usuario);
 		if (token == NULL)
 		{
@@ -2145,7 +2140,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 			return false;
 		}
 
-		token = strtok(NULL, " ");// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao nomeProduto tipoProduto descricaoProduto
+		// APP 2 + CHAVE_DE_SEGURANCA_PHP idContratante idProduto duracao nomeProduto tipoProduto descricaoProduto
 		token = usuario_getNextToken(usuario);
 		if(token == NULL)
 		{
@@ -2297,8 +2292,7 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 		return false;
 	}
 
-	char *token = strtok(NULL, " ");//APP 2 & tipoInformacao
-	token = usuario_getNextToken(usuario);
+	char *token = usuario_getNextToken(usuario);//APP 2 & tipoInformacao
 
 	if (token == NULL)
 	{
@@ -2320,7 +2314,7 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 			printf(" LOG: Usuario conectado não é cliente comum, portanto, nao pode ter lista de desejos em Comando-Adicao.h addInformacoesAUsuario() ao8ry8sad\n");
 			return false;
 		}
-		token = strtok(NULL, " ");
+		
 		token = usuario_getNextToken(usuario);
 		if (token == NULL)
 		{
@@ -2338,7 +2332,7 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 	else if (strcmp(token, TIPO_NOME) == 0)// APP 2 & # nomeInformado	//Adiciona ou substitui o nome do usuario pelo nome informado
 	{
 		printf(" LOG: cliente solicitando adição de informação: NOME em Comando-Adicao.h addInformacoesAUsuario()\n");
-		token = strtok(NULL, " ");
+		
 		token = usuario_getNextToken(usuario);
 		if (token == NULL)
 		{
@@ -2380,7 +2374,7 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 	}
 	else if(strcmp(token, TIPO_PONTO) == 0)// APP 2 & Dj quantidadeDePontos		//Adiciona numero de pontos ao usuario
 	{
-		token = strtok(NULL, " ");
+		
 		token = usuario_getNextToken(usuario);
 		if(token == NULL)
 		{
@@ -2422,7 +2416,7 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 	else if(strcmp(token, TIPO_SOBRENOME) == 0)// APP 2 & Y sobrenomeInformado		//Adiciona ou substitui o sobrenome do usuario pelo sobrenome informado
 	{
 		printf(" LOG: cliente solicitando adição de informação: SOBRENOME em Comando-Adicao.h addInformacoesAUsuario()\n");
-		token = strtok(NULL, " ");
+		
 		token = usuario_getNextToken(usuario);
 		if (token == NULL)
 		{
@@ -2465,7 +2459,7 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 	else if(strcmp(token, TIPO_SEXO) == 0)// APP 2 & SQ sexoInformado		//Adiciona ou substitui o sexo do usuario pelo sexo informado
 	{
 		printf(" LOG: cliente solicitando adição de informação: SEXO em Comando-Adicao.h addInformacoesAUsuario()\n");
-		token = strtok(NULL, " ");
+		
 		token = usuario_getNextToken(usuario);
 		if (token == NULL)
 		{
@@ -2508,7 +2502,7 @@ bool addInformacoesAUsuario(Usuario *usuario)// DOING FOREVER
 	else if(strcmp(token, TIPO_DATA) == 0)// APP 2 & T dataInformada		//Adiciona ou substitui a data de nascimento do usuario pela data informada
 	{
 		printf(" LOG: Cliente solicitando adição de data de nascimento a usuario em Comando-Adicao.h addInformacoesAUsuario()\n");
-		token = strtok(NULL, " ");
+		
 		token = usuario_getNextToken(usuario);
 		if(token == NULL)
 		{
@@ -2567,8 +2561,7 @@ bool addAvaliacaoAProduto(Usuario *usuario)//DONE       APP 2 kW * idProduto ava
 		printf(" Warning: Usuario não conectado detectado em Comando-Adicao.h addAvaliacaoAProduto()\n");
 		return false;
 	}
-	char *token = strtok(NULL, " ");// APP 2 kW idProduto
-	token = usuario_getNextToken(usuario);
+	char *token = usuario_getNextToken(usuario);// APP 2 kW idProduto
 
 	if(token == NULL)
 	{
@@ -2587,7 +2580,7 @@ bool addAvaliacaoAProduto(Usuario *usuario)//DONE       APP 2 kW * idProduto ava
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2 kW idProduto avaliacaoDoUsuario
+	// APP 2 kW idProduto avaliacaoDoUsuario
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
@@ -2665,8 +2658,7 @@ bool addFeedbackAProduto(Usuario *usuario)// APP 2 tr * idProduto tituloDoFeedba
 		printf(" Warning: Usuario nao conectado detectado em Comando-Adicao.h addFeedbackAProduto()\n");
 		return false;
 	}
-	char *token = strtok(NULL, " ");// APP 2 tr idProduto
-	token = usuario_getNextToken(usuario);
+	char *token = usuario_getNextToken(usuario);// APP 2 tr idProduto
 
 	if(token == NULL)
 	{
@@ -2685,7 +2677,7 @@ bool addFeedbackAProduto(Usuario *usuario)// APP 2 tr * idProduto tituloDoFeedba
 		return false;
 	}
 
-	token = strtok(NULL, " ");// APP 2 tr idProduto tituloFeedBack
+	// APP 2 tr idProduto tituloFeedBack
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
@@ -2712,7 +2704,7 @@ bool addFeedbackAProduto(Usuario *usuario)// APP 2 tr * idProduto tituloDoFeedba
 		//liberar(idProduto);
 		return false;
 	}
-	token = strtok(NULL, " ");// APP 2 tr * idproduto tituloFeedBack conteudoFeedback
+	// APP 2 tr * idproduto tituloFeedBack conteudoFeedback
 	token = usuario_getNextToken(usuario);
 	if (token == NULL)
 	{

@@ -166,12 +166,12 @@ bool new_Usuario(Usuario *usuario, const char *login, const char *senha)
 			{
 				if(usuario->login[contador] == '@')
 				{
-					usuario->nivelDePermissao = USUARIO_NIVEL_DE_PERMISSAO_ANONIMO;
+					usuario->nivelDePermissao = USUARIO_NIVEL_DE_PERMISSAO_NORMAL;
 					return true;
 				}
 			}
 
-			usuario->nivelDePermissao = USUARIO_NIVEL_DE_PERMISSAO_NORMAL;
+			usuario->nivelDePermissao = USUARIO_NIVEL_DE_PERMISSAO_ANONIMO;
 		}
 	}
 	else 
@@ -493,6 +493,11 @@ bool delete_Usuario(Usuario *usuario)
 		free(usuario->id);
 		usuario->id = NULL;
 	}
+	if (usuario->tokenizer != NULL)
+	{
+		delete_Tokenizer(usuario->tokenizer);
+		usuario->tokenizer = NULL;
+	}
 	// free(usuario);
 	// usuario = NULL;
 	return true;
@@ -617,7 +622,6 @@ int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario)/
 		}
 	}
 }
-
 
 
 

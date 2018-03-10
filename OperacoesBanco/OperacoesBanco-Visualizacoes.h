@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../Comandos/Comandos.h"
+#include "../Usuario.h"
 #include <mysql/mysql.h>
 
 
@@ -41,7 +42,7 @@ int checaExistenciaDeVisualizacaoDeProdutoComPessoa(char *idproduto, Usuario *us
     // int tamanho = sizeof(char) * ( strlen(idproduto) + strlen(email) + 183 + 1);
     int tamanho = sizeof(char) * (194 + usuario_obterTamanhoLogin(usuario));
 	
-	query = malloc(tamanho);
+	query = (char *)malloc(tamanho);
 	if(query == NULL)
 	{
 		printf(" ERRO: não foi possível alocar memória para a query (OperacoesBanco-Visualizacoes.h) (checaExistenciaDeVisualizacaoDeProdutoComPessoa())\n");
@@ -226,7 +227,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
         //int tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(quantidade) + 99 + 1);
         int tamanhoDaQuery = sizeof(char) * (strlen(quantidade) + 110);
 		
-		query = malloc(tamanhoDaQuery);
+		query = (char *)malloc(tamanhoDaQuery);
 		if(query == NULL)
 		{
 			printf(" ERRO: não foi possível alocar memória para a query (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
@@ -347,7 +348,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
                         printf(" ERRO: não foi possível alocar memória para a query(6) (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
                         return false;
                     }
-                    
+                    printf(" LOG: Inserindo visualização anônma em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
                     if(mysql_query(conexao, query))//Se ocorrer algum erro
                     {
                         printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
@@ -375,6 +376,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
                     }
                     free(query);
                     query = NULL;
+                    printf(" LOG: Dados adicionados com sucesso em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
                     return true;
                     break;
 				case RETORNO_ERRO_DE_PARAMETRO:

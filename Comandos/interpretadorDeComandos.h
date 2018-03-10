@@ -57,7 +57,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 		printf(" ASKHDASGHDASGHDJKASGJKGFJHASGDHJKASGDHJKASGBJKAGDHJKAGDHJASGDHJASGDHJKDAS\n");
 	}
 
-	// nomeAplicacao = strtok(comando, " ");/* Separa a primeira palavra */
+	/* Separa a primeira palavra */
 
 	nomeAplicacao = usuario_getNextToken(usuario);
 
@@ -132,13 +132,12 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 	}
 
 
-	// nomeAplicacao = strtok(NULL, " ");
 	nomeAplicacao = usuario_getNextToken(usuario);
 
 //	if(strlen(nomeAplicacao) > TAMANHO_COMANDO)/* checa se há mais de uma letra na segunda "palavra" */
 	if( stringMaior(nomeAplicacao, TAMANHO_COMANDO) )
 	{
-		interpretando = false;
+		// interpretando = false;
 		printf(" ERRO: Aplicação contem informação excessiva (interpretadorDeComandos.h) interpretaComando()\n");
 		*resultado = ERRO;
 		return NULL;
@@ -148,7 +147,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 
 	if(tipoComando>9 || tipoComando < 0)/* Define " Alcance dos comandos " (de 0 a 9) */
 	{
-		interpretando = false;
+		// interpretando = false;
 		printf(" Warning: TIPO DE COMANDO NÂO GERENCIADO: %d (interpretadorDeComandos.h) interpretaComando()\n", tipoComando);
 		// return ERRO;
 		*resultado = ERRO_COMANDO_INCORRETO;
@@ -164,14 +163,14 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 			if( retorno == RETORNO_OK )
 			{
 				printf(" LOG: comando adicionar deu certo interpretadorDeComandos.h (interpretaComando())\n");
-				interpretando = false;
+				// interpretando = false;
 				*resultado = OK;
 				return NULL;
 			}
 			else
 			{
 				printf(" LOG: comando adicionar NÃO deu certo interpretadorDeComandos.h (interpretaComando())\n");
-				interpretando = false;
+				// interpretando = false;
 				// *resultado = REQUISITANDO_ADICAO;
 				*resultado = retorno;
 				return NULL;
@@ -180,7 +179,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 
 		case COMANDO_ATUALIZAR:/* COMANDO_ATUALIZAR = 3 */
 			printf(" LOG: Requisitando \"COMANDO_ATUALIZAR\" em interpretadorDeComandos.h interpretaComando()\n");
-			interpretando = false;
+			// interpretando = false;
 
 			*resultado = REQUISITANDO_ATUALIZACAO;
 			return NULL;
@@ -196,12 +195,12 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 			printf(" LOG: Requisitando \"COMANDO_REMOVER\" em interpretadorDeComandos.h interpretaComando()\n");
 			if (comandoRemover(usuario))
 			{
-				interpretando = false;
+				// interpretando = false;
 				*resultado = REQUISITANDO_REMOCAO;	
 			}
 			else
 			{
-				interpretando = false;
+				// interpretando = false;
 				*resultado = OK;
 			}
 			return NULL;
@@ -209,7 +208,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 
 		case ERRO:
 			printf("Erro na execução do comando\n");
-			interpretando = false;
+			// interpretando = false;
 			*resultado = ERRO_DE_EXECUCAO;
 			return NULL;
 			break;
@@ -222,13 +221,13 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 
 		default:
 			printf(" Requisição não manipulada, (interpretadorDeComandos.h)\n");
-			interpretando = false;
+			// interpretando = false;
 			*resultado = ERRO;
 			return NULL;
 			break;
 	}
 
-	interpretando = false;
+	// interpretando = false;
 	printf(" Exceção não manipulada (interpretadorDeComandos.h)\n");
 	*resultado = ERRO;
 	return NULL;

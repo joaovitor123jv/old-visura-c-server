@@ -42,7 +42,7 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	char* token = NULL;
-	token = strtok(NULL, " ");
+	
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
@@ -123,7 +123,6 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 		// IMPORTANTE: Leia isso como "Desejo obter ALGO relacionado a visualizações"
 		// 		A pergunta que surge com isso: "O que ?"
 
-		token = strtok(NULL, " ");
 		token = usuario_getNextToken(usuario);
 		if(token == NULL)
 		{
@@ -133,7 +132,6 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 		if (strcmp(token, TIPO_QUANTIDADE) == 0)// APP 4 2 @
 		{
 			// DESEJA obter a QUANTIDADE de algo relacionado a visualizações
-			token = strtok(NULL, " ");
 			token = usuario_getNextToken(usuario);
 			if(token == NULL)
 			{
@@ -178,7 +176,7 @@ char *obterIdCidade(Usuario *usuario)
 	char *nomeCidade = NULL;
 	char *nomeEstado;
 
-	token = strtok(NULL, " ");// APP 4 $ nomeCidadeInformado
+	// APP 4 $ nomeCidadeInformado
 	token = usuario_getNextToken(usuario);
 	
 	if(token == NULL)
@@ -201,7 +199,7 @@ char *obterIdCidade(Usuario *usuario)
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	
-	token = strtok(NULL, " ");// APP 4 $ nomeCidadeInformado nomeEstadoInformado
+	// APP 4 $ nomeCidadeInformado nomeEstadoInformado
 	token = usuario_getNextToken(usuario);
 
 	if(token == NULL)
@@ -246,8 +244,7 @@ char *obterIdCidade(Usuario *usuario)
 
 char *obterIdContratante(Usuario *usuario)// APP 4 ; cnpj
 {
-	char *token = strtok(NULL, " "); // cnpj
-	token = usuario_getNextToken(usuario);
+	char *token = usuario_getNextToken(usuario); // cnpj
 
 	if( token == NULL )
 	{
@@ -288,8 +285,7 @@ char *obterIdContratante(Usuario *usuario)// APP 4 ; cnpj
 
 char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua numero complemento//TODO Teoricamente pronto
 {
-	char *token = strtok(NULL, " ");// APP 4 i0 idCidade
-	token = usuario_getNextToken(usuario);
+	char *token = usuario_getNextToken(usuario);// APP 4 i0 idCidade
 	if( token == NULL )
 	{
 		printf(" Warning: Comando insuficiente em Comando-Obter.h obterIdLocalizacao() qiuwbv89r4sf\n");
@@ -309,7 +305,7 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
-	token = strtok(NULL, " ");// AOO 4 i0 idCidade cep
+	// AOO 4 i0 idCidade cep
 	token = usuario_getNextToken(usuario);
 	if( token == NULL )
 	{
@@ -330,7 +326,7 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
-	token = strtok(NULL, " ");// APP 4 i0 idCidade cep bairro
+	// APP 4 i0 idCidade cep bairro
 	token = usuario_getNextToken(usuario);
 	if( token == NULL )// Se o cliente informar somente idCidade e cep
 	{
@@ -366,7 +362,7 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
-	token = strtok(NULL, " ");// APP 4 i0 idCidade cep bairro rua
+	// APP 4 i0 idCidade cep bairro rua
 	token = usuario_getNextToken(usuario);
 
 	if( token == NULL )
@@ -408,7 +404,7 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
-	token = strtok(NULL, " ");// APP 4 i0 idCidade cep bairro rua numero
+	// APP 4 i0 idCidade cep bairro rua numero
 	token = usuario_getNextToken(usuario);
 	if( token == NULL )
 	{
@@ -454,7 +450,7 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	 }
 
-	token = strtok(NULL, " ");// APP 4 i0 idCidade cep bairro rua numero complemento
+	// APP 4 i0 idCidade cep bairro rua numero complemento
 	token = usuario_getNextToken(usuario);
 	if( token == NULL )
 	{
@@ -539,7 +535,6 @@ char *obterTop10NovosProdutos(Usuario *usuario)// APP 4 J
 	}
 
 	char *token;
-	token = strtok(NULL, " ");
 	token = usuario_getNextToken(usuario);
 	if (token == NULL)
 	{
@@ -608,14 +603,13 @@ char *obterDescricaoProduto(Usuario *usuario)// APP 4 Q
 	*/
 	char *token;
 
-	token = strtok(NULL, " ");// APP 4 Q idProdutoInformado
+	// APP 4 Q idProdutoInformado
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
 		printf(" Warning: comando insuficiente em Comando-Obter.h obterDescricaoProduto() 4f51q\n");
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
-//	else if(strlen(token) != TAMANHO_ID_PRODUTO)
 	else if( !stringTamanhoIgual(token, TAMANHO_ID_PRODUTO) )
 	{
 		printf(" Warning: Comando de tamanho incorreto identificado em Comando-Obter.h obterDescricaoProduto()  44h5w11c\n");
@@ -646,7 +640,7 @@ char *obterNomeProduto(Usuario *usuario)
 	char *token  = NULL;
 	printf(" LOG: Iniciando interpretação em obterNomeProduto() Comando-Obter.h\n");
 
-	token = strtok(NULL, " ");// APP 4 1. idProdutoInformado
+	// APP 4 1. idProdutoInformado
 	token = usuario_getNextToken(usuario);
 
 	if(token == NULL)
@@ -679,8 +673,7 @@ char *obterNomeProduto(Usuario *usuario)
 /* Obtema avaliação do produto e retorna da seguinte forma:  "numeroDeAvaliacoesPositivas NumeroDeAvaliacoesNegativas" */
 char *obterAvaliacaoProduto(Usuario *usuario)// APP 4 kW idProduto                       (Retorna NULL quando ocorre algum erro)
 {
-	char *token = strtok(NULL, " ");// APP 4 kW idProduto
-	token = usuario_getNextToken(usuario);
+	char *token = usuario_getNextToken(usuario);// APP 4 kW idProduto
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Obter.h obterAvaliacaoProduto() sadkjhjvrsad\n");
@@ -756,8 +749,7 @@ char *obterInformacoesProduto(Usuario *usuario)
 		printf(" Warning: usuario nao conectado identificado em Comando-Obter.h obterInformacoesProduto() saviusad\n");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
-	char *idProduto = strtok(NULL, " ");
-	idProduto = usuario_getNextToken(usuario);
+	char *idProduto = usuario_getNextToken(usuario);
 	if (idProduto == NULL)
 	{
 		printf(" Warning: Comando insuficiente detectado em Comando-Obter.h obterInformacoesProduto() asdsaehtusdr\n");
@@ -832,7 +824,6 @@ char *obter10ProdutosDaEmpresa(Usuario *usuario)//APP 4 ## 33
 	// }
 
 char *token;
-token = strtok(NULL, " ");
 token = usuario_getNextToken(usuario);
 		if( token == NULL )
 		{
@@ -841,7 +832,7 @@ token = usuario_getNextToken(usuario);
 		char *pagina = strdup(token);
 		if (usuario_PermissaoCliente(usuario) || usuario_PermissaoAnonimo(usuario))
 		{
-			token = strtok(NULL, " ");
+			
 			token = usuario_getNextToken(usuario);
 			if (token == NULL)
 			{
@@ -881,8 +872,7 @@ char *obterInformacaoPaginada(Usuario *usuario)// APP 4 ##
 	{
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
-	char *token = strtok(NULL, " ");
-	token = usuario_getNextToken(usuario);
+	char * token = usuario_getNextToken(usuario);
 	if( token == NULL )
 	{
 		printf(" ERRO: Comando insuficiente detectado em Comando-Obter.h obterInformacaoPaginada() savrn90gt\n");
@@ -913,8 +903,8 @@ char *obterIdDeEmpresaDadoProduto(Usuario *usuario)
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	printf(" asjkdhskjahdjksahdkjashdkjashkjdashjkdsahjkdhasjkdhsakjdhsajkdk\n");
-	char *token = strtok(NULL, " ");//APP 4 EP idProduto
-	token = usuario_getNextToken(usuario);
+	char *token = usuario_getNextToken(usuario);//APP 4 EP idProduto
+
 	if (token == NULL)
 	{
 		printf(" Warning: Comando insuficiente detectado em Comando-Obter.h obterIdDeEmpresaDadoProduto() daskjbte\n");

@@ -2000,9 +2000,11 @@ bool addAvaliacaoAProdutoAoBanco(Usuario *usuario, char *idProduto, char *avalia
 	}
 
 	int checou = checaExistenciaDeVisualizacaoDeProdutoComPessoa(idProduto, usuario);
+	bool visualizacaoJaExistia = false;
 	if(checou == RETORNO_OK)
 	{
 		printf(" LOG: Existe visualização de usuario cadastrada em OperacoesBanco.h addAvaliacaoAProdutoAoBanco()\n");
+		visualizacaoJaExistia = true;
 	}
 	else if(checou == RETORNO_NULO)
 	{
@@ -2028,6 +2030,8 @@ bool addAvaliacaoAProdutoAoBanco(Usuario *usuario, char *idProduto, char *avalia
 	int tamanho = usuario_obterTamanhoLogin(usuario) + 162;//otimizado
 	char *query = (char *)malloc(sizeof(char) * tamanho);
 
+	
+
 	if (query == NULL)
 	{
 		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() q648484eas\n");
@@ -2052,72 +2056,80 @@ bool addAvaliacaoAProdutoAoBanco(Usuario *usuario, char *idProduto, char *avalia
 		free(query);
 		query = NULL;
 
-		if(avaliacao[0] == '1')
+
+		if (visualizacaoJaExistia)
 		{
-			//tamanho = 84+TAMANHO_ID_PRODUTO+1;
-			tamanho = 95;//otimizado
-			query = (char *)malloc(sizeof(char) * tamanho);
-			if(query == NULL)
-			{
-				printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() akhkvejjd81779c\n");
-				return false;
-			}
-			snprintf(query, tamanho, "UPDATE produto P SET P.avaliacaoPositiva=P.avaliacaoPositiva+1 WHERE P.idproduto=\'%s\';", idProduto);
-			if (query == NULL)
-			{
-				printf(" Warning: Falha ao formatar query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() qbhbr25300sdf44*-asd\n");
-				return false;
-			}
-			if(!executaQuery(query))
-			{
-				printf(" Warning: Foram encontrados erros na execucao da query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() a646e88bra\n");
-				free(query);
-				query = NULL;
-				return false;
-			}
-			printf(" LOG: Avaliacao adicionada com sucesso ao banco de dados em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() chkah389s9827\n");
-			free(query);
-			query = NULL;
-			return true;
-		}
-		else if(avaliacao[0] == '0')
-		{
-			//tamanho = 84+TAMANHO_ID_PRODUTO+1;
-			tamanho = 95;//otimizado
-			query = (char *)malloc(sizeof(char) * tamanho);
-			if(query == NULL)
-			{
-				printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() akhkvejjd81779c\n");
-				return false;
-			}
-			snprintf(query, tamanho, "UPDATE produto P SET P.avaliacaoPositiva=P.avaliacaoNegativa+1 WHERE P.idproduto=\'%s\';", idProduto);
-			if (query == NULL)
-			{
-				printf(" Warning: Falha ao formatar query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() qbhbr25300sdf44*-asd\n");
-				return false;
-			}
-			if(!executaQuery(query))
-			{
-				printf(" Warning: Foram encontrados erros na execucao da query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() a646e88bra\n");
-				free(query);
-				query = NULL;
-				return false;
-			}
-			printf(" LOG: Avaliacao adicionada com sucesso ao banco de dados em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() chkah389s9827\n");
-			free(query);
-			query = NULL;
-			return true;
-		}
-		else if(avaliacao[0] == '2')
-		{
-			return true;
+			return true;//Proíbe usuário de alterar a visualização (por enquanto)
 		}
 		else
 		{
-			printf(" ERRO: Lógica anterior à inserção FALHOU, DADOS NÃO CONFIÁVEIS DETECTADOS em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() ashdjksarb\n");
-			free(query);
-			query = NULL;
-			return false;
+			if(avaliacao[0] == '1')
+			{
+				//tamanho = 84+TAMANHO_ID_PRODUTO+1;
+				tamanho = 95;//otimizado
+				query = (char *)malloc(sizeof(char) * tamanho);
+				if(query == NULL)
+				{
+					printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() akhkvejjd81779c\n");
+					return false;
+				}
+				snprintf(query, tamanho, "UPDATE produto P SET P.avaliacaoPositiva=P.avaliacaoPositiva+1  WHERE P.idproduto=\'%s\';", idProduto);
+				if (query == NULL)
+				{
+					printf(" Warning: Falha ao formatar query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() qbhbr25300sdf44*-asd\n");
+					return false;
+				}
+				if(!executaQuery(query))
+				{
+					printf(" Warning: Foram encontrados erros na execucao da query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() a646e88bra\n");
+					free(query);
+					query = NULL;
+					return false;
+				}
+				printf(" LOG: Avaliacao adicionada com sucesso ao banco de dados em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() chkah389s9827\n");
+				free(query);
+				query = NULL;
+				return true;
+			}
+			else if(avaliacao[0] == '0')
+			{
+				//tamanho = 84+TAMANHO_ID_PRODUTO+1;
+				tamanho = 95;//otimizado
+				query = (char *)malloc(sizeof(char) * tamanho);
+				if(query == NULL)
+				{
+					printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() akhkvejjd81779c\n");
+					return false;
+				}
+				snprintf(query, tamanho, "UPDATE produto P SET P.avaliacaoPositiva=P.avaliacaoNegativa+1 WHERE P.idproduto=\'%s\';", idProduto);
+				if (query == NULL)
+				{
+					printf(" Warning: Falha ao formatar query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() qbhbr25300sdf44*-asd\n");
+					return false;
+				}
+				if(!executaQuery(query))
+				{
+					printf(" Warning: Foram encontrados erros na execucao da query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() a646e88bra\n");
+					free(query);
+					query = NULL;
+					return false;
+				}
+				printf(" LOG: Avaliacao adicionada com sucesso ao banco de dados em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() chkah389s9827\n");
+				free(query);
+				query = NULL;
+				return true;
+			}
+			else if(avaliacao[0] == '2')
+			{
+				return true;
+			}
+			else
+			{
+				printf(" ERRO: Lógica anterior à inserção FALHOU, DADOS NÃO CONFIÁVEIS DETECTADOS em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() ashdjksarb\n");
+				free(query);
+				query = NULL;
+				return false;
+			}
 		}
 	}
 
@@ -2176,7 +2188,15 @@ bool addFeedBackDeProdutoAoBanco(Usuario *usuario, char *idProduto, char *titulo
 		if(checaExistenciaDeVisualizacaoDeProdutoComPessoa(idProduto, usuario) != RETORNO_OK)
 		{
 			printf(" Warning: usuario cadastrado não possui nenhuma visualização desse produto registrada em OperacoesBanco.h addFeedBackDeProdutoAoBanco() askjdhjvbdsd5\n");
-			return false;
+			if(addVisualizacoesAoBanco(idProduto, strdup("1"), usuario))
+			{
+				geraLog(LOG, "Visualização adicionada a usuario", "OperacoesBanco.h addFeedBackDeProdutoAoBanco()");
+			}
+			else
+			{
+				geraLog(ERRO, "Falha ao adicionar visualização ao usuario", "OperacoesBanco.h addAvaliacaoAProdutoAoBanco()");
+				return false;
+			}
 		}
 
 		// int tamanho = 93 + strlen(email), TAMANHO_ID_PRODUTO + 1;
@@ -3785,15 +3805,15 @@ char *obterInformacoesBasicasDeProdutoDoBanco(Usuario *usuario, char *idProduto)
 		return RETORNO_ERRO_NAO_AUTORIZADO_STR_DINAMICA;
 	}
 
-	//int tamanho = 130+10+1;
-	int tamanho = 141;
+	//int tamanho = 146+10+1;
+	int tamanho = 157;
 	char *query = (char *)malloc(sizeof(char) * tamanho);
 	if (query == NULL)
 	{
 		printf("\n");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
-	snprintf(query, tamanho, "SELECT nomeProduto,descricao,avaliacaoPositiva,avaliacaoNegativa,visualizacoes,tipo,categoria FROM produto P WHERE P.idproduto=\'%s\';", idProduto);
+	snprintf(query, tamanho, "SELECT nomeProduto,descricao,avaliacaoPositiva,avaliacaoNegativa,visualizacoes+visualizacaoanom,tipo,categoria FROM produto P WHERE P.idproduto=\'%s\';", idProduto);
 	if (query == NULL)
 	{
 		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterInformacoesBasicasDeProdutoDoBanco() aporkasd09bv\n");

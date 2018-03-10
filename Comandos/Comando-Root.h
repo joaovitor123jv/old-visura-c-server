@@ -14,7 +14,8 @@ char *comandoRoot(Usuario *usuario)
 	}
 	
 	char *token;
-	token = strtok(NULL, " ");
+	
+	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
 		return strdup("ERRO: Comando incorreto, esse incidente será registrado.\n");
@@ -22,7 +23,8 @@ char *comandoRoot(Usuario *usuario)
 	else if( strcmp(token, "computador") == 0 )
 	{
 		printf(" COMANDO COMPUTADOR identificado\n");
-		token = strtok(NULL, "\0");
+		
+		token = usuario_getNextToken(usuario);
 		if(token == NULL)
 		{
 			return strdup("ERRO: Comando incorreto, esse incidente será registrado (2)\n");
@@ -46,14 +48,14 @@ char *comandoRoot(Usuario *usuario)
 	}
 	else if( strcmp(token, "resetar") == 0 )
 	{
-		token = strtok(NULL, " ");
+		token = usuario_getNextToken(usuario);
 		if( token == NULL )
 		{
 			return strdup("ERRO: ESPECIFIQUE O QUE DEVE SER RESETADO");
 		}
 		else if( strcmp(token, "banco") == 0 )
 		{
- 			if( !executaQuery("DROP DATABASE teste;" ) )
+ 			if( !executaQuery("DROP DATABASE teste;") )
 			{
 				return strdup("ERRO: Falha ao resetar o banco de dados, não foi possível executar \"DROP DATABASE\".");
 			}

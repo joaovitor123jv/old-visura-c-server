@@ -3,6 +3,7 @@
 #include<string.h>
 #include<unistd.h>
 #include "Comandos.h"
+#include "../Usuario.h"
 
 #ifndef bool
 #define bool char
@@ -35,7 +36,7 @@ bool comandoRemover(Usuario *usuario)/* APP 5 algumaCoisa */
 		return false;
 	}
 	printf(" LOG: Solicitando remocao de algo em Comando-Remover.h comandoRemover()\n");
-	char *token = strtok(NULL, " ");
+	char *token = usuario_getNextToken(usuario);
 	if( token == NULL )
 	{
 		printf(" Warning: Comando insuficiente em Comando-Remover.h comandoRemover()\n");

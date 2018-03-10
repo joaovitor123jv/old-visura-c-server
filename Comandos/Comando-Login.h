@@ -20,7 +20,6 @@ char *comandoLogin(Usuario *usuario)
 	char *token;
 	// int contador = 0;
 
-	token = strtok(NULL, " ");
 	token = usuario_getNextToken(usuario);
 
 	if(token != NULL)
@@ -28,7 +27,6 @@ char *comandoLogin(Usuario *usuario)
 		if( token[0] == '1' && token[1] == '\0' )// Otimização
 		{
 			printf(" LOG: cliente solicitando login (interpretadordecomandos.h) (comandoLogin)\n");
-			email = strtok(NULL, " ");
 			email = usuario_getNextToken(usuario);
 			if(email == NULL)
 			{
@@ -41,7 +39,6 @@ char *comandoLogin(Usuario *usuario)
 				return NULL;
 			}
 			
-			senha = strtok(NULL, "\0");
 			senha = usuario_getNextToken(usuario);
 			if(senha == NULL)
 			{
