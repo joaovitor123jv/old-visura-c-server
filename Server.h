@@ -205,10 +205,6 @@ void *Servidor(void *cliente)
 		if( !mensagemDeEscapeDetectada(bufferCliente) )
 		{
 			printf(" LOG: Mensagem recebida, Aguardando liberacao para interpretacao\n");
-			// while(interpretando)
-			// {
-				// pthread_yield();
-			// }//Aguarda, liberando cpu para outros trabalhos (senão fica fazendo coisa a toa até ser interrompida pelo SO)
 
 			printf("\n\n \t*********************Inicio de Interpretação *************\n");
 
@@ -230,7 +226,6 @@ void *Servidor(void *cliente)
 				case REQUISITANDO_LOGIN:/* Cliente NÃO AUTORIZADO OK */
 					printf(" Cliente Requisitou Login, mas Não foi atendido (Server Thread)\n");
 					enviaMensagemParaCliente("ERRO: Não autorizado, desconectando\0", cliente);
-					// interpretando = false;
 					sairDaThread();
 					break;
 
@@ -240,21 +235,18 @@ void *Servidor(void *cliente)
 				// 	sairDaThread(false);
 				// 	break;
 				case RETORNO_ERRO_INTERNO:/* se ocorrer algum erro de memória, por exemplo */
-					// interpretando = false;
 					printf(" Warning: Erro interno identificado em Server.h Servidor() qt658f7tgf34\n");
 					enviaMensagemParaCliente(RETORNO_ERRO_INTERNO_STR, cliente);
 					sairDaThread();
 					break;
 				
 				case RETORNO_COMANDO_INCORRETO:/* Se algum parâmetro estiver errado */
-					// interpretando = false;
 					printf(" Warning: Operação falhou, parâmetros incorretos detectados. em Server.h Servidor() 20ty9uwe\n");
 					enviaMensagemParaCliente( RETORNO_COMANDO_INCORRETO_STR , cliente);
 					sairDaThread();
 					break;
 				
 				case RETORNO_NAO_AUTORIZADO:
-					// interpretando = false;				
 					printf(" Warning: Não autorizado a executar essa operação em Server.h Servidor() q0r59hnthrueqgf\n");
 					enviaMensagemParaCliente(RETORNO_ERRO_NAO_AUTORIZADO_STR, cliente);
 					sairDaThread();
@@ -274,7 +266,6 @@ void *Servidor(void *cliente)
 
 				case REQUISITANDO_OBTENCAO:
 					mensagem = comandoObter(&usuario);
-					// interpretando = false;
 					enviaMensagemParaCliente(mensagem, cliente);
 					free(mensagem);
 					mensagem = NULL;
@@ -298,7 +289,6 @@ void *Servidor(void *cliente)
 					if( usuario_PermissaoRoot(&usuario) )
 					{
 						 mensagem = comandoRoot(&usuario);
-						//  interpretando = false;// NÃO REMOVER !!!
 						 enviaMensagemParaCliente(mensagem, cliente);
 						 free(mensagem);
 						 mensagem = NULL;
@@ -306,7 +296,6 @@ void *Servidor(void *cliente)
 					else
 					{
 						enviaMensagemParaCliente("ERRO: Você nn pode fazer isso, muahahahaha \\o/\0", cliente);
-						// interpretando = false;
 						sairDaThread();
 					}
 					break;

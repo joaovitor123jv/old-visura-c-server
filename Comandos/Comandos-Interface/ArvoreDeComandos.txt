@@ -270,11 +270,27 @@ APP
 	5	(COMANDO_REMOVER)
 		// Sendo criado no momento
 
-	7	(COMANDO_ROOT)	// Funções administrativas, acessiveis somente em "modo root"
+	7	(COMANDO_ROOT)	// Funções administrativas, acessiveis somente em "modo root" (quando logado com o usuario ROOT)
 		computador	// Sim, literalmente escrito "computador"
 			algumComando	(O comando que vai ser executado no sistema, no shell (sh, no caso)) // Exemplo:  APP 7 computador reboot
 				//Só pode ser acessado caso esteja logado como (provisoriamente) usuario padrão (	Login: interface@servidor 
 																									Senha: senatauri)
+
+		status
+			banco
+				nomeTabela
+					(retorna o numero de registros contidos na tabela)
+					(Exemplo:   APP 7 status banco produto)
+					(O exemplo acima retornaria um numero, contendo a quantidade de registros na tabela "produto")
+
+		deletar
+			produto
+				idProduto
+					(Deleta o produto referenciado pelo id de produto, incluindo seus FeedBacks, visualizações relacionadas a ele e o próprio produto)
+					(Exemplo:   APP 7 deletar produto cocacolavc)
+					(O exemplo acima removeria quaiquer visualizações que tivessem "cocacolavc" como produto referente, incluindo os feedbacks que possuissem tal produto em sua referencia)
+					(Intuitivamente, o exemplo acima também removeria a entrada "cocacolavc" da tabela de produtos)
+
 		encerrar	//Sim, literalmente "encerrar"
 			(Reinicia o processo da interface/servidor não mysql)
 

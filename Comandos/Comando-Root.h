@@ -4,6 +4,7 @@
 #include<stdlib.h>
 #include "Comandos.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
+#include "Comando-Remover.h"
 
 
 char *comandoRoot(Usuario *usuario)
@@ -45,6 +46,77 @@ char *comandoRoot(Usuario *usuario)
 		printf(" \t\t\t\t\tCOMANDO: |interrupcaoForcada|\n");
 		interrupcaoForcada(2);
 		return strdup("LOG: Reiniciando processo");
+	}
+	else if( strcmp(token, "status") == 0 )
+	{
+		geraLog(LOG, "ROOT requisitando status", "Comando-Root.h comandoRoot()");
+		token = usuario_getNextToken(usuario);
+		if (token == NULL)
+		{
+			return strdup("ERRO: Comando insuficiente detectado em comando para obter status (do que ?)");
+		}
+		else if(strcmp(token, "banco") == 0)
+		{
+			token = usuario_getNextToken(usuario);
+			if (token == NULL)
+			{
+				return strdup("Qual tabela ?");
+			}
+			int tamanho = 34 + 1 + strlen(token);
+			char *query = (char *)calloc(sizeof(char), tamanho);
+
+			snprintf(query, tamanho, "SELECT count(*) as num_reg FROM %s;", token);
+
+			char *retorno = obterRetornoUnicoDaQuery(query);
+			if (retorno == NULL)
+			{
+				return strdup("ERRO: Query não retornou nada...");
+			}
+			else
+			{
+				return retorno;
+			}
+		}
+		else
+		{
+			return strdup("Ainda não foram feitas funções para esse gerenciamento");
+		}
+	}
+	else if(strcmp(token, "deletar") == 0)
+	{
+		token = usuario_getNextToken(usuario);
+		if (token == NULL)
+		{
+			return strdup("Deletar o que ?");
+		}
+		else if(strcmp(token, "produto") == 0)
+		{
+			token = usuario_getNextToken(usuario);
+			if (token == NULL)
+			{
+				return strdup("Qual produto ?");
+			}
+
+			if (stringTamanhoIgual(token, 10))
+			{
+				if(deletarProduto(usuario, token))
+				{
+					return strdup("Produto deletado com sucesso");
+				}
+				else
+				{
+					return strdup("Falha ao deletar o produto, verifique o ID do produto e tente novamente");
+				}
+			}
+			else
+			{
+				return strdup("Opa, você errou o numero de caracteres do id do produto");
+			}
+		}
+		else
+		{
+			return strdup("Opa, essa opção ainda não está pronta, isso será reportado");
+		}
 	}
 	else if( strcmp(token, "resetar") == 0 )
 	{

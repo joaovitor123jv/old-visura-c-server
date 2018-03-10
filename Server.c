@@ -19,16 +19,6 @@ void interrupcaoForcada(int sinal);
 void limpaBuffers(void) __attribute__ ((destructor));
 
 
-#ifndef ___INTERPRETANDO___
-/* Variável de CONTROLE */
-/***********************************IMPORTANTE********************************************/
-/****************************/char interpretando = 0;/************************************/
-/***************************bool interpretando = false;***********************************/
-/*****************************************************************************************/
-#define ___INTERPRETANDO___
-#endif //___INTERPRETANDO___
-
-
 #include "Server.h"
 
 

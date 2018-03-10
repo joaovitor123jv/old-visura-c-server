@@ -4,18 +4,11 @@
 #include<unistd.h>
 #include "Comandos.h"
 #include "../Usuario.h"
+#include "../OperacoesBanco/OperacoesBanco.h"
 
-#ifndef bool
-#define bool char
-#endif
+#ifndef CODIGO_COMANDO_REMOVER
+#define CODIGO_COMANDO_REMOVER
 
-#ifndef true
-#define true 1
-#endif
-
-#ifndef false
-#define false 0
-#endif
 
 /*
 	@author João Vitor Antoniassi Segantin
@@ -44,3 +37,90 @@ bool comandoRemover(Usuario *usuario)/* APP 5 algumaCoisa */
 	}
 	return false;
 }
+
+
+
+
+
+bool deletarProduto(Usuario *usuario, char *idProduto)
+{
+	const char *localizacao = "Comando-Remover.h deletarProduto()";
+	if (!conexaoAtiva())
+	{
+		geraLog(ERRO, "Conexao inativa com o banco de dados detectada", localizacao);
+		return false;
+	}
+
+	if (!checarIdProduto(idProduto))
+	{
+		geraLog(WARNING, "Produto não existe na base de dados", localizacao);
+		return false;
+	}
+	geraLog(LOG, "Produto existe na base de dados", localizacao);
+
+	// int tamanho = strlen(idProduto);
+	int tamanho = 10 + 64 + 1;
+	char *query = (char *)calloc(sizeof(char), tamanho);
+	if (query == NULL)
+	{
+		geraLog(WARNING, "Falha ao alocar memoria para query", localizacao);
+		return false;
+	}
+	snprintf(query, tamanho, "DELETE FROM visualizacaoDeUsuario WHERE produto_idproduto=\'%s\';", idProduto);
+	if (query == NULL)
+	{
+		geraLog(WARNING, "Falha ao formatar query aoighr", localizacao);
+		return false;
+	}
+	if (!executaQuery(query))
+	{
+		geraLog(WARNING, "Falha ao executar query", localizacao);
+		return false;
+	}
+
+
+	tamanho = 10 + 46 + 1;
+	query = (char *)realloc(query, tamanho);
+	if (query == NULL)
+	{
+		geraLog(WARNING, "Falha ao realocar memoria para query weuiotb", localizacao);
+		return false;
+	}
+	snprintf(query, tamanho, "DELETE FROM feedBackCliente WHERE idproduto=\'%s\';", idProduto);
+	if (query == NULL)
+	{
+		geraLog(WARNING, "Falha ao formatar query dakjhbt", localizacao);
+		return false;
+	}
+	if (!executaQuery(query))
+	{
+		geraLog(WARNING, "Falha ao executar query", localizacao);
+		return false;
+	}
+
+	tamanho = 10 + 46 + 1;
+	query = (char *)realloc(query, tamanho);
+	if (query == NULL)
+	{
+		geraLog(WARNING, "Falha ao realocar memoria para query kerjym5", localizacao);
+		return false;
+	}
+	snprintf(query, tamanho, "DELETE FROM produto WHERE idproduto=\'%s\' LIMIT 1;", idProduto);
+	if (query == NULL)
+	{
+		geraLog(WARNING, "Falha ao formatar query tn654", localizacao);
+		return false;
+	}
+	if (!executaQuery(query))
+	{
+		geraLog(WARNING, "Falha ao executar query", localizacao);
+		return false;
+	}
+	else
+	{
+		geraLog(LOG, "Produto deletado do banco de dados com sucesso", localizacao);
+		return true;
+	}
+}
+
+#endif //CODIGO_COMANDO_REMOVER
