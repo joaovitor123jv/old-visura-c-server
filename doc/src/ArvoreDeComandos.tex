@@ -1,0 +1,146 @@
+\documentclass{article}
+
+% \usepackage{color}
+	
+\usepackage[utf8]{inputenc}
+
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+
+\author{João Vitor Antoniassi Segantin}
+\date{12/03/2018}
+\title{Árvore de Comandos - Visu-RA}
+
+\begin{document}
+	\maketitle
+	\begin{abstract}\indent
+		\par Este documento visa explicitar todos os comandos possíveis aceitos, e seus retornos com relação à interface de banco de dados do projeto Visu-RA, da Senatauri Enterprise.
+		\par Serão abordadas nesse documento, todas as possibilidades teóricas de entrada, e todas as possibilidades de saída para cada uma dessas entradas.
+		\par Para uma pesquisa rápida e eficiente, de fato, utilize o sumário, ele permitirá uma navegação mais sucinta ao que deseja.
+	\end{abstract}
+	\tableofcontents
+	\newpage
+	\section{Da organização desse documento}\indent
+		\par Todas as explicações acerca de entradas de saída serão dadas com pelo ou menos um exemplo de entrada e um exemplo de saída. Essa saída, é uma quantidade de Bytes, com caracteres codificados em UTF-8, com buffers máximos de saída de até 1024 Bytes.
+		\par As entradas também são sequencias de Bytes codificadas em UTF-8, inclusive com relação a números. Todas as entradas, \textbf{devem} ter, no máximo 1024 Bytes, e no mínimo, o tamanho correspondente à chave de aplicação (ver Chaves.pdf).
+		\par Os comandos serão encontrados em diferentes "categorias". As três principais categorias até o momento, são:
+		\begin{itemize}
+			\item{Comandos de adição de dados}
+				\par Categoria de comandos que adiciona e/ou alteram dados no banco de dados.
+				\par São accessíveis com o prefixo "APP 2 "
+			\item{Comandos de obtenção de dados}
+				\par Categoria de comandos que retorna informações do banco de dados.
+				\par São acessíveis pelo prefixo "APP 4 "
+			\item{Comandos acessíveis somente por ROOT}
+				\par Categoria dos comandos que são acessíveis somente quando logado como ROOT, podem possuir estrutura divergente dos outros comandos.
+				\par São acessíveis pelo prefixo "APP 7 "
+		\end{itemize}
+
+		\par Alguns comandos irão ter uma ou mais macros (CHAVE\_APLICACAO, CHAVE\_DE\_SEGURANCA). Para verificar a organização das macros, verifique o arquivo "Macros.pdf".
+
+	\section{Comandos de adição de dados}\indent
+		\par São comandos de adição de dados, incluindo comandos responsáveis pela Adição de Usuarios, Empresas contratantes, novos produtos, informações relacionadas a usuários, visualizações, etc.
+		\par São acessíveis pelo prefixo "APP 2 "
+
+		\subsection{Adicionar Produto}\indent
+			\par Esse comando provém duas formas principais de entrada, a primeira delas, a forma disponível para quando o cliente estiver logado como ROOT, e a segunda, quando o cliente estiver logado como contratante.
+			\par Aviso: Esse comando é bloqueado para usuários que não estejam logados como empresa contratante do serviço Visu-RA, ou logados como usuários ROOT desse serviço (Administradores), logo, usuários anônimos, regulares ou quaisquer outros tipos de usuários existentes, não terão acesso a esse comando.
+			\par Inicializa-se como "APP 2 +"
+
+			\subsubsection{Como ROOT}\indent
+				\par Quando o usuário estiver logado como ROOT, ele deverá seguir a sequinte estrutura de comando de entrada:
+				\begin{center}
+					APP 2 + CHAVE\_DE\_SEGURANCA idContratante idProduto duracao nomeProduto tipoProduto descricaoProduto
+				\end{center}
+				\par Onde:
+				\begin{itemize}
+					\item{CHAVE\_DE\_SEGURANCA}
+						\par Macro utilizada como forma de segurança dupla quando adicionando produtos, pode ser encontrada no arquivo "Macros.pdf".
+					\item{idContratante}
+						\par Id de contratante disponível no banco de dados(inteiro de até 11 posições), que pode ser obtido nos comandos de obtenção (ver "Obter empresa, dado produto" e "Obter ID de contratante").
+						\par O produto adicionado, terá como seu "dono", a empresa referenciada por esse ID de contratante.
+					\item{idProduto}
+						\par Uma sequencia de caracteres, codificados em UTF-8, com até 10 Bytes, ou, uma sequencia de 10 caracteres ASCII, que não possuam espaço, quebra de linha ou retorno de carro.
+						\par O produto será referenciado por esse ID, no banco de dados, e na aplicação, em comandos posteriores.
+					\item{duracao}
+						\par Uma sequencia de caracteres, que contenha somente números, com até 11 caracteres, codificados em ASCII.
+						\par Controla a quantidade de tempo que o produto ficará disponível aos usuários "normais" no banco de dados.
+					\item{nomeProduto}
+						\par Uma sequencia de caracteres com até 100 Bytes, que não contenha espaço, retorno de carro ou quebra de linha, que pode ser codificada em ASCII ou UTF-8, desde que a quantidade de Bytes seja igual ou inferior a 100.
+						\par É o nome de produto que será mostrado ao usuário leigo. Um referenciamento "bonito", aos olhos do usuário comum.
+					\item{tipoProduto}
+						\par Um caracter, codificado em ASCII, que definirá onde o produto deverá aparecer, de acordo com a pesquisa do usuário, pode ser '1', '2' ou '3', qualquer outro caracter será recusado.
+						\subitem{1} = Produto de Realidade Aumentada
+						\subitem{2} = Produto de Realidade Virtual
+						\subitem{3} = Produto de Realidade Aumentada e Virtual (misto).
+					\item{descricaoProduto} (Opcional)
+						\par Uma sequencia de caracteres, codificados em ASCII ou UTF-8, respeitando um limite de até 512 Bytes, que não possua espaços ou retornos de carro. Quebras de linha são permitidas.
+						\par É a descrição do produto que será mostrada na página do produto, para o usuário comum.
+				\end{itemize}
+
+			\subsubsection{Como Empresa}\indent
+				\par O comando para adição de produto como empresa, diverge um pouco do comando para adição de um produto como ROOT.
+				\par O comando deve ser enviado no seguinte formato:
+				\begin{center}
+					APP 2 + idProduto duracao nomeProduto tipoProduto categoria descricaoProduto
+				\end{center}
+				\par Onde:
+				\begin{itemize}
+					\item{idProduto}
+						\par Uma sequencia de caracteres, codificados em UTF-8, com até 10 Bytes, ou, uma sequencia de 10 caracteres ASCII, que não possuam espaço, quebra de linha ou retorno de carro.
+						\par O produto será referenciado por esse ID, no banco de dados, e na aplicação, em comandos posteriores.
+					\item{duracao}
+						\par Uma sequencia de caracteres, que contenha somente números, com até 11 caracteres, codificados em ASCII.
+						\par Controla a quantidade de tempo que o produto ficará disponível aos usuários "normais" no banco de dados.
+					\item{nomeProduto}
+						\par Uma sequencia de caracteres com até 100 Bytes, que não contenha espaço, retorno de carro ou quebra de linha, que pode ser codificada em ASCII ou UTF-8, desde que a quantidade de Bytes seja igual ou inferior a 100.
+						\par É o nome de produto que será mostrado ao usuário leigo. Um referenciamento "bonito", aos olhos do usuário comum.
+					\item{tipoProduto}
+						\par Um caracter, codificado em ASCII, que definirá onde o produto deverá aparecer, de acordo com a pesquisa do usuário, pode ser '1', '2' ou '3', qualquer outro caracter será recusado.
+						\subitem{1} = Produto de Realidade Aumentada
+						\subitem{2} = Produto de Realidade Virtual
+						\subitem{3} = Produto de Realidade Aumentada e Virtual (misto).
+					\item{categoria} (Opcional)
+						\par Uma sequencia de caracteres, contendo no máximo 2 Bytes, não podendo ser espaço, retorno de carro ou quebra de linha.
+						\par Campo utilizado para categorizar o produto, de acordo com a tabela de categorias encontrada em "CategoriasDeProduto.pdf".
+					\item{descricaoProduto} (Opcional)
+						\par Uma sequencia de caracteres, codificados em ASCII ou UTF-8, respeitando um limite de até 512 Bytes, que não possua espaços ou retornos de carro. Quebras de linha são permitidas.
+						\par É a descrição do produto que será mostrada na página do produto, para o usuário comum.
+				\end{itemize}
+		
+		\subsection{Adição de Usuário}
+		\subsection{Adição de Usuário Anônimo}
+		\subsection{Adição de Visualização}
+		\subsection{Adição de Avaliação a produto}
+		\subsection{Adição de Feedback a produto}
+		\subsection{Adição de Informação de usuário}
+		\subsection{Adição de Cidade}
+		\subsection{Adição de Localização}
+		\subsection{Adição de Contratante (Empresa que contrata o Visu-RA)}
+	\section{Comandos de obtenção de dados}\indent
+		\subsection{Obter produtos por data de publicação}
+			\par ObterTop10NovoProdutos
+		\subsection{Obter produtos por popularidade}
+			\par ObterTop10MelhoresProdutos
+		\subsection{Obter produtos da empresa}
+		\subsection{Obter lista de desejos do usuário}
+		\subsection{Obter informações do produto}
+		\subsection{Obter descrição do produto}
+		\subsection{Obter nome do produto}
+		\subsection{Obter avaliação do produto}
+		\subsection{Obter quantidade de visualizações do produto}
+		\subsection{Obter ID de cidade}
+		\subsection{Obter ID de contratante}
+		\subsection{Obter ID de localização}
+		\subsection{Obter informações do usuário conectado}
+		\subsection{Obter ID da empresa, dado produto}
+	\section{Comandos disponíveis para ROOT}
+		\subsection{Comando direto para SHELL}
+		\subsection{Comando para verificação de quantidade de registros de tabela do banco}
+		\subsection{Comando para remoção de produto}
+		\subsection{Comando de reinicializacao}
+		\subsection{Comando para resetar banco de dados}
+		\subsection{Comando para resetar arquivo de LOG}
+	\section{Conclusão}\indent
+	\par É nois que voa
+\end{document}

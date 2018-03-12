@@ -1,0 +1,38 @@
+\select@language {brazilian}
+\contentsline {section}{\numberline {1}Da organiza\IeC {\c c}\IeC {\~a}o desse documento}{2}
+\contentsline {section}{\numberline {2}Comandos de adi\IeC {\c c}\IeC {\~a}o de dados}{2}
+\contentsline {subsection}{\numberline {2.1}Adicionar Produto}{2}
+\contentsline {subsubsection}{\numberline {2.1.1}Como ROOT}{3}
+\contentsline {subsubsection}{\numberline {2.1.2}Como Empresa}{4}
+\contentsline {subsection}{\numberline {2.2}Adi\IeC {\c c}\IeC {\~a}o de Usu\IeC {\'a}rio}{5}
+\contentsline {subsection}{\numberline {2.3}Adi\IeC {\c c}\IeC {\~a}o de Usu\IeC {\'a}rio An\IeC {\^o}nimo}{5}
+\contentsline {subsection}{\numberline {2.4}Adi\IeC {\c c}\IeC {\~a}o de Visualiza\IeC {\c c}\IeC {\~a}o}{5}
+\contentsline {subsection}{\numberline {2.5}Adi\IeC {\c c}\IeC {\~a}o de Avalia\IeC {\c c}\IeC {\~a}o a produto}{5}
+\contentsline {subsection}{\numberline {2.6}Adi\IeC {\c c}\IeC {\~a}o de Feedback a produto}{5}
+\contentsline {subsection}{\numberline {2.7}Adi\IeC {\c c}\IeC {\~a}o de Informa\IeC {\c c}\IeC {\~a}o de usu\IeC {\'a}rio}{5}
+\contentsline {subsection}{\numberline {2.8}Adi\IeC {\c c}\IeC {\~a}o de Cidade}{5}
+\contentsline {subsection}{\numberline {2.9}Adi\IeC {\c c}\IeC {\~a}o de Localiza\IeC {\c c}\IeC {\~a}o}{5}
+\contentsline {subsection}{\numberline {2.10}Adi\IeC {\c c}\IeC {\~a}o de Contratante (Empresa que contrata o Visu-RA)}{5}
+\contentsline {section}{\numberline {3}Comandos de obten\IeC {\c c}\IeC {\~a}o de dados}{5}
+\contentsline {subsection}{\numberline {3.1}Obter produtos por data de publica\IeC {\c c}\IeC {\~a}o}{5}
+\contentsline {subsection}{\numberline {3.2}Obter produtos por popularidade}{6}
+\contentsline {subsection}{\numberline {3.3}Obter produtos da empresa}{6}
+\contentsline {subsection}{\numberline {3.4}Obter lista de desejos do usu\IeC {\'a}rio}{6}
+\contentsline {subsection}{\numberline {3.5}Obter informa\IeC {\c c}\IeC {\~o}es do produto}{6}
+\contentsline {subsection}{\numberline {3.6}Obter descri\IeC {\c c}\IeC {\~a}o do produto}{6}
+\contentsline {subsection}{\numberline {3.7}Obter nome do produto}{6}
+\contentsline {subsection}{\numberline {3.8}Obter avalia\IeC {\c c}\IeC {\~a}o do produto}{6}
+\contentsline {subsection}{\numberline {3.9}Obter quantidade de visualiza\IeC {\c c}\IeC {\~o}es do produto}{6}
+\contentsline {subsection}{\numberline {3.10}Obter ID de cidade}{6}
+\contentsline {subsection}{\numberline {3.11}Obter ID de contratante}{6}
+\contentsline {subsection}{\numberline {3.12}Obter ID de localiza\IeC {\c c}\IeC {\~a}o}{6}
+\contentsline {subsection}{\numberline {3.13}Obter informa\IeC {\c c}\IeC {\~o}es do usu\IeC {\'a}rio conectado}{6}
+\contentsline {subsection}{\numberline {3.14}Obter ID da empresa, dado produto}{6}
+\contentsline {section}{\numberline {4}Comandos dispon\IeC {\'\i }veis para ROOT}{6}
+\contentsline {subsection}{\numberline {4.1}Comando direto para SHELL}{6}
+\contentsline {subsection}{\numberline {4.2}Comando para verifica\IeC {\c c}\IeC {\~a}o de quantidade de registros de tabela do banco}{6}
+\contentsline {subsection}{\numberline {4.3}Comando para remo\IeC {\c c}\IeC {\~a}o de produto}{6}
+\contentsline {subsection}{\numberline {4.4}Comando de reinicializacao}{6}
+\contentsline {subsection}{\numberline {4.5}Comando para resetar banco de dados}{6}
+\contentsline {subsection}{\numberline {4.6}Comando para resetar arquivo de LOG}{6}
+\contentsline {section}{\numberline {5}Conclus\IeC {\~a}o}{6}

@@ -1,15 +1,15 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.2.27)  12 MAR 2018 14:15
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.2.27)  12 MAR 2018 14:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**OrganizacaoCodigo.tex
-(./OrganizacaoCodigo.tex
+**ArvoreDeComandos.tex
+(./ArvoreDeComandos.tex
 LaTeX2e <2016/02/01>
 Babel <3.9q> and hyphenation patterns for 4 language(s) loaded.
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
-(/usr/share/texlive/texmf-dist/tex/latex/base/size12.clo
-File: size12.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+(/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
 )
 \c@part=\count79
 \c@section=\count80
@@ -23,25 +23,6 @@ File: size12.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
 )
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
-Package: color 2016/01/03 v1.1b Standard LaTeX Color (DPC)
-
-(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/color.cfg
-File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
-)
-Package color Info: Driver file: pdftex.def on input line 143.
-
-(/usr/share/texlive/texmf-dist/tex/latex/pdftex-def/pdftex.def
-File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
-
-(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/infwarerr.sty
-Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
-)
-(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
-Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
-)
-\Gread@gobject=\count87
-))
 (/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2015/03/17 v1.2c Input encoding file
 \inpenc@prehook=\toks14
@@ -359,114 +340,87 @@ Package: fontenc 2005/09/27 v1.99g Standard LaTeX package
 File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding T1 on input line 48.
 ))
-(./OrganizacaoCodigo.aux)
-\openout1 = `OrganizacaoCodigo.aux'.
+(/usr/share/texlive/texmf-dist/tex/generic/babel/babel.sty
+Package: babel 2016/02/24 3.9q The Babel package
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
+(/usr/share/texlive/texmf-dist/tex/generic/babel-portuges/portuges.ldf
+Language: portuges 2008/03/18 v1.2q Portuguese support from the babel system
 
-(/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
-[Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count88
-\scratchdimen=\dimen103
-\scratchbox=\box26
-\nofMPsegments=\count89
-\nofMParguments=\count90
-\everyMPshowfont=\toks16
-\MPscratchCnt=\count91
-\MPscratchDim=\dimen104
-\MPnumerator=\count92
-\makeMPintoPDFobject=\count93
-\everyMPtoPDFconversion=\toks17
+(/usr/share/texlive/texmf-dist/tex/generic/babel/babel.def
+File: babel.def 2016/02/24 3.9q Babel common definitions
+\babel@savecnt=\count87
+\U@D=\dimen103
 )
+\l@brazilian = a dialect from \language\l@portuges 
+Package babel Info: Making " an active character on input line 145.
+))
+(./ArvoreDeComandos.aux)
+\openout1 = `ArvoreDeComandos.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <14.4> on input line 26.
+(Font)              <12> on input line 15.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 26.
+(Font)              <8> on input line 15.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 15.
+ (./ArvoreDeComandos.toc
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 4.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 4.
+)
+\tf@toc=\write3
+\openout3 = `ArvoreDeComandos.toc'.
+
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 51.
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 28.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 51.
-
-Overfull \hbox (0.96002pt too wide) in paragraph at lines 54--55
-[]\T1/cmr/m/n/12 Arquivo ori-undo do "POST-FORWARD script" da fer-ra-mente "MyS
-QL
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 28.
+ [2] [3] [4]
+Overfull \hbox (2.99547pt too wide) in paragraph at lines 119--119
+[]\T1/cmr/bx/n/12 Adição de Con-tra-tante (Em-presa que con-trata o Visu-
  []
 
-[3]
-Overfull \hbox (4.37993pt too wide) in paragraph at lines 68--69
-[]\T1/cmr/m/n/12 Arquivo que con-tém funções gen-er-al-izadas, uti-lizadas por 
-todo o restante
- []
-
-[4]
-Overfull \hbox (53.81375pt too wide) in paragraph at lines 91--92
-[]\T1/cmr/m/n/12 Cuida da lóg-ica de obtenção de da-dos gerais, como "obter-Top
-10NovosProdutos()",
- []
-
-
-Overfull \hbox (40.52968pt too wide) in paragraph at lines 97--97
-\T1/cmr/m/n/12 O ar-quivo re-spon-sável pela lóg-ica de re-moção de da-dos, é o
- \T1/cmr/bx/n/12 "Comandos/Comando-
- []
-
-[5]
-Overfull \hbox (35.44592pt too wide) in paragraph at lines 108--109
-[]\T1/cmr/m/n/12 Esse ar-quivo é iden-ti-fi-cado por \T1/cmr/bx/n/12 "Co-man-do
-s/interpretadorDeComandos.h"\T1/cmr/m/n/12 . 
- []
-
-[6]
-Overfull \hbox (4.9938pt too wide) in paragraph at lines 133--136
-[]\T1/cmr/m/n/12 Também é re-spon-sável pela cri-ação de no-vas chaves RSA para
- cada usuário,
- []
-
-[7]
-Overfull \hbox (68.61107pt too wide) in paragraph at lines 158--159
-\T1/cmr/m/n/12 para a trans-fer-en-cia de ar-quivos. Uti-lizado para tes-tar o 
-"ArmazenamentoDePacotes-
- []
-
-[8] [9] (./OrganizacaoCodigo.aux) ) 
+[5] [6] (./ArvoreDeComandos.aux) ) 
 Here is how much of TeX's memory you used:
- 1491 strings out of 494929
- 16905 string characters out of 6180142
- 69131 words of memory out of 5000000
- 4815 multiletter control sequences out of 15000+600000
- 12060 words of font info for 28 fonts, out of 8000000 for 9000
+ 1221 strings out of 494929
+ 12796 string characters out of 6180142
+ 68789 words of memory out of 5000000
+ 4546 multiletter control sequences out of 15000+600000
+ 13307 words of font info for 32 fonts, out of 8000000 for 9000
  16 hyphenation exceptions out of 8191
- 23i,6n,19p,510b,189s stack positions out of 5000i,500n,10000p,200000b,80000s
- </home/joaovitor/.texmf-var/fonts/pk/ljfour
-/jknappen/ec/ecbx1440.600pk> </home/joaovitor/.texmf-var/fonts/pk/ljfour/jknapp
-en/ec/ecbx1200.600pk> </home/joaovitor/.texmf-var/fonts/pk/ljfour/jknappen/ec/e
-cbx1728.600pk> </home/joaovitor/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200
-.600pk> </home/joaovitor/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1095.600pk>
- </home/joaovitor/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1095.600pk> </home
-/joaovitor/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1440.600pk> </home/joaovi
-tor/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm2074.600pk></usr/share/texlive/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on OrganizacaoCodigo.pdf (9 pages, 118235 bytes).
+ 23i,6n,23p,345b,188s stack positions out of 5000i,500n,10000p,200000b,80000s
+ </home/joaovitor/.texmf-var/fonts/pk/ljfour/
+jknappen/ec/ecbx1200.600pk> </home/joaovitor/.texmf-var/fonts/pk/ljfour/jknappe
+n/ec/ecrm1000.600pk> </home/joaovitor/.texmf-var/fonts/pk/ljfour/jknappen/ec/ec
+bx1000.600pk> </home/joaovitor/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1440.
+600pk> </home/joaovitor/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0900.600pk> 
+</home/joaovitor/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx0900.600pk> </home/
+joaovitor/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/joaovit
+or/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1728.600pk></usr/share/texlive/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on ArvoreDeComandos.pdf (6 pages, 99681 bytes).
 PDF statistics:
- 369 PDF objects out of 1000 (max. 8388607)
- 57 compressed objects within 1 object stream
+ 336 PDF objects out of 1000 (max. 8388607)
+ 49 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

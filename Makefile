@@ -86,8 +86,13 @@ doc/OperacoesBanco-FuncoesGenericas.pdf: doc/src/OperacoesBanco-FuncoesGenericas
 	@$(CHANGE_TO_DOC_SOURCE) ; pdflatex OperacoesBanco-FuncoesGenericas.tex
 	@$(CHANGE_TO_DOC_SOURCE) ; mv OperacoesBanco-FuncoesGenericas.pdf ../
 
+doc/ArvoreDeComandos.pdf: doc/src/ArvoreDeComandos.tex
+	@echo "Gerando documentação de especificação da Arvore De Comandos"
+	@$(CHANGE_TO_DOC_SOURCE) ; pdflatex ArvoreDeComandos.tex
+	@$(CHANGE_TO_DOC_SOURCE) ; mv ArvoreDeComandos.pdf ../
 
-documentation: doc/ComandosMakefile.pdf doc/OrganizacaoCodigo.pdf doc/OperacoesBanco-FuncoesGenericas.pdf
+
+documentation: doc/ComandosMakefile.pdf doc/OrganizacaoCodigo.pdf doc/OperacoesBanco-FuncoesGenericas.pdf doc/ArvoreDeComandos.pdf
 	@echo "Gerando meta-documentação (índice)"
 	@echo "Toda a documentação necessária foi gerada com sucesso !"
 	@echo "Limpando arquivos residuais da compilação da documentação"
