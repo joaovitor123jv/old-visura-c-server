@@ -1,0 +1,13 @@
+\contentsline {section}{\numberline {1}Das op\IeC {\c c}\IeC {\~o}es dispon\IeC {\'\i }veis.}{2}
+\contentsline {subsection}{\numberline {1.1}make all}{2}
+\contentsline {subsection}{\numberline {1.2}make debug}{2}
+\contentsline {subsection}{\numberline {1.3}make build}{2}
+\contentsline {subsection}{\numberline {1.4}make run}{3}
+\contentsline {subsection}{\numberline {1.5}make clean}{3}
+\contentsline {subsection}{\numberline {1.6}make documentation}{3}
+\contentsline {subsection}{\numberline {1.7}make forget}{3}
+\contentsline {subsection}{\numberline {1.8}make Fila.o}{3}
+\contentsline {section}{\numberline {2}Das depend\IeC {\^e}ncias do projeto}{4}
+\contentsline {subsection}{\numberline {2.1}Depend\IeC {\^e}ncias para \textbf {gera\IeC {\c c}\IeC {\~a}o} de \textbf {server}}{4}
+\contentsline {subsection}{\numberline {2.2}Depend\IeC {\^e}ncias para \textbf {execu\IeC {\c c}\IeC {\~a}o} de \textbf {server}}{4}
+\contentsline {subsection}{\numberline {2.3}Depend\IeC {\^e}ncias para \textbf {gera\IeC {\c c}\IeC {\~a}o} da \textbf {documenta\IeC {\c c}\IeC {\~a}o}}{5}

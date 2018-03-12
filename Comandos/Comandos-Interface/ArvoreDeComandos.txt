@@ -178,6 +178,17 @@ APP
 
 				(CASO ESTEJA LOGADO COMO EMPRESA, RETORNA OS PRODUTOS DA EMPRESA LOGADA)
 
+			LD	(TIPO_LISTA_DE_DESEJOS)
+				(Se não for passado parâmetro algum, a interface retornará os 10 primeiros produtos (a primeira página da lista))
+
+				numeroPagina	(*** OPCIONAL ***)
+					(Retorna novos 10 produtos, sendo, o primeiro produto da página, correspondente ao ultimo produto		)
+					(	da página anterior.																					)
+					(Exemplo:
+					( APP 4 ## LD  retorna → produto1 produto2 produto3 produto4 produto5 produto6 produto7 produto8 produto9 produto10 ))
+					( APP 4 ## LD 2   retorna → produto10 produto11 produto12 produto13 produto14 pdouto15 produto16 produto16 produto17 produto18 produto19)
+
+					(Obsevação :  APP 4 ## LD  == APP 4 ## LD 1																	)
 		
 		iP	(TIPO_INFORMACOES_PRODUTO)
 			idProduto
@@ -266,6 +277,7 @@ APP
 		EP	(TIPO_ID_EMPRESA_POR_PRODUTO)
 			idProduto
 				(Retorna o ID da empresa que é responsável pelo produto "idProduto")
+
 
 	5	(COMANDO_REMOVER)
 		// Sendo criado no momento

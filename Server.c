@@ -118,6 +118,7 @@ void limpaBuffers(void)// Função executada ao final das interpretações da fu
 		printf(" LOG: Liberando conexão com o banco de dados em Server.c limpaBuffers()\n");
 		mysql_close(conexao);
 		mysql_thread_end();
+		// mysql_library_end();
 		free(conexao);
 		conexao = NULL;
 		printf(" LOG: Conexão com o banco de dados liberada em Server.c limpaBuffers()\n");

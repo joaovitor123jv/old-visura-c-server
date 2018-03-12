@@ -11,7 +11,7 @@ char *obterIdContratante(Usuario *usuario);// APP 4 ;
 char *obterIdLocalizacao(Usuario *usuario);// APP 4 i0
 
 char *obterTop10NovosProdutos(Usuario *usuario);//APP 4 J
-	//Essa função reencaminha pra APP 4 J (1, 2 e 3)
+//Essa função reencaminha pra APP 4 J (1, 2 e 3)
 
 char *obterTop10ProdutosMelhorAvaliados(Usuario *usuario);//Retorna os 10 produtos melhor avaliados do banco de dados, ou NULL quando dá erro
 
@@ -28,6 +28,8 @@ char *obterInformacoesUsuario(Usuario *usuario);
 
 char *obterIdDeEmpresaDadoProduto(Usuario *usuario);
 
+char *obterListaDesejos(Usuario *usuario);
+
 char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 {
 	printf(" ********************** obterDados()\n");
@@ -42,7 +44,7 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	char* token = NULL;
-	
+
 	token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
@@ -54,8 +56,8 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 		printf(" Warning: Comando exageradamente grande detectado em Comando-Obter.h comandoObter()\n");
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
-	
-	
+
+
 	if(strcmp(token, TOP_10_NOVOS) == 0)// APP 4 J
 	{
 		return obterTop10NovosProdutos(usuario);
@@ -178,7 +180,7 @@ char *obterIdCidade(Usuario *usuario)
 
 	// APP 4 $ nomeCidadeInformado
 	token = usuario_getNextToken(usuario);
-	
+
 	if(token == NULL)
 	{
 		printf(" Warning: Comando insuficiente em Comando-Obter.h obterIdCidade() dksajdjkheb\n");
@@ -190,7 +192,7 @@ char *obterIdCidade(Usuario *usuario)
 		printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterIdCidade() ebk1ud8\n");
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
-	
+
 	nomeCidade = strdup(token);
 
 	if(nomeCidade == NULL)
@@ -198,7 +200,7 @@ char *obterIdCidade(Usuario *usuario)
 		printf(" Warning: Falha ao copiar de token para nomeCidade em Comando-Obter.h obterIdCidade aksjd()\n");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
-	
+
 	// APP 4 $ nomeCidadeInformado nomeEstadoInformado
 	token = usuario_getNextToken(usuario);
 
@@ -268,7 +270,7 @@ char *obterIdContratante(Usuario *usuario)// APP 4 ; cnpj
 		printf(" Warning: Comando insuficiente em Comando-Obter.h obterIdContratante() asjhvbruw0f7878s756f6d\n");
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
-//	if( strlen(token) > TAMANHO_CNPJ )
+	//	if( strlen(token) > TAMANHO_CNPJ )
 	if( stringMaior(token, TAMANHO_CNPJ) )
 	{
 		printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterIdContratante() abq78vas98wbjhax\n");
@@ -292,7 +294,7 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 
-//	if( strlen(token) > TAMANHO_CHAVE_PRIMARIA )
+	//	if( strlen(token) > TAMANHO_CHAVE_PRIMARIA )
 	if( stringMaior(token, TAMANHO_CHAVE_PRIMARIA) )
 	{
 		printf(" Warning: Argumento \"idCidade\" informado é exageradamente grande em Comando-Obter.h obterIdLocalizacao()\n");
@@ -339,7 +341,7 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 		return retorno;
 	}
 
-//	if( strlen(token) > TAMANHO_BAIRRO )
+	//	if( strlen(token) > TAMANHO_BAIRRO )
 	if( stringMaior(token, TAMANHO_BAIRRO) )
 	{
 		printf(" Warning: Tamanho de bairro exageradamente grande em Comando-Obter.h obterIdLocalizacao() asjvhbroasd\n");
@@ -378,7 +380,7 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 		return retorno;
 	}
 
-//	if( strlen(token) > TAMANHO_RUA )
+	//	if( strlen(token) > TAMANHO_RUA )
 	if( stringMaior(token, TAMANHO_RUA) )
 	{
 		printf(" Warning: Tamanho da rua é exageradamente grande em Comando-Obter.h obterIdLocalizacao() aceghieoads\n");
@@ -420,9 +422,9 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 		idCidade = NULL;
 		return retorno;
 	}
-//	 if( strlen(token) > TAMANHO_NUMERO )
+	//	 if( strlen(token) > TAMANHO_NUMERO )
 	if( stringMaior(token, TAMANHO_NUMERO) )
-	 {
+	{
 		printf(" Warning: Numero informado muto grande em Comando-Obter.h obterIdLocalizacao() sajhveasd\n");
 		free( idCidade );
 		free( cep );
@@ -433,11 +435,11 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 		cep = NULL;
 		idCidade = NULL;
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
-	 }
+	}
 
-	 char *numero = strdup(token);
-	 if( numero == NULL )
-	 {
+	char *numero = strdup(token);
+	if( numero == NULL )
+	{
 		printf(" Warning: Falha ao duplicar numero em Comando-Obter.h obterIdLocalizacao() sajhveasd\n");
 		free( idCidade );
 		free( cep );
@@ -448,7 +450,7 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 		cep = NULL;
 		idCidade = NULL;
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
-	 }
+	}
 
 	// APP 4 i0 idCidade cep bairro rua numero complemento
 	token = usuario_getNextToken(usuario);
@@ -469,7 +471,7 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 		return retorno;
 	}
 
-//	if( strlen(token) > TAMANHO_COMPLEMENTO )
+	//	if( strlen(token) > TAMANHO_COMPLEMENTO )
 	if( stringMaior(token, TAMANHO_COMPLEMENTO) )
 	{
 		printf(" Warning: Complemento exageradamente grande em Comando-Obter.h obterIdLocalizacao() askjdhjkvd\n");
@@ -599,8 +601,8 @@ char *obterTop10NovosProdutos(Usuario *usuario)// APP 4 J
 char *obterDescricaoProduto(Usuario *usuario)// APP 4 Q
 {
 	/*
-	*	Retorna descricao do produto caso sucesso, ou "ERRO" caso algo dê errado
-	*/
+	 *	Retorna descricao do produto caso sucesso, ou "ERRO" caso algo dê errado
+	 */
 	char *token;
 
 	// APP 4 Q idProdutoInformado
@@ -648,7 +650,7 @@ char *obterNomeProduto(Usuario *usuario)
 		printf(" Warning: Comando insuficiente em obterNomeProduto() Comando-Obter.h akjbbe\n");
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
-//	if(strlen(token) != TAMANHO_ID_PRODUTO)
+	//	if(strlen(token) != TAMANHO_ID_PRODUTO)
 	if( !stringTamanhoIgual(token, TAMANHO_ID_PRODUTO) )
 	{
 		printf(" Warning: Comando incorreto em obterNomeProduto() Comando-Obter.h ohrbbzzk\n");
@@ -679,7 +681,7 @@ char *obterAvaliacaoProduto(Usuario *usuario)// APP 4 kW idProduto              
 		printf(" Warning: Comando insuficiente em Comando-Obter.h obterAvaliacaoProduto() sadkjhjvrsad\n");
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
-//	if(strlen(token) != TAMANHO_ID_PRODUTO)
+	//	if(strlen(token) != TAMANHO_ID_PRODUTO)
 	if( !stringTamanhoIgual(token, TAMANHO_ID_PRODUTO) )
 	{
 		printf(" Warning: Comando incorreto detectado em Comando-Obter.h obterAvaliacaoProduto() asdhjkvrsdf\n");
@@ -807,14 +809,9 @@ char *obterInformacoesUsuario(Usuario *usuario)
 
 char *obter10ProdutosDaEmpresa(Usuario *usuario)//APP 4 ## 33
 {
-	if( usuario == NULL )
+	const char *localizacao = "Comando-Obter.h obter10ProdutosDaEmpresa()";
+	if (!usuarioValido(usuario, localizacao))
 	{
-		printf(" ERRO: Usuario nulo detectado em Comando-Obter.h obter10ProdutosDaEmpresa() askjve3\n");
-		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-	}
-	if( usuario_obterLogin(usuario) == NULL)
-	{
-		printf(" ERRO: Usuario não conectado detectado em Comando-Obter.h obter10ProdutosDaEmpresa() q09tbj\n");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	// if( !usuario_PermissaoContratante(usuario) )
@@ -823,40 +820,59 @@ char *obter10ProdutosDaEmpresa(Usuario *usuario)//APP 4 ## 33
 	// 	return RETORNO_ERRO_NAO_AUTORIZADO_STR_DINAMICA;
 	// }
 
-char *token;
-token = usuario_getNextToken(usuario);
-		if( token == NULL )
+	char *token;
+	token = usuario_getNextToken(usuario);
+	if( token == NULL )
+	{
+		return obter10ProdutosDaEmpresaDoBanco(usuario, strdup("1"), NULL);
+	}
+	char *pagina = strdup(token);
+	if (usuario_PermissaoCliente(usuario) || usuario_PermissaoAnonimo(usuario))
+	{
+
+		token = usuario_getNextToken(usuario);
+		if (token == NULL)
 		{
-			return obter10ProdutosDaEmpresaDoBanco(usuario, strdup("1"), NULL);
+			printf(" Warning: Comando insuficiente em Comando-Obter.h obterInformacaoPaginada() dfwjbht\n");
+			return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 		}
-		char *pagina = strdup(token);
-		if (usuario_PermissaoCliente(usuario) || usuario_PermissaoAnonimo(usuario))
+		if (stringMaior(token, TAMANHO_DE_INTEIRO_EM_BANCO_DE_DADOS))
 		{
-			
-			token = usuario_getNextToken(usuario);
-			if (token == NULL)
-			{
-				printf(" Warning: Comando insuficiente em Comando-Obter.h obterInformacaoPaginada() dfwjbht\n");
-				return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
-			}
-			if (stringMaior(token, TAMANHO_DE_INTEIRO_EM_BANCO_DE_DADOS))
-			{
-				printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterInformacaoPaginada() bouithfjt\n");
-				return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
-			}
-			char *idContratante = strdup(token);
-			return obter10ProdutosDaEmpresaDoBanco(usuario, pagina, idContratante);	
+			printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterInformacaoPaginada() bouithfjt\n");
+			return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 		}
-		return obter10ProdutosDaEmpresaDoBanco(usuario, pagina, NULL);
-
-
-
-
-
-
+		char *idContratante = strdup(token);
+		return obter10ProdutosDaEmpresaDoBanco(usuario, pagina, idContratante);	
+	}
 	return obter10ProdutosDaEmpresaDoBanco(usuario, pagina, NULL);
+
 }
 
+
+/** 
+ * @brief  Retorna a lista de desejos na pagina especificada ao usuario
+ * @note   Requisita informações ao banco de dados antes de retornar
+ * @param  *usuario:
+ * @retval string que precisa ser liberada
+ */
+char *obterListaDesejos(Usuario *usuario)
+{
+	const char *localizacao = "Comando-Obter.h obterListaDesejos()";
+	if (!usuarioValido(usuario, localizacao))
+	{
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	char *token = usuario_getNextToken(usuario);
+	if (token == NULL)
+	{
+		geraLog(LOG, "Usuario solicitando primeira pagina da lista de desejos", localizacao);
+		return retornaListaDesejosDoBanco(usuario, strdup("1"));
+	}
+	else
+	{
+		return retornaListaDesejosDoBanco(usuario, strdup(token));
+	}
+}
 
 
 
@@ -868,6 +884,8 @@ token = usuario_getNextToken(usuario);
  */
 char *obterInformacaoPaginada(Usuario *usuario)// APP 4 ##
 {
+	const char *localizacao = "Comando-Obter.h obterInformacaoPaginada()";
+	geraLog(LOG, "Usuario requisitando informação paginada", localizacao);
 	if (!usuarioValido(usuario, "Comando-Obter.h obterInformacaoPaginada() 156rf"))
 	{
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
@@ -875,24 +893,29 @@ char *obterInformacaoPaginada(Usuario *usuario)// APP 4 ##
 	char * token = usuario_getNextToken(usuario);
 	if( token == NULL )
 	{
-		printf(" ERRO: Comando insuficiente detectado em Comando-Obter.h obterInformacaoPaginada() savrn90gt\n");
+		geraLog(WARNING, "Comando insuficiente detectado askgbre", localizacao);
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 	if( stringMaior(token, TAMANHO_TIPO) )
 	{
-		printf(" ERRO: Comando exageradamente grande detectado em Comando-Obter.h obterInformacaoPaginada() askjrni0sd\n");
+		geraLog(ERRO, "Comando exageradamente grande detectado dfjkvbhuif", localizacao);
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 	if( strcmp(token, TIPO_ID_DE_PRODUTO_POR_EMPRESA) == 0 )//APP 4 ## 33
 	{
 		return obter10ProdutosDaEmpresa(usuario);
 	}
+	else if( strcmp(token, TIPO_LISTA_DESEJOS) == 0 )// AAPP 4 ## LD
+	{
+		return obterListaDesejos(usuario);
+	}
 	else
 	{
+		geraLog(WARNING, "Usuario solicitou um comando que não existe", localizacao);
+		printf("\tComando → |%s|\n", token);
 		return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
 	}
 }
-
 
 
 char *obterIdDeEmpresaDadoProduto(Usuario *usuario)
@@ -927,8 +950,4 @@ char *obterIdDeEmpresaDadoProduto(Usuario *usuario)
 
 	// return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 }
-
-
-
-
 

@@ -4167,6 +4167,49 @@ char *retornaIdDeEmpresaDadoProdutoDoBanco(Usuario *usuario, char *idProduto)
 	return retornaUnicoRetornoDaQuery(query);
 }
 
+/** 
+ * @brief  Gera a query pra lista de desejos e retorna paginado do banco de dados
+ * @note   Depende de "retornaPaginado()"
+ * @param  *usuario: Usuario a quem a lista de desejos pertenca
+ * @param  *pagina: Página que é desejado ser retornada
+ * @retval ERRO interno, ou, as informações paginadas da forma correta
+ */
+char *retornaListaDesejosDoBanco(Usuario *usuario, char *pagina)
+{
+	const char *localizacao = "OperacoesBanco.h retornaListaDesejosDoBanco()";
+	if (!usuarioValido(usuario, localizacao))
+	{
+		if (pagina != NULL)
+		{
+			free(pagina);
+			pagina = NULL;
+		}
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if (pagina == NULL)
+	{
+		geraLog(LOG, "Usuario nao informou pagina, definindo como \'1\'", localizacao);
+		pagina = strdup("1");
+	}
+
+	int tamanho = strlen(usuario_obterId(usuario)) + 1 + 67;
+	char *query = (char *)calloc(sizeof(char), tamanho);
+	if (query == NULL)
+	{
+		geraLog(ERRO, "Falha ao alocar memoria para string para query", localizacao);
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+
+	snprintf(query, tamanho, "SELECT L.idproduto FROM listaDesejos L WHERE L.cliente_idcliente=\'%s\'", usuario_obterId(usuario));
+	
+	if (query == NULL)
+	{
+		geraLog(ERRO, "Falha ao formatar string para query", localizacao);
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	return retornaPaginado(query, pagina);
+}
+
 /* ***FIM COMANDOS DE OBTENÇÃO*** */
 
 #endif //__OPERACOES_BANCO__

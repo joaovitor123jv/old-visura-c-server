@@ -70,17 +70,24 @@ forget:
 	@echo "Removendo doc/OrganizacaoCodigo.pdf"
 	@rm -f doc/OrganizacaoCodigo.pdf
 
-doc/ComandosMakefile.pdf:
+doc/ComandosMakefile.pdf: doc/src/ComandosMakefile.tex
 	@echo "Gerando documentação de opções de Makefile"
 	@$(CHANGE_TO_DOC_SOURCE) ; pdflatex ComandosMakefile.tex
 	@$(CHANGE_TO_DOC_SOURCE) ; mv ComandosMakefile.pdf ../
 
-doc/OrganizacaoCodigo.pdf:
+doc/OrganizacaoCodigo.pdf: doc/src/OrganizacaoCodigo.tex
 	@echo "Gerando documentação de organização de código"
 	@$(CHANGE_TO_DOC_SOURCE) ; pdflatex OrganizacaoCodigo.tex
 	@$(CHANGE_TO_DOC_SOURCE) ; mv OrganizacaoCodigo.pdf ../
 
-documentation: doc/ComandosMakefile.pdf doc/OrganizacaoCodigo.pdf
+
+doc/OperacoesBanco-FuncoesGenericas.pdf: doc/src/OperacoesBanco-FuncoesGenericas.tex
+	@echo "Gerando documentação de especificação do arquivo OperacoesBanco-FuncoesGenericas.h"
+	@$(CHANGE_TO_DOC_SOURCE) ; pdflatex OperacoesBanco-FuncoesGenericas.tex
+	@$(CHANGE_TO_DOC_SOURCE) ; mv OperacoesBanco-FuncoesGenericas.pdf ../
+
+
+documentation: doc/ComandosMakefile.pdf doc/OrganizacaoCodigo.pdf doc/OperacoesBanco-FuncoesGenericas.pdf
 	@echo "Gerando meta-documentação (índice)"
 	@echo "Toda a documentação necessária foi gerada com sucesso !"
 	@echo "Limpando arquivos residuais da compilação da documentação"

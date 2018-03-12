@@ -100,6 +100,7 @@ bool desconectarBanco()
 {
 	mysql_close(conexao);
 	conexao = NULL;
+	mysql_library_end();
 	return true;
 }
 

@@ -1,0 +1,125 @@
+\documentclass[onecolumn,12pt]{article}
+
+	%Adiciona suporte a cores
+	\usepackage{color}
+	%\usepackage[brazil]{babel}
+	
+	%traduz palavras utilizadas por padrão para português
+	%\usepackage[portuguese]{babel}
+	
+	%Adiciona suporte a acentuação, na hora de escrever
+	\usepackage[utf8]{inputenc}
+	
+	%Adiciona suporte a acentuação na hora de copiar texto
+	\usepackage[T1]{fontenc}
+	
+	
+	
+	%\title{Documenta\c{c}\~{a}o - Comandos de Makefile}
+	
+	\title{Documentação - Comandos de Makefile}
+	
+	%\date{2018-02-21}
+	\author{João Vitor Antoniassi Segantin}
+	
+	\begin{document}
+		\maketitle
+		\begin{abstract} \indent
+			\par Este documento, especifica padrões de criação de funções no arquivo \textbf{OperacoesBanco-FuncoesGenericas}, e explicita a utilização e funcionalidade a fundo de cada uma das funções contidas nesse arquivo.
+			\par Como é de se esperar, esse documento está dividido em seções, a fim de facilitar a navegação e busca rápida. Pode ser usado como referência em caso de dúvida.
+
+		\end{abstract}
+
+		\tableofcontents
+
+		\newpage
+		\indent
+		
+		\section{Das opções disponíveis.}
+		
+			\subsection{make all}
+				Ao utilizar essa opção, os arquivos de código fonte ainda não transformados em arquivos-objeto, e que são necessários para a compilação da interface, serão compilador, gerando assim um executável \textbf{server}.\par
+				Note que, esse comando \textbf{não} remove os arquivos objeto (.o) gerados no processo, portanto, se houver algum arquivo objeto oriundo de compilação anterior em outra arquitetura de processador, esse(s) arquivo(s) deverá(ão) ser removido(s) antes do processo de compilação com essa opção.
+				
+				
+			\subsection{make debug}
+				Opção relativamente semelhante ao comando "make all", com duas diferenciações:
+				\begin{itemize}
+					\item Na geração do executável \textbf{server}, é adicionada a opção "-g", que inclui anotações a respeito do código fonte, para debuggers.\par
+						Note que, por isso, não será interessante distribuir uma versão compilada para debug, ao público, ou colocá-lo rodando diretamente no servidor.
+					\item Após a compilação, será executada a interface automaticamente, utilizando de um debugger(valgrind).\par
+						Esse comando é útil na detecção de erros de memória, e alguns outros erros perceptíveis ou não, durante a execução do código em modo normal.
+				\end{itemize}
+				
+			\subsection{make build}
+				Opção para compilação final.\par
+				Ao ser chamada, executa o "make all", e então, remove quaisquer arquivos que são gerados durante a compilação, ao exemplo dos arquivos objeto (.o).
+			
+			\subsection{make run}
+				Ao ser utilizada, executa o "make all", e então executa o arquivo \textbf{server} automaticamente.\par
+				Essa opção foi adicionada ao projeto, por questões de padronização entre futuros códigos vindouros por mim, ou pela Senatauri Enterprise, que serão comandados por mim.
+			
+			\subsection{make clean}
+				Ao ser utilizada, essa opção removerá todo e qualquer arquivo objeto que esteja misturado com os códigos-fonte.\par
+				Atualmente somente executa a operação \textbf{"rm -rf *.o"}
+			
+			\subsection{make documentation}
+				\par Ao ser utilizada, compila todos os arquivos de documentação (.tex) contidos em "doc/src/", gerando arquivos de documentação em PDF, no diretório "doc/", e remove arquivos residuais oriundos da compilação desse arquivo.\par
+				Note que, com o uso dessa opção, os documentos somente serão gerados caso não existam no sistema de arquivos, para que eles sejam re-feitos, veja a opção "make forget", ou remova os arquivos que deseja que sejam gerados novamente.\par
+				Este documento pode ser gerado advindo dessa opção.
+				
+			\subsection{make forget}
+				Ao ser utilizada, essa opção remove quaisquer arquivos de documentação compilados por "make documentation"
+			
+			\subsection{make Fila.o}
+				Ao ser utilizada, essa opção compilará somente os documentos necessários para gerar o arquivo objeto Fila.o\par
+				Essa opção compila o arquivo Fila.c, gerando somente o arquivo Fila.o, necessário para a compilação do executável final \textbf{server}.\par
+				Note que, ao invocar "make all", essa opção será chamada como dependência automaticamente.
+	
+		\section{Das dependências do projeto}
+			As dependências para a compilação total do projeto são:
+			\begin{itemize}
+				\item make		(GNU Makefile interpreter)
+				\item gcc		(GNU C Compiler)
+				\item texlive	(LaTEX Compiler)
+				\item openssl	(Open Secure SHELL library)
+				\item libcrypto	(Criptography library)
+				\item libmysql	(MySQL library, or MariaDB library)
+				\item ruby		(The RUBY interpreter)
+				\item pthread	(POSIX Threads)
+			\end{itemize}
+			\subsection{Dependências para \textbf{geração} de \textbf{server}}
+				\begin{itemize}
+					\item make		(GNU Makefile interpreter)
+					\item gcc		(GNU C Compiler)
+					\item openssl	(Open Secure SHELL library)
+					\item libcrypto	(Criptography library)
+					\item libmysql	(MySQL library, or MariaDB library)
+					\item pthread	(POSIX Threads)
+				\end{itemize}
+			\subsection{Dependências para \textbf{execução} de \textbf{server}}
+				\begin{itemize}
+					\item ruby		(The RUBY interpreter)
+					\item openssl	(Open Secure SHELL library)
+					\item libcrypto	(Criptography library)
+					\item libmysql	(MySQL library, or MariaDB library)
+					\item pthread	(POSIX Threads)
+				\end{itemize}
+			\subsection{Dependências para \textbf{geração} da \textbf{documentação}}
+				\begin{itemize}
+					\item texlive	(LaTEX Compiler)
+				\end{itemize}
+			
+	%    \begin{large}
+	%    \end{large} \par
+	
+	%    \footnote{Isso aqui \'{e} pra estar no fim da p\'{a}gina.}
+		\newpage
+		\begin{large}
+			Desejo-lhe uma excelente experiência com o Visu-RA.
+		\end{large}
+	
+	
+	
+	\end{document}
+	

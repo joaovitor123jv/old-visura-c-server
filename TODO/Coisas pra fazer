@@ -1,8 +1,7 @@
-→redesenhar funcionamento da variavel "interpretando"
-→Checar strtok em multithread
-→Criar alternativa ao strtok
-→Separar .h de .c
-→Adaptar Makefile
+→ Acabar de fazer documentação para OperacoesBanco-FuncoesGenericas (O Makefile está pronto)
+
+
+
 →Separar a interface em processos  (mestre-> escravo)
 →Adaptar Makefile
 →Pesquisar e testar TCP Hand-off e Spoofing
@@ -13,7 +12,6 @@
 →Implementar confirma-email
 
 →Otimizar dados de confirmacao de email
-→Definir intervalo de tempo de Logs (15s é pouco)
 →Pesquisar algoritimos de definicao de perfil
 →Implementar update plano contratante
 →Implementar obterPlanoContratante
@@ -29,7 +27,6 @@
 →Otimizar modelo pra integracao com Big Data
 →Definir comandos que precisam ou não de chave
 →Re-Fazer addLocalizacao
-→estabelecer aquivo de logs somente para o Ruby
 →Criar função para gerenciamento de thread/forks
 
 

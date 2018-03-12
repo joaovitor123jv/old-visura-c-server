@@ -123,14 +123,3 @@ end
 
 cliente.encerrar
 
-# puts "Uso interno, somente"
-# puts "\n\n\n Deseja criar o produto em qual empresa (digite o login da empresa) ? (para ver a lista de empresas disponíveis digite \"list\")"
-# empresa = gets.chomp()
-
-# if empresa == "list"
-# 	puts "Você entao deseja ver a lista de empresas disponíveis ?"
-# end
-
-# puts "Empresa entendida = #{empresa}"
-
-# puts "Digite o ID do produto que você quer criar"
