@@ -154,7 +154,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 			{
 				// printf(" LOG: comando adicionar NÃO deu certo interpretadorDeComandos.h (interpretaComando())\n");
 				geraLog(LOG, "Comando adicionar não deu certo", localizacao);
-				*resultado = retorno;
+				*resultado = RETORNO_ADICAO_RECUSADA;
 				return NULL;
 			}
 			break;

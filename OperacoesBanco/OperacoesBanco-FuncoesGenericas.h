@@ -45,7 +45,11 @@
 #endif
 
 
-
+/** 
+ * @brief  Conecta-se ao banco e armazena os resultados em MYSQL *conexao.
+ * @note   Não é seguro em multithread
+ * @retval true, se conectou, false caso contrario.
+ */
 bool conectarBanco()
 {
 	if(conexao != NULL)
@@ -95,7 +99,11 @@ bool conectarBanco()
 	return false;
 }
 
-// Retorna true se der certo (unica opção)
+/** 
+ * @brief  Encerra conexao com o banco de dados
+ * @note   Trabalhando com variavel global MYSQL *conexao
+ * @retval true, sempre
+ */
 bool desconectarBanco()
 {
 	mysql_close(conexao);
@@ -104,6 +112,11 @@ bool desconectarBanco()
 	return true;
 }
 
+/** 
+ * @brief  Checa se a conexão com o banco de dados está ativa, e tenta uma re-conexao
+ * @note   Só checa se a conexao é nula...
+ * @retval true, caso a conexao esteja ativa
+ */
 bool conexaoAtiva()
 {
 	if(conexao == NULL)
@@ -124,7 +137,13 @@ bool conexaoAtiva()
 	return true;
 }
 
-// Retorna TRUE, se a query retorna algo com conteúdo, libera a query
+
+/** 
+ * @brief  Executa a query no banco de dados, e, se a query retornar algo, então retorna true
+ * @note   Libera a query
+ * @param  *query: Query a ser executada no banco de dados
+ * @retval true, se retornar conteudo, false caso contrario
+ */
 bool queryRetornaConteudo(char *query)
 {
 	if(query == NULL)
@@ -223,6 +242,12 @@ bool queryRetornaConteudo(char *query)
 }
 
 // retorna false se der algum problema, true se der certo (Não libera a query, como o checarSeVoltaAlgumaCoisaDaQuery())
+/** 
+ * @brief  Executa a query, e retorna false, caso seja recusada pelo banco de dados
+ * @note   Não libera a query
+ * @param  *query: Query a ser executada no banco de dados
+ * @retval true, se query for executada, false caso contrario
+ */
 bool executaQuery(char *query)
 {
 	if(query == NULL)
@@ -258,7 +283,13 @@ bool executaQuery(char *query)
 	return true;
 }
 
-char *obterRetornoUnicoDaQuery(char *query)// ATENÇÃO: Função de uso INTERNO da aplicação, para um retorno direto ao usuario, use retornaUnicoRetornoDaQuery(char *query);
+/** 
+ * @brief  Obtem o primeiro retorno de uma query, somente. Retorna NULL caso falhe
+ * @note   Libera query, Uso interno
+ * @param  *query: Query a ser executada no banco de dados
+ * @retval NULL, caso de erro. Resultado da query caso contrario
+ */
+char *obterRetornoUnicoDaQuery(char *query)
 {
 	if (!conexaoAtiva())
 	{
@@ -547,8 +578,12 @@ char *retornaUnicoRetornoDaQuery(char *query)
 	}
 }
 
-//Retorna TRUE se o produto existe na base de dados
-// bool checarIdProduto(MYSQL *conexao, char *id)
+/** 
+ * @brief  Checa se o produto existe na base de dados, retorna true caso exista
+ * @note   Não libera *id
+ * @param  *id: Id do produto a ser checado se existe
+ * @retval true, se existir, false caso contrario
+ */
 bool checarIdProduto(char *id)//OK
 {
 	if(id == NULL)
@@ -589,7 +624,12 @@ bool checarIdProduto(char *id)//OK
 	return retorno;
 }
 
-// Retorna true caso seja encontrado contratante com esse ID na base de dados
+/** 
+ * @brief  Checa se o contratante existe no banco de dados, retorna true caso exista
+ * @note   não libera *idContratante
+ * @param  *idContratante: Id do contratante a ser checado se existe na base de dados
+ * @retval true, caso exista, false, caso contrario
+ */
 bool checarIdContratante(char *idContratante)
 {
 	char *query = NULL;
@@ -610,7 +650,7 @@ bool checarIdContratante(char *idContratante)
 			return false;
 		}
 	
-		if(queryRetornaConteudo(query))
+		if(queryRetornaConteudo(query))//queryRetornaConteudo libera a query
 		{
 			//Se voltar algo da query
 			printf(" LOG: Existe empresa com esse ID no banco de dados em checarIdContratante() OperacoesBanco-FuncoesGenericas.h\n");
@@ -623,6 +663,12 @@ bool checarIdContratante(char *idContratante)
 		}
 }
 
+/** 
+ * @brief  Obtem o ID do contratante do usuário, caso seja contratante.
+ * @note   chame usuario_obterID(usuario)
+ * @param  *usuario: Usuario que precisa saber oo ID
+ * @retval NULL caso falhe, ID do usuario caso dê certo.
+ */
 char *obterIdContratanteDoBancoPorUsuario(Usuario *usuario)
 {
 	if (usuario == NULL)
@@ -647,22 +693,16 @@ char *obterIdContratanteDoBancoPorUsuario(Usuario *usuario)
 
 
 //retorna TRUE se o produto estiver vencido, false se estiver dentro do prazo de validade
+/** 
+ * @brief  Checa se o produto está vencido pra esse usuario. Retorna false caso esteja dentro do "prazo de validade"
+ * @note   Não libera *idProduto, nem *usuario
+ * @param  *idProduto: O produto o qual vai ser checada a validade
+ * @param  *usuario: O usuario que quer saber se está na validade o produto
+ * @retval true, caso esteja vencido. False, caso contrário
+ */
 bool produtoVencido(char *idProduto, Usuario *usuario)
 {
-	// if(conexao == NULL)
-	// {
-	// 	printf("ERRO DE CONEXÃO (OperacoesBanco-FuncoesGenericas.h) (produtoVencido())\n");
-	// 	printf(" LOG: Tentando reconexão com banco de dados \n");
-	// 	if(conectarBanco())
-	// 	{
-	// 		printf(" LOG: Reconectado com sucesso, continuando interpretação em OperacoesBanco-FuncoesGenericas.h produtoVencido()()\n");
-	// 	}
-	// 	else
-	// 	{
-	// 		printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-	// 		return true;
-	// 	}
-	// }
+
 	if (!conexaoAtiva())
 	{
 		printf(" Warning: Conexão inativa detectada em OperacoesBanco-FuncoesGenericas.h produtoVencido()\n");
@@ -775,8 +815,13 @@ bool produtoVencido(char *idProduto, Usuario *usuario)
 	}
 }
 
-// Função usada em obterTop10AlgumaCoisa
-// Pega informações da query informada, na primeira linha, concatena e responde ao usuario diretamente, liberando a query;
+
+/** 
+ * @brief  Retorna strings de ERRO caso dê erro, ou as informações requerida na query, concatenadas, com um espaço separando cada informação
+ * @note   usada em obterInformacoesProduto, libera a query
+ * @param  *query: query a ser executada no banco de dados
+ * @retval retorna direto ao usuario, um ponteiro para caracter não estático (strdup(algumaCoisa))
+ */
 char *retornaInformacoesObtidasNaQuery(char *query)
 {
 	if(query == NULL)
@@ -1100,4 +1145,67 @@ char *retornaPaginado(char *query, char *pagina)
 	return retornaNIteracoesDaQuery(novaQuery, 10);
 
 
+}
+
+/** 
+ * @brief  Checa se a cidade informada existe no banco de dados, retorna true caso positivo
+ * @note   não libera idCidade, nem nomeEstado
+ * @param  *nomeCidade: Nome da cidade no banco de dados
+ * @param  *nomeEstado: Nome do estado no banco de dados (SP, GO...)
+ * @retval true, caso cidade exista no banco de dados, false caso contrário
+ */
+bool cidadeExisteNoBanco(char *nomeCidade, char *nomeEstado)
+{
+	const char *localizacao = "OperacoesBanco-FuncoesGenericas.h cidadeExisteNoBanco()";
+	if (!conexaoAtiva())
+	{
+		geraLog(ERRO, "Conexão perdida com o banco de dados", localizacao);
+		return false;
+	}
+	if (nomeCidade == NULL || nomeEstado == NULL)
+	{
+		geraLog(ERRO, "nomeCidade ou nomeEstado == NULL", localizacao);
+		return false;
+	}
+	int tamanho = 106 + strlen(nomeCidade) + strlen(nomeEstado) + 1;
+	char *query = (char *)calloc(sizeof(char), tamanho);
+	if (query == NULL)
+	{
+		geraLog(ERRO, "Falha ao alocar memoria para query", localizacao);
+		return false;
+	}
+
+	snprintf(query, tamanho, "SELECT idcidade FROM cidade C JOIN estado E ON E.idestado=C.estado_idestado WHERE C.nome=\'%s\' AND E.nome=\'%s\';", nomeCidade, nomeEstado);
+	// char *query = strdup("SELECT idcidade FROM cidade C JOIN estado E ON E.idestado=C.estado_idestado WHERE C.nome='São_Paulo' AND E.nome='SP';");
+	if (query == NULL)
+	{
+		geraLog(ERRO, "Falha ao duplicar query", localizacao);
+		return false;
+	}
+
+	printf(" DEBUG: Query formatada = |%s|\n", query);
+
+	char *retorno = obterRetornoUnicoDaQuery(query);
+	if (retorno == NULL)
+	{
+		geraLog(ERRO, "Cidade não existe no banco de dados", localizacao);
+		return false;
+	}
+	else
+	{
+		geraLog(LOG, "Cidade existe no banco de dados", localizacao);
+		// free(query);
+		// query = NULL;
+		return true;
+	}
+	// if (!queryRetornaConteudo(query))// queryRetornaConteudo libera a query
+	// {
+	// 	geraLog(WARNING, "Cidade não existe no banco de dados", localizacao);
+	// 	return false;
+	// }
+	// else
+	// {
+	// 	geraLog(LOG, "Cidade existe no banco de dados", localizacao);
+	// 	return true;
+	// }
 }

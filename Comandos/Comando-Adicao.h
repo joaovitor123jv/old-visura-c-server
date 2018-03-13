@@ -19,6 +19,7 @@ bool addContratante(Usuario *usuario);//Retorna true se adicionado com sucesso
 bool addProduto(Usuario *usuario);//Retorna true se adicionado com sucesso
 
 bool addCidade(Usuario *usuario);//Retorna true se adicionado com sucesso
+bool addNumeroDeHabitantesACidade(Usuario *usuario);//Retorna true se adicionado com sucesso
 bool addLocalizacao(Usuario *usuario);//Retorna true se adicionado com sucesso
 
 bool addInformacoesAUsuario(Usuario *usuario);//Retorna true se adicionado com sucesso
@@ -216,6 +217,10 @@ int comandoAdicionar(Usuario *usuario)/* APP 2 */
 		}
 		printf(" ERRO: Exceção não manipulada em Comando-Adicao.h comandoAdicionar() QNR\n");
 		return RETORNO_ERRO_INTERNO;
+	}
+	else if(strcmp(token, TIPO_QUANTIDADE_DE_HABITANTES_DA_CIDADE) == 0)// APP 2 qC nomeCidade nomeEstado quantidade
+	{
+		return addNumeroDeHabitantesACidade(usuario);
 	}
 	else
 	{
@@ -2763,4 +2768,91 @@ bool addFeedbackAProduto(Usuario *usuario)// APP 2 tr * idProduto tituloDoFeedba
 	}
 	printf(" ERRO: erro desconhecido detectado em Comando-Adicao.h addFeedBackAProduto() ashjgvrsafrh41586210bvds\n");
 	return false;
+}
+
+/** 
+ * @brief  Altera a quantidade de habitantes do banco de dados, pra quantidade informada pelo usuario
+ * @note   Pode ser acessada somente pelo ROOT
+ * @call   APP 2 qC nomeCidade nomeEstado quantidade
+ * @param  *usuario: usado pra checar se é ROOT ou não
+ * @retval true caso tudo ocorra bem, false caso contrário
+ */
+bool addNumeroDeHabitantesACidade(Usuario *usuario)
+{
+	const char *localizacao = "Comando-Adicao.h addNumeroDeHabitantesACidade()";
+	if (!usuarioValido(usuario, localizacao))
+	{
+		return false;
+	}
+	if (usuario_PermissaoRoot(usuario))
+	{
+		char *token = usuario_getNextToken(usuario);
+		if (token == NULL)
+		{
+			geraLog(WARNING, "Comando insuficiente, cidade não informada", localizacao);
+			return false;
+		}
+		if (stringMaior(token, TAMANHO_DO_NOME_DA_CIDADE_COM_MAIOR_NOME_DO_MUNDO))
+		{
+			geraLog(WARNING, "Cidade informada possui nome exageradamente grande", localizacao)	;
+			return false;
+		}
+		char *nomeCidade = strdup(token);
+		if (nomeCidade == NULL)
+		{
+			geraLog(ERRO, "Falha ao duplicar nome de cidade", localizacao);
+			return false;
+		}
+		token = usuario_getNextToken(usuario);
+		if (token == NULL)
+		{
+			geraLog(WARNING, "Cliente nao informou estado", localizacao);
+			free(nomeCidade);
+			nomeCidade = NULL;
+			return false;
+		}
+		if (!stringTamanhoIgual(token, TAMANHO_ESTADO))
+		{
+			geraLog(WARNING, "Parametro incorreto identificado", localizacao);
+			free(nomeCidade);
+			nomeCidade = NULL;
+			return false;
+		}
+		char *nomeEstado = strdup(token);
+		if (nomeEstado == NULL)
+		{
+			geraLog(ERRO, "Falha ao duplicar nome de estado", localizacao);
+			free(nomeCidade);
+			nomeCidade = NULL;
+			return false;
+		}
+
+		token = usuario_getNextToken(usuario);
+		if (token == NULL)
+		{
+			geraLog(WARNING, "Numero de habitantes não foi informado", localizacao);
+			free(nomeCidade);
+			nomeCidade = NULL;
+			free(nomeEstado);
+			nomeEstado = NULL;						
+			return false;
+		}
+		char *numeroDeHabitantes = strdup(token);
+		if (numeroDeHabitantes == NULL)
+		{
+			geraLog(ERRO, "Falha ao duplicar quantidade de habitantes", localizacao);
+			free(nomeCidade);
+			nomeCidade = NULL;
+			free(nomeEstado);
+			nomeEstado = NULL;
+			return false;
+		}
+
+		return addNumeroDeHabitantesACidadeAoBanco(usuario, nomeCidade, nomeEstado, numeroDeHabitantes);
+	}
+	else
+	{
+		geraLog(WARNING, "Usuario que não é root tentou acessar esse comando", localizacao);
+		return false;
+	}
 }

@@ -2344,6 +2344,113 @@ bool addPontosDeUsuarioAoBanco(Usuario *usuario, char *quantidade)
 	}
 }
 
+bool addNumeroDeHabitantesACidadeAoBanco(Usuario *usuario, char *nomeCidade, char *nomeEstado, char *numeroHabitantes)
+{
+	const char *localizacao = "OperacoesBanco.h addNumeroDeHabitantesACidadeAoBanco()";
+	if (nomeCidade == NULL)
+	{
+		geraLog(ERRO, "nome de cidade é nulo", localizacao);
+		if (nomeEstado!=NULL)
+		{
+			free(nomeEstado);
+			nomeEstado = NULL;
+		}
+		if (numeroHabitantes != NULL)
+		{
+			free(numeroHabitantes);
+			numeroHabitantes = NULL;
+		}
+		return false;
+	}
+	if (nomeEstado == NULL)
+	{
+		geraLog(ERRO, "nome de estado é nulo", localizacao);
+		free(nomeCidade);
+		nomeCidade = NULL;
+		if (numeroHabitantes != NULL)
+		{
+			free(numeroHabitantes);
+			numeroHabitantes = NULL;
+		}
+		return false;
+	}
+	if (numeroHabitantes == NULL)
+	{
+		geraLog(ERRO, "Numero de habitantes nulo", localizacao);
+		free(nomeCidade);
+		free(nomeEstado);
+		nomeCidade = NULL;
+		nomeEstado = NULL;
+		return false;
+	}
+
+	if (!cidadeExisteNoBanco(nomeCidade, nomeEstado))
+	{
+		geraLog(WARNING, "Cidade não existe no banco de dados", localizacao);
+		printf("\tCidade = |%s|\n",nomeCidade);
+		free(nomeCidade);
+		free(nomeEstado);
+		nomeCidade = NULL;
+		nomeEstado = NULL;
+		return false;
+	}
+
+	int tamanho = 122 + strlen(nomeEstado) + strlen(nomeCidade) + strlen(numeroHabitantes) + 1;
+	char *query = (char*)calloc(sizeof(char), tamanho);
+	if (query == NULL)
+	{
+		geraLog(ERRO, "Falha ao alocar memoria para query", localizacao);
+		free(nomeCidade);
+		free(nomeEstado);
+		free(numeroHabitantes);
+		numeroHabitantes = NULL;
+		nomeEstado = NULL;
+		nomeCidade = NULL;
+		return false;
+	}
+
+	snprintf(query, tamanho, "UPDATE cidade C JOIN estado E ON E.idestado=C.estado_idestado SET C.quantidadeDeHabitantes=%s WHERE C.nome=\'%s\' AND E.nome=\'%s\';", numeroHabitantes, nomeCidade, nomeEstado);//TODO
+	if (query == NULL)
+	{
+		geraLog(ERRO, "Falha ao formatar query", localizacao);
+		free(nomeCidade);
+		free(nomeEstado);
+		free(numeroHabitantes);
+		numeroHabitantes = NULL;
+		nomeEstado = NULL;
+		nomeCidade = NULL;
+		return false;
+	}
+
+	if (!executaQuery(query))
+	{
+		geraLog(ERRO, "Falha ao executar query", localizacao);
+		printf("\tQuery = |%s|\n", query);
+		free(query);
+		free(nomeCidade);
+		free(nomeEstado);
+		free(numeroHabitantes);
+		numeroHabitantes = NULL;
+		nomeEstado = NULL;
+		nomeCidade = NULL;
+		query = NULL;
+		return false;
+	}
+	else
+	{
+		geraLog(LOG, "Quantidade de habitantes alterada com sucesso", localizacao);
+		free(query);
+		free(nomeCidade);
+		free(nomeEstado);
+		free(numeroHabitantes);
+		numeroHabitantes = NULL;
+		nomeEstado = NULL;
+		nomeCidade = NULL;
+		query = NULL;
+		return true;
+	}
+}
+
 /* ****FIM COMANDOS DE ADICAO****/
 /* COMANDOS DE OBTENÇÃO */
 

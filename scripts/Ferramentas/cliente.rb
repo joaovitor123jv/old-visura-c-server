@@ -2,6 +2,10 @@
 
 require 'socket'
 
+
+IP_GOOGLE = "35.192.214.58"
+PORTA_INTERFACE = 7420
+
 class Cliente
 	@@ip
 	@@porta
@@ -50,6 +54,7 @@ class Cliente
 
 		if @logEnabled
 			puts "Resposta = |#{resposta}|"
+			puts "Codificação da resposta = #{resposta.encoding}"
 		end
 		return resposta
 	end
