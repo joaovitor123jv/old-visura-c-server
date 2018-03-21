@@ -6,6 +6,9 @@ require 'socket'
 IP_GOOGLE = "35.192.214.58"
 PORTA_INTERFACE = 7420
 
+ERRO = -1
+OK = 0
+
 class Cliente
 	@@ip
 	@@porta

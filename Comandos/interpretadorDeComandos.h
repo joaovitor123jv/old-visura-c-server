@@ -15,9 +15,10 @@ MYSQL *conexao;
 #include "Comando-Obter.h"
 #include "Comando-Root.h"
 #include "Comando-Remover.h"
+#include "Comando-Atualizar.h"
 
 
-int comandoAtualizar(char *comando);
+// int comandoAtualizar(char *comando);
 
 
 char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario *usuario)

@@ -173,6 +173,7 @@ void *Servidor(void *cliente)
 	bool autorizado = false;
 	char *mensagem = NULL;
 	int resultado;
+	static const char *localizacao = "Server.h Servidor(void *cliente)";
 	Usuario usuario;
 	init_Usuario(&usuario);
 
@@ -227,6 +228,14 @@ void *Servidor(void *cliente)
 					printf(" Cliente Requisitou Login, mas Não foi atendido (Server Thread)\n");
 					enviaMensagemParaCliente("ERRO: Não autorizado, desconectando\0", cliente);
 					sairDaThread();
+					break;
+
+				case REQUISITANDO_ATUALIZACAO:
+					geraLog(LOG, "Cliente solicitando comando de atualização", localizacao);
+					mensagem = comandoAtualizar(&usuario);
+					enviaMensagemParaCliente(mensagem, cliente);
+					free(mensagem);
+					mensagem = NULL;
 					break;
 
 				// case REQUISITANDO_ADICAO:/* OK */

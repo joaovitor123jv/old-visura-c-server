@@ -264,6 +264,7 @@
 
 /* Retornos entre funções */
 #define RETORNO_OK 1
+#define RETORNO_OK_STR_DINAMICA strdup("OK");
 
 #define RETORNO_ERRO_INTERNO 2
 #define RETORNO_ERRO_DE_PARAMETRO 8
@@ -288,9 +289,11 @@
 #define RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA strdup("ERRO: Comando em construcao");
 #define RETORNO_ERRO_NAO_AUTORIZADO_STR_DINAMICA strdup("ERRO: Operacao nao autorizada");
 #define RETORNO_ERRO_NAO_AUTORIZADO_STR "ERRO: Operacao nao autorizada"
+#define RETORNO_FALHA_AO_ATUALIZAR_STR_DINAMICA strdup("ERRO: Falha ao atualizar dados");
 
 /* Fim retornos entre funções */
 
+#define SCRIPT_DE_ATUALIZACAO_DE_QUANTIDADE_DE_HABITANTES_DE_CIDADE "cd scripts/Ferramentas;ruby atualizaQuantidadeDeHabitantesDaCidade.rb"
 
 
 #endif //__COMANDOS__
