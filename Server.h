@@ -145,8 +145,13 @@ bool enviaMensagemParaCliente(const char *mensagem, void *cliente)
 		printf(" ERRO: COMANDO ESSENCIAL INCOMPLETO em Server.h enviaMensagemParaCliente()\n");
 		return false;
 	#else
-		write( *(int *)cliente, mensagem, strlen(mensagem) + 1 );
+		int quantidadeEscrita = write( *(int *)cliente, mensagem, strlen(mensagem) + 1 );
 		printf(" ************** ****************** *******************\n");
+		if (quantidadeEscrita == 0)
+		{
+			geraLog(ERRO, "Nada foi escrito ao usuario");
+			return false;
+		}
 		printf(" LOG: Mensagem enviada |%s|, em Server.h enviaMensagemParaCliente()\n", mensagem);
 		return true;
 	#endif
@@ -159,7 +164,12 @@ bool recebeMensagemDeCliente(char *mensagem, void *cliente)
 		return false;
 	#else
 		memset(mensagem, '\0', BUFFER_CLIENTE);
-		read(*(int*)cliente, mensagem, BUFFER_CLIENTE);	
+		int quantidadeDeBytesLida = read(*(int*)cliente, mensagem, BUFFER_CLIENTE);	
+		if (quantidadeDeBytesLida == 0)
+		{
+			geraLog(WARNING, "Nenhum byte foi lido");
+			return false;
+		}
 		printf(" LOG: Mensagem recebida |%s|, em Server.h recebeMensagemDeCliente()\n", mensagem);
 		return true;
 	#endif
@@ -173,7 +183,6 @@ void *Servidor(void *cliente)
 	bool autorizado = false;
 	char *mensagem = NULL;
 	int resultado;
-	static const char *localizacao = "Server.h Servidor(void *cliente)";
 	Usuario usuario;
 	init_Usuario(&usuario);
 
@@ -231,7 +240,7 @@ void *Servidor(void *cliente)
 					break;
 
 				case REQUISITANDO_ATUALIZACAO:
-					geraLog(LOG, "Cliente solicitando comando de atualização", localizacao);
+					geraLog(LOG, "Cliente solicitando comando de atualização");
 					mensagem = comandoAtualizar(&usuario);
 					enviaMensagemParaCliente(mensagem, cliente);
 					free(mensagem);
@@ -290,7 +299,7 @@ void *Servidor(void *cliente)
 					break;
 
 				case RETORNO_ADICAO_RECUSADA:
-					geraLog(LOG, "Adicao recusada detectada", "Server.h Servidor()");
+					geraLog(LOG, "Adicao recusada detectada");
 					enviaMensagemParaCliente("ERRO: Adição recusada", cliente);
 					break;
 

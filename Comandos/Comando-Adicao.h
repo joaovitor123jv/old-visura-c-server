@@ -2789,31 +2789,31 @@ bool addNumeroDeHabitantesACidade(Usuario *usuario)
 		char *token = usuario_getNextToken(usuario);
 		if (token == NULL)
 		{
-			geraLog(WARNING, "Comando insuficiente, cidade não informada", localizacao);
+			geraLog(WARNING, "Comando insuficiente, cidade não informada");
 			return false;
 		}
 		if (stringMaior(token, TAMANHO_DO_NOME_DA_CIDADE_COM_MAIOR_NOME_DO_MUNDO))
 		{
-			geraLog(WARNING, "Cidade informada possui nome exageradamente grande", localizacao)	;
+			geraLog(WARNING, "Cidade informada possui nome exageradamente grande")	;
 			return false;
 		}
 		char *nomeCidade = strdup(token);
 		if (nomeCidade == NULL)
 		{
-			geraLog(ERRO, "Falha ao duplicar nome de cidade", localizacao);
+			geraLog(ERRO, "Falha ao duplicar nome de cidade");
 			return false;
 		}
 		token = usuario_getNextToken(usuario);
 		if (token == NULL)
 		{
-			geraLog(WARNING, "Cliente nao informou estado", localizacao);
+			geraLog(WARNING, "Cliente nao informou estado");
 			free(nomeCidade);
 			nomeCidade = NULL;
 			return false;
 		}
 		if (!stringTamanhoIgual(token, TAMANHO_ESTADO))
 		{
-			geraLog(WARNING, "Parametro incorreto identificado", localizacao);
+			geraLog(WARNING, "Parametro incorreto identificado");
 			free(nomeCidade);
 			nomeCidade = NULL;
 			return false;
@@ -2821,7 +2821,7 @@ bool addNumeroDeHabitantesACidade(Usuario *usuario)
 		char *nomeEstado = strdup(token);
 		if (nomeEstado == NULL)
 		{
-			geraLog(ERRO, "Falha ao duplicar nome de estado", localizacao);
+			geraLog(ERRO, "Falha ao duplicar nome de estado");
 			free(nomeCidade);
 			nomeCidade = NULL;
 			return false;
@@ -2830,7 +2830,7 @@ bool addNumeroDeHabitantesACidade(Usuario *usuario)
 		token = usuario_getNextToken(usuario);
 		if (token == NULL)
 		{
-			geraLog(WARNING, "Numero de habitantes não foi informado", localizacao);
+			geraLog(WARNING, "Numero de habitantes não foi informado");
 			free(nomeCidade);
 			nomeCidade = NULL;
 			free(nomeEstado);
@@ -2840,7 +2840,7 @@ bool addNumeroDeHabitantesACidade(Usuario *usuario)
 		char *numeroDeHabitantes = strdup(token);
 		if (numeroDeHabitantes == NULL)
 		{
-			geraLog(ERRO, "Falha ao duplicar quantidade de habitantes", localizacao);
+			geraLog(ERRO, "Falha ao duplicar quantidade de habitantes");
 			free(nomeCidade);
 			nomeCidade = NULL;
 			free(nomeEstado);
@@ -2852,7 +2852,7 @@ bool addNumeroDeHabitantesACidade(Usuario *usuario)
 	}
 	else
 	{
-		geraLog(WARNING, "Usuario que não é root tentou acessar esse comando", localizacao);
+		geraLog(WARNING, "Usuario que não é root tentou acessar esse comando");
 		return false;
 	}
 }

@@ -1156,22 +1156,21 @@ char *retornaPaginado(char *query, char *pagina)
  */
 bool cidadeExisteNoBanco(char *nomeCidade, char *nomeEstado)
 {
-	const char *localizacao = "OperacoesBanco-FuncoesGenericas.h cidadeExisteNoBanco()";
 	if (!conexaoAtiva())
 	{
-		geraLog(ERRO, "Conexão perdida com o banco de dados", localizacao);
+		geraLog(ERRO, "Conexão perdida com o banco de dados");
 		return false;
 	}
 	if (nomeCidade == NULL || nomeEstado == NULL)
 	{
-		geraLog(ERRO, "nomeCidade ou nomeEstado == NULL", localizacao);
+		geraLog(ERRO, "nomeCidade ou nomeEstado == NULL");
 		return false;
 	}
 	int tamanho = 106 + strlen(nomeCidade) + strlen(nomeEstado) + 1;
 	char *query = (char *)calloc(sizeof(char), tamanho);
 	if (query == NULL)
 	{
-		geraLog(ERRO, "Falha ao alocar memoria para query", localizacao);
+		geraLog(ERRO, "Falha ao alocar memoria para query");
 		return false;
 	}
 
@@ -1179,7 +1178,7 @@ bool cidadeExisteNoBanco(char *nomeCidade, char *nomeEstado)
 	// char *query = strdup("SELECT idcidade FROM cidade C JOIN estado E ON E.idestado=C.estado_idestado WHERE C.nome='São_Paulo' AND E.nome='SP';");
 	if (query == NULL)
 	{
-		geraLog(ERRO, "Falha ao duplicar query", localizacao);
+		geraLog(ERRO, "Falha ao duplicar query");
 		return false;
 	}
 
@@ -1188,24 +1187,24 @@ bool cidadeExisteNoBanco(char *nomeCidade, char *nomeEstado)
 	char *retorno = obterRetornoUnicoDaQuery(query);
 	if (retorno == NULL)
 	{
-		geraLog(ERRO, "Cidade não existe no banco de dados", localizacao);
+		geraLog(ERRO, "Cidade não existe no banco de dados");
 		return false;
 	}
 	else
 	{
-		geraLog(LOG, "Cidade existe no banco de dados", localizacao);
+		geraLog(LOG, "Cidade existe no banco de dados");
 		// free(query);
 		// query = NULL;
 		return true;
 	}
 	// if (!queryRetornaConteudo(query))// queryRetornaConteudo libera a query
 	// {
-	// 	geraLog(WARNING, "Cidade não existe no banco de dados", localizacao);
+	// 	geraLog(WARNING, "Cidade não existe no banco de dados");
 	// 	return false;
 	// }
 	// else
 	// {
-	// 	geraLog(LOG, "Cidade existe no banco de dados", localizacao);
+	// 	geraLog(LOG, "Cidade existe no banco de dados");
 	// 	return true;
 	// }
 }

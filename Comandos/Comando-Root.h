@@ -35,10 +35,17 @@ char *comandoRoot(Usuario *usuario)
 			char *comandoCompleto = strdup(token);
 
 			printf(" \t\t\t\t\tCOMANDO: |%s|\n", comandoCompleto);
-			system(comandoCompleto);
+			int retorno = system(comandoCompleto);
 			free(comandoCompleto);
 			comandoCompleto = NULL;
-			return strdup("LOG: Comando executado com sucesso!");
+			if (retorno == 0)
+			{
+				return strdup("LOG: Comando executado com sucesso!");	
+			}
+			else
+			{
+				return strdup("LOG: Algo errado aconteceu, e o comando não foi executado corretamente");
+			}
 		}
 	}
 	else if( strcmp(token, "encerrar") == 0 )
@@ -49,7 +56,7 @@ char *comandoRoot(Usuario *usuario)
 	}
 	else if( strcmp(token, "status") == 0 )
 	{
-		geraLog(LOG, "ROOT requisitando status", "Comando-Root.h comandoRoot()");
+		geraLog(LOG, "ROOT requisitando status");
 		token = usuario_getNextToken(usuario);
 		if (token == NULL)
 		{

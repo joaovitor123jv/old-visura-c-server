@@ -269,38 +269,105 @@ bool mensagemDeEscapeDetectada(const char *mensagem)// Verifica se a mensagem é
 
 
 
-void geraLog(unsigned int tipoLog, const char *mensagem, const char *localizacao)
+void geraLog_internal(unsigned int tipoLog, const char *mensagem, const char *file, const char *function, const int linha)
 {
-	if (mensagem == NULL)
-	{
+	#ifndef DISABLE_LOGS
+		if (mensagem == NULL)
+		{
+			return;
+		}
+		
+		switch(tipoLog)
+		{
+			case WARNING:
+				fprintf(stdout, " WARNING: %s em %s na função %s: linha: %d\n", mensagem, file, function, linha);
+				break;
+			case ERRO:
+				fprintf(stdout, " ERRO: %s em %s na função %s: linha: %d\n", mensagem, file, function, linha);
+				break;
+			case LOG:
+				fprintf(stdout, " LOG: %s em %s na função %s: linha: %d\n", mensagem, file, function, linha);
+				break;
+			case DEBUG:
+				fprintf(stdout, " DEBUG: %s em %s na função %s: linha: %d\n", mensagem, file, function, linha);
+				break;
+			case EXTRA:
+				fprintf(stdout, " EXTRA: %s em %s na função %s: linha: %d\n", mensagem, file, function, linha);
+				break;
+			default:
+				fprintf(stdout, " ERRO: INDEFINICAO DE LOG EM AdaptadorDeString.h geraLog(unsigned int tipoLog, const char *mensagem, const char * localizacao);\n");
+				break;
+		}
+	#else
 		return;
-	}
-	if (localizacao == NULL)
-	{
-		return;
-	}
-	switch(tipoLog)
-	{
-		case WARNING:
-			fprintf(stdout, " Warning: %s em: %s\n", mensagem, localizacao);
-			break;
-		case ERRO:
-			fprintf(stdout, " ERRO: %s em %s\n", mensagem, localizacao);
-			break;
-		case LOG:
-			fprintf(stdout, " LOG: %s em %s\n", mensagem, localizacao);
-			break;
-		case DEBUG:
-			fprintf(stdout, " DEBUG: %s em %s\n", mensagem, localizacao);
-			break;
-		case EXTRA:
-			fprintf(stdout, " EXTRA: %s em %s\n", mensagem, localizacao);
-			break;
-		default:
-			fprintf(stdout, " ERRO: INDEFINICAO DE LOG EM AdaptadorDeString.h geraLog(unsigned int tipoLog, const char *mensagem, const char * localizacao);\n");
-			break;
-	}
+	#endif // DISABLE_LOGS
+
 }
+
+
+
+void tokenizer_private_reverteAlteracoesPorDelimitador(Tokenizer *tokenizer);
+
+/** 
+ * @brief  Retorna o endereco de uma página (sem as delimitações de servidor)
+ * @note   A URL Deve estar no formato    algumsite.com
+ * 			Ou seja, não deve ter o "http://" antes de "algumsite.com"
+ * @param  *pageURL: 
+ * @retval 
+ */
+char *obterEnderecoDadoURL(char *pageURL)
+{
+	static const char *localizacao = "AdaptadorDeString.h obterEnderecoDadoURL(char *pageURL)";
+	if (pageURL == NULL)
+	{
+		geraLog(WARNING, "pageURL nulo");
+		return NULL;
+	}
+	char *endereco = NULL;
+
+	Tokenizer *tokenizer = new_Tokenizer(pageURL, '/');
+	endereco = strdup(tokenizer_getNext(tokenizer));
+	delete_Tokenizer(tokenizer);
+	
+	return endereco;
+}
+
+/** 
+ * @brief  Retorna o endereco de uma página (sem as delimitações de servidor)
+ * @note   A URL Deve estar no formato    algumsite.com
+ * 			Ou seja, não deve ter o "http://" antes de "algumsite.com"
+ * @param  *pageURL: 
+ * @retval 
+ */
+char *obterPaginaDadoURL(char *pageURL)
+{
+	if (pageURL == NULL)
+	{
+		geraLog(WARNING, "pageURL nulo");
+		return NULL;
+	}
+	int i;
+
+	for(i = 0;i < strlen(pageURL);i++)
+	{
+		if(pageURL[i] == '/')
+		{
+			break;
+		}
+	}
+
+	if (i >= strlen(pageURL))
+	{
+		return "/";
+	}
+	else
+	{
+		return &pageURL[i];
+	}
+	
+}
+
+
 
 // ***************************************TOKENIZER  - BEGIN****************************************************
 
@@ -347,25 +414,25 @@ void init_Tokenizer(Tokenizer *tokenizer, const char *comando, const char delimi
 {
 	if (tokenizer == NULL)
 	{
-		geraLog(WARNING, "nenhum tokenizer foi passado", "AdaptadorDeString.h init_Tokenizer(Tokenizer *tokenizer, char *comando)");
+		geraLog(WARNING, "nenhum tokenizer foi passado");
 		return;
 	}
 	if (comando == NULL)
 	{
-		geraLog(WARNING, "Comando não pode ser NULL", "adaptadorDeString.h init_Tokenizer()");
+		geraLog(WARNING, "Comando não pode ser NULL");
 		return;
 	}
 
 	if (stringMaior((char *)comando, BUFFER_CLIENTE))
 	{
-		geraLog(ERRO, "Comando exageradamente grande detectado", "AdaptadorDeString.h init_Tokenizer()");
+		geraLog(ERRO, "Comando exageradamente grande detectado");
 		return;
 	}
 
 	tokenizer->comando = strdup(comando);
 	if (tokenizer->comando == NULL)
 	{
-		geraLog(ERRO, "Falha ao duplicar comando" , "AdaptadorDeString.h init_Tokenizer()");
+		geraLog(ERRO, "Falha ao duplicar comando");
 		return;
 	}
 
@@ -383,13 +450,13 @@ Tokenizer *new_Tokenizer(const char *comando, const char delimitador)
 {
 	if (comando == NULL)
 	{
-		geraLog(WARNING, "Comando não pode ser NULL", "adaptadorDeString.h new_Tokenizer()");
+		geraLog(WARNING, "Comando não pode ser NULL");
 		return NULL;
 	}
 
 	if (stringMaior((char *)comando, BUFFER_CLIENTE))
 	{
-		geraLog(ERRO, "Comando exageradamente grande detectado", "AdaptadorDeString.h new_Tokenizer()");
+		geraLog(ERRO, "Comando exageradamente grande detectado");
 		return NULL;
 	}
 
@@ -398,7 +465,7 @@ Tokenizer *new_Tokenizer(const char *comando, const char delimitador)
 	tokenizer->comando = strdup(comando);
 	if (tokenizer->comando == NULL)
 	{
-		geraLog(ERRO, "Falha ao duplicar comando" , "AdaptadorDeString.h new_Tokenizer()");
+		geraLog(ERRO, "Falha ao duplicar comando");
 		return NULL;
 	}
 
@@ -416,11 +483,11 @@ char *tokenizer_getNext(Tokenizer *tokenizer)
 	char *localizacao = "AdaptadorDeString.h tokenizer_getNext()";
 	if (tokenizer == NULL)
 	{
-		geraLog(WARNING, "Tokenizer nulo passado como parâmetro", localizacao);
+		geraLog(WARNING, "Tokenizer nulo passado como parâmetro");
 	}
 	if (tokenizer->comando == NULL)
 	{
-		geraLog(WARNING, "Tokenizer com comando nulo identificado", localizacao);		
+		geraLog(WARNING, "Tokenizer com comando nulo identificado");		
 	}
 	
 	// for(i = tokenizer->atual ; i < tokenizer->fim && pare ; i++)
@@ -431,7 +498,7 @@ char *tokenizer_getNext(Tokenizer *tokenizer)
 	int valor = strlen(&tokenizer->comando[tokenizer->atual]) + tokenizer->atual + 1;//+1 pra pular o \0
 	if( valor > tokenizer->fim+1)
 	{
-		geraLog(LOG, "Tokenizer alcançou seu limite...", localizacao);
+		geraLog(LOG, "Tokenizer alcançou seu limite...");
 		return NULL;
 	}
 	else
@@ -446,7 +513,7 @@ void delete_Tokenizer(Tokenizer *tokenizer)
 	char *localizacao = "AdaptadorDeString.h delete_Tokenizer(Tokenizer *tokenizer)";
 	if (tokenizer == NULL)
 	{
-		geraLog(WARNING, "Tokenizer nulo detectado", localizacao);
+		geraLog(WARNING, "Tokenizer nulo detectado");
 	}
 	if (tokenizer->comando != NULL)
 	{

@@ -156,8 +156,9 @@ APP
 		qC	(TIPO_QUANTIDAED_DE_HABITANTES_DA_CIDADE) (TODO)
 			nomeDaCidade	(Nome da cidade que deseja atualizar a quantidade de habitantes	)
 				nomeDoEstado	(Nome do estado que deseja atualizar a quantidade de habitantes	)
-					(Esse comando pode ser chamado como root, ele atualiza a quantidade de habitantes da cidade informada)
-					(Obtem a quantidade de habitantes da cidade do site do IBGE e armazena no banco de dados)
+					(Esse comando pode ser chamado como root, ele atualiza a quantidade de habitantes da cidade informada	)
+					(Obtem a quantidade de habitantes da cidade do site do IBGE e armazena no banco de dados				)
+					(Esse comando ainda apresenta problemas de desconexão													)
 
 	4	(COMANDO_OBTER)
 		J	(TOP_10_NOVOS)

@@ -1,5 +1,15 @@
 #define _GNU_SOURCE // Renove warning do pthread_yield();
 
+
+
+// #define TESTANDO
+// #define DISABLE_LOGS
+
+
+
+
+
+
 // #define __COM_CRIPTOGRAFIA__
 
 #include <stdio.h>
@@ -32,8 +42,6 @@ void interrupcaoForcada(int sinal)
 
 bool inicializaMonitorDeBancoDeDados();
 
-
-// #define TESTANDO
 
 
 #ifdef TESTANDO

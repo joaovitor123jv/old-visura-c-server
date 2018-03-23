@@ -113,9 +113,12 @@ bool mensagemDeEscapeDetectada(const char *mensagem);// Verifica se a mensagem √
  * @param  *localizacao: onde a mensagem foi gerada (em que parte do c√≥digo)
  * @retval None
  */
-void geraLog(unsigned int tipoLog, const char *mensagem, const char *localizacao);
+void geraLog_internal(unsigned int tipoLog, const char *mensagem, const char *arquivo, const char *funcao, const int linha);
 
 
+#ifndef DISABLE_LOGS
+	#define geraLog(TipoErro, Mensagem) geraLog_internal(TipoErro, Mensagem , __FILE__, __FUNCTION__, __LINE__)
+#endif
 
 // *******************    TOKENIZER   ***********************
 
@@ -165,6 +168,9 @@ void delete_Tokenizer(Tokenizer *tokenizer);
 
 // ******************* FIM TOKENIZER  ***********************
 
+
+char *obterPaginaDadoURL(char *pageURL);
+char *obterEnderecoDadoURL(char *pageURL);
 
 
 #endif //__AdaptadorDeString__

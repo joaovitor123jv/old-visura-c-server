@@ -865,7 +865,7 @@ char *obterListaDesejos(Usuario *usuario)
 	char *token = usuario_getNextToken(usuario);
 	if (token == NULL)
 	{
-		geraLog(LOG, "Usuario solicitando primeira pagina da lista de desejos", localizacao);
+		geraLog(LOG, "Usuario solicitando primeira pagina da lista de desejos");
 		return retornaListaDesejosDoBanco(usuario, strdup("1"));
 	}
 	else
@@ -884,8 +884,7 @@ char *obterListaDesejos(Usuario *usuario)
  */
 char *obterInformacaoPaginada(Usuario *usuario)// APP 4 ##
 {
-	const char *localizacao = "Comando-Obter.h obterInformacaoPaginada()";
-	geraLog(LOG, "Usuario requisitando informação paginada", localizacao);
+	geraLog(LOG, "Usuario requisitando informação paginada");
 	if (!usuarioValido(usuario, "Comando-Obter.h obterInformacaoPaginada() 156rf"))
 	{
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
@@ -893,12 +892,12 @@ char *obterInformacaoPaginada(Usuario *usuario)// APP 4 ##
 	char * token = usuario_getNextToken(usuario);
 	if( token == NULL )
 	{
-		geraLog(WARNING, "Comando insuficiente detectado askgbre", localizacao);
+		geraLog(WARNING, "Comando insuficiente detectado askgbre");
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 	if( stringMaior(token, TAMANHO_TIPO) )
 	{
-		geraLog(ERRO, "Comando exageradamente grande detectado dfjkvbhuif", localizacao);
+		geraLog(ERRO, "Comando exageradamente grande detectado dfjkvbhuif");
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 	if( strcmp(token, TIPO_ID_DE_PRODUTO_POR_EMPRESA) == 0 )//APP 4 ## 33
@@ -911,7 +910,7 @@ char *obterInformacaoPaginada(Usuario *usuario)// APP 4 ##
 	}
 	else
 	{
-		geraLog(WARNING, "Usuario solicitou um comando que não existe", localizacao);
+		geraLog(WARNING, "Usuario solicitou um comando que não existe");
 		printf("\tComando → |%s|\n", token);
 		return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
 	}

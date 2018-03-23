@@ -26,26 +26,26 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 	char *nomeAplicacao = NULL;
 	int tipoComando;
 	char *login = NULL;
-	const char *localizacao = "interpretadorDeComandos.h interpretaComando()";
+	// const char *localizacao = "interpretadorDeComandos.h interpretaComando()";
 
 	
 
 	if(autorizado == NULL)
 	{
 		printf("ERRO INDEFINIDO (interpretadorDeComandos.h) (interpretaComando())\n");
-		geraLog(ERRO, "Interno jajajhehbioa", localizacao);
+		geraLog(ERRO, "Interno jajajhehbioa");
 		*resultado = ERRO;
 		return NULL;
 	}
 	
 	if(comando == NULL)
 	{
-		geraLog(ERRO, "Interno jbgqaoit", localizacao);
+		geraLog(ERRO, "Interno jbgqaoit");
 		*resultado = ERRO;
 		return NULL;
 	}
 
-	geraLog(LOG, "Gerando TOKENIZER AQUI !!!", localizacao);
+	geraLog(LOG, "Gerando TOKENIZER AQUI !!!");
 	usuario_setTokenizer(usuario, comando);
 
 	/* Separa a primeira palavra */
@@ -55,21 +55,21 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 	if( nomeAplicacao == NULL )
 	{
 		// printf(" Warning: Comando nulo detectado em interpretadorDeComandos.h interpretaComando()\n");
-		geraLog(WARNING, "Comando nulo detectado", localizacao);
+		geraLog(WARNING, "Comando nulo detectado");
 		*resultado = ERRO;
 		return NULL;
 	}
 
 	if( !stringTamanhoIgual(nomeAplicacao, TAMANHO_CHAVE_APLICACAO) )
 	{
-		geraLog(WARNING, "Tamanho de chave incorreto detectado", localizacao);
+		geraLog(WARNING, "Tamanho de chave incorreto detectado");
 		*resultado = ERRO;
 		return NULL;
 	}
 
 	if(strcmp(nomeAplicacao, CHAVE_APLICACAO) != 0)/* CHAVE DE Aplicacao */
 	{
-		geraLog(WARNING, "CHAVE DE APLICACAO INCORRETA (APP)", localizacao);
+		geraLog(WARNING, "CHAVE DE APLICACAO INCORRETA (APP)");
 		*resultado = ERRO;
 		return NULL;
 	}
@@ -77,7 +77,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 
 	if( !(*autorizado) )
 	{
-		geraLog(LOG, "Cliente ainda não autorizando, iniciando processo de login", localizacao);
+		geraLog(LOG, "Cliente ainda não autorizando, iniciando processo de login");
 
 		login = comandoLogin(usuario);
 
@@ -93,26 +93,26 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 			*resultado = LOGIN_NAO_AUTORIZADO;
 			return NULL;
 		}
-		geraLog(ERRO, "Falha fatal askjgvbri", localizacao);
+		geraLog(ERRO, "Falha fatal askjgvbri");
 		exit(1);
 		*resultado = ERRO;
 	}
 	else
 	{
 		// printf(" LOG: Cliente Já logado, continuando em interpretadorDeComandos.h interpretaComando()\n");
-		geraLog(LOG, "Cliente já locado, continuando interpretacao", localizacao);
+		geraLog(LOG, "Cliente já locado, continuando interpretacao");
 	}
 
 	if(usuario_obterLogin(usuario) == NULL)
 	{
-		geraLog(ERRO, "Falha fatal orh89sd875", localizacao);
+		geraLog(ERRO, "Falha fatal orh89sd875");
 		exit(1);
 		*resultado = ERRO;
 		return NULL;
 	}
 	else
 	{
-		geraLog(LOG, "Usuario conectado e autenticado com sucesso", localizacao);
+		geraLog(LOG, "Usuario conectado e autenticado com sucesso");
 		usuario_mostrarDados(usuario);
 	}
 
@@ -122,7 +122,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 	if( stringMaior(nomeAplicacao, TAMANHO_COMANDO) )
 	{
 		// printf(" ERRO: Aplicação contem informação excessiva (interpretadorDeComandos.h) interpretaComando()\n");
-		geraLog(WARNING, "Tamanho de chave de aplicacao incompatível (APP) não identificado", localizacao);
+		geraLog(WARNING, "Tamanho de chave de aplicacao incompatível (APP) não identificado");
 		*resultado = ERRO;
 		return NULL;
 	}
@@ -131,7 +131,7 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 
 	if(tipoComando>9 || tipoComando < 0)/* Define " Alcance dos comandos " (de 0 a 9) */
 	{
-		geraLog(WARNING, "TIPO DE COMANDO NÂO GERENCIADO: ", localizacao);
+		geraLog(WARNING, "TIPO DE COMANDO NÂO GERENCIADO: ");
 		printf("\t\tTipo de comando = %d\n", tipoComando);
 		*resultado = ERRO_COMANDO_INCORRETO;
 		return NULL;
@@ -142,19 +142,19 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 	{
 		case COMANDO_ADICIONAR:
 			// printf(" LOG: Requisitando \"COMANDO_ADICIONAR\" em interpretadorDeComandos.h interpretaComando()\n");
-			geraLog(LOG, "Requisitando comandoAdicionar()", localizacao);
+			geraLog(LOG, "Requisitando comandoAdicionar()");
 			int retorno = comandoAdicionar(usuario);
 			if( retorno == RETORNO_OK )
 			{
 				// printf(" LOG: comando adicionar deu certo interpretadorDeComandos.h (interpretaComando())\n");
-				geraLog(LOG, "Sucesso ao executar o comando de adição", localizacao);
+				geraLog(LOG, "Sucesso ao executar o comando de adição");
 				*resultado = OK;
 				return NULL;
 			}
 			else
 			{
 				// printf(" LOG: comando adicionar NÃO deu certo interpretadorDeComandos.h (interpretaComando())\n");
-				geraLog(LOG, "Comando adicionar não deu certo", localizacao);
+				geraLog(LOG, "Comando adicionar não deu certo");
 				*resultado = RETORNO_ADICAO_RECUSADA;
 				return NULL;
 			}
@@ -162,21 +162,21 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 
 		case COMANDO_ATUALIZAR:/* COMANDO_ATUALIZAR = 3 */
 			// printf(" LOG: Requisitando \"COMANDO_ATUALIZAR\" em interpretadorDeComandos.h interpretaComando()\n");
-			geraLog(LOG, "Requisitando comandoAtualizar()", localizacao);
+			geraLog(LOG, "Requisitando comandoAtualizar()");
 			*resultado = REQUISITANDO_ATUALIZACAO;
 			return NULL;
 			break;
 
 		case COMANDO_OBTER:
 			// printf(" LOG: Requisitando \"COMANDO-OBTER\" em interpretadorDeComandos.h interpretaComando()\n");
-			geraLog(LOG, "requisitando comandoObter()", localizacao);
+			geraLog(LOG, "requisitando comandoObter()");
 			*resultado = REQUISITANDO_OBTENCAO;
 			return NULL;
 			break;
 
 		case COMANDO_REMOVER:
 			// printf(" LOG: Requisitando \"COMANDO_REMOVER\" em interpretadorDeComandos.h interpretaComando()\n");
-			geraLog(LOG, "Requisitando comando remover", localizacao);
+			geraLog(LOG, "Requisitando comando remover");
 			if (comandoRemover(usuario))
 			{
 				*resultado = REQUISITANDO_REMOCAO;	
@@ -190,28 +190,28 @@ char* interpretaComando(char *comando, bool *autorizado, int *resultado, Usuario
 
 		case ERRO:
 			// printf("Erro na execução do comando\n");
-			geraLog(ERRO, "Erro na execucao do comando q089g721b", localizacao);
+			geraLog(ERRO, "Erro na execucao do comando q089g721b");
 			*resultado = ERRO_DE_EXECUCAO;
 			return NULL;
 			break;
 
 		case COMANDO_ROOT: // 7
 			// printf(" Warning: COMANDO_ROOT REQUISITADO em interpretadorDeComandos.h interpretaComando()\n");
-			geraLog(WARNING, "****** REQUISITANDO COMANDO ROOT *******", localizacao);
+			geraLog(WARNING, "****** REQUISITANDO COMANDO ROOT *******");
 			*resultado = REQUISITANDO_ROOT; // 17
 			return NULL;
 			break;
 
 		default:
 			// printf(" Requisição não manipulada, (interpretadorDeComandos.h)\n");
-			geraLog(ERRO, "Requisição não manipulada", localizacao);
+			geraLog(ERRO, "Requisição não manipulada");
 			*resultado = ERRO;
 			return NULL;
 			break;
 	}
 
 	// printf(" Exceção não manipulada (interpretadorDeComandos.h)\n");
-	geraLog(ERRO, "Exceção não manipulada", "interpretadorDeComandos.h interpretaComando()");
+	geraLog(ERRO, "Exceção não manipulada");
 	*resultado = ERRO;
 	return NULL;
 }

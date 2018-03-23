@@ -66,6 +66,8 @@
 #define BUFFER_CLIENTE 1024//(aceitou 1024*1024 (1MB))
 #define PORTA 7420
 
+#define PORTA_PADRAO_WEB 80
+
 #define QTD_CLIENTE 5 /* Quantidade de clientes máxima aceita */
 
 

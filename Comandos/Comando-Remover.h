@@ -44,37 +44,36 @@ bool comandoRemover(Usuario *usuario)/* APP 5 algumaCoisa */
 
 bool deletarProduto(Usuario *usuario, char *idProduto)
 {
-	const char *localizacao = "Comando-Remover.h deletarProduto()";
 	if (!conexaoAtiva())
 	{
-		geraLog(ERRO, "Conexao inativa com o banco de dados detectada", localizacao);
+		geraLog(ERRO, "Conexao inativa com o banco de dados detectada");
 		return false;
 	}
 
 	if (!checarIdProduto(idProduto))
 	{
-		geraLog(WARNING, "Produto não existe na base de dados", localizacao);
+		geraLog(WARNING, "Produto não existe na base de dados");
 		return false;
 	}
-	geraLog(LOG, "Produto existe na base de dados", localizacao);
+	geraLog(LOG, "Produto existe na base de dados");
 
 	// int tamanho = strlen(idProduto);
 	int tamanho = 10 + 64 + 1;
 	char *query = (char *)calloc(sizeof(char), tamanho);
 	if (query == NULL)
 	{
-		geraLog(WARNING, "Falha ao alocar memoria para query", localizacao);
+		geraLog(WARNING, "Falha ao alocar memoria para query");
 		return false;
 	}
 	snprintf(query, tamanho, "DELETE FROM visualizacaoDeUsuario WHERE produto_idproduto=\'%s\';", idProduto);
 	if (query == NULL)
 	{
-		geraLog(WARNING, "Falha ao formatar query aoighr", localizacao);
+		geraLog(WARNING, "Falha ao formatar query aoighr");
 		return false;
 	}
 	if (!executaQuery(query))
 	{
-		geraLog(WARNING, "Falha ao executar query", localizacao);
+		geraLog(WARNING, "Falha ao executar query");
 		return false;
 	}
 
@@ -83,18 +82,18 @@ bool deletarProduto(Usuario *usuario, char *idProduto)
 	query = (char *)realloc(query, tamanho);
 	if (query == NULL)
 	{
-		geraLog(WARNING, "Falha ao realocar memoria para query weuiotb", localizacao);
+		geraLog(WARNING, "Falha ao realocar memoria para query weuiotb");
 		return false;
 	}
 	snprintf(query, tamanho, "DELETE FROM feedBackCliente WHERE idproduto=\'%s\';", idProduto);
 	if (query == NULL)
 	{
-		geraLog(WARNING, "Falha ao formatar query dakjhbt", localizacao);
+		geraLog(WARNING, "Falha ao formatar query dakjhbt");
 		return false;
 	}
 	if (!executaQuery(query))
 	{
-		geraLog(WARNING, "Falha ao executar query", localizacao);
+		geraLog(WARNING, "Falha ao executar query");
 		return false;
 	}
 
@@ -102,25 +101,25 @@ bool deletarProduto(Usuario *usuario, char *idProduto)
 	query = (char *)realloc(query, tamanho);
 	if (query == NULL)
 	{
-		geraLog(WARNING, "Falha ao realocar memoria para query kerjym5", localizacao);
+		geraLog(WARNING, "Falha ao realocar memoria para query kerjym5");
 		return false;
 	}
 	snprintf(query, tamanho, "DELETE FROM produto WHERE idproduto=\'%s\' LIMIT 1;", idProduto);
 	if (query == NULL)
 	{
-		geraLog(WARNING, "Falha ao formatar query tn654", localizacao);
+		geraLog(WARNING, "Falha ao formatar query tn654");
 		return false;
 	}
 	if (!executaQuery(query))
 	{
-		geraLog(WARNING, "Falha ao executar query", localizacao);
+		geraLog(WARNING, "Falha ao executar query");
 		free(query);
 		query = NULL;
 		return false;
 	}
 	else
 	{
-		geraLog(LOG, "Produto deletado do banco de dados com sucesso", localizacao);
+		geraLog(LOG, "Produto deletado do banco de dados com sucesso");
 		free(query);
 		query = NULL;
 		return true;

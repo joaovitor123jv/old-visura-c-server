@@ -187,15 +187,18 @@ bool usuarioValido(Usuario *usuario, const char *localizacao)
 {
 	if (usuario == NULL)
 	{
-		geraLog(WARNING, "Usuario nulo detectado", localizacao);
+		geraLog(WARNING, "Usuario nulo detectado");
+		printf("\tDetectado em: %s\n", localizacao);
 		return false;
 	}
 	if (usuario->login == NULL	)
 	{
-		geraLog(WARNING, "Usuario nao conectado detectado", localizacao);
+		geraLog(WARNING, "Usuario nao conectado detectado");
+		printf("\tDetectado em: %s\n", localizacao);
 		return false;
 	}
-	geraLog(LOG, "Usuario validado", localizacao);
+	geraLog(LOG, "Usuario validado");
+	printf("\tDetectado em: %s\n", localizacao);
 	return true;
 }
 
@@ -379,12 +382,12 @@ Tokenizer *usuario_getTokenizer(Usuario *usuario)
 {
 	if (usuario == NULL)
 	{
-		geraLog(WARNING, "Usuario nulo detectado", "Usuario.h usuario_getTokenizer()");
+		geraLog(WARNING, "Usuario nulo detectado");
 		return NULL;
 	}
 	if (usuario->tokenizer == NULL)
 	{
-		geraLog(WARNING, "Usuario nao possui tokenizer", "Usuario.h usuario_getTokenizer()");
+		geraLog(WARNING, "Usuario nao possui tokenizer");
 		return NULL;
 	}
 	return usuario->tokenizer;
@@ -394,12 +397,12 @@ char *usuario_getNextToken(Usuario *usuario)
 {
 	if (usuario == NULL)
 	{
-		geraLog(WARNING, "Usuario nulo detectado", "Usuario.h usuario_getNextToken()");
+		geraLog(WARNING, "Usuario nulo detectado");
 		return NULL;
 	}
 	if (usuario->tokenizer == NULL)
 	{
-		geraLog(WARNING, "Usuario nao possui tokenizer", "Usuario.h usuario_getNextToken()");
+		geraLog(WARNING, "Usuario nao possui tokenizer");
 		return NULL;
 	}
 	return tokenizer_getNext(usuario->tokenizer);
@@ -409,7 +412,7 @@ void usuario_setTokenizer(Usuario *usuario, const char *comando)
 {
 	if (usuario == NULL)
 	{
-		geraLog(WARNING, "Usuario nulo detectado", "Usuario.h usuario_setTokenizer()");
+		geraLog(WARNING, "Usuario nulo detectado");
 		return;
 	}
 	else
@@ -423,12 +426,12 @@ void usuario_setTokenizer(Usuario *usuario, const char *comando)
 		usuario->tokenizer = new_Tokenizer(comando, ' ');
 		if (usuario->tokenizer == NULL)
 		{
-			geraLog( ERRO, "Falha ao gerar tokenizer para usuario", "Usuario.h usuario_setTokenizer()");
+			geraLog( ERRO, "Falha ao gerar tokenizer para usuario");
 			return;
 		}
 		else
 		{
-			geraLog( LOG, "usuario agora possui Tokenizer", "Usuario.h usuario_setTokenizer()");
+			geraLog( LOG, "usuario agora possui Tokenizer");
 			return;
 		}
 	}

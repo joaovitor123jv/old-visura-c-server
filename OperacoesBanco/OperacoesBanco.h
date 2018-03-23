@@ -2011,11 +2011,11 @@ bool addAvaliacaoAProdutoAoBanco(Usuario *usuario, char *idProduto, char *avalia
 		printf(" Warning: não existe visualização para esse usuario em OperacoesBanco.h addAvaliacaoAProdutoAoBanco()\n");
 		if(addVisualizacoesAoBanco(idProduto, strdup("1"), usuario))
 		{
-			geraLog(LOG, "Visualização adicionada a usuario", "OperacoesBanco.h addAvaliacaoAProdutoAoBanco()");
+			geraLog(LOG, "Visualização adicionada a usuario");
 		}
 		else
 		{
-			geraLog(ERRO, "Falha ao adicionar visualização ao usuario", "OperacoesBanco.h addAvaliacaoAProdutoAoBanco()");
+			geraLog(ERRO, "Falha ao adicionar visualização ao usuario");
 			return false;
 		}
 		// return false;
@@ -2190,11 +2190,11 @@ bool addFeedBackDeProdutoAoBanco(Usuario *usuario, char *idProduto, char *titulo
 			printf(" Warning: usuario cadastrado não possui nenhuma visualização desse produto registrada em OperacoesBanco.h addFeedBackDeProdutoAoBanco() askjdhjvbdsd5\n");
 			if(addVisualizacoesAoBanco(idProduto, strdup("1"), usuario))
 			{
-				geraLog(LOG, "Visualização adicionada a usuario", "OperacoesBanco.h addFeedBackDeProdutoAoBanco()");
+				geraLog(LOG, "Visualização adicionada a usuario");
 			}
 			else
 			{
-				geraLog(ERRO, "Falha ao adicionar visualização ao usuario", "OperacoesBanco.h addAvaliacaoAProdutoAoBanco()");
+				geraLog(ERRO, "Falha ao adicionar visualização ao usuario");
 				return false;
 			}
 		}
@@ -2346,10 +2346,9 @@ bool addPontosDeUsuarioAoBanco(Usuario *usuario, char *quantidade)
 
 bool addNumeroDeHabitantesACidadeAoBanco(Usuario *usuario, char *nomeCidade, char *nomeEstado, char *numeroHabitantes)
 {
-	const char *localizacao = "OperacoesBanco.h addNumeroDeHabitantesACidadeAoBanco()";
 	if (nomeCidade == NULL)
 	{
-		geraLog(ERRO, "nome de cidade é nulo", localizacao);
+		geraLog(ERRO, "nome de cidade é nulo");
 		if (nomeEstado!=NULL)
 		{
 			free(nomeEstado);
@@ -2364,7 +2363,7 @@ bool addNumeroDeHabitantesACidadeAoBanco(Usuario *usuario, char *nomeCidade, cha
 	}
 	if (nomeEstado == NULL)
 	{
-		geraLog(ERRO, "nome de estado é nulo", localizacao);
+		geraLog(ERRO, "nome de estado é nulo");
 		free(nomeCidade);
 		nomeCidade = NULL;
 		if (numeroHabitantes != NULL)
@@ -2376,7 +2375,7 @@ bool addNumeroDeHabitantesACidadeAoBanco(Usuario *usuario, char *nomeCidade, cha
 	}
 	if (numeroHabitantes == NULL)
 	{
-		geraLog(ERRO, "Numero de habitantes nulo", localizacao);
+		geraLog(ERRO, "Numero de habitantes nulo");
 		free(nomeCidade);
 		free(nomeEstado);
 		nomeCidade = NULL;
@@ -2386,7 +2385,7 @@ bool addNumeroDeHabitantesACidadeAoBanco(Usuario *usuario, char *nomeCidade, cha
 
 	if (!cidadeExisteNoBanco(nomeCidade, nomeEstado))
 	{
-		geraLog(WARNING, "Cidade não existe no banco de dados", localizacao);
+		geraLog(WARNING, "Cidade não existe no banco de dados");
 		printf("\tCidade = |%s|\n",nomeCidade);
 		free(nomeCidade);
 		free(nomeEstado);
@@ -2399,7 +2398,7 @@ bool addNumeroDeHabitantesACidadeAoBanco(Usuario *usuario, char *nomeCidade, cha
 	char *query = (char*)calloc(sizeof(char), tamanho);
 	if (query == NULL)
 	{
-		geraLog(ERRO, "Falha ao alocar memoria para query", localizacao);
+		geraLog(ERRO, "Falha ao alocar memoria para query");
 		free(nomeCidade);
 		free(nomeEstado);
 		free(numeroHabitantes);
@@ -2412,7 +2411,7 @@ bool addNumeroDeHabitantesACidadeAoBanco(Usuario *usuario, char *nomeCidade, cha
 	snprintf(query, tamanho, "UPDATE cidade C JOIN estado E ON E.idestado=C.estado_idestado SET C.quantidadeDeHabitantes=%s WHERE C.nome=\'%s\' AND E.nome=\'%s\';", numeroHabitantes, nomeCidade, nomeEstado);//TODO
 	if (query == NULL)
 	{
-		geraLog(ERRO, "Falha ao formatar query", localizacao);
+		geraLog(ERRO, "Falha ao formatar query");
 		free(nomeCidade);
 		free(nomeEstado);
 		free(numeroHabitantes);
@@ -2424,7 +2423,7 @@ bool addNumeroDeHabitantesACidadeAoBanco(Usuario *usuario, char *nomeCidade, cha
 
 	if (!executaQuery(query))
 	{
-		geraLog(ERRO, "Falha ao executar query", localizacao);
+		geraLog(ERRO, "Falha ao executar query");
 		printf("\tQuery = |%s|\n", query);
 		free(query);
 		free(nomeCidade);
@@ -2438,7 +2437,7 @@ bool addNumeroDeHabitantesACidadeAoBanco(Usuario *usuario, char *nomeCidade, cha
 	}
 	else
 	{
-		geraLog(LOG, "Quantidade de habitantes alterada com sucesso", localizacao);
+		geraLog(LOG, "Quantidade de habitantes alterada com sucesso");
 		free(query);
 		free(nomeCidade);
 		free(nomeEstado);
@@ -4295,7 +4294,7 @@ char *retornaListaDesejosDoBanco(Usuario *usuario, char *pagina)
 	}
 	if (pagina == NULL)
 	{
-		geraLog(LOG, "Usuario nao informou pagina, definindo como \'1\'", localizacao);
+		geraLog(LOG, "Usuario nao informou pagina, definindo como \'1\'");
 		pagina = strdup("1");
 	}
 
@@ -4303,7 +4302,7 @@ char *retornaListaDesejosDoBanco(Usuario *usuario, char *pagina)
 	char *query = (char *)calloc(sizeof(char), tamanho);
 	if (query == NULL)
 	{
-		geraLog(ERRO, "Falha ao alocar memoria para string para query", localizacao);
+		geraLog(ERRO, "Falha ao alocar memoria para string para query");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
@@ -4311,7 +4310,7 @@ char *retornaListaDesejosDoBanco(Usuario *usuario, char *pagina)
 	
 	if (query == NULL)
 	{
-		geraLog(ERRO, "Falha ao formatar string para query", localizacao);
+		geraLog(ERRO, "Falha ao formatar string para query");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	return retornaPaginado(query, pagina);
