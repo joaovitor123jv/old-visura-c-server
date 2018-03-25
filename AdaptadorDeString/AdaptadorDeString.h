@@ -120,6 +120,17 @@ void geraLog_internal(unsigned int tipoLog, const char *mensagem, const char *ar
 	#define geraLog(TipoErro, Mensagem) geraLog_internal(TipoErro, Mensagem , __FILE__, __FUNCTION__, __LINE__)
 #endif
 
+
+/** 
+ * @brief  Concatena varias strings numa só
+ * @note   necessário liberar retorno. Não libera memoria
+ * @param  *primeiraString: 
+ * @retval string resultado das concatenações
+ */
+char *concatenaStrings(int quantidadeDeStrings, char *primeiraString, ...);
+
+
+
 // *******************    TOKENIZER   ***********************
 
 /** 

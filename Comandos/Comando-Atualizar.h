@@ -5,7 +5,7 @@
 #include "../OperacoesBanco/OperacoesBanco.h"
 #include "../AdaptadorDeString/AdaptadorDeString.h"
 
-#include <ruby.h>
+#include "Ferramentas/rubyWrapper.h"
 
 char *comandoAtualizar(Usuario *usuario);//Retorna mensagem direto ao usuario (OK, caso dê certo)
 
@@ -44,10 +44,12 @@ char *comandoAtualizar(Usuario *usuario)/* APP 3 */
 	}
 	if (strcmp(TIPO_QUANTIDADE_DE_HABITANTES_DA_CIDADE, token) == 0)
 	{
+		geraLog(LOG, "Solicitando atualização de quantidade de habitantes na cidade");
 		return atualizarQuantidadeDeHabitantesDaCidade(usuario);
 	}
 	else
 	{
+		geraLog(ERRO, "Comando não compreendido");
 		return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
 	}
 }
@@ -65,6 +67,7 @@ char *atualizarQuantidadeDeHabitantesDaCidade(Usuario *usuario)// APP 3 qC nomeC
 	{
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
+	geraLog(LOG, "Obtendo token");
 	char *token = usuario_getNextToken(usuario);
 	if (token == NULL)
 	{
@@ -76,69 +79,116 @@ char *atualizarQuantidadeDeHabitantesDaCidade(Usuario *usuario)// APP 3 qC nomeC
 		geraLog(WARNING, "Tamanho do nome da cidade excedeu os limites");
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
+	geraLog(LOG, "Duplicando token");
 	char *nomeDaCidade = strdup(token);
 	if (nomeDaCidade == NULL)
 	{
 		geraLog(ERRO, "Falha ao duplicar nome da cidade, abortando");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
-
+	geraLog(LOG, "Obtendo proximo token");
 	token = usuario_getNextToken(usuario);
 	if (token == NULL)
 	{
 		geraLog(WARNING, "Comando insuficiente detectado kjdwgrt");
+		free(nomeDaCidade);
+		nomeDaCidade = NULL;
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
 	if(!stringTamanhoIgual(token, TAMANHO_ESTADO))
 	{
 		geraLog(WARNING, "Tamanho do nome do estado está incorreto");
+		free(nomeDaCidade);
+		nomeDaCidade = NULL;
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 	}
+	geraLog(LOG, "Duplicando token");
 	char *nomeDoEstado = strdup(token);
 	if (nomeDoEstado == NULL)
 	{
 		geraLog(ERRO, "Falha ao duplicar nome de estado");
+		free(nomeDaCidade);
+		nomeDaCidade = NULL;
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
 
 
 	// TODO Colocar ruby aqui
+	geraLog(LOG, "Gerando argumento");
+	// char *argumento = concatenaStrings(5, "\'", nomeDaCidade, "\',\'", nomeDoEstado, "\'");
+	char *argumento = concatenaStrings(3, nomeDaCidade, " ", nomeDoEstado);
+	if (argumento == NULL)
+	{
+		free(nomeDaCidade);
+		free(nomeDoEstado);
+		nomeDaCidade = NULL;
+		nomeDoEstado = NULL;
+		return NULL;
+	}
+	geraLog(LOG, "Chamando função ruby");
+	// char *retorno = chamaFuncaoRuby("./obtemQuantidadeDeHabitantesDoIBGE.rb", "FerramentaInterna.new", argumento);
+	char *retorno = chamaFuncaoRuby(usuario, SCRIPT_DE_ATUALIZACAO_DE_QUANTIDADE_DE_HABITANTES_DE_CIDADE, argumento);
+
+	geraLog(LOG, "Liberando argumento");
+	free(argumento);
+	argumento = NULL;
+
+	if (retorno == NULL)
+	{
+		geraLog(ERRO, "Ocorreu algum erro no wrapper, e não foi possível obter o retorno");
+		free(nomeDoEstado);
+		free(nomeDaCidade);
+		nomeDaCidade = NULL;
+		nomeDoEstado = NULL;
+		geraLog(LOG, "Variáveis liberadas");
+		return NULL;
+	}
+
+	geraLog(LOG, "O Ruby retornou !!!!!!!!!!!!!");
+	printf("\t\tRetorno = |%s|\n", retorno);
+
+
+	free(nomeDaCidade);
+	free(nomeDoEstado);
+	nomeDaCidade = NULL;
+	nomeDoEstado = NULL;
+
+	return retorno;
+	// END_RUBY
 
 
 
+
+	// ↓ ******************************  ↓SEMI-FUNCIONAL↓ ************************************* ↓
 
 	//					Tamanho da string de execucao do script						+ tamanho do nome da cidade + tamanho do nome do estado + quantidade de espacos + \0
-	int tamanho = strlen(SCRIPT_DE_ATUALIZACAO_DE_QUANTIDADE_DE_HABITANTES_DE_CIDADE) + strlen(nomeDaCidade) + TAMANHO_ESTADO + 2 + 1;
-	char *comando = (char *)calloc(sizeof(char), tamanho);
-	if (comando == NULL)
-	{
-		geraLog(ERRO, "Falha ao alocar memoria para comando");
-		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-	}
+	// int tamanho = strlen(SCRIPT_DE_ATUALIZACAO_DE_QUANTIDADE_DE_HABITANTES_DE_CIDADE) + strlen(nomeDaCidade) + TAMANHO_ESTADO + 2 + 1;
+	// char *comando = (char *)calloc(sizeof(char), tamanho);
+	// if (comando == NULL)
+	// {
+	// 	geraLog(ERRO, "Falha ao alocar memoria para comando");
+	// 	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	// }
 
-	snprintf(comando, tamanho, "%s %s %s", SCRIPT_DE_ATUALIZACAO_DE_QUANTIDADE_DE_HABITANTES_DE_CIDADE, nomeDaCidade, nomeDoEstado);
-	if (comando == NULL)
-	{
-		geraLog(ERRO, "Falha ao formatar comando");
-		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-	}
+	// snprintf(comando, tamanho, "%s %s %s", SCRIPT_DE_ATUALIZACAO_DE_QUANTIDADE_DE_HABITANTES_DE_CIDADE, nomeDaCidade, nomeDoEstado);
+	// if (comando == NULL)
+	// {
+	// 	geraLog(ERRO, "Falha ao formatar comando");
+	// 	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	// }
 
-	int retorno = system(comando);
-	if (retorno != 0)
-	{
-		geraLog(ERRO, "Falha ao atualizar dados");
-		return RETORNO_FALHA_AO_ATUALIZAR_STR_DINAMICA;
-	}
-	else
-	{
-		geraLog(LOG, "Conteudo atualizado com sucesso");
-		return RETORNO_OK_STR_DINAMICA;
-	}
-
-
-
-
+	// int retorno = system(comando);
+	// if (retorno != 0)
+	// {
+	// 	geraLog(ERRO, "Falha ao atualizar dados");
+	// 	return RETORNO_FALHA_AO_ATUALIZAR_STR_DINAMICA;
+	// }
+	// else
+	// {
+	// 	geraLog(LOG, "Conteudo atualizado com sucesso");
+	// 	return RETORNO_OK_STR_DINAMICA;
+	// }
 
 
 

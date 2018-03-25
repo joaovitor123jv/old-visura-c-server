@@ -5,14 +5,18 @@ DEFINE_OUTPUT_FILE_NAME=-o
 
 MAIN_FILE=Server.c
 
-MYSQL_LINKER=-L/usr/lib  -lmysqlclient -lz -lm -ldl -lssl -lcrypto
-
-FILA_OBJ=Fila.o
+# `pkg-config --cflags --libs ruby-2.3`
 
 PTHREAD_LINKER=-lpthread
 #PTHREAD_LINKER=-pthread
+MYSQL_LINKER=-L/usr/lib  -lmysqlclient -lz -lm -ldl -lssl -lcrypto
+RUBY_LINKER=-I/usr/include/x86_64-linux-gnu/ruby-2.3.0 -I/usr/include/ruby-2.3.0 -lruby-2.3 -lgmp -lcrypt
 
-LINKERS=$(PTHREAD_LINKER) $(MYSQL_LINKER)
+FILA_OBJ=Fila.o
+
+
+
+LINKERS=$(PTHREAD_LINKER) $(MYSQL_LINKER) $(RUBY_LINKER)
 
 DEBUGGER=-g
 
@@ -28,7 +32,7 @@ WARNINGS=-Wall
 #STANDARD=--std=c11
 
 
-all: AdaptadorDeString.o $(FILA_OBJ)
+all: AdaptadorDeString.o $(FILA_OBJ) TCPServer.o
 	@echo "Compilando MAIN"
 	$(COMPILE) $(WARNINGS) $(USE_OTIMIZACAO) $(STANDARD) $(MAIN_FILE) $(DEFINE_OUTPUT_FILE_NAME) $(OUTPUT_FILE) $(LINKERS) $^
 
@@ -38,7 +42,8 @@ build: all
 debug: 
 	$(COMPILE) $(DEBUGGER) $(LIKE_A_LIBRARY) Fila/Fila.c
 	$(COMPILE) $(DEBUGGER) $(LIKE_A_LIBRARY) AdaptadorDeString/AdaptadorDeString.c
-	$(COMPILE) $(DEBUGGER) $(WARNINGS) $(STANDARD) $(MAIN_FILE) $(DEFINE_OUTPUT_FILE_NAME) $(OUTPUT_FILE) $(LINKERS) AdaptadorDeString.o $(FILA_OBJ)
+	$(COMPILE) $(DEBUGGER) $(LIKE_A_LIBRARY) Bibliotecas/TCPServer/TCPServer.c
+	$(COMPILE) $(DEBUGGER) $(WARNINGS) $(STANDARD) $(MAIN_FILE) $(DEFINE_OUTPUT_FILE_NAME) $(OUTPUT_FILE) $(LINKERS) AdaptadorDeString.o $(FILA_OBJ) TCPServer.o
 	valgrind --leak-check=full --track-origins=yes ./server
 
 run: all
@@ -51,7 +56,18 @@ AdaptadorDeString/AdaptadorDeString.c: AdaptadorDeString/AdaptadorDeString.h
 
 AdaptadorDeString.o: AdaptadorDeString/AdaptadorDeString.c
 	@echo "Compilando AdaptadorDeString"
-	$(COMPILE) $(LIKE_A_LIBRARY) $^ $(DEFINE_OUTPUT_FILE_NAME) $@
+	$(COMPILE) $(WARNINGS) $(LIKE_A_LIBRARY) $^ $(DEFINE_OUTPUT_FILE_NAME) $@
+
+
+Bibliotecas/TCPServer/TCPServer.c: Bibliotecas/TCPServer/TCPServer.h
+
+Bibliotecas/TCPServer/TCPServer.o: Bibliotecas/TCPServer/TCPServer.c
+	@echo "Compilando mini TCPServer"
+	$(COMPILE) $(WARNINGS) $(LIKE_A_LIBRARY) $^ $(DEFINE_OUTPUT_FILE_NAME) $@ $(PTHREAD_LINKER)
+
+TCPServer.o: Bibliotecas/TCPServer/TCPServer.o
+	@echo "Reposicionando arquivo compilado Bibliotecas/TCPServer/TCPServer.o"
+	mv $^ $@
 
 $(FILA_OBJ): 
 	@echo "Compilando Fila"

@@ -62,11 +62,13 @@
 
 
 
-#define BUFFER_ADICAO_CONTEUDO 1024*5
-#define BUFFER_CLIENTE 1024//(aceitou 1024*1024 (1MB))
-#define PORTA 7420
+#define BUFFER_ADICAO_CONTEUDO 1024*5	// Inútil
+#define BUFFER_CLIENTE 1024//  Quantidade de bytes que o servidor pode receber  (aceitou 1024*1024 (1MB))
+#define PORTA 7420	// Porta padrão para conexão externa (a porta da interface acessível externamente)
 
-#define PORTA_PADRAO_WEB 80
+#define PORTA_PADRAO_CONEXAO_INTERNA 13598	//Porta padrão para conexão com scripts externos executados internamente
+
+#define PORTA_PADRAO_WEB 80	//Porta para conexão com clientes HTTP (caso necessário no futuro, implementado mas não usado)
 
 #define QTD_CLIENTE 5 /* Quantidade de clientes máxima aceita */
 
@@ -295,7 +297,9 @@
 
 /* Fim retornos entre funções */
 
-#define SCRIPT_DE_ATUALIZACAO_DE_QUANTIDADE_DE_HABITANTES_DE_CIDADE "cd scripts/Ferramentas;ruby atualizaQuantidadeDeHabitantesDaCidade.rb"
+// #define SCRIPT_DE_ATUALIZACAO_DE_QUANTIDADE_DE_HABITANTES_DE_CIDADE "Comandos/Ferramentas/obtemQuantidadeDeHabitantesDoIBGE.rb"
+
+#define SCRIPT_DE_ATUALIZACAO_DE_QUANTIDADE_DE_HABITANTES_DE_CIDADE "Comandos/Ferramentas/obtemQuantidadeDeHabitantesDoIBGE.rb"
 
 
 #endif //__COMANDOS__

@@ -2,6 +2,7 @@
 #include "../Comandos/Comandos.h"
 
 
+
 #ifndef _TESTAR_SEM_FILA_
 char *padronizarString(char *original)
 {
@@ -77,6 +78,12 @@ char *padronizarString(char *original)
 }
 #endif
 
+/** 
+ * @brief  Inverte string informada
+ * @note   altera conteudo da string original
+ * @param  s[]: string a ser invertida
+ * @retval None
+ */
 void adaptadorDeString_REVERSE(char s[])
 {
     int i, j;
@@ -90,6 +97,12 @@ void adaptadorDeString_REVERSE(char s[])
     }
 }
 
+/** 
+ * @brief  Converte inteiro para string (char *)
+ * @note   necessário desalocar string retornada
+ * @param  n: numero que deve ser convertido
+ * @retval ponteiro para caracter que contem a conversão
+ */
 char *intToString(int n)
 {
 	int i=0, sign;
@@ -112,6 +125,13 @@ char *intToString(int n)
 	return s;
 }
 
+/** 
+ * @brief  Retorna true se a string passada tiver tamanho menor que o tamanho informado
+ * @note   
+ * @param  *string: 
+ * @param  tamanho: 
+ * @retval 
+ */
 bool stringMenor(char *string, int tamanho)
 {
 	if( string == NULL )
@@ -133,6 +153,13 @@ bool stringMenor(char *string, int tamanho)
 	return false;
 }
 
+/** 
+ * @brief  Retorna true se a string passada tiver tamanho menor ou igual ao tamanho informado
+ * @note   
+ * @param  *string: 
+ * @param  tamanho: 
+ * @retval 
+ */
 bool stringMenorOuIgual(char *string, int tamanho)
 {
 	if( string == NULL )
@@ -154,6 +181,13 @@ bool stringMenorOuIgual(char *string, int tamanho)
 	return false;
 }
 
+/** 
+ * @brief  Retorna true se a string for maior que o tamanho especificado
+ * @note   
+ * @param  *string: 
+ * @param  tamanho: 
+ * @retval 
+ */
 bool stringMaior(char *string, int tamanho)
 {
 	if( string == NULL )
@@ -175,6 +209,13 @@ bool stringMaior(char *string, int tamanho)
 	return true;
 }
 
+/** 
+ * @brief  Retorna true se a string indicada tiver o tamanho indicado
+ * @note   
+ * @param  *string: string pra checar se o tamanho é igual
+ * @param  tamanho: tamanho a ser comparado com a string
+ * @retval true, se a string tiver o tamanho correspondente ao tamanho passado
+ */
 bool stringTamanhoIgual(char *string, int tamanho)
 {
 	if( string == NULL )
@@ -228,6 +269,82 @@ void liberar(void *var1, ...)
 	va_end(variaveis); 
 } */
 
+/** 
+ * @brief  Concatena várias strings numa só, e então retorna uma string alocada contendo essa concatenação
+ * @note   necessário liberar memoria depois
+ * @param  *primeiraString: primeira string a ser concatenada
+ * @retval 
+ */
+char *concatenaStrings(int quantidadeDeStrings, char *primeiraString, ...)
+{
+	geraLog(LOG, "Iniciando concatenação de strings");
+	if (primeiraString == NULL)
+	{
+		geraLog(ERRO, "Primeira string informada é nula");
+		return NULL;
+	}
+	if (quantidadeDeStrings == 0)
+	{
+		geraLog(ERRO, "Quantidade de strings informada não corresponde ao numero correto");
+		return NULL;
+	}
+
+	va_list variaveis;
+	int tamanho = 1 + strlen(primeiraString);
+	char *retorno = (char *)calloc(sizeof(char), tamanho);
+	if (retorno == NULL)
+	{
+		geraLog(LOG, "Falha ao alocar memoria para retorno");
+		return NULL;
+	}
+	strcpy(retorno, primeiraString);
+	char *temporario = NULL;
+	va_start(variaveis, primeiraString);
+	int i = 1;
+
+	while(quantidadeDeStrings != i)// Enquanto não acabar a quantidade de strings
+	{
+		temporario = va_arg(variaveis, char *);
+		if (temporario == NULL)
+		{
+			geraLog(WARNING, "Deu ruim aqui... variavel que não podia ser nulo, é nula");
+		}
+		if (quantidadeDeStrings == i)
+		{
+			geraLog(LOG, "Acabou de concatenar já...");
+			break;
+		}
+		tamanho = tamanho + strlen(temporario);
+		printf("\t\tTamanho = |%d|\n", tamanho);
+		printf("\t\tQuantidade de Caracteres em temp = |%ld|\n", strlen(temporario));
+		retorno = (char *)realloc(retorno, tamanho);
+		if (retorno == NULL)
+		{
+			geraLog(ERRO, "Ocorreu um erro ao tentar realocar memoria para retorno");
+			return NULL;
+		}
+		geraLog(LOG, "Concatenando string");
+		strncat(retorno, temporario, strlen(temporario));
+		printf("\t Retorno, até agora → |%s|\n", retorno);
+		i++;
+	}
+
+	if (retorno == NULL)
+	{
+		geraLog(ERRO, "Ocorreu um erro ao tentar realocar memoria para retorno");
+		return NULL;
+	}
+	return retorno;
+}
+
+
+
+/** 
+ * @brief  Verifica mensagem e, se detectar alguma mensagem inválida, retorna true
+ * @note   usada no inicio da interpretação
+ * @param  *mensagem: mensagem que o cliente envia
+ * @retval true se detectada mensagem inválida, false caso contrário
+ */
 bool mensagemDeEscapeDetectada(const char *mensagem)// Verifica se a mensagem é "APP sair", de forma otimizada
 {
 	//	strcmp(mensagem, "APP sair");
@@ -268,7 +385,16 @@ bool mensagemDeEscapeDetectada(const char *mensagem)// Verifica se a mensagem é
 }
 
 
-
+/** 
+ * @brief  Função que gera os logs da aplicação, responde à macro geraLog(TIPO_LOG, mensagem)
+ * @note   recomenda-se usar a macro, no lugar dessa função
+ * @param  tipoLog: Tipo do log enviado (LOG, ERRO, WARNING, DEBUG, EXTRA)
+ * @param  *mensagem: Mensagem que deve ser enviada no Log criado
+ * @param  *file: o arquivo em que ocorreu o log
+ * @param  *function: a função em que ocorreu o log
+ * @param  linha: a linha em que ocorreu o log
+ * @retval None
+ */
 void geraLog_internal(unsigned int tipoLog, const char *mensagem, const char *file, const char *function, const int linha)
 {
 	#ifndef DISABLE_LOGS
@@ -303,6 +429,7 @@ void geraLog_internal(unsigned int tipoLog, const char *mensagem, const char *fi
 	#endif // DISABLE_LOGS
 
 }
+
 
 
 
