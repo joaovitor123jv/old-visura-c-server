@@ -37,6 +37,7 @@ all: AdaptadorDeString.o Fila.o TCPServer.o
 # Comando pra ser usado no server GOOGLE
 production: build
 	@echo "Realizando ajustes finais"
+	rm -f ../server
 	mv server ../
 	mkdir -p ../Comandos/Ferramentas
 	cp Comandos/Ferramentas/ConexaoInternaComServer.rb ../Comandos/Ferramentas/ConexaoInternaComServer.rb
