@@ -34,8 +34,18 @@ all: AdaptadorDeString.o Fila.o TCPServer.o
 	@echo "Compilando MAIN"
 	$(COMPILE) $(WARNINGS) $(USE_OTIMIZACAO) $(STANDARD) $(MAIN_FILE) $(DEFINE_OUTPUT_FILE_NAME) $(OUTPUT_FILE) $(LINKERS) $^
 
-build: all
-	rm *.o
+# Comando pra ser usado no server GOOGLE
+production: build
+	@echo "Realizando ajustes finais"
+	mv server ../
+	mkdir -p ../Comandos/Ferramentas
+	cp Comandos/Ferramentas/ConexaoInternaComServer.rb ../Comandos/Ferramentas/ConexaoInternaComServer.rb
+	cp Comandos/Ferramentas/obtemQuantidadeDeHabitantesDoIBGE.rb ../Comandos/Ferramentas/obtemQuantidadeDeHabitantesDoIBGE.rb
+	@clear
+	@echo "\n\nO VISU-RA Está pronto pra ser utilizado\n\n"
+	@echo "Você pode executar './server', na pasta pai desta pasta"
+
+build: all clean
 
 debug: clean
 	$(COMPILE) $(DEBUGGER) $(LIKE_A_LIBRARY) Bibliotecas/Fila/Fila.c
@@ -118,9 +128,6 @@ documentation: doc/ComandosMakefile.pdf doc/OrganizacaoCodigo.pdf doc/OperacoesB
 	@$(CHANGE_TO_DOC_SOURCE) ; rm -f ComandosMakefile.aux
 	@echo "Todos os arquivos residuais da compilação foram removidos"
 	@echo "Compilação finalizada"
-
-
-
 
 
 
