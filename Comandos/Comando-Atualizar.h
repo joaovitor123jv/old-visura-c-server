@@ -5,7 +5,7 @@
 #include <string.h>
 #include "Comandos.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
-#include "../AdaptadorDeString/AdaptadorDeString.h"
+#include "../Bibliotecas/AdaptadorDeString/AdaptadorDeString.h"
 
 #include "Ferramentas/rubyWrapper.h"
 

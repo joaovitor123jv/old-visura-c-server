@@ -143,21 +143,23 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 			token = usuario_getNextToken(usuario);
 			if(token == NULL)
 			{
-				printf(" Warning: Comando insuficiente em Comando-Obter.h comandoObter() 5q68r87s\n");
+				geraLog(WARNING, "Comando insuficiente detectado, esperado tipo de informação relacionada a visualização");
 				return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 			}
 			if (strcmp(token, TIPO_VISUALIZACAO) == 0)// APP 4 2 @ 2
 			{
-				// DESEJA obter a QUANTIDADE de VISUALIZACOES (NÃO ANONIMAS)
-				printf(" LOG: Solicitando Obtenção de quantidade de visualizações de usuario não anonimos em Comando-Obter.h comandoObter()\n");
-				// printf(" Warning: Comando incompleto em Comando-Obter.h obterDados()\n");
+				geraLog(LOG, "Solicitando quantidade de visualizações não anônimas");
 				return obterQuantidadeDeVisualizacoesGerais(usuario);
 			}
 			else if(strcmp(token, TIPO_VISUALIZACAO_ANONIMA_CHAR) == 0)// APP 4 2 @ 3
 			{
-				// DESEJA obter a QUANTIDADE de VISUALIZACOES ANONIMAS
-				printf(" LOG: Solicitando Obtenção de quantidade de visualizações anonimas em Comando-Obter.h comandoObter()\n");
+				geraLog(LOG, "Solicitando quantidade de visualizações anonimas");
 				return obterQuantidadeDeVisualizacoesAnonimas(usuario);
+			}
+			else if(strcmp(token, TIPO_VISUALIZACAO_NA_CIDADE) == 0)// APP 4 2 @ vC idProduto nomeCidade nomeEstado
+			{
+				geraLog(LOG, "Solicitando quantidade de visualizações na cidade");
+				return obterQuantidadeDeVisualizacoesDoProdutoNaCidade(usuario);
 			}
 			else if(strcmp(token, TIPO_ESPECIFICO) == 0)// APP 4 2 @ =
 			{
@@ -169,8 +171,8 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 		}
 		else
 		{
-			printf(" Warning: Comando não compreendido (%s) em Comando-Obter.h comandoObter() aq468e7ca\n", token);
-			return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+			geraLog(WARNING, "Comando não compreendido, ou solicitando comando não pronto");
+			return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
 		}
 	}
 

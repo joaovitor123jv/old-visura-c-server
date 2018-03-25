@@ -10,13 +10,11 @@ MAIN_FILE=Server.c
 PTHREAD_LINKER=-lpthread
 #PTHREAD_LINKER=-pthread
 MYSQL_LINKER=-L/usr/lib  -lmysqlclient -lz -lm -ldl -lssl -lcrypto
-RUBY_LINKER=-I/usr/include/x86_64-linux-gnu/ruby-2.3.0 -I/usr/include/ruby-2.3.0 -lruby-2.3 -lgmp -lcrypt
-
-FILA_OBJ=Fila.o
+# RUBY_LINKER=-I/usr/include/x86_64-linux-gnu/ruby-2.3.0 -I/usr/include/ruby-2.3.0 -lruby-2.3 -lgmp -lcrypt
 
 
 
-LINKERS=$(PTHREAD_LINKER) $(MYSQL_LINKER) $(RUBY_LINKER)
+LINKERS=$(PTHREAD_LINKER) $(MYSQL_LINKER)
 
 DEBUGGER=-g
 
@@ -32,18 +30,18 @@ WARNINGS=-Wall
 #STANDARD=--std=c11
 
 
-all: AdaptadorDeString.o $(FILA_OBJ) TCPServer.o
+all: AdaptadorDeString.o Fila.o TCPServer.o
 	@echo "Compilando MAIN"
 	$(COMPILE) $(WARNINGS) $(USE_OTIMIZACAO) $(STANDARD) $(MAIN_FILE) $(DEFINE_OUTPUT_FILE_NAME) $(OUTPUT_FILE) $(LINKERS) $^
 
 build: all
 	rm *.o
 
-debug: 
-	$(COMPILE) $(DEBUGGER) $(LIKE_A_LIBRARY) Fila/Fila.c
-	$(COMPILE) $(DEBUGGER) $(LIKE_A_LIBRARY) AdaptadorDeString/AdaptadorDeString.c
+debug: clean
+	$(COMPILE) $(DEBUGGER) $(LIKE_A_LIBRARY) Bibliotecas/Fila/Fila.c
+	$(COMPILE) $(DEBUGGER) $(LIKE_A_LIBRARY) Bibliotecas/AdaptadorDeString/AdaptadorDeString.c
 	$(COMPILE) $(DEBUGGER) $(LIKE_A_LIBRARY) Bibliotecas/TCPServer/TCPServer.c
-	$(COMPILE) $(DEBUGGER) $(WARNINGS) $(STANDARD) $(MAIN_FILE) $(DEFINE_OUTPUT_FILE_NAME) $(OUTPUT_FILE) $(LINKERS) AdaptadorDeString.o $(FILA_OBJ) TCPServer.o
+	$(COMPILE) $(DEBUGGER) $(WARNINGS) $(STANDARD) $(MAIN_FILE) $(DEFINE_OUTPUT_FILE_NAME) $(OUTPUT_FILE) $(LINKERS) AdaptadorDeString.o Fila.o TCPServer.o
 	valgrind --leak-check=full --track-origins=yes ./server
 
 run: all
@@ -52,9 +50,9 @@ run: all
 clean:
 	rm -f *.o
 
-AdaptadorDeString/AdaptadorDeString.c: AdaptadorDeString/AdaptadorDeString.h
+Bibliotecas/AdaptadorDeString/AdaptadorDeString.c: Bibliotecas/AdaptadorDeString/AdaptadorDeString.h
 
-AdaptadorDeString.o: AdaptadorDeString/AdaptadorDeString.c
+AdaptadorDeString.o: Bibliotecas/AdaptadorDeString/AdaptadorDeString.c
 	@echo "Compilando AdaptadorDeString"
 	$(COMPILE) $(WARNINGS) $(LIKE_A_LIBRARY) $^ $(DEFINE_OUTPUT_FILE_NAME) $@
 
@@ -69,9 +67,12 @@ TCPServer.o: Bibliotecas/TCPServer/TCPServer.o
 	@echo "Reposicionando arquivo compilado Bibliotecas/TCPServer/TCPServer.o"
 	mv $^ $@
 
-$(FILA_OBJ): 
+Bibliotecas/Fila/Fila.c: Bibliotecas/Fila/Fila.h
+
+Fila.o: Bibliotecas/Fila/Fila.c
 	@echo "Compilando Fila"
-	$(COMPILE) $(LIKE_A_LIBRARY) Fila/Fila.c
+	$(COMPILE) $(WARNINGS) $(LIKE_A_LIBRARY) $^ $(DEFINE_OUTPUT_FILE_NAME) $@
+	# $(COMPILE) $(LIKE_A_LIBRARY) Fila/Fila.c
 
 #SESSÃO PRINCIPAL ******************************************************************************** ↑
 #SESSÃO DE DOCUMENTACAO ************************************************************************** ↓

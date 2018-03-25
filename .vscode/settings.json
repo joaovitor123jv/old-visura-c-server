@@ -1,0 +1,11 @@
+{
+	"files.associations": {
+		"adaptadordestring.h": "c",
+		"server.h": "c",
+		"interpretadordecomandos.h": "c",
+		"comando-atualizar.h": "c",
+		"rubywrapper.h": "c",
+		"tcpserver.h": "c",
+		"stdio.h": "c"
+	}
+}

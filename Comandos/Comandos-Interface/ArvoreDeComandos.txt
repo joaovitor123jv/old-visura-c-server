@@ -263,8 +263,14 @@ APP
 
 				3	(TIPO_VISUALIZACAO_ANONIMA)
 					idproduto
-						(retorna a quantidade de visualizacoes de usuarios Anonimos a um determinado produto referenciado por idproduto)
-						
+						(retorna a quantidade de visualizacoes de usuarios Anonimos a um determinado produto referenciado por idproduto)]
+					
+				vC	(TIPO_VISUALIZACAO_NA_CIDADE)	//Fazendo
+					idproduto	(O id que referencia o produto)
+						nomeDaCidade	(A cidade na qual o produto foi visto)
+							nomeDoEstado	(A sigla do estado (SP, GO, MG, MT) na qual está a cidade)
+								(Retorna a quantidade de visualizações desse produto na cidade)
+
 				=	(TIPO_ESPECIFICO)	(possibilita extensão do comando)
 					(Ainda não implementado nada aqui, aguardando pra "visualização de empresa, perfil de usuários, coisas do tipo")
 		$	(TIPO_ID_CIDADE)

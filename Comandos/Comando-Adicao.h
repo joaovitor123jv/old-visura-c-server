@@ -3,7 +3,7 @@
 #include <string.h>
 #include "Comandos.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
-#include "../AdaptadorDeString/AdaptadorDeString.h"
+#include "../Bibliotecas/AdaptadorDeString/AdaptadorDeString.h"
 
 int comandoAdicionar(Usuario *usuario);//Retorna true se adicionado com sucesso
 

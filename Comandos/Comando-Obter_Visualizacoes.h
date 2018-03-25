@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../AdaptadorDeString/AdaptadorDeString.h"
+#include "../Bibliotecas/AdaptadorDeString/AdaptadorDeString.h"
 #include "Comandos.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
 
@@ -10,7 +10,7 @@ char *obterQuantidadeDeVisualizacoesAnonimas(Usuario *usuario)// APP 4 2 @ 3 idP
     char *token = usuario_getNextToken(usuario);// APP 4 2 @ 3 idProduto
     if(token == NULL)
     {
-        printf(" LOG: Comando insuficiente em obterQuantidadeDeVisualizacoesAnonimas() Comando-Obter_Visualizacoes.h 65q54e88t7\n");
+        geraLog(WARNING, "Comando insuficiente detectado, esperado idProduto");
         return NULL;
     }
 
@@ -61,13 +61,13 @@ char *obterQuantidadeDeVisualizacoesGerais(Usuario *usuario)// APP 4 2 @ 2 idPro
     char *token = usuario_getNextToken(usuario);// APP 4 2 @ 2 idProduto
     if(token == NULL)
     {
-        printf(" LOG: Comando insuficiente em obterQuantidadeDeVisualizacoesGerais() Comando-Obter_Visualizacoes.h 65q54e88t7\n");
+        geraLog(LOG, "Comando insuficiente detectado, esperado idProduto");
         return NULL;
     }
 
     if(strlen(token) != TAMANHO_ID_PRODUTO)
     {
-        printf(" Warning: Tamanho de ID de produto informado inválido em obterQuantidadeDeVisualizacoesGerais() Comando-Obter_Visualizacoes.h qkjhe\n");
+        geraLog(WARNING, "Tamanho de ID de produto invalido informado");
         return NULL;
     }
 
@@ -123,4 +123,23 @@ char *obterQuantidadeDeVisualizacoesGerais(Usuario *usuario)// APP 4 2 @ 2 idPro
         return retorno;
     }
     return NULL;
+}
+
+/** 
+ * @brief  Retorna a quantidade de visualizações de produto na cidade ao usuario
+ * @note    Retorna direto ao usuario, função externa
+ * @note2   Resultado do comando: APP 4 2 @ vC idProduto nomeCidade nomeEstado
+ * @param  *usuario: Usuario o qual deseja saber a quantidade de visualizações desse produto na cidade
+ * @retval ERRO:%s caso falhe, a quantidade caso tenha sucesso.
+ */
+char *obterQuantidadeDeVisualizacoesDoProdutoNaCidade(Usuario *usuario)
+{
+    static const char *localizacao = "Comando-Obter_Visualizacoes.h obterQuantidadeDeVisualizacoesDoProdutoNaCidade()";
+    if (!usuarioValido(usuario, localizacao))
+    {
+        return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+    }
+    // TODO
+
+    return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
 }

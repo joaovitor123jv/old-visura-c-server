@@ -1,5 +1,5 @@
 #include "AdaptadorDeString.h"
-#include "../Comandos/Comandos.h"
+#include "../../Comandos/Comandos.h"
 
 
 
@@ -447,7 +447,6 @@ void tokenizer_private_reverteAlteracoesPorDelimitador(Tokenizer *tokenizer);
  */
 char *obterEnderecoDadoURL(char *pageURL)
 {
-	static const char *localizacao = "AdaptadorDeString.h obterEnderecoDadoURL(char *pageURL)";
 	if (pageURL == NULL)
 	{
 		geraLog(WARNING, "pageURL nulo");
@@ -610,7 +609,6 @@ Tokenizer *new_Tokenizer(const char *comando, const char delimitador)
 
 char *tokenizer_getNext(Tokenizer *tokenizer)
 {
-	char *localizacao = "AdaptadorDeString.h tokenizer_getNext()";
 	if (tokenizer == NULL)
 	{
 		geraLog(WARNING, "Tokenizer nulo passado como parâmetro");
@@ -640,7 +638,6 @@ char *tokenizer_getNext(Tokenizer *tokenizer)
 
 void delete_Tokenizer(Tokenizer *tokenizer)
 {
-	char *localizacao = "AdaptadorDeString.h delete_Tokenizer(Tokenizer *tokenizer)";
 	if (tokenizer == NULL)
 	{
 		geraLog(WARNING, "Tokenizer nulo detectado");

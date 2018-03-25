@@ -2530,7 +2530,6 @@ char *obterQuantidadeDeHabitantesDaCidadeDoBanco(Usuario *usuario, char *nomeDaC
 
 	if (resposta == NULL)
 	{
-		geraLog(LOG, "Atualizando a quantidade de habitantes da cidade");
 		if (!interno_atualizarQuantidadeDeHabitantesDaCidade(usuario, nomeDaCidade, nomeDoEstado))
 		{
 			geraLog(WARNING, "Não foi possível atualizar o numero de habitantes da cidade");
@@ -2567,9 +2566,7 @@ char *obterQuantidadeDeHabitantesDaCidadeDoBanco(Usuario *usuario, char *nomeDaC
 				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 			}
 			
-			geraLog(DEBUG, "Obtendo retorno do banco de dados");
 			resposta = obterRetornoUnicoDaQuery(query);
-			geraLog(DEBUG, "Retorno obtido do banco de dados");
 
 			if (resposta == NULL)
 			{
@@ -2582,10 +2579,8 @@ char *obterQuantidadeDeHabitantesDaCidadeDoBanco(Usuario *usuario, char *nomeDaC
 			}
 		}
 	}
-	geraLog(DEBUG, "Prosseguindo com debug");
-	geraLog(DEBUG, "Liberando nomeDaCidade");
+
 	free(nomeDaCidade);
-	geraLog(DEBUG, "Liberando nomeDoEstado");
 	free(nomeDoEstado);
 	nomeDoEstado = NULL;
 	nomeDaCidade = NULL;
@@ -2597,31 +2592,22 @@ char *obterQuantidadeDeHabitantesDaCidadeDoBanco(Usuario *usuario, char *nomeDaC
 
 char *obterIdLocalizacaoDoBanco(char *idCidade, char *cep, char *bairro, char *rua, char *numero, char *complemento)
 {
-	if(conexao == NULL)
+	if (!conexaoAtiva())
 	{
-		printf(" ERRO: Conexao nula em OperacoesBanco.h obterIdLocalizacaoDoBanco() !!!\n");
-		printf(" LOG: Tentando reconexão com banco de dados \n");
-		if(conectarBanco())
-		{
-			printf(" LOG: Reconectado com sucesso, continuando interpretação\n");
-		}
-		else
-		{
-			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
-			return strdup("ERRO interno(banco de dados), tente novamente");
-		}
+		geraLog(ERRO, "Conexão inativa com o banco de dados detectada");
+		return RETORNO_ERRO_INTERNO_BANCO_STR_DINAMICA;
 	}
 
 	if( idCidade == NULL )
 	{
 		printf(" ERRO: idCidade nulo detectada em OperacoesBanco.h obterIdLocalizacaoDoBanco() sabfjieoq\n");
-		return strdup("ERRO interno, tente novamente");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
 	if( cep == NULL )
 	{
 		printf(" ERRO: cep nulo detectada em OperacoesBanco.h obterIdLocalizacaoDoBanco() sabfjieoq\n");
-		return strdup("ERRO interno, tente novamente");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
 	//TODO Daqui pra baixo
@@ -2635,13 +2621,13 @@ char *obterIdLocalizacaoDoBanco(char *idCidade, char *cep, char *bairro, char *r
 		if( query == NULL )
 		{
 			printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdLocalizacaoDoBanco() aoirnisdf\n");
-			return strdup("ERRO interno, tente novamente");
+			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 		}
 		snprintf(query, tamanho, "SELECT L.idlocalizacao FROM localizacao L WHERE L.cidade_idcidade=%s AND L.cep=\'%s\' LIMIT 1;", idCidade, cep);
 		if( query == NULL )
 		{
 			printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdLocalizacaoDoBanco() abuvirkasd\n");
-			return strdup("ERRO interno, tente novamente");
+			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 		}
 		return retornaUnicoRetornoDaQuery(query);
 	}
@@ -2654,13 +2640,13 @@ char *obterIdLocalizacaoDoBanco(char *idCidade, char *cep, char *bairro, char *r
 			if( query == NULL )
 			{
 				printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdLocalizacaoDoBanco() aoirnisdf\n");
-				return NULL;
+				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 			}
 			snprintf(query, tamanho, "SELECT L.idlocalizacao FROM localizacao L WHERE L.cidade_idcidade=%s AND L.bairro=\'%s\' AND L.cep=\'%s\' LIMIT 1;", idCidade, bairro, cep);
 			if( query == NULL )
 			{
 				printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdLocalizacaoDoBanco() abuvirkasd\n");
-				return strdup("ERRO interno, tente novamente");
+				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 			}
 			return retornaUnicoRetornoDaQuery(query);
 		}
@@ -2673,13 +2659,13 @@ char *obterIdLocalizacaoDoBanco(char *idCidade, char *cep, char *bairro, char *r
 				if( query == NULL )
 				{
 					printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdLocalizacaoDoBanco() aoirnisdf\n");
-					return strdup("ERRO interno, tente novamente");
+					return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 				}
 				snprintf(query, tamanho, "SELECT L.idlocalizacao FROM localizacao L WHERE L.cidade_idcidade=%s AND L.bairro=\'%s\' AND L.cep=\'%s\' AND L.rua=\'%s\' LIMIT 1;", idCidade, bairro, cep, rua);
 				if( query == NULL )
 				{
 					printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdLocalizacaoDoBanco() abuvirkasd\n");
-					return strdup("ERRO interno, tente novamente");
+					return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 				}
 				return retornaUnicoRetornoDaQuery(query);
 			}
@@ -2692,13 +2678,13 @@ char *obterIdLocalizacaoDoBanco(char *idCidade, char *cep, char *bairro, char *r
 					if( query == NULL )
 					{
 						printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdLocalizacaoDoBanco() aoirnisdf\n");
-						return strdup("ERRO interno, tente novamente");
+						return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 					}
 					snprintf(query, tamanho, "SELECT L.idlocalizacao FROM localizacao L WHERE L.cidade_idcidade=%s AND L.bairro=\'%s\' AND L.cep=\'%s\' AND L.rua=\'%s\' AND L.numero=\'%s\' LIMIT 1;", idCidade, bairro, cep, rua, numero);
 					if( query == NULL )
 					{
 						printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdLocalizacaoDoBanco() abuvirkasd\n");
-						return strdup("ERRO interno, tente novamente");
+						return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 					}
 					return retornaUnicoRetornoDaQuery(query);
 				}
@@ -2709,39 +2695,20 @@ char *obterIdLocalizacaoDoBanco(char *idCidade, char *cep, char *bairro, char *r
 					if( query == NULL )
 					{
 						printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdLocalizacaoDoBanco() aoirnisdf\n");
-						return strdup("ERRO interno, tente novamente");
+						return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 					}
 					snprintf(query, tamanho, "SELECT L.idlocalizacao FROM localizacao L WHERE L.cidade_idcidade=%s AND L.bairro=\'%s\' AND L.cep=\'%s\' AND L.rua=\'%s\' AND L.numero=\'%s\' AND L.complemento=\'%s\' LIMIT 1;", idCidade, bairro, cep, rua, numero, complemento);
 					if( query == NULL )
 					{
 						printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdLocalizacaoDoBanco() abuvirkasd\n");
-						return strdup("ERRO interno, tente novamente");
+						return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 					}
 					return retornaUnicoRetornoDaQuery(query);
 				}
 			}
 		}
 	}
-
-	/* int tamanho = 126 + 1 + 2 * (strlen(cidade) + strlen(estado));
-	   char *query = (char *)malloc(sizeof(char) * (tamanho));
-
-	   if(query == NULL)
-	   {
-	   printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h obterIdLocalizacaoDoBanco() qkjeh\n");
-	   return NULL;
-	   }
-
-	   snprintf(query, tamanho, "SELECT L.idlocalizacao FROM localizacao L JOIN cidade C ON C.nome=\'%s\' JOIN estado E ON E.nome=\'%s\' WHERE C.nome=\'%s\' AND E.nome=\'%s\';", cidade, estado, cidade, estado);
-
-	   if(query == NULL)
-	   {
-	   printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterIdLocalizacaoDoBanco() bqjek\n");
-	   return NULL;
-	   }*/
-
-	//TODO Daqui pra cima
-	return strdup("ERRO interno, tente novamente");
+	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 }
 
 char *obterIdContratanteDoBanco(char *cnpj)// APP 4 ; cnpj
@@ -2837,106 +2804,6 @@ char *obterIdCidadeDoBanco(char *nomeCidade, char *nomeEstado)/* APP 4 CHAVE_DE_
 	}
 
 	return retornaUnicoRetornoDaQuery(query);
-	// if(mysql_query(conexao, query))
-	// {
-	// 	printf(" ERRO: Falha ao executar query em OperacoesBanco.h obterIdCidadeDoBanco() sakdjh\n");
-	// 	printf(" \t%s\n", mysql_error(conexao));
-	// 	return strdup("ERRO interno, tente novamente");
-	// }
-
-	// MYSQL_RES *resultado = mysql_store_result(conexao);
-
-	// if(resultado == NULL)// Se não houver consulta
-	// {
-	// 	printf(" Warning: Resultado nulo em OperacoesBanco.h obterIdCidadeDoBanco() kqht\n");
-	// 	return strdup("ERRO interno, tente novamente");
-	// }
-	// else
-	// {
-
-	// 	//		MYSQL_FIELD *campos;
-	// 	//		campos = mysql_fetch_fields(resultado);//Passa campos com resposta para a variavel campos
-
-	// 	if(mysql_num_fields(resultado) != 1)
-	// 	{
-	// 		if(mysql_num_fields(resultado) != 1)
-	// 		{
-	// 			printf(" LOG: Banco processou a query de forma errada, aparentemente...:\n");
-	// 			printf(" \t%s\n", query);
-	// 			printf(" \t em OperacoesBanco.h obterIdCidadeDoBanco() 4rr455\n");
-	// 			mysql_free_result(resultado);
-	// 			free(query);
-	// 			resultado = NULL;
-	// 			query = NULL;
-	// 			return strdup("ERRO interno, tente novamente");
-	// 		}
-	// 		else
-	// 		{
-	// 			printf(" Warning: Resultado inconsistente em OperacoesBanco.h obterIdCidadeDoBanco() hekja\n");
-	// 			mysql_free_result(resultado);
-	// 			free(query);
-	// 			query = NULL;
-	// 			resultado = NULL;
-	// 			return strdup("ERRO interno, tente novamente");
-	// 		}
-	// 	}
-	// 	else
-	// 	{
-	// 		if(mysql_num_rows(resultado) > 1)
-	// 		{
-	// 			printf(" Warning: Mais de uma cidade com mesmo nome e estado em OperacoesBanco.h obterIdCidadeDoBanco() ekjjha\n");
-	// 			printf(" \tRespostas:\n");
-	// 			MYSQL_ROW linhas;
-	// 			while((linhas = mysql_fetch_row(resultado)) != NULL)
-	// 			{
-	// 				printf(" linhas[0] -> %s\n", linhas[0]);
-	// 			}
-	// 			printf(" \n");
-	// 			char *retorno = strdup(linhas[0]);
-	// 			mysql_free_result(resultado);
-	// 			free(query);
-	// 			query = NULL;
-	// 			resultado = NULL;
-	// 			//return linhas[0];//Retorna o primeiro resultado, mesmo se houver erro
-	// 			return retorno;
-	// 		}
-	// 		else if (mysql_num_rows(resultado) == 1)
-	// 		{
-	// 			MYSQL_ROW linha;
-
-	// 			linha = mysql_fetch_row(resultado);
-
-	// 			if(linha == NULL)
-	// 			{
-	// 				printf(" ERRO: Não era pra poder retornar nulo aqui em OperacoesBanco.h obterIdCidadeDoBanco()\n");
-	// 				mysql_free_result(resultado);
-	// 				free(query);
-	// 				query = NULL;
-	// 				resultado = NULL;
-	// 				return strdup("ERRO interno, tente novamente, caso persista, chama eu");
-	// 			}
-	// 			else
-	// 			{
-	// 				char *retorno = strdup(linha[0]);
-	// 				mysql_free_result(resultado);
-	// 				free(query);
-	// 				query = NULL;
-	// 				resultado = NULL;
-	// 				printf(" LOG: Retornando id de cidade em OperacoesBanco.h obterIdCidadeDoBanco()\n");
-	// 				return retorno;
-	// 			}
-	// 		}
-	// 		else
-	// 		{
-	// 			mysql_free_result(resultado);
-	// 			free(query);
-	// 			query = NULL;
-	// 			return strdup("ERRO, cidade nao encontrada na base de dados");
-	// 		}
-	// 	}
-
-	// }
-	// return strdup("ERRO interno(desconhecido), tente novamente");
 }
 
 char *obterTop10NovosProdutosDoBanco()//DONE

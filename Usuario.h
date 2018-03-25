@@ -6,7 +6,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include "Comandos/Comandos.h"
-#include "AdaptadorDeString/AdaptadorDeString.h"
+#include "Bibliotecas/AdaptadorDeString/AdaptadorDeString.h"
 //#include "OperacoesBanco/OperacoesBanco.h"
 #include <mysql/mysql.h>
 
@@ -632,7 +632,33 @@ int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario)/
 }
 
 
+/** 
+ * @brief  Retorna true, caso o usuario possa executar a operacao especificada
+ * @note   Uso somente com usuario do tipo contratante
+ * @param  *usuario: Usuario que deseja saber se tem a permissão
+ * @param  tipoPermissao: CONSTANTE pre definida que contém o código da operação que deseja executar
+ * @retval 
+ */
+bool usuarioContratanteTemPermissao(Usuario *usuario, int tipoPermissao)
+{
+	static const char *localizacao = "Usuario.h usuarioTemPermissao()";
+	if (!usuarioValido(usuario, localizacao))
+	{
+		return false;
+	}
+	if (usuario_PermissaoRoot(usuario))
+	{
+		geraLog(LOG, "USUÁRIO ROOT DETECTADO, concedendo permissão");
+		return true;
+	}
+	if (!usuario_PermissaoContratante(usuario))
+	{
+		geraLog(WARNING, "Usuario não tem permissão pra usar esse recurso (não é contratante)");
+		return false;
+	}
 
+	return true;
+}
 
 
 #endif //__USUARIO_VISURA__

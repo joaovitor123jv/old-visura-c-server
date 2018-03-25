@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <mysql/mysql.h>
 #include "Comandos.h"
-#include "../AdaptadorDeString/AdaptadorDeString.h"
+#include "../Bibliotecas/AdaptadorDeString/AdaptadorDeString.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
 #include "../OperacoesBanco/OperacoesBanco-FuncoesGenericas.h"
 #include "../Usuario.h"

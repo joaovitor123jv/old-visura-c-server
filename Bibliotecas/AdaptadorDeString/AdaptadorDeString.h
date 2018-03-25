@@ -6,7 +6,7 @@
 #include<string.h>
 #include<stdarg.h>//Pra aceitar multiplos argumentos
 
-#include "../Comandos/Comandos.h"
+#include "../../Comandos/Comandos.h"
 
 #ifndef _TESTAR_SEM_FILA_
 #include "../Fila/Fila.h"

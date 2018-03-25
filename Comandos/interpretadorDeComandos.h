@@ -3,7 +3,7 @@
 #include "Comandos.h"
 
 
-#include "../AdaptadorDeString/AdaptadorDeString.h"
+#include "../Bibliotecas/AdaptadorDeString/AdaptadorDeString.h"
 
 #include <mysql/mysql.h>
 MYSQL *conexao;

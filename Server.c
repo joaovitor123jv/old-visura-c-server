@@ -1,11 +1,9 @@
-#define _GNU_SOURCE // Renove warning do pthread_yield();
+//#define _GNU_SOURCE // Remove warning do pthread_yield();
 
 
 
 // #define TESTANDO
 // #define DISABLE_LOGS
-
-
 
 
 
