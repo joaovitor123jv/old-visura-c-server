@@ -99,7 +99,7 @@ APP
 
 		/* FUNÇÕES PARA ADMINISTRADORES - Sujeitas a alterações */
 
-		qC	(TIPO_QUANTIDAED_DE_HABITANTES_DA_CIDADE)
+		qC	(TIPO_QUANTIDADE_DE_HABITANTES_DA_CIDADE)
 			(Esse comando é chamado por um script (script/atualizaQuantidadeDeHabitantesDaCidade.rb))
 			nomeDaCidade	(Nome da cidade armazenado no banco de dados)
 				nomeDoEstado	(Nome do estado armazenado no banco de dados)
@@ -153,14 +153,19 @@ APP
 	3	(COMANDO_ATUALIZAR)
 		(Não possui comandos ainda, está aqui como uma possível extensão futura)
 
-		qC	(TIPO_QUANTIDAED_DE_HABITANTES_DA_CIDADE) (TODO)
+		qC	(TIPO_QUANTIDADE_DE_HABITANTES_DA_CIDADE) (TODO)
 			nomeDaCidade	(Nome da cidade que deseja atualizar a quantidade de habitantes	)
 				nomeDoEstado	(Nome do estado que deseja atualizar a quantidade de habitantes	)
 					(Esse comando pode ser chamado como root, ele atualiza a quantidade de habitantes da cidade informada	)
 					(Obtem a quantidade de habitantes da cidade do site do IBGE e armazena no banco de dados				)
-					(Esse comando ainda apresenta problemas de desconexão													)
 
 	4	(COMANDO_OBTER)
+		qC	(TIPO_QUANTIDADE_DE_HABITANTES_DA_CIDADE)
+			nomeDaCidade	(O nome da cidade que deseja saber a quantidade de habitantes)
+				nomeDoEstado	(A sigla do estado (SP, MG, GO...) que deseja saber a quantidade de habitantes)
+					(Retorna o usuário a quantidade de habitantes que está cadastrada no banco de dados)
+					(Se a quantidade não existir no banco de dados, o comando obtem os dados do site do IBGE, atualiza o banco, e retorna a quantidade de habitantes ao usuári)
+
 		J	(TOP_10_NOVOS)
 			1	(TIPO_REALIDADE_AUMENTADA)
 				(obtem os 10 produtos mais recentes em realidade aumentada)

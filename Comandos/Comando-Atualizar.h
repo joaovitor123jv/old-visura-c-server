@@ -225,15 +225,5 @@ bool interno_atualizarQuantidadeDeHabitantesDaCidade(Usuario *usuario, char *nom
 		return false;
 	}
 
-	if(addNumeroDeHabitantesACidadeAoBanco(usuario, strdup(nomeDaCidade), strdup(nomeDoEstado), strdup(retorno)))
-	{
-		free(retorno);	
-		retorno = NULL;
-		return true;
-	}
-
-	free(retorno);
-	retorno = NULL;
-	return false;
-
+	return addNumeroDeHabitantesACidadeAoBanco(usuario, strdup(nomeDaCidade), strdup(nomeDoEstado), retorno);// Função já libera o char *retorno
 }
