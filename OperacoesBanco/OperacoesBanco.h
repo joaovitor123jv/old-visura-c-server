@@ -6,7 +6,10 @@
 #include <string.h>
 #include <mysql/mysql.h>
 #include "../Usuario.h"
+// #include "../Comandos/Comando-Atualizar.h"
 //#include <stdarg.h>
+
+bool interno_atualizarQuantidadeDeHabitantesDaCidade(Usuario *usuario, char *nomeDaCidade, char *nomeDoEstado);
 
 #ifndef bool
 #define bool char
@@ -2452,6 +2455,95 @@ bool addNumeroDeHabitantesACidadeAoBanco(Usuario *usuario, char *nomeCidade, cha
 
 /* ****FIM COMANDOS DE ADICAO****/
 /* COMANDOS DE OBTENÇÃO */
+
+/** 
+ * @brief  Retorna direto ao usuario a quantidade de habitantes da cidade, se não houver, atualiza (caso usuario esteja autorizado)
+ * @note   retorna direto ao usuario
+ * @param  *usuario: O usuario que deseja saber a informação obtida
+ * @param  *nomeDaCidade: o nome da cidade que deseja saber a quantidade de habitantes
+ * @param  *nomeDoEstado: O estado onde se encontra a cidade que deseja saber a quantidade de habitantes
+ * @retval retorna direto ao usuario char *
+ */
+char *obterQuantidadeDeHabitantesDaCidadeDoBanco(Usuario *usuario, char *nomeDaCidade, char *nomeDoEstado)
+{
+	static const char *localizacao = "OperacoesBanco.h obterQuantidadeDeHabitantesDaCidadeDoBanco(Usuario*, char*, char*)";
+	if (!usuarioValido(usuario, localizacao))
+	{
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if (nomeDaCidade == NULL)
+	{
+		geraLog(ERRO, "nomeDaCidade nulo detectado");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if (nomeDoEstado == NULL)
+	{
+		geraLog(ERRO, "nomeDoEstado nulo detectado");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+
+	int tamanho = 122 + strlen(nomeDaCidade) + strlen(nomeDoEstado) + 1;
+	char *query = (char *)calloc(sizeof(char), tamanho);
+	if (query == NULL)
+	{
+		geraLog(ERRO, "Falha ao alocar memoria para query");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+
+	snprintf(query, tamanho, "SELECT C.quantidadeDeHabitantes FROM cidade C JOIN estado E ON C.estado_idestado=E.idestado WHERE C.nome=\'%s\' AND E.nome=\'%s\';", nomeDaCidade, nomeDoEstado);
+	if (query == NULL)
+	{
+		geraLog(ERRO, "Falha ao formatar para query");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+
+	char *resposta = obterRetornoUnicoDaQuery(query);
+
+	if (resposta == NULL)
+	{
+		geraLog(LOG, "Atualizando a quantidade de habitantes da cidade");
+		if (!interno_atualizarQuantidadeDeHabitantesDaCidade(usuario, nomeDaCidade, nomeDoEstado))
+		{
+			geraLog(WARNING, "Não foi possível atualizar o numero de habitantes da cidade");
+			return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;
+		}
+		else
+		{
+			query = (char *)calloc(sizeof(char), tamanho);
+			if (query == NULL)
+			{
+				geraLog(ERRO, "Falha ao alocar memoria para query");
+				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+			}
+
+			// TODO  (Alguma coisa por aqui)
+
+			snprintf(query, tamanho, "SELECT C.quantidadeDeHabitantes FROM cidade C JOIN estado E ON C.estado_idestado=E.idestado WHERE C.nome=\'%s\' AND E.nome=\'%s\';", nomeDaCidade, nomeDoEstado);
+			if (query == NULL)
+			{
+				geraLog(ERRO, "Falha ao formatar para query");
+				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+			}
+			resposta = obterRetornoUnicoDaQuery(query);
+			if (resposta == NULL)
+			{
+				geraLog(ERRO, "Mesmo após atualizar a quantidade de habitantes da cidade, não deu certo");
+				return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+			}
+		}
+	}
+
+	free(resposta);
+	free(nomeDaCidade);
+	free(nomeDoEstado);
+	nomeDoEstado = NULL;
+	nomeDaCidade = NULL;
+	resposta = NULL;
+
+	return resposta;
+}
+
+
 
 char *obterIdLocalizacaoDoBanco(char *idCidade, char *cep, char *bairro, char *rua, char *numero, char *complemento)
 {

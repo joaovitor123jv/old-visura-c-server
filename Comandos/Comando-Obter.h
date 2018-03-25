@@ -30,6 +30,8 @@ char *obterIdDeEmpresaDadoProduto(Usuario *usuario);
 
 char *obterListaDesejos(Usuario *usuario);
 
+char *obterQuantidadeDeHabitantesDaCidade(Usuario *usuario);
+
 char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 {
 	printf(" ********************** obterDados()\n");
@@ -92,6 +94,10 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 	else if(strcmp(token, TIPO_ID_CIDADE) == 0)// APP 4 $
 	{
 		return obterIdCidade(usuario);
+	}
+	else if(strcmp(token, TIPO_QUANTIDADE_DE_HABITANTES_DA_CIDADE) == 0)// APP 4 qC nomeCidade nomeEstado
+	{
+		return obterQuantidadeDeHabitantesDaCidade(usuario);
 	}
 	else if( strcmp(token, TIPO_ID_CONTRATANTE) == 0 )
 	{
@@ -944,9 +950,58 @@ char *obterIdDeEmpresaDadoProduto(Usuario *usuario)
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	printf(" LOG: Obtendo retorno de id de empresa do banco de dados em Comando-Obter.h obterIdDeEmpresaDadoProduto() djkgbr\n");
-	// return retornaIdDeEmpresaDadoProdutoDoBanco(usuario, idContratante);
 	return retornaIdDeEmpresaDadoProdutoDoBanco(usuario, idProduto);
 
-	// return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 }
 
+
+char *obterQuantidadeDeHabitantesDaCidade(Usuario *usuario)
+{
+	if (!usuarioValido(usuario, "Comando-Obter.h obterQuantidadeDeHabitantesDaCidade(Usuario *usuario)"))
+	{
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	char *token = usuario_getNextToken(usuario);
+	if (token == NULL)
+	{
+		geraLog(WARNING, "Comando insuficiente detectado (esperando nome de cidade)");
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+	}
+	if (stringMaior(token, TAMANHO_DO_NOME_DA_CIDADE_COM_MAIOR_NOME_DO_MUNDO))
+	{
+		geraLog(WARNING, "Comando exageradamente grande detectado (esperado nome de cidade)");
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+	}
+	char *nomeDaCidade = strdup(token);
+	if (nomeDaCidade == NULL)
+	{
+		geraLog(WARNING, "Falha ao duplicar nome de cidade");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	token = usuario_getNextToken(usuario);
+	if (token == NULL)
+	{
+		geraLog(WARNING, "Comando insuficiente detectado (esperado nome de estado)");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if (!stringTamanhoIgual(token, TAMANHO_ESTADO))
+	{
+		geraLog(ERRO, "Tamanho de nome de estado informado não condiz com o esperado");
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+	}
+	char *nomeDoEstado = strdup(token);
+
+	if (nomeDoEstado == NULL)
+	{
+		geraLog(ERRO, "Falha ao duplicar nome de estado");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+
+	if (!cidadeExisteNoBanco(nomeDaCidade, nomeDoEstado))
+	{
+		geraLog(WARNING, "Cidade pesquisada não existe no banco de dados");
+		return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;
+	}
+
+	return obterQuantidadeDeHabitantesDaCidadeDoBanco(usuario, nomeDaCidade, nomeDoEstado);
+}

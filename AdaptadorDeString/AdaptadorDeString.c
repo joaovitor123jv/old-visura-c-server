@@ -269,6 +269,7 @@ void liberar(void *var1, ...)
 	va_end(variaveis); 
 } */
 
+
 /** 
  * @brief  Concatena várias strings numa só, e então retorna uma string alocada contendo essa concatenação
  * @note   necessário liberar memoria depois
@@ -277,7 +278,7 @@ void liberar(void *var1, ...)
  */
 char *concatenaStrings(int quantidadeDeStrings, char *primeiraString, ...)
 {
-	geraLog(LOG, "Iniciando concatenação de strings");
+	// geraLog(LOG, "Iniciando concatenação de strings");
 	if (primeiraString == NULL)
 	{
 		geraLog(ERRO, "Primeira string informada é nula");
@@ -309,23 +310,23 @@ char *concatenaStrings(int quantidadeDeStrings, char *primeiraString, ...)
 		{
 			geraLog(WARNING, "Deu ruim aqui... variavel que não podia ser nulo, é nula");
 		}
-		if (quantidadeDeStrings == i)
-		{
-			geraLog(LOG, "Acabou de concatenar já...");
-			break;
-		}
+		// if (quantidadeDeStrings == i)
+		// {
+		// 	// geraLog(LOG, "Acabou de concatenar já...");
+		// 	break;
+		// }
 		tamanho = tamanho + strlen(temporario);
-		printf("\t\tTamanho = |%d|\n", tamanho);
-		printf("\t\tQuantidade de Caracteres em temp = |%ld|\n", strlen(temporario));
+		// printf("\t\tTamanho = |%d|\n", tamanho);
+		// printf("\t\tQuantidade de Caracteres em temp = |%ld|\n", strlen(temporario));
 		retorno = (char *)realloc(retorno, tamanho);
 		if (retorno == NULL)
 		{
 			geraLog(ERRO, "Ocorreu um erro ao tentar realocar memoria para retorno");
 			return NULL;
 		}
-		geraLog(LOG, "Concatenando string");
+		// geraLog(LOG, "Concatenando string");
 		strncat(retorno, temporario, strlen(temporario));
-		printf("\t Retorno, até agora → |%s|\n", retorno);
+		// printf("\t Retorno, até agora → |%s|\n", retorno);
 		i++;
 	}
 
@@ -334,6 +335,8 @@ char *concatenaStrings(int quantidadeDeStrings, char *primeiraString, ...)
 		geraLog(ERRO, "Ocorreu um erro ao tentar realocar memoria para retorno");
 		return NULL;
 	}
+	geraLog(LOG, "Retorno até agora:");
+	printf("\tRetorno = |%s|\n", retorno);
 	return retorno;
 }
 

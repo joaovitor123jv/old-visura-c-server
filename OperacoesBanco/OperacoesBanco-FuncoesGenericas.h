@@ -340,7 +340,7 @@ char *obterRetornoUnicoDaQuery(char *query)
 	}
 	else
 	{
-		
+		geraLog(LOG, "Analisando resultados obtidos");
 		if(mysql_num_fields(resultado) != 1)
 		{
 			if(mysql_num_fields(resultado) == 0)
@@ -389,6 +389,7 @@ char *obterRetornoUnicoDaQuery(char *query)
 			}
 			else if (mysql_num_rows(resultado) == 1)
 			{
+				geraLog(LOG, "Encontrado exatamente um resultado para a query em questao");
 				MYSQL_ROW linha;
 				
 				linha = mysql_fetch_row(resultado);
@@ -404,10 +405,14 @@ char *obterRetornoUnicoDaQuery(char *query)
 				}
 				else
 				{
-					char *retorno = strdup(linha[0]);
-					if (retorno == NULL)
+					char *retorno;
+					if (linha[0] == NULL)
 					{
-						return NULL;
+						retorno = NULL;
+					}
+					else
+					{
+						retorno = strdup(linha[0]);						
 					}
 					mysql_free_result(resultado);
 					free(query);

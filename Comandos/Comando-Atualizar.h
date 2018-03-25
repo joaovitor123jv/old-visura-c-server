@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -112,11 +114,14 @@ char *atualizarQuantidadeDeHabitantesDaCidade(Usuario *usuario)// APP 3 qC nomeC
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
+	if (!cidadeExisteNoBanco(nomeDaCidade, nomeDoEstado))
+	{
+		geraLog(WARNING, "Cidade não existe no banco de dados");
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+	}
 
 
-	// TODO Colocar ruby aqui
-	geraLog(LOG, "Gerando argumento");
-	// char *argumento = concatenaStrings(5, "\'", nomeDaCidade, "\',\'", nomeDoEstado, "\'");
+	geraLog(DEBUG, "Gerando argumento");
 	char *argumento = concatenaStrings(3, nomeDaCidade, " ", nomeDoEstado);
 	if (argumento == NULL)
 	{
@@ -124,12 +129,11 @@ char *atualizarQuantidadeDeHabitantesDaCidade(Usuario *usuario)// APP 3 qC nomeC
 		free(nomeDoEstado);
 		nomeDaCidade = NULL;
 		nomeDoEstado = NULL;
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
-	geraLog(LOG, "Chamando função ruby");
+	geraLog(DEBUG, "Chamando função ruby");
 	// char *retorno = chamaFuncaoRuby("./obtemQuantidadeDeHabitantesDoIBGE.rb", "FerramentaInterna.new", argumento);
 	char *retorno = chamaFuncaoRuby(usuario, SCRIPT_DE_ATUALIZACAO_DE_QUANTIDADE_DE_HABITANTES_DE_CIDADE, argumento);
-
 	geraLog(LOG, "Liberando argumento");
 	free(argumento);
 	argumento = NULL;
@@ -141,55 +145,95 @@ char *atualizarQuantidadeDeHabitantesDaCidade(Usuario *usuario)// APP 3 qC nomeC
 		free(nomeDaCidade);
 		nomeDaCidade = NULL;
 		nomeDoEstado = NULL;
-		geraLog(LOG, "Variáveis liberadas");
-		return NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
-
-	geraLog(LOG, "O Ruby retornou !!!!!!!!!!!!!");
+	geraLog(DEBUG, "Retorno do ruby: ");
 	printf("\t\tRetorno = |%s|\n", retorno);
 
+	if (strcmp(retorno, "ERRO") == 0)
+	{
+		geraLog(WARNING, "Ocorreu um erro ao tentar atualizar a quantidade de habitantes da cidade");
+		return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;
+	}
+
+	if(addNumeroDeHabitantesACidadeAoBanco(usuario, nomeDaCidade, nomeDoEstado, retorno))
+	{
+		free(nomeDaCidade);
+		free(nomeDoEstado);
+		free(retorno);
+		nomeDaCidade = NULL;
+		nomeDoEstado = NULL;
+		retorno = NULL;
+		return RETORNO_OK_STR_DINAMICA;
+	}
 
 	free(nomeDaCidade);
 	free(nomeDoEstado);
+	free(retorno);
 	nomeDaCidade = NULL;
 	nomeDoEstado = NULL;
+	retorno = NULL;
+	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 
-	return retorno;
-	// END_RUBY
+}
 
+/** 
+ * @brief  Formula um comando pra ser executado por um script em ruby que atualiza as informações da cidade indicada
+ * @note   Uso interno, somente, não libera nada
+ * @param  *usuario: 
+ * @retval 
+ */
+bool interno_atualizarQuantidadeDeHabitantesDaCidade(Usuario *usuario, char *nomeDaCidade, char *nomeDoEstado)
+{
+	static const char *localizacao = "Comando-Atualizar.h atualizarQuantidadeDeHabitantesDaCidade(Usuario *usuario)";
+	if (!usuarioValido(usuario, localizacao))
+	{
+		return false;
+	}
+	if (nomeDaCidade == NULL)
+	{
+		geraLog(ERRO, "nomeDaCidade nulo detectado");
+		return false;
+	}
+	if (nomeDoEstado == NULL)
+	{
+		geraLog(ERRO, "nomeDoEstado nulo detectado");
+		return false;
+	}
+	
+	char *argumento = concatenaStrings(3, nomeDaCidade, " ", nomeDoEstado);
+	if (argumento == NULL)
+	{
+		return false;
+	}
+	
+	char *retorno = chamaFuncaoRuby(usuario, SCRIPT_DE_ATUALIZACAO_DE_QUANTIDADE_DE_HABITANTES_DE_CIDADE, argumento);
+	free(argumento);
+	argumento = NULL;
 
+	if (retorno == NULL)
+	{
+		geraLog(ERRO, "Ocorreu algum erro no wrapper, e não foi possível obter o retorno");
+		return false;
+	}
+	geraLog(DEBUG, "Retorno do ruby: ");
+	printf("\t\tRetorno = |%s|\n", retorno);
 
+	if (strcmp(retorno, "ERRO") == 0)
+	{
+		geraLog(WARNING, "Ocorreu um erro ao tentar atualizar a quantidade de habitantes da cidade");
+		return false;
+	}
 
-	// ↓ ******************************  ↓SEMI-FUNCIONAL↓ ************************************* ↓
+	if(addNumeroDeHabitantesACidadeAoBanco(usuario, strdup(nomeDaCidade), strdup(nomeDoEstado), strdup(retorno)))
+	{
+		free(retorno);	
+		retorno = NULL;
+		return true;
+	}
 
-	//					Tamanho da string de execucao do script						+ tamanho do nome da cidade + tamanho do nome do estado + quantidade de espacos + \0
-	// int tamanho = strlen(SCRIPT_DE_ATUALIZACAO_DE_QUANTIDADE_DE_HABITANTES_DE_CIDADE) + strlen(nomeDaCidade) + TAMANHO_ESTADO + 2 + 1;
-	// char *comando = (char *)calloc(sizeof(char), tamanho);
-	// if (comando == NULL)
-	// {
-	// 	geraLog(ERRO, "Falha ao alocar memoria para comando");
-	// 	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-	// }
-
-	// snprintf(comando, tamanho, "%s %s %s", SCRIPT_DE_ATUALIZACAO_DE_QUANTIDADE_DE_HABITANTES_DE_CIDADE, nomeDaCidade, nomeDoEstado);
-	// if (comando == NULL)
-	// {
-	// 	geraLog(ERRO, "Falha ao formatar comando");
-	// 	return RETORNO_ERRO_INTERNO_STR_DINAMICA;
-	// }
-
-	// int retorno = system(comando);
-	// if (retorno != 0)
-	// {
-	// 	geraLog(ERRO, "Falha ao atualizar dados");
-	// 	return RETORNO_FALHA_AO_ATUALIZAR_STR_DINAMICA;
-	// }
-	// else
-	// {
-	// 	geraLog(LOG, "Conteudo atualizado com sucesso");
-	// 	return RETORNO_OK_STR_DINAMICA;
-	// }
-
-
+	free(retorno);
+	retorno = NULL;
+	return false;
 
 }
