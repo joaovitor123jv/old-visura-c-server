@@ -71,11 +71,14 @@ bool conectarBanco();
 struct Usuario
 {
 	char *login;
-	int tamanhoLogin;
 	char *senha;
+	char *id;
+
+	int tamanhoLogin;
 	int tamanhoSenha;
 	int nivelDePermissao;
-	char *id;
+	int nivelDePermissaoDeContratante; //Variável que só é usada quando o usuário é do tipo "contratante"
+	
 	Tokenizer *tokenizer;
 };
 
@@ -83,6 +86,7 @@ typedef struct Usuario Usuario;
 
 bool usuarioPrivilegiado(char *email);
 int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario);//Retorna o nível de permissao do usuario
+int usuario_obterNivelDePermissaoDeContratante(Usuario *usuario);
 
 void init_Usuario(Usuario *usuario)
 {
@@ -177,6 +181,10 @@ bool new_Usuario(Usuario *usuario, const char *login, const char *senha)
 	else 
 	{
 		usuario->nivelDePermissao = nivelDePermissao;
+		if (usuario->nivelDePermissao == USUARIO_NIVEL_DE_PERMISSAO_CONTRATANTE)
+		{
+			usuario->nivelDePermissaoDeContratante = usuario_obterNivelDePermissaoDeContratante(usuario);
+		}
 	}
 	// usuario->tokenizer = NULL;
 
@@ -631,6 +639,32 @@ int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario)/
 	}
 }
 
+#include "PermissoesDeUsuario.h"
+
+int usuario_obterNivelDePermissaoDeContratante(Usuario *usuario)
+{
+	if (!usuario_PermissaoContratante(usuario))
+	{
+		return PERMISSAO_NULA;
+	}
+	// TODO
+	// Aqui conterá o código do banco de dados pra definir permissao de contratante
+
+	return PERMISSAO_GLOBAL;
+}
+
+int usuario_getPermissaoContratante(Usuario *usuario)
+{
+	if (usuario == NULL)
+	{
+		return PERMISSAO_NULA;
+	}
+	if (usuario_obterLogin(usuario) == NULL)
+	{
+		return PERMISSAO_NULA;
+	}
+	return usuario->nivelDePermissaoDeContratante;
+}
 
 /** 
  * @brief  Retorna true, caso o usuario possa executar a operacao especificada
@@ -639,7 +673,7 @@ int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario)/
  * @param  tipoPermissao: CONSTANTE pre definida que contém o código da operação que deseja executar
  * @retval 
  */
-bool usuarioContratanteTemPermissao(Usuario *usuario, int tipoPermissao)
+bool usuario_ContratanteTemPermissao(Usuario *usuario, int tipoPermissao)
 {
 	static const char *localizacao = "Usuario.h usuarioTemPermissao()";
 	if (!usuarioValido(usuario, localizacao))
@@ -655,6 +689,19 @@ bool usuarioContratanteTemPermissao(Usuario *usuario, int tipoPermissao)
 	{
 		geraLog(WARNING, "Usuario não tem permissão pra usar esse recurso (não é contratante)");
 		return false;
+	}
+
+	switch(tipoPermissao)
+	{
+		case PERMISSAO_OBTER_QUANTIDADE_DE_HABITANTES_NA_CIDADE:
+			if (usuario_getPermissaoContratante(usuario) >= tipoPermissao)
+			{
+				return true;
+			}
+			break;
+		default:
+			return false;
+			break;
 	}
 
 	return true;

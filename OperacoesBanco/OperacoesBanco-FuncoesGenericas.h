@@ -436,7 +436,7 @@ char *obterRetornoUnicoDaQuery(char *query)
 
 /** 
  * @brief  Retorna uma informação obtida na query na primeira posição
- * @note   Libera a query
+ * @note   Libera a query, retorna direto ao usuario, função externa
  * @param  *query: 
  * @retval char *
  */

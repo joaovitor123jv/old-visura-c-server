@@ -135,11 +135,76 @@ char *obterQuantidadeDeVisualizacoesGerais(Usuario *usuario)// APP 4 2 @ 2 idPro
 char *obterQuantidadeDeVisualizacoesDoProdutoNaCidade(Usuario *usuario)
 {
     static const char *localizacao = "Comando-Obter_Visualizacoes.h obterQuantidadeDeVisualizacoesDoProdutoNaCidade()";
+    char *token = NULL;
+    char *idProduto = NULL;
+    char *nomeCidade = NULL;
+    char *nomeEstado = NULL;
     if (!usuarioValido(usuario, localizacao))
     {
         return RETORNO_ERRO_INTERNO_STR_DINAMICA;
     }
-    // TODO
+    if (!usuario_ContratanteTemPermissao(usuario, PERMISSAO_OBTER_QUANTIDADE_DE_HABITANTES_NA_CIDADE))
+    {
+        return RETORNO_ERRO_NAO_AUTORIZADO_STR_DINAMICA;
+    }
 
-    return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
+    token = usuario_getNextToken(usuario);
+    if (token == NULL)
+    {
+        geraLog(WARNING, "Comando insuficiente detectado, token NULO");
+        return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+    }
+    if (!stringTamanhoIgual(token, TAMANHO_ID_PRODUTO))
+    {
+        geraLog(WARNING, "Entrada de tamanho incorreto detectada (esperando idProduto)");
+        return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+    }
+    idProduto = strdup(token);
+    if (idProduto == NULL)
+    {
+        geraLog(ERRO, "Falha ao duplicar token");
+        return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+    }
+
+    token = usuario_getNextToken(usuario);
+    if (token == NULL)
+    {
+        geraLog(WARNING, "Comando insuficiente detectado, token NULO");
+        return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+    }
+    if (!stringMaior(token, TAMANHO_DO_NOME_DA_CIDADE_COM_MAIOR_NOME_DO_MUNDO))
+    {
+        geraLog(WARNING, "Entrada de tamanho incorreto detectada (esperando nomeCidade)");
+        return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+    }
+    nomeCidade = strdup(token);
+    if (nomeCidade == NULL)
+    {
+        geraLog(ERRO, "Falha ao duplicar token");
+        return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+    }
+
+    token = usuario_getNextToken(usuario);
+    if (token == NULL)
+    {
+        geraLog(WARNING, "Comando insuficiente detectado, token NULO");
+        return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+    }
+    if (!stringMaior(token, TAMANHO_ESTADO))
+    {
+        geraLog(WARNING, "Entrada de tamanho incorreto detectada (esperando nomeEstado)");
+        return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+    }
+    nomeEstado = strdup(token);
+    if (nomeEstado == NULL)
+    {
+        geraLog(ERRO, "Falha ao duplicar token");
+        return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+    }
+
+
+    //TODO
+    return obterQuantidadeDeVisualizacoesDoProdutoNaCidadeDoBanco(usuario, idProduto, nomeCidade, nomeEstado);
+
+    // return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
 }

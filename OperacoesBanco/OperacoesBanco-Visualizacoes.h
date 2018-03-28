@@ -3,8 +3,10 @@
 #include <stdlib.h>
 #include "../Comandos/Comandos.h"
 #include "../Usuario.h"
+#include "OperacoesBanco-FuncoesGenericas.h"
 #include <mysql/mysql.h>
 
+bool produtoVencido(char *idProduto, Usuario *usuario);
 
 int checaExistenciaDeVisualizacaoDeProdutoComPessoa(char *idproduto, Usuario *usuario)//Se retorna RETORNO_OK, existe algo ali, se retornar RETORNO_NULO, não existe
 {
@@ -282,7 +284,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
                     // tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + strlen(quantidade) + 198 + 1);
                     tamanhoDaQuery = sizeof(char) * ( usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 219);
                     
-                    query = malloc(tamanhoDaQuery);
+                    query = (char *)malloc(tamanhoDaQuery);
                     if(query == NULL)
                     {
                         printf(" ERRO: não foi possível alocar memória para a query(9) (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
@@ -333,7 +335,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
                     // tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + strlen(quantidade) + 179 + 1);
                     tamanhoDaQuery = sizeof(char) *  (usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 190);
                     
-                    query = malloc(tamanhoDaQuery);
+                    query = (char *)malloc(tamanhoDaQuery);
                     if(query == NULL)
                     {
                         printf(" ERRO: não foi possível alocar memória para a query(5) (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
@@ -411,7 +413,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
 		
         // int tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(quantidade) + 77 + 1);
         int tamanhoDaQuery = sizeof(char) * ( strlen(quantidade) + 88);
-		query = malloc(tamanhoDaQuery);
+		query = (char *)malloc(tamanhoDaQuery);
 		if(query == NULL)
 		{
 			printf(" ERRO: não foi possível alocar memória para a query(7) (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
@@ -469,7 +471,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
                     // tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + strlen(quantidade) + 208 + 1);
                     tamanhoDaQuery = sizeof(char) * ( usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 219);
                     
-                    query = malloc(tamanhoDaQuery);
+                    query = (char *)malloc(tamanhoDaQuery);
                     if(query == NULL)
                     {
                         printf(" ERRO: não foi possível alocar memória para a query(9) (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
@@ -520,7 +522,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
                     // tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + strlen(quantidade) + 179 + 1);
                     tamanhoDaQuery = sizeof(char) *  (usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 190);
                     
-                    query = malloc(tamanhoDaQuery);
+                    query = (char *)malloc(tamanhoDaQuery);
                     if(query == NULL)
                     {
                         printf(" ERRO: não foi possível alocar memória para a query(5) (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
@@ -687,7 +689,7 @@ char *obterQuantidadeDeVisualizacoesAnonimasDoBanco(char *idProduto, Usuario *us
         mysql_free_result(resultado);
         resultado = NULL;
         query = NULL;
-        return RETORNO_NOT_FOUND;
+        return (char *)RETORNO_NOT_FOUND;
     }
     
     MYSQL_ROW linha = NULL;
@@ -720,7 +722,7 @@ char *obterQuantidadeDeVisualizacoesAnonimasDoBanco(char *idProduto, Usuario *us
         }
         
         int tamanho = strlen(linha[0]) + 1;
-        retorno = malloc(sizeof(char) * tamanho);
+        retorno = (char *)malloc(sizeof(char) * tamanho);
         
         if(retorno == NULL)
         {
@@ -862,7 +864,7 @@ char *obterQuantidadeDeVisualizacoesGeraisDoBanco(char *idProduto, Usuario *usua
         mysql_free_result(resultado);
         resultado = NULL;
         query = NULL;
-        return RETORNO_NOT_FOUND;
+        return (char *)RETORNO_NOT_FOUND;
     }
     
     MYSQL_ROW linha = NULL;
@@ -895,7 +897,7 @@ char *obterQuantidadeDeVisualizacoesGeraisDoBanco(char *idProduto, Usuario *usua
         }
         
         int tamanho = strlen(linha[0]) + 1;
-        retorno = malloc(sizeof(char) * tamanho);
+        retorno = (char *)malloc(sizeof(char) * tamanho);
         
         if(retorno == NULL)
         {
@@ -938,4 +940,89 @@ char *obterQuantidadeDeVisualizacoesGeraisDoBanco(char *idProduto, Usuario *usua
     }
     printf(" ERRO: erro desconhecido em obterQuantidadeDeVisualizacoesGeraisDoBanco() OperacoesBanco-Visualizacoes.h q654r888r77q65a22d\n");
     return NULL;
+}
+
+/** 
+ * @brief  Obtem a quantidade de visualizações do produto especificado, do banco de dados, e retorna diretamente ao cliente
+ * @note   Retorna diretamente ao cliente, logo, libera as variáveis
+ * @param  *usuario: O usuário que solicitou o acesso a esses dados (contratante, provavelmente)
+ * @param  *idProduto: o id do produto em questão
+ * @param  *nomeCidade: o nome da cidade que deseja saber de onde veio as visualizações
+ * @param  *nomeEstado: o nome do estado, que a cidade acima mencionada se localiza
+ * @retval strdup(algumaCoisa). um ponteiro alocado que deve ser liberado em algum lugar;
+ */
+char *obterQuantidadeDeVisualizacoesDoProdutoNaCidadeDoBanco(Usuario *usuario, char *idProduto, char *nomeCidade, char *nomeEstado)
+{
+    static const char *localizacao = "OperacoesBanco-Visualizacoes.h obterQuantidadeDeVisualizacoesDoProdutoNaCidadeDoBanco()";
+    if (!usuarioValido(usuario, localizacao))
+    {
+        return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+    }
+    if (idProduto == NULL)
+    {
+        geraLog(ERRO, "idProduto nulo identificado");        
+        if (nomeCidade != NULL)
+        {
+            free(nomeCidade);
+            nomeCidade = NULL;
+        }
+        if (nomeEstado != NULL)
+        {
+            free(nomeEstado);
+            nomeEstado = NULL;
+        }
+        return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+    }
+    if (nomeCidade == NULL)
+    {
+        geraLog(ERRO, "nomeCidade nulo identificado");
+        if (nomeEstado != NULL)
+        {
+            free(nomeEstado);
+            nomeEstado = NULL;
+        }
+        free(idProduto);
+        idProduto = NULL;
+        return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+    }
+    if (nomeEstado == NULL)
+    {
+        geraLog(ERRO, "nomeEstado nulo identificado");
+        free(idProduto);
+        free(nomeCidade);
+        nomeCidade = NULL;
+        idProduto = NULL;
+        return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+    }
+
+    int tamanho = 319 + strlen(nomeCidade) + strlen(nomeEstado) + TAMANHO_ID_PRODUTO + 1;
+    char *query = (char *)calloc(sizeof(char), tamanho);
+    if (query == NULL)
+    {
+        geraLog(ERRO, "Falha ao alocar memoria para query");
+        free(idProduto);
+        free(nomeCidade);
+        free(nomeEstado);
+        nomeEstado = NULL;
+        nomeCidade = NULL;
+        idProduto = NULL;
+        return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+    }
+
+    //MAL OTIMIZADO!!!
+    snprintf(query, tamanho, "SELECT count(V.quantidade) FROM visualizacaoDeUsuario V JOIN cliente C ON V.cliente_idcliente=idcliente JOIN localizacao L ON C.localizacao_idlocalizacao=L.idlocalizacao JOIN cidade M ON L.cidade_idcidade=M.idcidade JOIN estado E ON M.estado_idestado=E.idestado WHERE E.nome=\'%s\' AND C.nome=\'%s\' AND V.produto_idproduto=\'%s\';", nomeEstado, nomeEstado, idProduto);
+
+    free(idProduto);
+    free(nomeCidade);
+    free(nomeEstado);
+    nomeEstado = NULL;
+    nomeCidade = NULL;
+    idProduto = NULL;
+
+    if (query == NULL)
+    {
+        geraLog(ERRO, "Falha ao formatar query");
+        return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+    }
+    return retornaUnicoRetornoDaQuery(query);
 }

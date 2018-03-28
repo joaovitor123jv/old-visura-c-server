@@ -142,7 +142,15 @@ void *threadMonitoraDoBancoDeDados(void *args)// EXECUTADA EM SEGUNDO PLANO!!!
 	else
 	{
 		printf(" Inicializar o ruby aqui\n");
-		system(COMANDO_MONITOR_DO_BANCO_DE_DADOS_RUBY);
+		int retorno = system(COMANDO_MONITOR_DO_BANCO_DE_DADOS_RUBY);
+		if (retorno == 0)
+		{
+			geraLog(LOG, "Comando monitor de banco de dados inicializado com sucesso");
+		}
+		else
+		{
+			geraLog(ERRO, "O Comando para monitoramento de banco de dados não foi inicializado \a");
+		}
 		pthread_exit( NULL );
 	}
 	printf(" Vai que.... threadMonitoraDoBancoDeDados()\n");
