@@ -20,7 +20,7 @@ char *obterNomeProduto(Usuario *usuario);// APP 4 1. idProduto
 char *obterAvaliacaoProduto(Usuario *usuario);// APP 4 kW idProduto                       (Retorna NULL quando ocorre algum erro)
 char *obterInformacoesProduto(Usuario *usuario);// APP 4 iP idProduto			//Retorna informações do produto separadas por espaço, de acordo com o nível de permissão de usuario
 
-char *obter10ProdutosDaEmpresa(Usuario *usuario);
+char *obter10ProdutosDaEmpresa(Usuario *usuario);// APP 4 ## 33
 
 char *obterInformacaoPaginada(Usuario *usuario);
 
@@ -814,7 +814,13 @@ char *obterInformacoesUsuario(Usuario *usuario)
 	}
 }
 
-
+/** 
+ * @brief  retorna 10 produtos da empresa especificada ao usuario
+ * @note   Se logado como contratante:  APP 4 ## 33 numeroPagina
+ * @note   Se logado como usuario normal:  APP 4 ## 33 idEmpresa numeroPagina
+ * @param  *usuario: Usuario que solicitou o comando
+ * @retval retorna direto ao usuario
+ */
 char *obter10ProdutosDaEmpresa(Usuario *usuario)//APP 4 ## 33
 {
 	const char *localizacao = "Comando-Obter.h obter10ProdutosDaEmpresa()";
@@ -822,38 +828,82 @@ char *obter10ProdutosDaEmpresa(Usuario *usuario)//APP 4 ## 33
 	{
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
-	// if( !usuario_PermissaoContratante(usuario) )
-	// {
-	// 	printf(" Warning: Usuario normal tentou acessar comando disponível somente para contratante em Comando-Obter.h obter10ProdutosDaEmpresa() aisubru2wqiw\n");
-	// 	return RETORNO_ERRO_NAO_AUTORIZADO_STR_DINAMICA;
-	// }
+	char *token = NULL;
+	char *pagina = NULL;
+	char *idContratante = NULL;
 
-	char *token;
-	token = usuario_getNextToken(usuario);
-	if( token == NULL )
+	if( !usuario_PermissaoContratante(usuario) )
 	{
-		return obter10ProdutosDaEmpresaDoBanco(usuario, strdup("1"), NULL);
-	}
-	char *pagina = strdup(token);
-	if (usuario_PermissaoCliente(usuario) || usuario_PermissaoAnonimo(usuario))
-	{
-
-		token = usuario_getNextToken(usuario);
+		geraLog(LOG, "Usuario normal ou ROOT, solicitando produtos de empresa");
+		token = usuario_getNextToken(usuario);// APP 4 ## 33 idEmpresa
 		if (token == NULL)
 		{
-			printf(" Warning: Comando insuficiente em Comando-Obter.h obterInformacaoPaginada() dfwjbht\n");
+			geraLog(WARNING, "Usuario nao especificou a empresa");
 			return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 		}
 		if (stringMaior(token, TAMANHO_DE_INTEIRO_EM_BANCO_DE_DADOS))
 		{
-			printf(" Warning: Comando exageradamente grande em Comando-Obter.h obterInformacaoPaginada() bouithfjt\n");
+			geraLog(ERRO, "Usuario enviou comando com tamanho incorreto");
 			return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
 		}
-		char *idContratante = strdup(token);
-		return obter10ProdutosDaEmpresaDoBanco(usuario, pagina, idContratante);	
-	}
-	return obter10ProdutosDaEmpresaDoBanco(usuario, pagina, NULL);
+		idContratante = strdup(token);
+		if (idContratante == NULL)
+		{
+			geraLog(ERRO, "Falha ao duplicar idContratante");
+			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+		}
 
+		token = usuario_getNextToken(usuario);// APP 4 ## 33 idEmpresa numeroPagina
+		if (token == NULL)
+		{
+			geraLog(LOG, "Usuario nao especificou pagina, retornando pagina 1");
+			pagina = strdup("1");
+		}
+		else
+		{
+			if (stringMaior(token, TAMANHO_DE_INTEIRO_EM_BANCO_DE_DADOS))
+			{
+				geraLog(WARNING, "Comando exageradamente grande, pagina impossivel detectada");
+				free(idContratante);
+				idContratante = NULL;
+				return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+			}
+			pagina = strdup(token);
+		}
+
+		if (pagina == NULL)
+		{
+			geraLog(ERRO, "Falha ao duplicar string para pagina no banco de dados");
+			free(idContratante);
+			idContratante = NULL;
+			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+		}
+
+		geraLog(LOG, "Obtendo produtos do banco de dados");
+
+		return obter10ProdutosDaEmpresaDoBanco(usuario, pagina, idContratante);
+	}
+	else
+	{
+		token = usuario_getNextToken(usuario);
+		if( token == NULL )
+		{
+			return obter10ProdutosDaEmpresaDoBanco(usuario, strdup("1"), NULL);// retorna os produtos da página 1 da empresa
+		}
+		if (stringMaior(token, TAMANHO_DE_INTEIRO_EM_BANCO_DE_DADOS))
+		{
+			geraLog(WARNING, "Usuario enviou um comando muito grande (esperado pagina)");
+			return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+		}
+		pagina = strdup(token);
+		if (pagina == NULL)
+		{
+			geraLog(ERRO, "Falha ao duplicar pagina");
+			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+		}
+
+		return obter10ProdutosDaEmpresaDoBanco(usuario, pagina, NULL);
+	}
 }
 
 

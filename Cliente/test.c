@@ -5,7 +5,17 @@ int main()
 {
 
 	// printf("Iniciando teste de Criptografia\n");
-	unsigned char senha[2048/8] = "Eu te amo Alexia Lui Da Silva !!!!";/* Máximo de 256 caracteres por senha */
+	// unsigned char senha[2048/8] = "Eu te amo Alexia Lui Da Silva !!!!";/* Máximo de 256 caracteres por senha */
+	unsigned char senha[1024] = "Eu estou fazendo esse teste, pra ver se a mensagem pode ser \n\
+									Dividida em mais de uma.... a fim de saber se essas coisas são\n \
+									Mesmo reais.... digamos assim (esse negócio será que só pode ter \n \
+									256 caracteres mesmo ? ou será que pode ter 1024 ?). Eis a questão.\
+									Dividida em mais de uma.... a fim de saber se essas coisas são\n \
+									Mesmo reais.... digamos assim (esse negócio será que só pode ter \n \
+									256 caracteres mesmo ? ou será que pode ter 1024 ?). Eis a questão.\
+									Dividida em mais de uma.... a fim de saber se essas coisas são\n \
+									Mesmo reais.... digamos assim (esse negócio será que só pode ter \n \
+									256 caracteres mesmo ? ou será que pode ter 1024 ?). Eis a questão.";/* Máximo de 256 caracteres por senha */
 	unsigned char *publicKey = getChavePublica();
 	unsigned char *privateKey = getChavePrivada();
 	/* char publicKey[] = "-----BEGIN PUBLIC KEY-----\n"\

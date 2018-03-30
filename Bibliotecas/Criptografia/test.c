@@ -5,7 +5,10 @@ int main()
 {
 
 	// printf("Iniciando teste de Criptografia\n");
-	unsigned char senha[2048/8] = "Eu te amo Alexia Lui Da Silva !!!!";/* Máximo de 256 caracteres por senha */
+	// unsigned char senha[2048/8] = "Eu te amo Alexia Lui Da Silva !!!!";/* Máximo de 256 caracteres por senha */
+	// unsigned char senha[1024] = "Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Silva !!!!Eu te amo Alexia Lui Da Sil";/* Máximo de 256 caracteres por senha */
+	unsigned char senha[2048/8] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";/* Máximo de 256 caracteres por senha */
+	
 	unsigned char *publicKey = getChavePublica();
 	unsigned char *privateKey = getChavePrivada();
 	/* char publicKey[] = "-----BEGIN PUBLIC KEY-----\n"\
@@ -46,10 +49,13 @@ int main()
 		"Nyvo+ZNS7xENtnUFk+066TLQ3H1UskFEZIqiZCy5Mc1KeHmeVUdk\n"\
 		"-----END RSA PRIVATE KEY-----\n";*/
 
-	unsigned char encrypted[4098]={};
-	unsigned char decrypted[4098]={};
+	// unsigned char encrypted[4098]={};
+	unsigned char encrypted[8192]={};
+	// unsigned char decrypted[4098]={};
+	unsigned char decrypted[1024]={};
+	
 
-	int encrypted_length= public_encrypt(senha,strlen((const char *)senha),publicKey,encrypted);
+	int encrypted_length= public_encrypt(senha, strlen((const char *)senha), publicKey, encrypted);
 	if(encrypted_length == -1)
 	{
 		printf("Erro ao criptografar mensagem\n");
@@ -68,6 +74,9 @@ int main()
 
 	printf("Crypted Text = %s\n", encrypted );
 	printf("Crypted Length = %d\n", encrypted_length );
+
+	printf("LOG: Mensagem decriptografada = |%s|\n", decrypted);
+	printf("LOG: Tamanho da mensagem decriptografada = |%d|\n", strlen(decrypted));
 	
 	return 0;
 }
