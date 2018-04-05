@@ -1716,7 +1716,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 			nomeProduto = NULL;
 			return false;
 		}
-		idContratante = obterIdContratanteDoBancoPorUsuario(usuario);
+		idContratante = strdup(usuario_obterId(usuario));// Estava liberando o id o usuario direto... o que é bizarro... mas ok
 		if (idContratante == NULL)
 		{
 			printf(" Warning: Falha ao obter id de contratante do banco de dados em Comando-Adicao.h addProduto() askbgvr8u9asud\n");
