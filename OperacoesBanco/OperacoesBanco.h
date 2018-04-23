@@ -1579,7 +1579,7 @@ bool addProdutoAListaDeDesejosDoClienteAoBanco(Usuario *usuario, char *idProduto
 		idProduto = NULL;
 		return false;
 	}
-	int tamanho = 85 + strlen(idProduto)+ strlen(usuario_obterId(usuario)) + 1;
+	int tamanho = 97 + strlen(idProduto)+ strlen(usuario_obterId(usuario)) + 1;
 	char *query = (char *)malloc(sizeof(char) * tamanho);
 
 	//Checa se o usuario já possui o item na lista de desejos   _START_
@@ -1590,7 +1590,7 @@ bool addProdutoAListaDeDesejosDoClienteAoBanco(Usuario *usuario, char *idProduto
 		idProduto = NULL;
 		return false;
 	}
-	snprintf(query, tamanho, "SELECT L.idproduto FROM listaDesejos L WHERE L.cliente_idcliente=%s AND L.idproduto=\'%s\';", usuario_obterId(usuario), idProduto);
+	snprintf(query, tamanho, "SELECT L.idproduto FROM listaDesejos L WHERE L.cliente_idcliente=%s AND L.idproduto LIKE BINARY \'%s\';", usuario_obterId(usuario), idProduto);
 	if (query == NULL)
 	{
 		printf(" Warning: Falha ao formatar query para execução em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() asadvgreihuskjrbhasdhy");
@@ -1629,7 +1629,6 @@ bool addProdutoAListaDeDesejosDoClienteAoBanco(Usuario *usuario, char *idProduto
 		if (!executaQuery(query))
 		{
 			printf(" Warning: falha ao executar query, produto não adicionado à lista de desejos em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() dwebr5990nuhsjy\n");
-			//liberar(query, idProduto);
 			free( query );
 			free( idProduto );
 			query = NULL;
@@ -1639,7 +1638,6 @@ bool addProdutoAListaDeDesejosDoClienteAoBanco(Usuario *usuario, char *idProduto
 		else
 		{
 			printf(" LOG: produto adicionaro à lista de desejos em OperacoesBanco.h addProdutoAListaDeDesejosDoClienteAoBanco() 0wrh8h9hjgidsaohu6uj\n");
-			//liberar(query, idProduto);
 			free( query );
 			free( idProduto );
 			query = NULL;
@@ -2030,7 +2028,7 @@ bool addAvaliacaoAProdutoAoBanco(Usuario *usuario, char *idProduto, char *avalia
 	}
 
 	//int tamanho = 151 + strlen(email) + TAMANHO_ID_PRODUTO + 1;
-	int tamanho = usuario_obterTamanhoLogin(usuario) + 162;//otimizado
+	int tamanho = usuario_obterTamanhoLogin(usuario) + 186;//otimizado
 	char *query = (char *)malloc(sizeof(char) * tamanho);
 
 	
@@ -2040,7 +2038,7 @@ bool addAvaliacaoAProdutoAoBanco(Usuario *usuario, char *idProduto, char *avalia
 		printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() q648484eas\n");
 		return false;
 	}
-	snprintf(query, tamanho, "UPDATE visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente SET V.avaliacaoDoUsuario=%c WHERE V.produto_idproduto=\'%s\' AND C.email=\'%s\';", avaliacao[0], idProduto, usuario_obterLogin(usuario) );
+	snprintf(query, tamanho, "UPDATE visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente SET V.avaliacaoDoUsuario=%c WHERE V.produto_idproduto LIKE BINARY \'%s\' AND C.email LIKE BINARY \'%s\';", avaliacao[0], idProduto, usuario_obterLogin(usuario) );
 	if(query == NULL)
 	{
 		printf(" Warning: Falha ao formatar query para executar em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() qkjhhdjkasd\n");
@@ -2069,14 +2067,14 @@ bool addAvaliacaoAProdutoAoBanco(Usuario *usuario, char *idProduto, char *avalia
 			if(avaliacao[0] == '1')
 			{
 				//tamanho = 84+TAMANHO_ID_PRODUTO+1;
-				tamanho = 95;//otimizado
+				tamanho = 107;//otimizado
 				query = (char *)malloc(sizeof(char) * tamanho);
 				if(query == NULL)
 				{
 					printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() akhkvejjd81779c\n");
 					return false;
 				}
-				snprintf(query, tamanho, "UPDATE produto P SET P.avaliacaoPositiva=P.avaliacaoPositiva+1  WHERE P.idproduto=\'%s\';", idProduto);
+				snprintf(query, tamanho, "UPDATE produto P SET P.avaliacaoPositiva=P.avaliacaoPositiva+1  WHERE P.idproduto LIKE BINARY \'%s\';", idProduto);
 				if (query == NULL)
 				{
 					printf(" Warning: Falha ao formatar query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() qbhbr25300sdf44*-asd\n");
@@ -2097,14 +2095,14 @@ bool addAvaliacaoAProdutoAoBanco(Usuario *usuario, char *idProduto, char *avalia
 			else if(avaliacao[0] == '0')
 			{
 				//tamanho = 84+TAMANHO_ID_PRODUTO+1;
-				tamanho = 95;//otimizado
+				tamanho = 107;//otimizado
 				query = (char *)malloc(sizeof(char) * tamanho);
 				if(query == NULL)
 				{
 					printf(" Warning: Falha ao alocar memoria para query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() akhkvejjd81779c\n");
 					return false;
 				}
-				snprintf(query, tamanho, "UPDATE produto P SET P.avaliacaoPositiva=P.avaliacaoNegativa+1 WHERE P.idproduto=\'%s\';", idProduto);
+				snprintf(query, tamanho, "UPDATE produto P SET P.avaliacaoPositiva=P.avaliacaoNegativa+1 WHERE P.idproduto LIKE BINARY \'%s\';", idProduto);
 				if (query == NULL)
 				{
 					printf(" Warning: Falha ao formatar query em OperacoesBanco.h addAvaliacaoAProdutoAoBanco() qbhbr25300sdf44*-asd\n");
@@ -2203,14 +2201,14 @@ bool addFeedBackDeProdutoAoBanco(Usuario *usuario, char *idProduto, char *titulo
 		}
 
 		// int tamanho = 93 + strlen(email), TAMANHO_ID_PRODUTO + 1;
-		int tamanho = 104 + usuario_obterTamanhoLogin(usuario);
+		int tamanho = 116 + usuario_obterTamanhoLogin(usuario);
 		char *query = (char *)malloc(sizeof(char) * tamanho);
 		if(query == NULL)
 		{
 			printf(" Warning: não foi possivel alocar memoria para query em OperacoesBanco.h addFeedBackDeProdutoAoBanco() asdjkhkvdn");
 			return false;
 		}
-		snprintf(query, tamanho, "SELECT F.idfeedBackCliente FROM feedBackCliente F WHERE F.emailCliente=\'%s\' AND F.idproduto=\'%s\';", usuario_obterLogin(usuario), idProduto);
+		snprintf(query, tamanho, "SELECT F.idfeedBackCliente FROM feedBackCliente F WHERE F.emailCliente=\'%s\' AND F.idproduto LIKE BINARY \'%s\';", usuario_obterLogin(usuario), idProduto);
 		if(query == NULL)
 		{
 			printf(" Warning: não foi possivel formatar query em OperacoesBanco.h addFeedBackDeProdutoAoBanco() asdjkhkvdn");
@@ -2220,14 +2218,14 @@ bool addFeedBackDeProdutoAoBanco(Usuario *usuario, char *idProduto, char *titulo
 		{
 			printf(" LOG: Feedback existente detectado em OperacoesBanco.h addFeedBackDeProdutoAoBanco() asdjhjkbvscf\n");
 			// tamanho = 115 + strlen(titulo) + strlen(conteudo) + strlen(email) + TAMANHO_ID_PRODUTO + 1;
-			tamanho = 126 + strlen(titulo) + strlen(conteudo) + usuario_obterTamanhoLogin(usuario);
+			tamanho = 138 + strlen(titulo) + strlen(conteudo) + usuario_obterTamanhoLogin(usuario);
 			query = (char *)malloc(sizeof(char) * tamanho);
 			if(query == NULL)
 			{
 				printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addFeedBackDeProdutoAoBanco() asdjhkvdsdf65025s\n");
 				return false;
 			}
-			snprintf(query, tamanho, "UPDATE feedBackCliente F SET F.titulo=\'%s\', F.conteudo=\'%s\' WHERE F.emailCliente=\'%s\' AND F.idproduto=\'%s\';", titulo, conteudo, usuario_obterLogin(usuario), idProduto);
+			snprintf(query, tamanho, "UPDATE feedBackCliente F SET F.titulo=\'%s\', F.conteudo=\'%s\' WHERE F.emailCliente=\'%s\' AND F.idproduto LIKE BINARY \'%s\';", titulo, conteudo, usuario_obterLogin(usuario), idProduto);
 			if(query == NULL)
 			{
 				printf(" Warning: falha ao formatar query em OperacoesBanco.h addFeedBackDeProdutoAoBanco() bhjvbhjcfdsfr\n");
@@ -3426,7 +3424,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 		}
 		char *query = NULL;
 		//int tamanho = 55 + TAMANHO_ID_PRODUTO + 1;// Usando TAMANHO_ID_PRODUTO para otimização
-		int tamanho = 66;// Usando TAMANHO_ID_PRODUTO para otimização
+		int tamanho = 78;// Usando TAMANHO_ID_PRODUTO para otimização
 
 		query = (char *)malloc(sizeof(char) * tamanho);
 		if(query == NULL)
@@ -3435,7 +3433,7 @@ char *obterDescricaoProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 			return strdup("ERRO interno, tente novamente");
 		}
 
-		snprintf(query, tamanho, "SELECT P.descricao FROM produto P WHERE P.idproduto=\'%s\';", idProduto);
+		snprintf(query, tamanho, "SELECT P.descricao FROM produto P WHERE P.idproduto LIKE BINARY \'%s\';", idProduto);
 
 		if(query == NULL)
 		{
@@ -3598,7 +3596,7 @@ char *obterNomeProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 
 		char *query = NULL;
 		//int tamanho = 57 + TAMANHO_ID_PRODUTO + 1;// Usando TAMANHO_ID_PRODUTO para otimização
-		int tamanho = 68;// Usando TAMANHO_ID_PRODUTO para otimização
+		int tamanho = 80;// Usando TAMANHO_ID_PRODUTO para otimização
 
 		query = (char *)malloc(sizeof(char) * tamanho);
 		if(query == NULL)
@@ -3607,7 +3605,7 @@ char *obterNomeProdutoDoBanco(char *idProduto, Usuario *usuario)//DONE
 			return strdup("ERRO interno, tente novamente");
 		}
 
-		snprintf(query, tamanho, "SELECT P.nomeProduto FROM produto P WHERE P.idproduto=\'%s\';", idProduto);
+		snprintf(query, tamanho, "SELECT P.nomeProduto FROM produto P WHERE P.idproduto LIKE BINARY \'%s\';", idProduto);
 
 		if(query == NULL)
 		{
@@ -3752,7 +3750,7 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, Usuario *usuario)// APP 4 kW
 		}
 		char *query = NULL;
 		// int tamanho = 79 + 1 + TAMANHO_ID_PRODUTO;
-		int tamanho = 99;// Usando TAMANHO_ID_PRODUTO para otimização
+		int tamanho = 111;// Usando TAMANHO_ID_PRODUTO para otimização
 
 		query = (char *)malloc(sizeof(char) * tamanho);
 		if(query == NULL)
@@ -3761,7 +3759,7 @@ char *obterAvaliacaoProdutoDoBanco(char *idProduto, Usuario *usuario)// APP 4 kW
 			return strdup("ERRO interno, tente novamente");
 		}
 
-		snprintf(query, tamanho, "SELECT P.avaliacaoPositiva,P.avaliacaoNegativa FROM produto P WHERE P.idproduto=\'%s\';", idProduto);
+		snprintf(query, tamanho, "SELECT P.avaliacaoPositiva,P.avaliacaoNegativa FROM produto P WHERE P.idproduto LIKE BINARY \'%s\';", idProduto);
 
 		if(query == NULL)
 		{
@@ -3921,14 +3919,14 @@ char *obterInformacoesBasicasDeProdutoDoBanco(Usuario *usuario, char *idProduto)
 	}
 
 	//int tamanho = 146+10+1;
-	int tamanho = 157;
+	int tamanho = 169;
 	char *query = (char *)malloc(sizeof(char) * tamanho);
 	if (query == NULL)
 	{
 		printf("\n");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
-	snprintf(query, tamanho, "SELECT nomeProduto,descricao,avaliacaoPositiva,avaliacaoNegativa,visualizacoes+visualizacaoanom,tipo,categoria FROM produto P WHERE P.idproduto=\'%s\';", idProduto);
+	snprintf(query, tamanho, "SELECT nomeProduto,descricao,avaliacaoPositiva,avaliacaoNegativa,visualizacoes+visualizacaoanom,tipo,categoria FROM produto P WHERE P.idproduto LIKE BINARY \'%s\';", idProduto);
 	if (query == NULL)
 	{
 		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterInformacoesBasicasDeProdutoDoBanco() aporkasd09bv\n");
@@ -3976,14 +3974,14 @@ char *obterInformacoesAvancadasDeProdutoDoBanco(Usuario *usuario, char *idProdut
 	}
 
 	//int tamanho = 150+10+1;
-	int tamanho = 161;
+	int tamanho = 173;
 	char *query = (char *)malloc(sizeof(char) * tamanho);
 	if (query == NULL)
 	{
 		printf("\n");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
-	snprintf(query, tamanho, "SELECT nomeProduto,descricao,avaliacaoPositiva,avaliacaoNegativa,visualizacoes,tipo,categoria,duracao,datacriacao FROM produto P WHERE P.idproduto=\'%s\';", idProduto);
+	snprintf(query, tamanho, "SELECT nomeProduto,descricao,avaliacaoPositiva,avaliacaoNegativa,visualizacoes,tipo,categoria,duracao,datacriacao FROM produto P WHERE P.idproduto LIKE BINARY \'%s\';", idProduto);
 	if (query == NULL)
 	{
 		printf(" Warning: Falha ao formatar query em OperacoesBanco.h obterInformacoesAvancadasDeProdutoDoBanco() aporkasd09bv\n");
@@ -4258,7 +4256,7 @@ char *retornaIdDeEmpresaDadoProdutoDoBanco(Usuario *usuario, char *idProduto)
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	// int tamanho = 124 + 1 + TAMANHO_ID_PRODUTO;
-	int tamanho = 135;
+	int tamanho = 147;
 	char *query = (char *)calloc(sizeof(char), tamanho);
 	if (query == NULL)
 	{
@@ -4268,7 +4266,7 @@ char *retornaIdDeEmpresaDadoProdutoDoBanco(Usuario *usuario, char *idProduto)
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
-	snprintf(query, tamanho, "SELECT C.idcontratante FROM contratante C JOIN produto P ON P.contratante_idcontratante=C.idcontratante WHERE P.idproduto=\'%s\';", idProduto);
+	snprintf(query, tamanho, "SELECT C.idcontratante FROM contratante C JOIN produto P ON P.contratante_idcontratante=C.idcontratante WHERE P.idproduto LIKE BINARY \'%s\';", idProduto);
 
 	free(idProduto);
 	idProduto = NULL;
@@ -4323,6 +4321,45 @@ char *retornaListaDesejosDoBanco(Usuario *usuario, char *pagina)
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 	return retornaPaginado(query, pagina);
+}
+
+
+/** 
+ * @brief  Gera a query para obter a quantidade de reclamações para tal produto do banco de dados e retorna ao usuário
+ * @note   Retorna direto ao usuario
+ * @param  *usuario: Usuario a quem a lista de desejos pertenca
+ * @retval ERRO interno, ou, o número de reclamações do produto
+ * TODO Completar esse comando
+ */
+char *obterQuantidadeDeReclamacoesDoProdutoDoBanco(Usuario *usuario, char *idProduto)
+{
+	// char *query = NULL; //Descomentar depois
+	// int tamanho = 0; //Descomentar depois
+	if( idProduto == NULL )
+	{
+		geraLog(ERRO, "id de produto nulo identificado");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if( !usuarioValido(usuario, "obterQuantidadeDeReclamacoesDoProdutoDoBanco(), OperacoesBanco.h") )
+	{
+		free( idProduto );
+		idProduto = NULL;
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	if( !usuario_PermissaoContratante(usuario) || !usuario_PermissaoRoot(usuario) )
+	{
+		geraLog(WARNING, "Usuario normal tentando acessar dados privados a contratante");
+		free( idProduto );
+		idProduto = NULL;
+		return RETORNO_ERRO_NAO_AUTORIZADO_STR_DINAMICA;
+	}
+
+//	tamanho = TAMANHODAQUERY + TAMANHO_ID_PRODUTO + 1;
+//
+//	snprintf(query, tamanho, "SELECT ", idProduto);
+//
+
+	return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
 }
 
 /* ***FIM COMANDOS DE OBTENÇÃO*** */

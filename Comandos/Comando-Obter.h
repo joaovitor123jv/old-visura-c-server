@@ -32,6 +32,15 @@ char *obterListaDesejos(Usuario *usuario);
 
 char *obterQuantidadeDeHabitantesDaCidade(Usuario *usuario);
 
+/** 
+ * @brief  Retorna a quantidade de reclamações que o produto possui cadastradas no banco de dados.
+ * @note   Se logado como contratante:  APP 4 rP idProduto
+ * @note   Se logado como usuario normal, retorna ERRO:
+ * @param  *usuario: Usuario que solicitou o comando
+ * @retval retorna direto ao usuario
+ */
+char *obterQuantidadeDeReclamacoesDoProduto(Usuario *usuario);
+
 char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 {
 	printf(" ********************** obterDados()\n");
@@ -94,6 +103,10 @@ char *comandoObter(Usuario *usuario)// APP 4 algumaCoisa
 	else if(strcmp(token, TIPO_ID_CIDADE) == 0)// APP 4 $
 	{
 		return obterIdCidade(usuario);
+	}
+	else if( strcmp(token, TIPO_QUANTIDADE_DE_RECLAMACOES_PRODUTO) == 0 )// APP 4 rP idProduto
+	{
+		return obterQuantidadeDeReclamacoesDoProduto(usuario);
 	}
 	else if(strcmp(token, TIPO_QUANTIDADE_DE_HABITANTES_DA_CIDADE) == 0)// APP 4 qC nomeCidade nomeEstado
 	{
@@ -1057,3 +1070,41 @@ char *obterQuantidadeDeHabitantesDaCidade(Usuario *usuario)
 
 	return obterQuantidadeDeHabitantesDaCidadeDoBanco(usuario, nomeDaCidade, nomeDoEstado);
 }
+
+
+/** 
+ * @brief  Retorna a quantidade de reclamações que o produto possui cadastradas no banco de dados.
+ * @note   Se logado como contratante:  APP 4 rP idProduto
+ * @note   Se logado como usuario normal, retorna ERRO:
+ * @param  *usuario: Usuario que solicitou o comando
+ * @retval retorna direto ao usuario
+ */
+char *obterQuantidadeDeReclamacoesDoProduto(Usuario *usuario)
+{
+	char *token = NULL;
+	char *idProduto = NULL;
+	if( !usuarioValido(usuario, "obterQuantidadeDeReclamacoesDoProduto(), Comando-Obter.h") )
+	{
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+	token = usuario_getNextToken(usuario);
+	if(token==NULL)
+	{
+		geraLog(WARNING, "token nulo identificado, comando insuficiente");
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+	}
+	if( !stringTamanhoIgual(token, TAMANHO_ID_PRODUTO) )
+	{
+		geraLog(WARNING, "Tamanho de id de produto informado é diferente do desejado");
+		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
+	}
+	idProduto = padronizarString(token);
+	if( idProduto == NULL )
+	{
+		geraLog(ERRO, "Falha ao duplicar string de idProduto/ou padronizar");
+		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
+	}
+
+	return obterQuantidadeDeReclamacoesDoProdutoDoBanco(usuario, idProduto);
+}
+

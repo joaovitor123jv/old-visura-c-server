@@ -117,7 +117,9 @@ void geraLog_internal(unsigned int tipoLog, const char *mensagem, const char *ar
 
 
 #ifndef DISABLE_LOGS
-	#define geraLog(TipoErro, Mensagem) geraLog_internal(TipoErro, Mensagem , __FILE__, __FUNCTION__, __LINE__)
+	#define geraLog(TipoErro, Mensagem) geraLog_internal(TipoErro, Mensagem , __FILE__, __FUNCTION__, __LINE__);
+#else
+	#define geraLog(TipoErro, Mensagem) NULL;
 #endif
 
 

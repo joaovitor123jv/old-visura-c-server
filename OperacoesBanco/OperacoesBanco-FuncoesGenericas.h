@@ -21,13 +21,13 @@
 #define bool char
 #endif
 
-	/*
-		Comandos pra executar no cloud quando for refazer a maquina kkk
-		CREATE USER 'interface'@'127.0.0.1';
-		CREATE DATABASE teste;
-		GRANT SELECT DELETE UPDATE INSERT ON teste.* to 'interface'@'127.0.0.1';
-		flush privileges;
-	*/
+/*
+	Comandos pra executar no cloud quando for refazer a maquina kkk
+	CREATE USER 'interface'@'127.0.0.1';
+	CREATE DATABASE teste;
+	GRANT SELECT DELETE UPDATE INSERT ON teste.* to 'interface'@'127.0.0.1';
+	flush privileges;
+*/
 
 #define DATABASE_HOST "127.0.0.1"//TESTES
 // #define DATABASE_HOST "35.186.190.243"//GOOGLE CLOUD
@@ -111,6 +111,7 @@ bool desconectarBanco()
 	mysql_library_end();
 	return true;
 }
+
 
 /** 
  * @brief  Checa se a conexão com o banco de dados está ativa, e tenta uma re-conexao
@@ -585,7 +586,7 @@ char *retornaUnicoRetornoDaQuery(char *query)
 
 /** 
  * @brief  Checa se o produto existe na base de dados, retorna true caso exista
- * @note   Não libera *id
+ * @note   Não libera *id  (função interna)
  * @param  *id: Id do produto a ser checado se existe
  * @retval true, se existir, false caso contrario
  */
@@ -731,15 +732,15 @@ bool produtoVencido(char *idProduto, Usuario *usuario)
 		}
 	}
 	
-	//int tamanho = 88+strlen(idProduto)+1;
-	int tamanho = 99;//otimizado
+	//int tamanho = 100+strlen(idProduto)+1;
+	int tamanho = 111;
 	char *query = (char *)malloc(sizeof(char) * tamanho);
 	if(query == NULL)
 	{
 		printf(" Warning: não foi possível alocar memoria para query em OperacoesBanco-FuncoesGenericas.h produtoVencido() qkjhjvgdf\n");
 		return true;
 	}
-	snprintf(query, tamanho, "SELECT DATEDIFF(CURDATE(), P.datacriacao)+P.duracao FROM produto P WHERE P.idproduto=\'%s\';", idProduto);
+	snprintf(query, tamanho, "SELECT DATEDIFF(CURDATE(), P.datacriacao)+P.duracao FROM produto P WHERE P.idproduto LIKE BINARY \'%s\';", idProduto);
 	if(query == NULL)
 	{
 		printf(" Warning: não foi possível formatar query em OperacoesBanco-FuncoesGenericas.h produtoVencido() sajkdhjbr\n");
@@ -819,7 +820,6 @@ bool produtoVencido(char *idProduto, Usuario *usuario)
 		}
 	}
 }
-
 
 /** 
  * @brief  Retorna strings de ERRO caso dê erro, ou as informações requerida na query, concatenadas, com um espaço separando cada informação
@@ -1148,8 +1148,6 @@ char *retornaPaginado(char *query, char *pagina)
 	query = NULL;
 
 	return retornaNIteracoesDaQuery(novaQuery, 10);
-
-
 }
 
 /** 
@@ -1198,18 +1196,6 @@ bool cidadeExisteNoBanco(char *nomeCidade, char *nomeEstado)
 	else
 	{
 		geraLog(LOG, "Cidade existe no banco de dados");
-		// free(query);
-		// query = NULL;
 		return true;
 	}
-	// if (!queryRetornaConteudo(query))// queryRetornaConteudo libera a query
-	// {
-	// 	geraLog(WARNING, "Cidade não existe no banco de dados");
-	// 	return false;
-	// }
-	// else
-	// {
-	// 	geraLog(LOG, "Cidade existe no banco de dados");
-	// 	return true;
-	// }
 }

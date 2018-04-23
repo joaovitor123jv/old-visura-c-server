@@ -6,6 +6,8 @@
 		"comando-atualizar.h": "c",
 		"rubywrapper.h": "c",
 		"tcpserver.h": "c",
-		"stdio.h": "c"
-	}
+		"stdio.h": "c",
+		"comando-remover.h": "c"
+	},
+	"C_Cpp.intelliSenseEngineFallback": "Disabled"
 }

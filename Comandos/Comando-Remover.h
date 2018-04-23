@@ -58,14 +58,15 @@ bool deletarProduto(Usuario *usuario, char *idProduto)
 	geraLog(LOG, "Produto existe na base de dados");
 
 	// int tamanho = strlen(idProduto);
-	int tamanho = 10 + 64 + 1;
+	// int tamanho = 10 + 64 + 1;
+	int tamanho = 74 + 10;
 	char *query = (char *)calloc(sizeof(char), tamanho);
 	if (query == NULL)
 	{
 		geraLog(WARNING, "Falha ao alocar memoria para query");
 		return false;
 	}
-	snprintf(query, tamanho, "DELETE FROM visualizacaoDeUsuario WHERE produto_idproduto=\'%s\';", idProduto);
+	snprintf(query, tamanho, "DELETE FROM visualizacaoDeUsuario WHERE produto_idproduto LIKE BINARY \'%s\';", idProduto);//Elimina erros de case-sensitive
 	if (query == NULL)
 	{
 		geraLog(WARNING, "Falha ao formatar query aoighr");
@@ -78,14 +79,14 @@ bool deletarProduto(Usuario *usuario, char *idProduto)
 	}
 
 
-	tamanho = 10 + 46 + 1;
+	tamanho = 10 + 59 + 1;
 	query = (char *)realloc(query, tamanho);
 	if (query == NULL)
 	{
 		geraLog(WARNING, "Falha ao realocar memoria para query weuiotb");
 		return false;
 	}
-	snprintf(query, tamanho, "DELETE FROM feedBackCliente WHERE idproduto=\'%s\';", idProduto);
+	snprintf(query, tamanho, "DELETE FROM feedBackCliente WHERE idproduto LIKE BINARY \'%s\';", idProduto);
 	if (query == NULL)
 	{
 		geraLog(WARNING, "Falha ao formatar query dakjhbt");
@@ -97,14 +98,14 @@ bool deletarProduto(Usuario *usuario, char *idProduto)
 		return false;
 	}
 
-	tamanho = 10 + 46 + 1;
+	tamanho = 10 + 59 + 1;
 	query = (char *)realloc(query, tamanho);
 	if (query == NULL)
 	{
 		geraLog(WARNING, "Falha ao realocar memoria para query kerjym5");
 		return false;
 	}
-	snprintf(query, tamanho, "DELETE FROM produto WHERE idproduto=\'%s\' LIMIT 1;", idProduto);
+	snprintf(query, tamanho, "DELETE FROM produto WHERE idproduto LIKE BINARY \'%s\' LIMIT 1;", idProduto);
 	if (query == NULL)
 	{
 		geraLog(WARNING, "Falha ao formatar query tn654");

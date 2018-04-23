@@ -1,3 +1,8 @@
+/** 
+ * @brief  Documento que toma conta de todas as funções responsáveis pelas Visualizações, relacionadas ao banco de dados
+ * @note   Todos os comentários onde está escrito "retorna direto ao usuário", entenda "através da interface, retorna direto ao usuário"
+ */
+
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,9 +11,17 @@
 #include "OperacoesBanco-FuncoesGenericas.h"
 #include <mysql/mysql.h>
 
+
 bool produtoVencido(char *idProduto, Usuario *usuario);
 
-int checaExistenciaDeVisualizacaoDeProdutoComPessoa(char *idproduto, Usuario *usuario)//Se retorna RETORNO_OK, existe algo ali, se retornar RETORNO_NULO, não existe
+/** 
+ * @brief  Checa a existência de visualização com usuário especificado (função interna)
+ * @note   não libera Usuario, nem idProduto
+ * @param  *idproduto: O produto que será checado se existe visualização
+ * @param  *usuario: Será checado se o usuário especificado tem alguma visualização com o produto
+ * @retval RETORNO_OK, caso houver visualização com aquele usuário. RETORNO_NULO, caso contrário
+ */
+int checaExistenciaDeVisualizacaoDeProdutoComPessoa(char *idproduto, Usuario *usuario)
 {
 	if(idproduto == NULL)
 	{
@@ -42,17 +55,15 @@ int checaExistenciaDeVisualizacaoDeProdutoComPessoa(char *idproduto, Usuario *us
 	
 	char *query = NULL;
     // int tamanho = sizeof(char) * ( strlen(idproduto) + strlen(email) + 183 + 1);
-    int tamanho = sizeof(char) * (194 + usuario_obterTamanhoLogin(usuario));
-	
+    // int tamanho = sizeof(char) * (194 + usuario_obterTamanhoLogin(usuario));
+    int tamanho = sizeof(char) *(207 + 10 + usuario_obterTamanhoLogin(usuario) + 1);
 	query = (char *)malloc(tamanho);
 	if(query == NULL)
 	{
 		printf(" ERRO: não foi possível alocar memória para a query (OperacoesBanco-Visualizacoes.h) (checaExistenciaDeVisualizacaoDeProdutoComPessoa())\n");
 		return RETORNO_ERRO_FALTA_DE_MEMORIA;
 	}
-	
-    // snprintf(query, tamanho, "SELECT quantidade FROM visualizacaoDeUsuario JOIN cliente ON cliente.email=visualizacaoDeUsuario.cliente_idcliente JOIN produto ON P.idproduto=V.produto_idproduto WHERE P.idproduto=\'%s\';", email, idproduto );
-    snprintf(query, tamanho, "SELECT quantidade FROM visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente JOIN produto P ON P.idproduto=V.produto_idproduto WHERE P.idproduto=\'%s\' AND C.email=\'%s\';", idproduto, usuario_obterLogin(usuario));
+    snprintf(query, tamanho, "SELECT quantidade FROM visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente JOIN produto P ON P.idproduto=V.produto_idproduto WHERE P.idproduto LIKE BINARY \'%s\' AND C.email LIKE BINARY \'%s\';", idproduto, usuario_obterLogin(usuario));
 	
 	if(query == NULL)
 	{
@@ -155,33 +166,47 @@ int checaExistenciaDeVisualizacaoDeProdutoComPessoa(char *idproduto, Usuario *us
 	}
 }
 
-// bool addVisualizacoesAoBanco(MYSQL *conexao, char *id, int quantidade)
+/** 
+ * @brief  Adiciona a quantidade de visualizações informada ao banco
+ * @note   Comando que invoca esse comando: APP 2 2 idProduto quantidade
+ * @note   Não libera a id, nem produto.
+ * @param  *id: Id do produto que deve ser chamado
+ * @param  *quantidade: A quantidade de visualizações que precisa ser adicionada
+ * @param  *usuario: 
+ * @retval true, caso a visualização seja adicionada, false caso contrário (não retorna direto ao usuario)
+ */
 bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP 2 2 idProduto quantidade
 {
+	char *query = NULL;
+	int tamanhoDaQuery = 0;
 	/*UPDATE produto SET produto.visualizacaoanom = 0 WHERE produto.idproduto = 'cocacolavc';*/
 	if (usuario == NULL)
 	{
-		printf(" ERRO: usuario nulo detectado em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
+		geraLog(ERRO, "Usuario nulo detectado");
 		return false;
 	}
 	if (usuario_obterLogin(usuario) == NULL)
 	{
-		printf(" ERRO: usuario não conectado detectado em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
+		geraLog(ERRO, "Usuario nao conectado detectado");
 		return false;
 	}
-	// if(email == NULL)
-	// {
-	// 	printf("ERRO: Email == NULL OperacoesBanco-Visualizacoes.h (addVisualizacoesAoBanco())\n");
-	// 	return false;
-	// }
-	
 	if(id == NULL)
 	{
-		printf("ERRO: Não há login para checar (id == NULL) (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
+		geraLog(ERRO, "idProduto == NULL");
+		if( quantidade != NULL )
+		{
+			free( quantidade );
+			quantidade = NULL;
+		}
 		return false;
 	}
-	
-	if(conexao == NULL)
+	if( conexaoAtiva() )
+	{
+		geraLog(WARNING, "Falha ao conectar-se ao banco de dados" );
+		return false;
+	}
+
+/* if(conexao == NULL)
 	{
 		printf("ERRO DE CONEXÃO (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
 		printf(" LOG: Tentando reconexão com banco de dados \n");
@@ -194,71 +219,77 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
 			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
 			return false;
 		}
-	}
-	
-	// if(quantidade < 0  || quantidade > 9999)
-	// {
-	// 	printf("ERRO: Quantidade informada é inválida (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
-	// 	return false;
-	// }
+	}*/
 
     if(quantidade == NULL)
     {
-        printf(" Warning: Não foi informada quantidade de produtos a ser adicionados em addVisualizacoesAoBanco() OperacoesBanco-Visualizacoes.h\n");
+		geraLog(ERRO, "quantidade == NULL detectado");
+		if( id != NULL )
+		{
+			free( id );
+			id = NULL;
+		}
+		return false;
     }
 
     //TODO Checar se a quantidade informada é válida
 
 	if(strlen(id) != 10)
 	{
-		printf("ERRO: Id informado contém quantidade incorreta de caracteres (OperacoesBanco-Visualizacoes.h) addVisualizacoesAoBanco())\n");
+		//	printf("ERRO: Id informado contém quantidade incorreta de caracteres (OperacoesBanco-Visualizacoes.h) addVisualizacoesAoBanco())\n");
+		geraLog(ERRO, "Quantidade inválida de caracteres para idProduto detectada");
 		return false;
 	}
     
     if (produtoVencido(id, usuario))
     {
-        printf(" Warning: Produto vencido detectado em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
+        //printf(" Warning: Produto vencido detectado em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
+		geraLog(WARNING, "Produto vencido para esse usuario");
         return false;
     }
 	
 	if(usuario_PermissaoAnonimo(usuario))
 	{
-		printf(" LOG: USUARIO ANONIMO DETECTADO em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
-		char *query = NULL;
+		geraLog(LOG, "Usuario anonimo identificado");
 		
         //int tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(quantidade) + 99 + 1);
-        int tamanhoDaQuery = sizeof(char) * (strlen(quantidade) + 110);
+        tamanhoDaQuery = sizeof(char) * (strlen(quantidade) + 112 + TAMANHO_ID_PRODUTO);
 		
 		query = (char *)malloc(tamanhoDaQuery);
 		if(query == NULL)
 		{
-			printf(" ERRO: não foi possível alocar memória para a query (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
+			//printf(" ERRO: não foi possível alocar memória para a query (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
+			geraLog(ERRO, "Falha ao alocar memoria para query");
 			return false;
 		}
 		memset(query, '\0', tamanhoDaQuery);
         
-		snprintf(query, tamanhoDaQuery, "UPDATE produto SET produto.visualizacaoanom = produto.visualizacaoanom+%s WHERE produto.idproduto=\'%s\';", quantidade, id );
+		snprintf(query, tamanhoDaQuery, "UPDATE produto SET produto.visualizacaoanom = produto.visualizacaoanom+%s WHERE produto.idproduto LIKE BINARY \'%s\';", quantidade, id );
 		
 		if(query == NULL)
 		{
-			printf(" ERRO: não foi possível alocar memória para a query (2) (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
+			//printf(" ERRO: não foi possível alocar memória para a query (2) (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
+			geraLog(ERRO, "falha ao formatar query");
 			return false;
 		}
         
         //Adiciona quantidade de visualizações anonimas à TABELA de produto, em vizualizacaoanom
 		if(mysql_query(conexao, query))//Se ocorrer algum erro
 		{
-			printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
+			//printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
+			geraLog(ERRO, "Ocorreram erros durante a execução da query");
 			printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
 			printf("\t Query enviada =  |%s|\n", query);
 			free(query);
 			query = NULL;
 			if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
 			{
-				printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
+				//printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
+				geraLog(LOG, "Tentando reconexão com o banco de dados");
 				if(conectarBanco())
 				{
-					printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
+					//printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
+					geraLog(LOG, "Reconexão efetuada com sucesso");
 				}
 				else
 				{
@@ -266,7 +297,8 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
 					mysql_close(conexao);
 					mysql_thread_end();
 					free(conexao);
-					printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
+					//printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
+					geraLog(ERRO, "Falha ao reconectar-se ao banco de dados");
 				}
 			}
 			return false;
@@ -280,60 +312,71 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
 			{
 				case RETORNO_OK://Se já tiver criado a tabela de visualizacaDeUsuario
                     //Usar update para atualizar dados já existentes
-                    printf(" LOG: Informações já existem em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
+                    //printf(" LOG: Informações já existem em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
+					geraLog(LOG, "Visualização de usuario já existem");
                     // tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + strlen(quantidade) + 198 + 1);
-                    tamanhoDaQuery = sizeof(char) * ( usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 219);
+                    // tamanhoDaQuery = sizeof(char) * ( usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 219);
+                    tamanhoDaQuery = sizeof(char) * (usuario_obterTamanhoLogin(usuario), + strlen(quantidade) + TAMANHO_ID_PRODUTO + 210 + 1);
                     
                     query = (char *)malloc(tamanhoDaQuery);
                     if(query == NULL)
                     {
-                        printf(" ERRO: não foi possível alocar memória para a query(9) (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
+						geraLog(ERRO, "Falha ao alocar memoria para query");
                         return false;
                     }
                     memset(query, '\0', tamanhoDaQuery);
                     
-                    snprintf(query, tamanhoDaQuery, "UPDATE visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente JOIN produto P ON P.idproduto=V.produto_idproduto SET V.quantidade=V.quantidade+%s WHERE P.idproduto=\'%s\' AND C.email=\'%s\';", quantidade, id, usuario_obterLogin(usuario) );
+                    snprintf(query, tamanhoDaQuery, "UPDATE visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente JOIN produto P ON P.idproduto=V.produto_idproduto SET V.quantidade=V.quantidade+%s WHERE P.idproduto LIKE BINARY \'%s\' AND C.email=\'%s\';", quantidade, id, usuario_obterLogin(usuario) );
                     
                     if(query == NULL)
                     {
-                        printf(" ERRO: não foi possível alocar memória para a query (10) (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
+						geraLog(ERRO, "Falha ao formatar query");
                         return false;
                     }
                     
-                    if(mysql_query(conexao, query))//Se ocorrer algum erro
-                    {
-                        printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
-                        printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
-                        printf("\t Query enviada =  |%s|\n", query);
-                        free(query);
-                        query = NULL;
-                        if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
-                        {
-                            printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco() 1qa5456dasd\n");
-                            if(conectarBanco())
-                            {
-                                printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco() asd456\n");
-                            }
-                            else
-                            {
-                                conexao = NULL;
-                                mysql_close(conexao);
-                                mysql_thread_end();
-                                free(conexao);
-                                printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco() as4d5asd\n");
-                            }
-                        }
-                        return false;
-                    }
+//                    if(mysql_query(conexao, query))//Se ocorrer algum erro
+//                    {
+//                        printf("ERRO: Ocorreram erros durante a execução da query (OperacoesBanco-Visualizacoes.h) (addVisualizacoesAoBanco())\n");
+//                        printf("\t ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
+//                        printf("\t Query enviada =  |%s|\n", query);
+//                        free(query);
+//                        query = NULL;
+//                        if(mysql_errno(conexao) == 2006)// SERVER MYSQL SUMIU
+//                        {
+//                            printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco() 1qa5456dasd\n");
+//                            if(conectarBanco())
+//                            {
+//                                printf(" LOG: Re-conexão efetuada com sucesso em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco() asd456\n");
+//                            }
+//                            else
+//                            {
+//                                conexao = NULL;
+//                                mysql_close(conexao);
+//                                mysql_thread_end();
+//                                free(conexao);
+//                                printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco() as4d5asd\n");
+//                            }
+//                        }
+//                        return false;
+//                    }
+
+					if( !executaQuery(query) )
+					{
+						geraLog(ERRO, "Falha ao executar query no banco de dados");
+						free( query );
+						query = NULL;
+						return false;
+					}
                     free(query);
                     query = NULL;
                     return true;
                     break;
+
 				case RETORNO_NULO:
                     //Usar Insert para inserir dados
                     printf(" LOG: Informações NÃO existem ainda\n");
                     // tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + strlen(quantidade) + 179 + 1);
-                    tamanhoDaQuery = sizeof(char) *  (usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 190);
+                    tamanhoDaQuery = sizeof(char) *  (usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 202);
                     
                     query = (char *)malloc(tamanhoDaQuery);
                     if(query == NULL)
@@ -343,7 +386,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
                     }
                     memset(query, '\0', tamanhoDaQuery);
                     
-                    snprintf(query, tamanhoDaQuery, "INSERT INTO visualizacaoDeUsuario(quantidade,cliente_idcliente,produto_idproduto) SELECT %s,C.idcliente,P.idproduto FROM cliente C JOIN produto P ON P.idproduto=\'%s\' WHERE C.email=\'%s\';", quantidade, id, usuario_obterLogin(usuario));
+                    snprintf(query, tamanhoDaQuery, "INSERT INTO visualizacaoDeUsuario(quantidade,cliente_idcliente,produto_idproduto) SELECT %s,C.idcliente,P.idproduto FROM cliente C JOIN produto P ON P.idproduto LIKE BINARY \'%s\' WHERE C.email=\'%s\';", quantidade, id, usuario_obterLogin(usuario));
                     
                     if(query == NULL)
                     {
@@ -412,7 +455,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
 		char *query = NULL;
 		
         // int tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(quantidade) + 77 + 1);
-        int tamanhoDaQuery = sizeof(char) * ( strlen(quantidade) + 88);
+        int tamanhoDaQuery = sizeof(char) * ( strlen(quantidade) + 100);
 		query = (char *)malloc(tamanhoDaQuery);
 		if(query == NULL)
 		{
@@ -421,7 +464,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
 		}
 		memset(query, '\0', tamanhoDaQuery);
 		
-		snprintf(query, tamanhoDaQuery, "UPDATE produto P SET P.visualizacoes=P.visualizacoes + %s WHERE P.idproduto=\'%s\';", quantidade, id );
+		snprintf(query, tamanhoDaQuery, "UPDATE produto P SET P.visualizacoes=P.visualizacoes + %s WHERE P.idproduto LIKE BINARY \'%s\';", quantidade, id );
 		
 		if(query == NULL)
 		{
@@ -469,7 +512,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
                     //Usar update para atualizar dados já existentes
                     printf(" LOG: Informações já existem em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
                     // tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + strlen(quantidade) + 208 + 1);
-                    tamanhoDaQuery = sizeof(char) * ( usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 219);
+                    tamanhoDaQuery = sizeof(char) * ( usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 243);
                     
                     query = (char *)malloc(tamanhoDaQuery);
                     if(query == NULL)
@@ -479,7 +522,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
                     }
                     memset(query, '\0', tamanhoDaQuery);
                     
-                    snprintf(query, tamanhoDaQuery, "UPDATE visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente JOIN produto P ON P.idproduto=V.produto_idproduto SET V.quantidade=V.quantidade+%s WHERE P.idproduto=\'%s\' AND C.email=\'%s\';", quantidade, id, usuario_obterLogin(usuario) );
+                    snprintf(query, tamanhoDaQuery, "UPDATE visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente JOIN produto P ON P.idproduto=V.produto_idproduto SET V.quantidade=V.quantidade+%s WHERE P.idproduto LIKE BINARY \'%s\' AND C.email LIKE BINARY \'%s\';", quantidade, id, usuario_obterLogin(usuario) );
                     
                     if(query == NULL)
                     {
@@ -520,7 +563,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
                     //Usar Insert para inserir dados
                     printf(" LOG: Informações NÃO existem ainda\n");
                     // tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + strlen(quantidade) + 179 + 1);
-                    tamanhoDaQuery = sizeof(char) *  (usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 190);
+                    tamanhoDaQuery = sizeof(char) *  (usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 214);
                     
                     query = (char *)malloc(tamanhoDaQuery);
                     if(query == NULL)
@@ -530,7 +573,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
                     }
                     memset(query, '\0', tamanhoDaQuery);
                     
-                    snprintf(query, tamanhoDaQuery, "INSERT INTO visualizacaoDeUsuario(quantidade,cliente_idcliente,produto_idproduto) SELECT %s,C.idcliente,P.idproduto FROM cliente C JOIN produto P ON P.idproduto=\'%s\' WHERE C.email=\'%s\';", quantidade, id, usuario_obterLogin(usuario));
+                    snprintf(query, tamanhoDaQuery, "INSERT INTO visualizacaoDeUsuario(quantidade,cliente_idcliente,produto_idproduto) SELECT %s,C.idcliente,P.idproduto FROM cliente C JOIN produto P ON P.idproduto LIKE BINARY \'%s\' WHERE C.email LIKE BINARY \'%s\';", quantidade, id, usuario_obterLogin(usuario));
                     
                     if(query == NULL)
                     {
@@ -619,7 +662,7 @@ char *obterQuantidadeDeVisualizacoesAnonimasDoBanco(char *idProduto, Usuario *us
         return NULL;
     }
     // int tamanho = 62 + TAMANHO_ID_PRODUTO + 1;// Jamais esqueça o '\0'
-    int tamanho = 73;
+    int tamanho = 85;
     char *query = (char *)malloc(sizeof(char) * tamanho);
     if(query == NULL)
     {
@@ -627,7 +670,7 @@ char *obterQuantidadeDeVisualizacoesAnonimasDoBanco(char *idProduto, Usuario *us
         return NULL;
     }
 
-    snprintf(query, tamanho, "SELECT P.visualizacaoanom FROM produto P WHERE P.idproduto=\'%s\';", idProduto);
+    snprintf(query, tamanho, "SELECT P.visualizacaoanom FROM produto P WHERE P.idproduto LIKE BINARY \'%s\';", idProduto);
     if(query == NULL)
     {
         printf(" Warning: falha ao formatar query em obterQuantidadeDeVisualizacoesAnonimasDoBanco() OperacoesBanco-Visualizacoes.h kjheb\n");
@@ -767,6 +810,14 @@ char *obterQuantidadeDeVisualizacoesAnonimasDoBanco(char *idProduto, Usuario *us
     return NULL;
 }
 
+/** 
+ * @brief  obtém a quantidade de visualizações "totais" do banco de dados, de acordo com o produto especificado
+ * @note   retorna direto ao usuário, libera idProduto
+ * @note   pode ser acessado pelo comando (APP 4 2 @ 2 * idProduto)
+ * @param  *idProduto: produto o qual será checado visualizações
+ * @param  *usuario: O usuário que está solicitando a quantidade de visualizações
+ * @retval retorna direto ao usuário
+ */
 char *obterQuantidadeDeVisualizacoesGeraisDoBanco(char *idProduto, Usuario *usuario)// APP 4 2 @ 2 * idProduto (chama também, essa funcao)
 {
     if(conexao == NULL)
@@ -794,7 +845,7 @@ char *obterQuantidadeDeVisualizacoesGeraisDoBanco(char *idProduto, Usuario *usua
     }
 
     // int tamanho = 59 + TAMANHO_ID_PRODUTO + 1;// Jamais esqueça o '\0'
-    int tamanho = 70;
+    int tamanho = 82;
     char *query = (char *)malloc(sizeof(char) * tamanho);
     if(query == NULL)
     {
@@ -802,7 +853,7 @@ char *obterQuantidadeDeVisualizacoesGeraisDoBanco(char *idProduto, Usuario *usua
         return NULL;
     }
 
-    snprintf(query, tamanho, "SELECT P.visualizacoes FROM produto P WHERE P.idproduto=\'%s\';", idProduto);
+    snprintf(query, tamanho, "SELECT P.visualizacoes FROM produto P WHERE P.idproduto LIKE BINARY \'%s\';", idProduto);
     if(query == NULL)
     {
         printf(" Warning: falha ao formatar query em obterQuantidadeDeVisualizacoesGeraisDoBanco() OperacoesBanco-Visualizacoes.h kjheb\n");
@@ -995,7 +1046,7 @@ char *obterQuantidadeDeVisualizacoesDoProdutoNaCidadeDoBanco(Usuario *usuario, c
         return RETORNO_ERRO_INTERNO_STR_DINAMICA;
     }
 
-    int tamanho = 319 + strlen(nomeCidade) + strlen(nomeEstado) + TAMANHO_ID_PRODUTO + 1;
+    int tamanho = 331 + strlen(nomeCidade) + strlen(nomeEstado) + TAMANHO_ID_PRODUTO + 1;
     char *query = (char *)calloc(sizeof(char), tamanho);
     if (query == NULL)
     {
@@ -1010,7 +1061,7 @@ char *obterQuantidadeDeVisualizacoesDoProdutoNaCidadeDoBanco(Usuario *usuario, c
     }
 
     //MAL OTIMIZADO!!!
-    snprintf(query, tamanho, "SELECT count(V.quantidade) FROM visualizacaoDeUsuario V JOIN cliente C ON V.cliente_idcliente=idcliente JOIN localizacao L ON C.localizacao_idlocalizacao=L.idlocalizacao JOIN cidade M ON L.cidade_idcidade=M.idcidade JOIN estado E ON M.estado_idestado=E.idestado WHERE E.nome=\'%s\' AND C.nome=\'%s\' AND V.produto_idproduto=\'%s\';", nomeEstado, nomeEstado, idProduto);
+    snprintf(query, tamanho, "SELECT count(V.quantidade) FROM visualizacaoDeUsuario V JOIN cliente C ON V.cliente_idcliente=idcliente JOIN localizacao L ON C.localizacao_idlocalizacao=L.idlocalizacao JOIN cidade M ON L.cidade_idcidade=M.idcidade JOIN estado E ON M.estado_idestado=E.idestado WHERE E.nome=\'%s\' AND C.nome=\'%s\' AND V.produto_idproduto LIKE BINARY \'%s\';", nomeEstado, nomeEstado, idProduto);
 
     free(idProduto);
     free(nomeCidade);

@@ -1,0 +1,32 @@
+//Comandos
+	//Alt + D =  DONE
+	//Alt + C = Cancel
+	//Alt + S = Start
+
+
+Árvore de Comandos:
+	☐ Revisar Comandos Gerais
+
+
+Bibliotecas Auxiliares:
+	☐ Criar biblioteca para gerenciar threads (thread pool... encerrar todas as threads e coisas do tipo)
+
+Server.h (receber/enviar mensagem):
+	☐ Implementar suporte à criptografia @low 
+
+
+Comandos-Obter:
+	☐ Implementar função para obter cidade com maior visualização do produto *idProduto* @low 
+	☐ Implementar função para retornar os pontos do cliente (parte de gamificação) @low
+
+Comandos-Adicao:
+	☐ Implementar função para atualizar plano de contratante (mudança de plano de empresa que contrata o Visu-RA) @low
+
+
+Banco de dados:
+	☐ Redesenhar utilização da interface MySQL (Criar biblioteca que será "utilizada" pelo "usuario" conectado @high
+	☐ Pesquisar particionamento de índice @low 
+	☐ Revisar índices de Plano de Produto @low
+
+Makefile:
+	☐ Fazer adaptação para mudança quando separar funções MySQL do restante das funções (transformar em biblioteca) @high
