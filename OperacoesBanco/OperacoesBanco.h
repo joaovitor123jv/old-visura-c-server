@@ -162,7 +162,7 @@ bool addUsuarioAoBanco(Usuario *usuario, char *email, char *senha, char* sexo, c
 	char *query = NULL;
 
 	size_t tamanho = 0;
-	tamanho = 51 + usuario_obterTamanhoLogin(usuario) + 1;
+	tamanho = 63 + usuario_obterTamanhoLogin(usuario) + 1;
 
 	query = (char *)malloc(sizeof(char) * tamanho);
 
@@ -172,7 +172,7 @@ bool addUsuarioAoBanco(Usuario *usuario, char *email, char *senha, char* sexo, c
 		return false;
 	}
 
-	snprintf(query, tamanho, "SELECT C.idcliente FROM cliente C WHERE C.email=\'%s\';", usuario_obterLogin(usuario));
+	snprintf(query, tamanho, "SELECT C.idcliente FROM cliente C WHERE C.email LIKE BINARY \'%s\';", usuario_obterLogin(usuario));
 
 	if(query == NULL)
 	{
@@ -195,7 +195,7 @@ bool addUsuarioAoBanco(Usuario *usuario, char *email, char *senha, char* sexo, c
 		{
 			query = NULL;
 			// tamanho = 113 + strlen(senha) + strlen(dataNascimento) + strlen(sexo) + strlen(email) + strlen(emailAnterior) + 1;
-			tamanho = strlen(senha) + strlen(dataNascimento) + strlen(sexo) + strlen(email) + usuario_obterTamanhoLogin(usuario) + 114;
+			tamanho = strlen(senha) + strlen(dataNascimento) + strlen(sexo) + strlen(email) + usuario_obterTamanhoLogin(usuario) + 126;
 
 			query = (char *)malloc(sizeof(char) * tamanho);
 
@@ -205,7 +205,7 @@ bool addUsuarioAoBanco(Usuario *usuario, char *email, char *senha, char* sexo, c
 				return false;
 			}
 
-			snprintf(query, tamanho, "UPDATE cliente C SET C.datanascimento=STR_TO_DATE(\'%s\',\'%%d/%%m/%%Y\'),C.sexo=%s,C.senha=\'%s\',C.email=\'%s\' WHERE C.email=\'%s\';", dataNascimento, sexo, senha, email, usuario_obterLogin(usuario));
+			snprintf(query, tamanho, "UPDATE cliente C SET C.datanascimento=STR_TO_DATE(\'%s\',\'%%d/%%m/%%Y\'),C.sexo=%s,C.senha=\'%s\',C.email=\'%s\' WHERE C.email LIKE BINARY \'%s\';", dataNascimento, sexo, senha, email, usuario_obterLogin(usuario));
 
 
 			if(query == NULL)
@@ -247,7 +247,7 @@ bool addUsuarioAoBanco(Usuario *usuario, char *email, char *senha, char* sexo, c
 		{
 			query = NULL;
 			// tamanho = 60 + strlen(senha) +  strlen(sexo) + strlen(email) + strlen(emailAnterior) + 1;
-			tamanho = strlen(senha) + strlen(email) + usuario_obterTamanhoLogin(usuario) + 61;
+			tamanho = strlen(senha) + strlen(email) + usuario_obterTamanhoLogin(usuario) + 73;
 
 			query = (char *)malloc(sizeof(char) * tamanho);
 
@@ -257,7 +257,7 @@ bool addUsuarioAoBanco(Usuario *usuario, char *email, char *senha, char* sexo, c
 				return false;
 			}
 
-			snprintf(query, tamanho, "UPDATE cliente C SET C.senha=\'%s\',C.email=\'%s\' WHERE C.email=\'%s\';", senha, email, usuario_obterLogin(usuario));
+			snprintf(query, tamanho, "UPDATE cliente C SET C.senha=\'%s\',C.email=\'%s\' WHERE C.email LIKE BINARY \'%s\';", senha, email, usuario_obterLogin(usuario));
 
 
 			if(query == NULL)
@@ -1210,7 +1210,7 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 
 	/* Checa se a já existe empresa com esse cnpj e esse email cadastrada */
 	/* QUERYs para checagem de dados corretos */
-	tamanho = 70 + strlen(email) + strlen(cnpj) + 1; // Esse +1 é o do bendito \0 kkk
+	tamanho = 82 + strlen(email) + strlen(cnpj) + 1; // Esse +1 é o do bendito \0 kkk
 	query = (char *)malloc(sizeof(char) * tamanho);
 
 	if(query == NULL)
@@ -1220,7 +1220,7 @@ bool addContratanteAoBanco(char *nome, char *cnpj, char *plano, char *email, cha
 	}
 	else
 	{
-		snprintf(query, tamanho, "SELECT idcontratante FROM contratante C WHERE C.email=\'%s\' OR C.cnpj=\'%s\';", email, cnpj);
+		snprintf(query, tamanho, "SELECT idcontratante FROM contratante C WHERE C.email LIKE BINARY \'%s\' OR C.cnpj=\'%s\';", email, cnpj);
 		if(queryRetornaConteudo(query))
 		{
 			printf(" Warning: Já existe Uma empresa com esse email e/ou esse cnpj cadastrados no banco de dados em addContratanteAoBanco()  OperacoesBanco.h bqkjshqoxiusya\n");
@@ -1674,7 +1674,7 @@ bool addNomeDeUsuarioAoBanco(Usuario *usuario, char *nome)// TESTAR        APP 2
 
 	char *query = NULL;
 	// int tamanho = strlen(email) + strlen(nome) + 48 +1;
-	int tamanho = usuario_obterTamanhoLogin(usuario) + strlen(nome) + 49;
+	int tamanho = usuario_obterTamanhoLogin(usuario) + strlen(nome) + 61;
 	query = (char *)malloc(sizeof(char) * tamanho);
 	if(query == NULL)
 	{
@@ -1682,7 +1682,7 @@ bool addNomeDeUsuarioAoBanco(Usuario *usuario, char *nome)// TESTAR        APP 2
 		return false;
 	}
 
-	snprintf(query, tamanho, "UPDATE cliente C SET C.nome=\'%s\' WHERE C.email=\'%s\';", nome, usuario_obterLogin(usuario));
+	snprintf(query, tamanho, "UPDATE cliente C SET C.nome=\'%s\' WHERE C.email LIKE BINARY \'%s\';", nome, usuario_obterLogin(usuario));
 
 	if(query == NULL)
 	{
@@ -1732,7 +1732,7 @@ bool addSobrenomeDeUsuarioAoBanco(Usuario *usuario, char *sobrenome)//TESTAR    
 
 	char *query = NULL;
 	// int tamanho = strlen(email) + strlen(sobrenome) + 53 +1;
-	int tamanho = usuario_obterTamanhoLogin(usuario) + strlen(sobrenome) + 54;
+	int tamanho = usuario_obterTamanhoLogin(usuario) + strlen(sobrenome) + 66;
 	query = (char *)malloc(sizeof(char) * tamanho);
 	if(query == NULL)
 	{
@@ -1740,7 +1740,7 @@ bool addSobrenomeDeUsuarioAoBanco(Usuario *usuario, char *sobrenome)//TESTAR    
 		return false;
 	}
 
-	snprintf(query, tamanho, "UPDATE cliente C SET C.sobrenome=\'%s\' WHERE C.email=\'%s\';", sobrenome, usuario_obterLogin(usuario));
+	snprintf(query, tamanho, "UPDATE cliente C SET C.sobrenome=\'%s\' WHERE C.email LIKE BINARY \'%s\';", sobrenome, usuario_obterLogin(usuario));
 
 	if(query == NULL)
 	{
@@ -1819,7 +1819,7 @@ bool addSexoDeUsuarioAoBanco(Usuario *usuario, char *sexo)// TESTAR        APP 2
 
 	char *query = NULL;
 	// int tamanho = strlen(email) + strlen(sobrenome) + 48 +1;
-	int tamanho = usuario_obterTamanhoLogin(usuario) + strlen(sexo) + 49;
+	int tamanho = usuario_obterTamanhoLogin(usuario) + strlen(sexo) + 61;
 	query = (char *)malloc(sizeof(char) * tamanho);
 	if(query == NULL)
 	{
@@ -1827,7 +1827,7 @@ bool addSexoDeUsuarioAoBanco(Usuario *usuario, char *sexo)// TESTAR        APP 2
 		return false;
 	}
 
-	snprintf(query, tamanho, "UPDATE cliente C SET C.sexo=\'%s\' WHERE C.email=\'%s\';", sexo, usuario_obterLogin(usuario));
+	snprintf(query, tamanho, "UPDATE cliente C SET C.sexo=\'%s\' WHERE C.email LIKE BINARY \'%s\';", sexo, usuario_obterLogin(usuario));
 
 	if(query == NULL)
 	{
@@ -1906,7 +1906,7 @@ bool addDataNascimentoDeUsuarioAoBanco(Usuario * usuario, char *dataNascimento)
 
 	char *query = NULL;
 	// int tamanho = strlen(email) + strlen(dataNascimento) + 82 +1;
-	int tamanho = usuario_obterTamanhoLogin(usuario) + strlen(dataNascimento) + 83;
+	int tamanho = usuario_obterTamanhoLogin(usuario) + strlen(dataNascimento) + 95;
 	query = (char *)malloc(sizeof(char) * tamanho);
 	if(query == NULL)
 	{
@@ -1914,7 +1914,7 @@ bool addDataNascimentoDeUsuarioAoBanco(Usuario * usuario, char *dataNascimento)
 		return false;
 	}
 
-	snprintf(query, tamanho, "UPDATE cliente C SET C.dataNascimento=STR_TO_DATE(\'%s\',\'%%d/%%m/%%Y\') WHERE C.email=\'%s\';", dataNascimento, usuario_obterLogin(usuario));
+	snprintf(query, tamanho, "UPDATE cliente C SET C.dataNascimento=STR_TO_DATE(\'%s\',\'%%d/%%m/%%Y\') WHERE C.email LIKE BINARY \'%s\';", dataNascimento, usuario_obterLogin(usuario));
 
 	if(query == NULL)
 	{
@@ -2316,14 +2316,14 @@ bool addPontosDeUsuarioAoBanco(Usuario *usuario, char *quantidade)
 	}
 
 	// int tamanho =  57 + strlen(email) + strlen(quantidade) + 1;
-	int tamanho = 58 + usuario_obterTamanhoLogin(usuario) + strlen(quantidade);// que merda de otimizacao hein ?
+	int tamanho = 70 + usuario_obterTamanhoLogin(usuario) + strlen(quantidade);// que merda de otimizacao hein ?
 	char *query = (char *)malloc(sizeof(char) * tamanho);
 	if (query == NULL)
 	{
 		printf(" Warning: falha ao alocar memoria para query em OperacoesBanco.h addPontosDeUsuarioAoBanco() vq4b0s8sq\n");
 		return false;
 	}
-	snprintf(query, tamanho, "UPDATE cliente C SET C.pontos=C.pontos+%s WHERE C.email=\'%s\';", quantidade, usuario_obterLogin(usuario));
+	snprintf(query, tamanho, "UPDATE cliente C SET C.pontos=C.pontos+%s WHERE C.email LIKE BINARY \'%s\';", quantidade, usuario_obterLogin(usuario));
 	if (query == NULL)
 	{
 		printf(" Warning: falha ao formatar query em OperacoesBanco.h addPontosDeUsuarioAoBanco() ab4iua13tb\n");

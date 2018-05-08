@@ -577,7 +577,7 @@ int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario)/
 	
 	char *query = NULL;
 	//size_t tamanho = strlen(email) + strlen(senha) + 66 + 1;
-	size_t tamanho = strlen(email) + strlen(senha) + 67;
+	size_t tamanho = strlen(email) + strlen(senha) + 91;
 	
 	
 	query = (char *)malloc(sizeof(char) * tamanho);
@@ -587,7 +587,7 @@ int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario)/
 		return _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
 	}
 	
-	snprintf(query, sizeof(char) * tamanho, "SELECT C.idcliente from cliente C WHERE C.email=\'%s\' AND C.senha=\'%s\';", email, senha);
+	snprintf(query, sizeof(char) * tamanho, "SELECT C.idcliente from cliente C WHERE C.email LIKE BINARY \'%s\' AND C.senha LIKE BINARY \'%s\';", email, senha);
 	
 	
 	if(query == NULL)
@@ -610,13 +610,13 @@ int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario)/
 	{
 		//tamanho = 74 + strlen(email) + strlen(senha) + 1;
 		usuario->id = NULL;
-		tamanho = 75 + strlen(email) + strlen(senha);
+		tamanho = 99 + strlen(email) + strlen(senha);
 		query = (char *)malloc(sizeof(char) * tamanho);
 		if (query == NULL)
 		{
 			return _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
 		}
-		snprintf(query, tamanho, "SELECT C.idcontratante FROM contratante C WHERE C.email=\'%s\' AND C.senha=\'%s\';", email, senha);
+		snprintf(query, tamanho, "SELECT C.idcontratante FROM contratante C WHERE C.email LIKE BINARY \'%s\' AND C.senha LIKE BINARY \'%s\';", email, senha);
 		if (query == NULL)
 		{
 			printf(" ERRO: Falha ao checar login de contratante em Usuario.h usuario_checarLogin()\n");

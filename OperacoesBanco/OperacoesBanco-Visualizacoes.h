@@ -316,7 +316,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
 					geraLog(LOG, "Visualização de usuario já existem");
                     // tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + strlen(quantidade) + 198 + 1);
                     // tamanhoDaQuery = sizeof(char) * ( usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 219);
-                    tamanhoDaQuery = sizeof(char) * (usuario_obterTamanhoLogin(usuario), + strlen(quantidade) + TAMANHO_ID_PRODUTO + 210 + 1);
+                    tamanhoDaQuery = sizeof(char) * (usuario_obterTamanhoLogin(usuario), + strlen(quantidade) + TAMANHO_ID_PRODUTO + 234 + 1);
                     
                     query = (char *)malloc(tamanhoDaQuery);
                     if(query == NULL)
@@ -326,7 +326,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
                     }
                     memset(query, '\0', tamanhoDaQuery);
                     
-                    snprintf(query, tamanhoDaQuery, "UPDATE visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente JOIN produto P ON P.idproduto=V.produto_idproduto SET V.quantidade=V.quantidade+%s WHERE P.idproduto LIKE BINARY \'%s\' AND C.email=\'%s\';", quantidade, id, usuario_obterLogin(usuario) );
+                    snprintf(query, tamanhoDaQuery, "UPDATE visualizacaoDeUsuario V JOIN cliente C ON C.idcliente=V.cliente_idcliente JOIN produto P ON P.idproduto LIKE BINARY V.produto_idproduto SET V.quantidade=V.quantidade+%s WHERE P.idproduto LIKE BINARY \'%s\' AND C.email LIKE BINARY \'%s\';", quantidade, id, usuario_obterLogin(usuario) );
                     
                     if(query == NULL)
                     {
@@ -376,7 +376,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
                     //Usar Insert para inserir dados
                     printf(" LOG: Informações NÃO existem ainda\n");
                     // tamanhoDaQuery = sizeof(char) * (strlen(id) + strlen(email) + strlen(quantidade) + 179 + 1);
-                    tamanhoDaQuery = sizeof(char) *  (usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 202);
+                    tamanhoDaQuery = sizeof(char) *  (usuario_obterTamanhoLogin(usuario) + strlen(quantidade) + 214);
                     
                     query = (char *)malloc(tamanhoDaQuery);
                     if(query == NULL)
@@ -386,7 +386,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
                     }
                     memset(query, '\0', tamanhoDaQuery);
                     
-                    snprintf(query, tamanhoDaQuery, "INSERT INTO visualizacaoDeUsuario(quantidade,cliente_idcliente,produto_idproduto) SELECT %s,C.idcliente,P.idproduto FROM cliente C JOIN produto P ON P.idproduto LIKE BINARY \'%s\' WHERE C.email=\'%s\';", quantidade, id, usuario_obterLogin(usuario));
+                    snprintf(query, tamanhoDaQuery, "INSERT INTO visualizacaoDeUsuario(quantidade,cliente_idcliente,produto_idproduto) SELECT %s,C.idcliente,P.idproduto FROM cliente C JOIN produto P ON P.idproduto LIKE BINARY \'%s\' WHERE C.email LIKE BINARY \'%s\';", quantidade, id, usuario_obterLogin(usuario));
                     
                     if(query == NULL)
                     {
