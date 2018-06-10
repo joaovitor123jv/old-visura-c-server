@@ -5,6 +5,12 @@
 #include "Comandos.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
 
+/** 
+ * @brief  Retorna a quantidade de visualizações anônimas um produto possui, ou NULL, em caso de erro
+ * @note   Não retorna direto ao usuário, função interna
+ * @param  *usuario: o usuário que solicita o dado
+ * @retval NULL em caso de erro, a quantidade de visualizações do produto caso sucesso
+ */
 char *obterQuantidadeDeVisualizacoesAnonimas(Usuario *usuario)// APP 4 2 @ 3 idProduto
 {
     char *token = usuario_getNextToken(usuario);// APP 4 2 @ 3 idProduto
@@ -16,7 +22,7 @@ char *obterQuantidadeDeVisualizacoesAnonimas(Usuario *usuario)// APP 4 2 @ 3 idP
 
     if(strlen(token) != TAMANHO_ID_PRODUTO)
     {
-        printf(" Warning: Tamanho de ID de produto informado inválido em obterQuantidadeDeVisualizacoesAnonimas() Comando-Obter_Visualizacoes.h qkjhe\n");
+        geraLog(WARNING, "Tamanho de ID de produto informado inválido");
         return NULL;
     }
 
@@ -25,29 +31,29 @@ char *obterQuantidadeDeVisualizacoesAnonimas(Usuario *usuario)// APP 4 2 @ 3 idP
     idProduto = strdup(token);//DUPLICA UMA STRING (pq nn usou isso de inicio JV ? (T-T) )
     if(idProduto == NULL)
     {
-        printf(" Warning: Não foi possível duplicar a string contida em token em obterQuantidadeDeVisualizacoesAnonimas() Comando-Obter_Visualizacoes.h q654e87dd\n");
+        geraLog(WARNING, "Não foi possível duplicar a string contida em token");
         return NULL;
     }
 
     char *retorno;
     if((retorno = obterQuantidadeDeVisualizacoesAnonimasDoBanco(idProduto, usuario)) != NULL)
     {
-        printf(" LOG: Quantidade de visualizações retornada com sucesso em obterQuantidadeDeVisualizacoesAnonimas() Comando-Obter_Visualizacoes.h\n");
+        geraLog(LOG, "Quantidade de visualizações retornada com sucesso");
         free(idProduto);
         idProduto = NULL;
         return retorno;
     }
     else
     {
-        printf(" Warning: não foi possível obter os dados do banco em obterQuantidadeDeVisualizacoesAnonimas() Comando-Obter_Visualizacoes.h qalkjwf\n");
+        geraLog(WARNING, "Não foi possível obter os dados do banco");
         free(idProduto);
         idProduto = NULL;
         return NULL;
     }
 
 
-    printf(" ERRO: Deu algum erro que não previ em obterQuantidadeDeVisualizacoesAnonimas() Comando-Obter_Visualizacoes.h qkjhejkvjhea\n");
-    printf(" \tLiberando memorias talvez utilizadas\n");
+    geraLog(ERRO, "Deu algum erro que não previ");
+    geraLog(LOG, "Liberando memorias talvez utilizadas\n");
     if(idProduto != NULL)
     {
         free(idProduto);
@@ -56,19 +62,25 @@ char *obterQuantidadeDeVisualizacoesAnonimas(Usuario *usuario)// APP 4 2 @ 3 idP
     return NULL;
 }
 
+/** 
+ * @brief  Retorna o total de visualizações de um produto do banco de dados (anônimas + não anônimas)
+ * @note   retorna direto ao usuario
+ * @param  *usuario: usuario que está solicitando esse dado
+ * @retval 
+ */
 char *obterQuantidadeDeVisualizacoesGerais(Usuario *usuario)// APP 4 2 @ 2 idProduto
 {
     char *token = usuario_getNextToken(usuario);// APP 4 2 @ 2 idProduto
     if(token == NULL)
     {
         geraLog(LOG, "Comando insuficiente detectado, esperado idProduto");
-        return NULL;
+        return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
     }
 
     if(strlen(token) != TAMANHO_ID_PRODUTO)
     {
         geraLog(WARNING, "Tamanho de ID de produto invalido informado");
-        return NULL;
+        return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;
     }
 
     char *idProduto = NULL;
@@ -76,37 +88,38 @@ char *obterQuantidadeDeVisualizacoesGerais(Usuario *usuario)// APP 4 2 @ 2 idPro
     idProduto = strdup(token);//DUPLICA UMA STRING (pq nn usou isso de inicio JV ? (T-T) )
     if(idProduto == NULL)
     {
-        printf(" Warning: Não foi possível duplicar a string contida em token em obterQuantidadeDeVisualizacoesGerais() Comando-Obter_Visualizacoes.h q654e87dd\n");
-        return NULL;
+        geraLog(WARNING, "Não foi possível duplicar a string contida em token");
+        return RETORNO_ERRO_INTERNO_STR_DINAMICA;
     }
 
     char *qtdVisualAnom;
     if((qtdVisualAnom = obterQuantidadeDeVisualizacoesAnonimasDoBanco(idProduto, usuario)) != NULL)
     {
-        printf(" LOG: Quantidade de visualizações retornada com sucesso em obterQuantidadeDeVisualizacoesGerais() Comando-Obter_Visualizacoes.h\n");
+        geraLog(LOG, "Quantidade de visualizações anônimas obtidas com sucesso do banco de dados");
+        printf("\t Quantidade anom = %s\n", qtdVisualAnom);
     }
     else
     {
-        printf(" Warning: não foi possível obter os dados do banco em obterQuantidadeDeVisualizacoesGerais() Comando-Obter_Visualizacoes.h qalkjwf\n");
+        geraLog(WARNING, "Não foi possível obter os dados do banco");
         free(idProduto);
         idProduto = NULL;
-        return NULL;
+        return RETORNO_ERRO_INTERNO_BANCO_STR_DINAMICA;
     }
-
 
     char *qtdVisualNorm;
     if((qtdVisualNorm = obterQuantidadeDeVisualizacoesGeraisDoBanco(idProduto, usuario)) != NULL)
     {
-        printf(" LOG: Quantidade de visualizações retornada com sucesso em obterQuantidadeDeVisualizacoesGerais() Comando-Obter_Visualizacoes.h\n");
+        geraLog(LOG,"Quantidade de visualizações retorna com sucesso");
+        printf("\t Quantidade n anom = %s\n", qtdVisualNorm);
     }
     else
     {
-        printf(" Warning: não foi possível obter os dados do banco em obterQuantidadeDeVisualizacoesGerais() Comando-Obter_Visualizacoes.h qalkjwf\n");
+        geraLog( WARNING, "Não foi possível obter os dados do banco");
         free(qtdVisualAnom);
         qtdVisualAnom = NULL;
         free(idProduto);
         idProduto = NULL;
-        return NULL;
+        return RETORNO_ERRO_INTERNO_STR_DINAMICA;
     }
 
     char *retorno = intToString(atoi(qtdVisualAnom) + atoi(qtdVisualNorm));
@@ -119,10 +132,11 @@ char *obterQuantidadeDeVisualizacoesGerais(Usuario *usuario)// APP 4 2 @ 2 idPro
 
     if(retorno != NULL)
     {
-        printf(" LOG: Quantidade total de visualizações obtido com sucesso em Comando-Obter_Visualizacoes.h obterQuantidadeDeVisualizacoesGerais()ds456\n");
+        geraLog(LOG, "Quantidade total de visualizações obtido com sucesso");
+        printf("\tResultado = %s\n", retorno);
         return retorno;
     }
-    return NULL;
+    return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 }
 
 /** 
@@ -205,6 +219,5 @@ char *obterQuantidadeDeVisualizacoesDoProdutoNaCidade(Usuario *usuario)
 
     //TODO
     return obterQuantidadeDeVisualizacoesDoProdutoNaCidadeDoBanco(usuario, idProduto, nomeCidade, nomeEstado);
-
     // return RETORNO_ERRO_COMANDO_NAO_CONSTRUIDO_STR_DINAMICA;
 }

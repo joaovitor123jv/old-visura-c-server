@@ -89,14 +89,11 @@ int checaExistenciaDeVisualizacaoDeProdutoComPessoa(char *idproduto, Usuario *us
 	
 	if(resposta)//Se houver resposta
 	{
-		// printf(" \tResposta recebida do banco de dados\n");
 		campos = mysql_fetch_fields(resposta);
 		if(campos != NULL)
 		{
-			// printf(" \tExistem campos na resposta\n");
 			if(mysql_num_fields(resposta) >= 1)
 			{
-				// printf(" \tObteve %d respostas\n", mysql_num_fields(resposta));
                 
                 MYSQL_ROW linha = NULL;
 				if((linha = mysql_fetch_row(resposta)) != NULL)
@@ -200,7 +197,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
 		}
 		return false;
 	}
-	if( conexaoAtiva() )
+	if( !conexaoAtiva() )
 	{
 		geraLog(WARNING, "Falha ao conectar-se ao banco de dados" );
 		return false;
@@ -233,17 +230,14 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
     }
 
     //TODO Checar se a quantidade informada é válida
-
-	if(strlen(id) != 10)
+    if( !stringTamanhoIgual(id, 10) )
 	{
-		//	printf("ERRO: Id informado contém quantidade incorreta de caracteres (OperacoesBanco-Visualizacoes.h) addVisualizacoesAoBanco())\n");
 		geraLog(ERRO, "Quantidade inválida de caracteres para idProduto detectada");
 		return false;
 	}
     
     if (produtoVencido(id, usuario))
     {
-        //printf(" Warning: Produto vencido detectado em OperacoesBanco-Visualizacoes.h addVisualizacoesAoBanco()\n");
 		geraLog(WARNING, "Produto vencido para esse usuario");
         return false;
     }
@@ -265,6 +259,8 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
 		memset(query, '\0', tamanhoDaQuery);
         
 		snprintf(query, tamanhoDaQuery, "UPDATE produto SET produto.visualizacaoanom = produto.visualizacaoanom+%s WHERE produto.idproduto LIKE BINARY \'%s\';", quantidade, id );
+
+        printf(" LOG: QUERY GERADA PRA ESSE TROÇO = |%s|\n", query);
 		
 		if(query == NULL)
 		{

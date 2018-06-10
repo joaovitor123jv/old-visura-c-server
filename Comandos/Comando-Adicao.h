@@ -33,30 +33,31 @@ int comandoAdicionar(Usuario *usuario)/* APP 2 */
 {
 	if (usuario == NULL)
 	{
-		printf(" ERRO: Usuario nulo detectado em Comando-Adicao.h comandoAdicionar()\n");
+		geraLog(ERRO, "Usuario nulo detectado");
 		return RETORNO_ERRO_INTERNO;
 	}
-	printf(" LOG: **************COMANDO_ADICAO*************** em Comando-Adicao.h comandoAdicionar()\n");
+	geraLog(LOG, "****************COMANDO_ADICAO***************");
 	usuario_mostrarDados(usuario);
 
 	char *token = usuario_getNextToken(usuario);
 	if(token == NULL)
 	{
-		printf(" ERRO: Comando incorreto (Comando-Adicao.h) comandoAdicionar()\n");
+		geraLog(ERRO, "Comando incorreto detectado");
 		return RETORNO_ERRO_INTERNO;
 	}
 
 	if(strcmp(token, TIPO_VISUALIZACAO) == 0)/* APP 2 2  (Solicitação de adicao de Visualizacao)*/
 	{
-		printf(" LOG: Solicitando adição de visualizacao de produto (Comando-Adicao.h) comandoAdicionar()\n");
+		geraLog(LOG, "Solicitando adição de visualizacao de produto");
+
 		if(addVisualizacao(usuario))
 		{
-			printf(" LOG: Passou pelo OK Comando-Adicao.h comandoAdicionar()\n");
+			geraLog(LOG, "Visualização adicionada com sucesso");
 			return RETORNO_OK;
 		}
 		else
 		{
-			printf(" LOG: Passou pelo ELSE Comando-Adicao.h comandoAdicionar()\n");
+			geraLog(LOG, "Visualização não foi adicionada");
 			return RETORNO_ADICAO_RECUSADA;
 		}
 	}
@@ -64,12 +65,12 @@ int comandoAdicionar(Usuario *usuario)/* APP 2 */
 	{
 		if(addAvaliacaoAProduto(usuario))
 		{
-			printf(" LOG: Avaliação cadastrada com sucesso em Comando-Adicao.h comandoAdicionar()\n");
+			geraLog(LOG, "Avaliação cadastrada com sucesso");
 			return RETORNO_OK;
 		}
 		else
 		{
-			printf(" Warning: Falha ao adicionar avaliação ao produto requisitado em Comando-Adicao.h comandoAdicionar()\n");
+			geraLog(WARNING, "Falha ao adicionar avaliação ao produto requisitado");
 			return RETORNO_ADICAO_RECUSADA;
 		}
 	}
@@ -77,100 +78,100 @@ int comandoAdicionar(Usuario *usuario)/* APP 2 */
 	{
 		if(addFeedbackAProduto(usuario))
 		{
-			printf(" LOG: Feedback adicionado com sucesso ao banco de dados em Comando-Adicao.h comandoAdicionar() 4a68easd\n");
+			geraLog(LOG, "Feedback adicionado com sucesso ao banco de dados");
 			return RETORNO_OK;
 		}
 		else
 		{
-			printf(" Warning: Feedback não foi adicionado ao banco de dados em Comando-Adicao.h comandoAdicionar() asdkhjkvr\n");
+			geraLog(WARNING, "Feedback não foi adicionado ao banco de dados");
 			return RETORNO_ADICAO_RECUSADA;
 		}
 	}
 	else if(strcmp(token, TIPO_USUARIO) == 0)/* APP 2 1 Solicitação de criacao de usuario */
 	{
-		printf(" LOG: Solicitando adição de usuario ");
+		geraLog(LOG, "Solicitando adição de usuario");
 		token = usuario_getNextToken(usuario);
 		if(token == NULL)
 		{
-			printf(" Warning: Comando incorreto(2) Comando-Adicao.h comandoAdicionar()\n");
+			geraLog(WARNING, "Comando incorreto");
 			return RETORNO_COMANDO_INCORRETO;
 		}
 		if(strcmp(token, TIPO_USUARIO_ANONIMO) == 0)/* APP 2 1 2 Solicitação de criação de usuário anônimo */
 		{
-			printf("------------>anônimo Comando-Adicao.h comandoAdicionar()\n");
+			geraLog(LOG, "------------>anônimo");
 			token = usuario_getNextToken(usuario);
 			if(token == NULL)
 			{
-				printf(" Warning: Comando incorreto(3) Comando-Adicao.h comandoAdicionar()\n");
+				geraLog(WARNING, "Comando incorreto");
 				return RETORNO_COMANDO_INCORRETO;
 			}
 			if(strcmp(token, CHAVE_DE_SEGURANCA_PHP) == 0)/* APP 2 1 2 asdkjsahdjksahdjksadkj Solicitação de criação de usuário anônimo, informando chave */
 			{
-				printf(" LOG: Cliente PHP identificado Comando-Adicao.h comandoAdicionar()\n");
+				geraLog(LOG, "Cliente PHP identificado");
 
 				if(addUsuarioAnonimo(usuario))
 				{
-					printf(" LOG: Cliente adicionado com sucesso Comando-Adicao.h comandoAdicionar()\n");
+					geraLog(LOG, "Cliente adicionado com sucesso");
 					return RETORNO_OK;
 				}
 				else
 				{
-					printf(" Warning: Falha ao tentar adicionar usuario\n");
+					geraLog(WARNING, "Falha ao tentar adicionar usuario");
 					return RETORNO_ADICAO_RECUSADA;
 				}
 
 			}
 			else
 			{
-				printf(" LOG: Não autorizado Comando-Adicao comandoAdicionar()\n");
+				geraLog(LOG, "Não autorizado");
 				return RETORNO_NAO_AUTORIZADO;
 			}
 		}
 		else if( (strcmp(token, TIPO_USUARIO) == 0) && true)/* APP 2 1 1 Solicitação de criação de usuário não-anônimo && usuarioAnonimo */
 		{
-			printf("------------>regular Comando-Adicao.h comandoAdicionar()\n");
+			geraLog(LOG, "------------>regular");
 			if(addUsuario(usuario))
 			{
-				printf(" LOG: Adicao executada com sucesso em Comando-Adicao.h comandoAdicionar()\n");
+				geraLog(LOG, "Adicao executada com sucesso");
 				return RETORNO_OK;
 			}
 			else
 			{
-				printf(" Warning: Ocorreram erros e o usuario não pôde ser adicionado em Comando-Adicao.h comandoAdicionar()\n");
+				geraLog(WARNING, "Ocorreram erros e o usuario não pôde ser adicionado");
 				return RETORNO_ADICAO_RECUSADA;
 			}
 		}
 		else
 		{
-			printf(" LOG: Usuario não é anonimo ou operação desconhecida em Comando-Adicao.h comandoAdicionar()\n");
+			geraLog(LOG, "Usuario não é anonimo ou operação desconhecida");
 			return RETORNO_NAO_AUTORIZADO;
 		}
 	}
 	else if(strcmp(token, TIPO_INFORMACAO) == 0)/* APP 2 & TIPO_DE_INFORMACAO */
 	{
-		printf(" LOG: Cliente requisita adicao de informação a usuario em Comando-Adicao.h comandoAdicionar()\n");
+		geraLog(LOG, "Cliente requisita adicao de informação a usuario");
 		if(addInformacoesAUsuario(usuario))
 		{	
-			printf(" LOG: Informações adicionadas com sucesso ao banco em Comand-Adicao.h comandoAdicionar()\n");
+			geraLog(LOG, "Informações adicionadas com sucesso ao banco");
 			return RETORNO_OK;
 		}
 		else
 		{
-			printf(" Warning: Falha ao adicionar informações a usuario em Comando-Adicao.h comandoAdicionar()\n");
+			geraLog(WARNING, "Falha ao adicionar informações a usuario");
 			return RETORNO_ADICAO_RECUSADA;
 		}
 	}
 	else if(strcmp(token, TIPO_PRODUTO) == 0)/* APP 2 +    -> Solicita criação de produto na base de dados */
 	{
-		printf(" LOG: Solicitando a adição de Produto em Comando-Adicao.h comandoAdicionar() qqpjah1\n");
+		geraLog(LOG, "Solicitando a adição de Produto");
 		if(addProduto(usuario))
 		{
-			printf(" LOG: Produto adicionado com sucesso em comandoAdicionar() Comando-Adicao.h\n");
+			geraLog(LOG, "Produto adicionado com sucesso");
 			return RETORNO_OK;
 		}
 		else
 		{
-			printf(" Warning: Não foi possivel adicionar produto ao banco de dados em comandoAdicionar() Comando-Adicao.h\n");
+			geraLog(WARNING, "Não foi possivel adicionar produto ao banco de dados");
 			return RETORNO_ADICAO_RECUSADA;
 		}
 	}
@@ -178,12 +179,12 @@ int comandoAdicionar(Usuario *usuario)/* APP 2 */
 	{
 		if(addCidade(usuario))
 		{
-			printf(" LOG: Cidade adicionada com sucesso (Comando-Adicao.h) comandoAdicionar()\n");
+			geraLog(LOG, "Cidade adicionada com sucesso");
 			return RETORNO_OK;
 		}
 		else
 		{
-			printf(" Warning: Falha ao adicionar cidade (Comando-Adicao.h) comandoAdicionar()\n");
+			geraLog(WARNING, "Falha ao adicionar cidade");
 			return RETORNO_ADICAO_RECUSADA;
 		}
 	}
@@ -192,31 +193,31 @@ int comandoAdicionar(Usuario *usuario)/* APP 2 */
 		/* Cliente solicitando adicao de localizacao */
 		if(addLocalizacao(usuario))
 		{
-			printf(" LOG: Localizacao adicionada com sucesso Comando-Adicao.h comandoAdicionar()!\n");
+			geraLog(LOG, "Localizacao adicionada com sucesso");
 			return RETORNO_OK;
 		}
 		else
 		{
-			printf(" Warning: Não foi possivel adicionar localizacao em Comando-Adicao.h comandoAdicionar()\n");
+			geraLog(LOG, "Não foi possivel adicionar localizacao");
 			return RETORNO_ADICAO_RECUSADA;
 		}
-		printf(" Warning: Exceção não manipulável Comando-Adicao.h comandoAdicionar() (TIPO_LOCALIZACAO)\n");
+		geraLog(WARNING, "Exceção não manipulada/manipulável");
 		return RETORNO_ERRO_INTERNO;
 	}
 	else if(strcmp(token, TIPO_CONTRATANTE) == 0)//APP 2 $C 
 	{
-		printf(" LOG: Solicitando adição de contratante em Comando-Adicao.h comandoAdicionar()\n");
+		geraLog(LOG, "Solicitando adição de contratante");
 		if(addContratante(usuario))
 		{
-			printf(" LOG: Contratante adicionada com sucesso em Comando-Adicao.h comandoAdicionar()\n");
+			geraLog(LOG, "Contratante adicionada com sucesso");
 			return RETORNO_OK;
 		}
 		else
 		{
-			printf(" Warning: Não foi possível adicionar contratante em Comando-Adicao.h comandoAdicionar()\n");
+			geraLog(LOG, "Não foi possível adicionar contratante");
 			return RETORNO_ADICAO_RECUSADA;
 		}
-		printf(" ERRO: Exceção não manipulada em Comando-Adicao.h comandoAdicionar() QNR\n");
+		geraLog(ERRO, "Exceção não manipulada");
 		return RETORNO_ERRO_INTERNO;
 	}
 	else if(strcmp(token, TIPO_QUANTIDADE_DE_HABITANTES_DA_CIDADE) == 0)// APP 2 qC nomeCidade nomeEstado quantidade
@@ -225,10 +226,10 @@ int comandoAdicionar(Usuario *usuario)/* APP 2 */
 	}
 	else
 	{
-		printf(" ERRO: TIPO DE ADIÇAO DESCONHECIDA (Comando-Adicao.h) comandoAdicionar()\n");
+		geraLog(ERRO, "TIPO DE ADIÇAO DESCONHECIDA");
 		return RETORNO_COMANDO_INCORRETO;
 	}
-	printf(" ERRO: Algum erro desconhecido ocorreu em Comando-Adicao.h comandoAdicionar()\n");
+	geraLog(ERRO, "Algum erro desconhecido ocorreu");
 	return RETORNO_ERRO_INTERNO;
 }
 
@@ -362,6 +363,14 @@ bool addUsuarioAnonimo(Usuario *usuario)// APP 2 1 2 asdkhasdjkas
 	}
 }
 
+/** 
+ * @brief  Obtém os dados da query recebida e redireciona-os para a função que adiciona os dados no banco
+ * @note   exemplo de uso:
+ * 				APP 2 1 1 7 login 9 senha
+ * 				APP 2 1 1 7 login 9 senha sexo datanascimento
+ * @param  *usuario: o usuário que está solicitando a adição de um outro usuário
+ * @retval true caso seja bem sucedido, false caso contrário
+ */
 bool addUsuario(Usuario *usuario)//TODO  APP 2 1 1      (done)
 {
 	if (usuario == NULL)

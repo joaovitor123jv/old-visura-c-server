@@ -41,7 +41,7 @@ APP
 							senhaInformada
 								(Converte usuario logado para usar agora o login e senha informados (cria um usuario), somente login e senha *ATÉ AQUI*)
 
-								sexoInformado
+								sexoInformado	()
 									dataNascimentoInformada		(formato  DD/MM/AAAA )
 										(Converte usuario logado para usar agora o login e senha informados (cria um usuario normal)
 											DIFERENÇA: Adiciona informações de sexo e data de nascimento do usuario ao banco com o mesmo comando que já adiciona o usuario (menos dados transitando))
