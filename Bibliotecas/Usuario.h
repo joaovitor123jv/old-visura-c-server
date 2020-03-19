@@ -5,8 +5,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include "Comandos/Comandos.h"
-#include "Bibliotecas/AdaptadorDeString/AdaptadorDeString.h"
+#include "../Comandos/Comandos.h"
+#include "AdaptadorDeString/AdaptadorDeString.h"
 //#include "OperacoesBanco/OperacoesBanco.h"
 #include <mysql/mysql.h>
 
@@ -15,8 +15,6 @@
 	#define CONEXAO_COM_BANCO_DE_DADOS_DEFINIDA
 	MYSQL *conexao;
 #endif
-
-char *obterRetornoUnicoDaQuery(char *query);
 
 #ifndef true
 #define true 1
@@ -63,8 +61,8 @@ char *obterRetornoUnicoDaQuery(char *query);
 #endif
 
 
-bool queryRetornaConteudo(char *);
-bool conectarBanco();
+
+// bool conectarBanco();
 
 // Criar biblioteca de criação e manipulacao de usuarios
 
@@ -78,15 +76,23 @@ struct Usuario
 	int tamanhoSenha;
 	int nivelDePermissao;
 	int nivelDePermissaoDeContratante; //Variável que só é usada quando o usuário é do tipo "contratante"
+
+	MYSQL *conexao;
 	
 	Tokenizer *tokenizer;
 };
-
 typedef struct Usuario Usuario;
 
+char *obterRetornoUnicoDaQuery(Usuario *usuario, char *query);
+bool queryRetornaConteudo(Usuario *usuario, char *query);
+
+
 bool usuarioPrivilegiado(char *email);
-int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario);//Retorna o nível de permissao do usuario
+int usuario_checarLogin(Usuario *usuario, const char *email, const char *senha);//Retorna o nível de permissao do usuario
 int usuario_obterNivelDePermissaoDeContratante(Usuario *usuario);
+bool usuario_conectarBanco(Usuario *usuario);
+bool usuario_conexaoAtiva(Usuario *usuario);
+bool usuario_desconectarBanco(Usuario *usuario);
 
 void init_Usuario(Usuario *usuario)
 {
@@ -97,6 +103,7 @@ void init_Usuario(Usuario *usuario)
 	usuario->id = NULL;
 	usuario->nivelDePermissao = _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
 	usuario->tokenizer = NULL;
+	usuario->conexao = NULL;
 }
 
 bool new_Usuario(Usuario *usuario, const char *login, const char *senha)
@@ -119,7 +126,13 @@ bool new_Usuario(Usuario *usuario, const char *login, const char *senha)
 
 	printf(" LOG: Iniciando criacao de usuario em Usuario.h new_Usuario()\n");
 
-	int nivelDePermissao = usuario_checarLogin(login, senha, usuario);
+	if(!usuario_conectarBanco(usuario))
+	{
+		geraLog(ERRO, "Usuario não conseguiu conectar-se ao banco de dados");
+		return false;
+	}
+
+	int nivelDePermissao = usuario_checarLogin(usuario, login, senha);
 	if (nivelDePermissao == _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_)
 	{
 		return false;
@@ -509,6 +522,10 @@ bool delete_Usuario(Usuario *usuario)
 		delete_Tokenizer(usuario->tokenizer);
 		usuario->tokenizer = NULL;
 	}
+	if (usuario->conexao != NULL)
+	{
+		usuario_desconectarBanco(usuario);
+	}
 	// free(usuario);
 	// usuario = NULL;
 	return true;
@@ -543,22 +560,23 @@ bool reset_Usuario(Usuario *usuario)
 	return true;
 }
 
-int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario)// RETORNA Nível de permissão do usuario
+int usuario_checarLogin(Usuario *usuario, const char *email, const char *senha)// RETORNA Nível de permissão do usuario
 {
-	if(conexao == NULL)
-	{
-		printf("ERRO DE CONEXÃO (Usuario.h) (usuario_checarLogin)\n");
-		printf(" LOG: Tentando reconexão com banco de dados \n");
-		if(conectarBanco())
-		{
-			printf(" LOG: Reconectado com sucesso, continuando interpretação em Usuario.h usuario_checarLogin()\n");
-		}
-		else
-		{
-			printf(" Warning: Falha ao reconectar-se, encerrando interpretação em Usuario.h usuario_checarLogin()\n");
-			return _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
-		}
-	}
+	// if(conexao == NULL)
+	// {
+	// 	printf("ERRO DE CONEXÃO (Usuario.h) (usuario_checarLogin)\n");
+	// 	printf(" LOG: Tentando reconexão com banco de dados \n");
+	// 	if(usuario_conectarBanco())
+	// 	{
+	// 		printf(" LOG: Reconectado com sucesso, continuando interpretação em Usuario.h usuario_checarLogin()\n");
+	// 	}
+	// 	else
+	// 	{
+	// 		printf(" Warning: Falha ao reconectar-se, encerrando interpretação em Usuario.h usuario_checarLogin()\n");
+	// 		return _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
+	// 	}
+	// }
+
 	if (usuario->id != NULL)
 	{
 		free(usuario->id);
@@ -596,7 +614,8 @@ int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario)/
 		return _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
 	}
 	
-	usuario->id = obterRetornoUnicoDaQuery(query);
+	// usuario->id = usuario_obterRetornoUnicoDaQuery(usuario, query);
+	usuario->id = obterRetornoUnicoDaQuery(usuario, query);
 
 	if(usuario->id != NULL)
 	{
@@ -623,7 +642,7 @@ int usuario_checarLogin(const char *email, const char *senha, Usuario *usuario)/
 			return _USUARIO_NIVEL_DE_PERMISSAO_NAO_OBTIDO_;
 		}
 
-		usuario->id = obterRetornoUnicoDaQuery(query);
+		usuario->id = obterRetornoUnicoDaQuery(usuario, query);
 		if (usuario->id != NULL)
 		{
 			printf(" LOG: Foi encontrado um ID para contratante que satisfaça as seguintes comparações: em Usuario.h usuario_checarLogin()\n");
@@ -706,6 +725,113 @@ bool usuario_ContratanteTemPermissao(Usuario *usuario, int tipoPermissao)
 
 	return true;
 }
+
+
+
+
+// OPERACOES DE BANCO
+
+/** 
+ * @brief  Conecta-se ao banco e armazena os resultados em MYSQL *conexao.
+ * @note   Seguro inclusive em multithread
+ * @retval true, se conectou, false caso contrario.
+ */
+bool usuario_conectarBanco(Usuario *usuario)
+{
+	if(usuario->conexao != NULL)
+	{
+		mysql_close(usuario->conexao);
+		free(usuario->conexao);
+		usuario->conexao = NULL;
+	}
+
+	usuario->conexao = (MYSQL *)malloc(sizeof(MYSQL));
+	if(usuario->conexao == NULL)
+	{
+		geraLog(WARNING, "Memória insuficiente para conectar-se ao banco de dados");
+		return false;
+	}
+
+	geraLog(LOG, "Inicializando cliente SQL");
+
+	if( mysql_init(usuario->conexao) == NULL )
+	{
+		geraLog(ERRO, "Não foi possível inicializar o MYSQL");
+		return false;
+	}
+
+	geraLog(LOG, "Cliente SQL inicializado");
+
+	if( !mysql_real_connect( usuario->conexao, DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_SCHEMA, DATABASE_PORT, DATABASE_DEFAULT_SOCKET, DATABASE_DEFAULT_FLAGS ))
+	{
+		geraLog(WARNING, "Falha ao estabelecer conexao com o banco de dados");
+		printf("\t|ERRO: %d : %s\n", mysql_errno(usuario->conexao), mysql_error(usuario->conexao));
+		if(usuario->conexao != NULL)
+		{
+			geraLog(LOG, "Conexão diferente de NULL");
+			mysql_close(usuario->conexao);
+			mysql_thread_end();
+			free(usuario->conexao);
+			usuario->conexao = NULL;
+			return false;
+		}
+		return false;
+	}
+	else
+	{
+		geraLog(LOG, "Conexão com banco de dados estabelecida");
+		return true;
+	}
+	geraLog(ERRO,"Erro incompreendido");
+	return false;
+}
+
+
+
+/** 
+ * @brief  Encerra conexao com o banco de dados
+ * @note   Trabalhando com variavel global MYSQL *conexao
+ * @retval true, sempre
+ */
+bool usuario_desconectarBanco(Usuario *usuario)
+{
+	mysql_close(usuario->conexao);
+	usuario->conexao = NULL;
+	mysql_library_end();
+	return true;
+}
+
+
+/** 
+ * @brief  Checa se a conexão com o banco de dados está ativa, e tenta uma re-conexao
+ * @note   Só checa se a conexao é nula...
+ * @retval true, caso a conexao esteja ativa
+ */
+bool usuario_conexaoAtiva(Usuario *usuario)
+{
+	if(usuario->conexao == NULL)
+	{
+		printf("ERRO DE CONEXÃO (OperacoesBanco-FuncoesGenericas.h) (checarConexao())\n");
+		printf(" LOG: Tentando reconexão com banco de dados \n");
+		if(usuario_conectarBanco(usuario))
+		{
+			printf(" LOG: Reconectado com sucesso, continuando interpretação em OperacoesBanco-FuncoesGenericas.h checarConexao()()\n");
+			return true;
+		}
+		else
+		{
+			printf(" Warning: Falha ao reconectar-se, encerrando interpretação\n");
+			return false;
+		}
+	}
+	return true;
+}
+
+
+// FIM OPERACOES DE BANCO
+
+
+
 
 
 #endif //__USUARIO_VISURA__

@@ -252,7 +252,7 @@ char *obterIdCidade(Usuario *usuario)
 	}
 	else
 	{
-		char *retorno = obterIdCidadeDoBanco(nomeCidade, nomeEstado);
+		char *retorno = obterIdCidadeDoBanco(usuario, nomeCidade, nomeEstado);
 		free(nomeCidade);
 		free(nomeEstado);
 		nomeCidade = NULL;
@@ -303,7 +303,7 @@ char *obterIdContratante(Usuario *usuario)// APP 4 ; cnpj
 		printf(" Warning: Falha ao duplicar email informado em Comando-Obter.h obterIdContratante() abv849a8sd72bhjht65w\n");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
-	return obterIdContratanteDoBanco(cnpj);
+	return obterIdContratanteDoBanco(usuario, cnpj);
 }
 
 char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua numero complemento//TODO Teoricamente pronto
@@ -354,7 +354,7 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 	if( token == NULL )// Se o cliente informar somente idCidade e cep
 	{
 		printf(" LOG: Cliente não informou bairro em Comando-Obter.h obterIdLocalizacao() askjfjkhqsg4 \n");
-		char *retorno = obterIdLocalizacaoDoBanco(idCidade, cep, NULL, NULL, NULL, NULL);
+		char *retorno = obterIdLocalizacaoDoBanco(usuario, idCidade, cep, NULL, NULL, NULL, NULL);
 		free( idCidade );
 		free( cep );
 		cep = NULL;
@@ -391,7 +391,7 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 	if( token == NULL )
 	{
 		printf(" LOG: Cliente não informou rua em Comando-Obter.h obterIdLocalizacao()\n");
-		char *retorno = obterIdLocalizacaoDoBanco(idCidade, cep, bairro, NULL, NULL, NULL);
+		char *retorno = obterIdLocalizacaoDoBanco(usuario, idCidade, cep, bairro, NULL, NULL, NULL);
 		free( idCidade );
 		free( cep );
 		free( bairro );
@@ -432,7 +432,7 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 	if( token == NULL )
 	{
 		printf(" LOG: Cliente não informou numero em Comando-Obter.h obterIdLocalizacao() ashjvjk\n");
-		char *retorno = obterIdLocalizacaoDoBanco(idCidade, cep, bairro, rua, NULL, NULL);
+		char *retorno = obterIdLocalizacaoDoBanco(usuario, idCidade, cep, bairro, rua, NULL, NULL);
 		free( idCidade );
 		free( cep );
 		free( bairro );
@@ -478,7 +478,7 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 	if( token == NULL )
 	{
 		printf(" LOG: Cliente não informou numero em Comando-Obter.h obterIdLocalizacao() ashjvjk\n");
-		char *retorno = obterIdLocalizacaoDoBanco(idCidade, cep, bairro, rua, NULL, NULL);
+		char *retorno = obterIdLocalizacaoDoBanco(usuario, idCidade, cep, bairro, rua, NULL, NULL);
 		free( idCidade );
 		free( cep );
 		free( bairro );
@@ -522,7 +522,7 @@ char *obterIdLocalizacao(Usuario *usuario)// APP 4 i0 idCidade cep bairro rua nu
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
-	char *retorno = obterIdLocalizacaoDoBanco(idCidade, cep, bairro, rua, numero, complemento);
+	char *retorno = obterIdLocalizacaoDoBanco(usuario, idCidade, cep, bairro, rua, numero, complemento);
 	free( idCidade );
 	free( cep );
 	free( bairro );
@@ -599,17 +599,17 @@ char *obterTop10NovosProdutos(Usuario *usuario)// APP 4 J
 		if (strcmp(token, TIPO_REALIDADE_AUMENTADA_E_VIRTUAL) == 0)// APP 4 J 3
 		{
 			printf(" LOG: Solicitando top 10 novos produtos, realidade aumentada e virtual em Comando-Obter.h obterTop10NovosProdutos()\n");
-			return obterTop10NovosProdutosDoBanco();
+			return obterTop10NovosProdutosDoBanco(usuario);
 		}
 		else if(strcmp(token, TIPO_REALIDADE_AUMENTADA) == 0)// APP 4 J 1
 		{
 			printf(" LOG: Solicitando top 10 novos produtos, realidade aumentada em Comando-Obter.h obterTop10NovosProdutos()\n");
-			return obterTop10NovosProdutosRealidadeAumentadaDoBanco();
+			return obterTop10NovosProdutosRealidadeAumentadaDoBanco(usuario);
 		}
 		else if(strcmp(token, TIPO_REALIDADE_VIRTUAL) == 0)// APP 4 J 2
 		{
 			printf(" LOG: Solicitando top 10 novos produtos, realidade virtual em Comando-Obter.h obterTop10NovosProdutos()\n");
-			return obterTop10NovosProdutosRealidadeVirtualDoBanco();
+			return obterTop10NovosProdutosRealidadeVirtualDoBanco(usuario);
 		}
 		else
 		{
@@ -744,7 +744,7 @@ char *obterTop10ProdutosMelhorAvaliados(Usuario *usuario)
 	 *
 	 * Em caso de erro -> NULL
 	 */
-	char *top = obterTop10ProdutosMelhorAvaliadosDoBanco();
+	char *top = obterTop10ProdutosMelhorAvaliadosDoBanco(usuario);
 	if(top == NULL)
 	{
 		printf(" Warning: top 10 produtos não obteve resultado em Comando-Obter.h obterTop10ProdutosMelhorAvaliados()\n");
@@ -1062,7 +1062,7 @@ char *obterQuantidadeDeHabitantesDaCidade(Usuario *usuario)
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
-	if (!cidadeExisteNoBanco(nomeDaCidade, nomeDoEstado))
+	if (!cidadeExisteNoBanco(usuario, nomeDaCidade, nomeDoEstado))
 	{
 		geraLog(WARNING, "Cidade pesquisada não existe no banco de dados");
 		return RETORNO_ERRO_NOT_FOUND_STR_DINAMICA;

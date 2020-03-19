@@ -7,7 +7,7 @@
 #include<mysql/mysql.h>
 
 #include "../Bibliotecas/AdaptadorDeString/AdaptadorDeString.h"
-#include "../Usuario.h"
+#include "../Bibliotecas/Usuario.h"
 
 #ifndef true
 #define true 1
@@ -28,15 +28,6 @@
 	GRANT SELECT DELETE UPDATE INSERT ON teste.* to 'interface'@'127.0.0.1';
 	flush privileges;
 */
-
-#define DATABASE_HOST "127.0.0.1"//TESTES
-// #define DATABASE_HOST "35.186.190.243"//GOOGLE CLOUD
-#define DATABASE_USER "interface"
-#define DATABASE_PASSWORD "essaSenhaEsoPraInteFaCeSaBeRPorQuESiM"
-#define DATABASE_SCHEMA "teste"
-#define DATABASE_PORT 0
-#define DATABASE_DEFAULT_SOCKET NULL
-#define DATABASE_DEFAULT_FLAGS 0
 
 
 #ifndef CONEXAO_COM_BANCO_DE_DADOS_DEFINIDA
@@ -145,7 +136,7 @@ bool conexaoAtiva()
  * @param  *query: Query a ser executada no banco de dados
  * @retval true, se retornar conteudo, false caso contrario
  */
-bool queryRetornaConteudo(char *query)
+bool queryRetornaConteudo(Usuario *usuario, char *query)
 {
 	if(query == NULL)
 	{
@@ -153,15 +144,15 @@ bool queryRetornaConteudo(char *query)
 		return false;
 	}
 
-	if(mysql_query(conexao, query))//Se ocorrer algum erro
+	if(mysql_query(usuario->conexao, query))//Se ocorrer algum erro
 	{
 		printf(" ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) checarSeVoltaAlgumaCoisaDaQuery()\n");
-		printf(" ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
+		printf(" ERRO nº%d  ->  %s\n", mysql_errno(usuario->conexao), mysql_error(usuario->conexao));
 		printf(" Query executada: |%s|\n", query);
 		free(query);
 		query = NULL;
 
-		if(mysql_errno(conexao) == ERRO_CONEXAO_ENCERRADA_MYSQL)// SERVER MYSQL SUMIU
+		if(mysql_errno(usuario->conexao) == ERRO_CONEXAO_ENCERRADA_MYSQL)// SERVER MYSQL SUMIU
 		{
 			printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h checarSeVoltaAlgumaCoisaDaQuery()\n");
 			if(conectarBanco())
@@ -170,10 +161,10 @@ bool queryRetornaConteudo(char *query)
 			}
 			else
 			{
-				conexao = NULL;
-				mysql_close(conexao);
+				usuario->conexao = NULL;
+				mysql_close(usuario->conexao);
 				mysql_thread_end();
-				free(conexao);
+				free(usuario->conexao);
 				printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h checarSeVoltaAlgumaCoisaDaQuery()\n");
 			}
 		}
@@ -183,7 +174,7 @@ bool queryRetornaConteudo(char *query)
 	MYSQL_RES *resposta = NULL;
 	MYSQL_FIELD *campos = NULL;
 
-	resposta = mysql_store_result(conexao);
+	resposta = mysql_store_result(usuario->conexao);
 
 	if(resposta)//Se houver resposta
 	{
@@ -249,7 +240,7 @@ bool queryRetornaConteudo(char *query)
  * @param  *query: Query a ser executada no banco de dados
  * @retval true, se query for executada, false caso contrario
  */
-bool executaQuery(char *query)
+bool executaQuery(Usuario *usuario, char *query)
 {
 	if(query == NULL)
 	{
@@ -257,12 +248,12 @@ bool executaQuery(char *query)
 		return false;
 	}
 
-	if(mysql_query(conexao, query))//Se ocorrer algum erro
+	if(mysql_query(usuario->conexao, query))//Se ocorrer algum erro
 	{
 		printf(" ERRO: Ocorreram erros durante a execução da query (OperacoesBanco.h) checarSeVoltaAlgumaCoisaDaQuery()\n");
-		printf(" ERRO nº%d  ->  %s\n", mysql_errno(conexao), mysql_error(conexao));
+		printf(" ERRO nº%d  ->  %s\n", mysql_errno(usuario->conexao), mysql_error(usuario->conexao));
 		printf(" Query executada: |%s|\n", query);
-		if(mysql_errno(conexao) == ERRO_CONEXAO_ENCERRADA_MYSQL)// SERVER MYSQL SUMIU
+		if(mysql_errno(usuario->conexao) == ERRO_CONEXAO_ENCERRADA_MYSQL)// SERVER MYSQL SUMIU
 		{
 			printf(" LOG: Tentando reconexão com o banco de dados em OperacoesBanco.h checarSeVoltaAlgumaCoisaDaQuery()\n");
 			if(conectarBanco())
@@ -271,10 +262,10 @@ bool executaQuery(char *query)
 			}
 			else
 			{
-				conexao = NULL;
-				mysql_close(conexao);
+				usuario->conexao = NULL;
+				mysql_close(usuario->conexao);
 				mysql_thread_end();
-				free(conexao);
+				free(usuario->conexao);
 				printf(" ERRO: Não foi possível reconectar-se ao banco de dados em OperacoesBanco.h checarSeVoltaAlgumaCoisaDaQuery()\n");
 			}
 		}
@@ -290,9 +281,9 @@ bool executaQuery(char *query)
  * @param  *query: Query a ser executada no banco de dados
  * @retval NULL, caso de erro. Resultado da query caso contrario
  */
-char *obterRetornoUnicoDaQuery(char *query)
+char *obterRetornoUnicoDaQuery(Usuario *usuario, char *query)
 {
-	if (!conexaoAtiva())
+	if (!usuario_conexaoAtiva(usuario))
 	{
 		printf(" ERRO: Conexao inativa detectada em OperacoesBanco-FuncoesGenericas.h obterRetornoUnicoDaQuery()\n");
 		return NULL;
@@ -309,12 +300,12 @@ char *obterRetornoUnicoDaQuery(char *query)
 	
 	do
 	{
-		if(mysql_query(conexao, query))
+		if(mysql_query(usuario->conexao, query))
 		{
-			if( mysql_errno(conexao) == ERRO_CONEXAO_ENCERRADA_MYSQL)
+			if( mysql_errno(usuario->conexao) == ERRO_CONEXAO_ENCERRADA_MYSQL)
 			{
 				printf(" ERRO: Conexão com o banco de dados encerrada detectada em OperacoesBanco-FuncoesGenericas.h obterRetornoUnicoDaQuery() artb9vcn\n");
-				conexao = NULL;
+				usuario->conexao = NULL;
 				conectarBanco();
 				if( tentativas > 2 )
 				{
@@ -327,12 +318,12 @@ char *obterRetornoUnicoDaQuery(char *query)
 				tentativas = tentativas + 1;
 			}
 			printf(" ERRO: Falha ao executar query em obterRetornoUnicoDaQuery() OperacoesBanco-FuncoesGenericas.h sakdjh\n");
-			printf(" ERRO MYSQL nº%d = \t|%s|\n", mysql_errno(conexao) ,mysql_error(conexao));
+			printf(" ERRO MYSQL nº%d = \t|%s|\n", mysql_errno(usuario->conexao) ,mysql_error(usuario->conexao));
 			return NULL;
 		}
 	}while(tentarDenovo);
 	
-	MYSQL_RES *resultado = mysql_store_result(conexao);
+	MYSQL_RES *resultado = mysql_store_result(usuario->conexao);
 	
 	if(resultado == NULL)// Se não houver consulta
 	{
@@ -441,9 +432,9 @@ char *obterRetornoUnicoDaQuery(char *query)
  * @param  *query: 
  * @retval char *
  */
-char *retornaUnicoRetornoDaQuery(char *query)
+char *retornaUnicoRetornoDaQuery(Usuario *usuario, char *query)
 {
-	if (!conexaoAtiva())
+	if (!usuario_conexaoAtiva(usuario))
 	{
 		printf(" Warning: Conexao inativa detectada em OperacoesBanco-FuncoesGenericas.h retornaUnicoRetornoDaQuery()\n");
 		return RETORNO_ERRO_INTERNO_BANCO_STR_DINAMICA;
@@ -459,13 +450,13 @@ char *retornaUnicoRetornoDaQuery(char *query)
 	int tentativas = 0;
 	do
 	{
-		if(mysql_query(conexao, query))
+		if(mysql_query(usuario->conexao, query))
 		{
-			if( mysql_errno(conexao) == ERRO_CONEXAO_ENCERRADA_MYSQL)
+			if( mysql_errno(usuario->conexao) == ERRO_CONEXAO_ENCERRADA_MYSQL)
 			{
 				printf(" ERRO: Conexão com o banco de dados encerrada detectada em OperacoesBanco-FuncoesGenericas.h obterRetornoUnicoDaQuery() artb9vcn\n");
-				conexao = NULL;
-				conectarBanco();
+				usuario->conexao = NULL;
+				usuario_conectarBanco(usuario);
 				if( tentativas > 2 )
 				{
 					tentarDenovo = false;
@@ -477,12 +468,12 @@ char *retornaUnicoRetornoDaQuery(char *query)
 				tentativas = tentativas + 1;
 			}
 			printf(" ERRO: Falha ao executar query em retornaUnicoRetornoDaQuery() OperacoesBanco-FuncoesGenericas.h sakdjh\n");
-			printf(" ERRO MYSQL nº%d = \t|%s|\n", mysql_errno(conexao) ,mysql_error(conexao));
+			printf(" ERRO MYSQL nº%d = \t|%s|\n", mysql_errno(usuario->conexao) ,mysql_error(usuario->conexao));
 			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 		}
 	}while(tentarDenovo);
 	
-	MYSQL_RES *resultado = mysql_store_result(conexao);
+	MYSQL_RES *resultado = mysql_store_result(usuario->conexao);
 	
 	if(resultado == NULL)// Se não houver consulta
 	{
@@ -590,14 +581,14 @@ char *retornaUnicoRetornoDaQuery(char *query)
  * @param  *id: Id do produto a ser checado se existe
  * @retval true, se existir, false caso contrario
  */
-bool checarIdProduto(char *id)//OK
+bool checarIdProduto(Usuario *usuario, char *id)//OK
 {
 	if(id == NULL)
 	{
 		printf("ERRO: Não há login para checar (id == NULL) (OperacoesBanco-FuncoesGenericas.h) (checarIdProduto())\n");
 		return false;
 	}
-	if(!conexaoAtiva())
+	if(!usuario_conexaoAtiva(usuario))
 	{
 		printf(" Warning: conexao inativa detectada em OperacoesBanco-FuncoesGenericas.h checarIdProduto()\n");
 		return false;
@@ -625,7 +616,7 @@ bool checarIdProduto(char *id)//OK
 		return false;
 	}
 
-	bool retorno = queryRetornaConteudo(query);
+	bool retorno = queryRetornaConteudo(usuario, query);
 	query = NULL;
 	return retorno;
 }
@@ -636,7 +627,7 @@ bool checarIdProduto(char *id)//OK
  * @param  *idContratante: Id do contratante a ser checado se existe na base de dados
  * @retval true, caso exista, false, caso contrario
  */
-bool checarIdContratante(char *idContratante)
+bool checarIdContratante(Usuario *usuario, char *idContratante)
 {
 	char *query = NULL;
 	int tamanho = 53 + 1 + strlen(idContratante);
@@ -656,7 +647,7 @@ bool checarIdContratante(char *idContratante)
 			return false;
 		}
 	
-		if(queryRetornaConteudo(query))//queryRetornaConteudo libera a query
+		if(queryRetornaConteudo(usuario, query))//queryRetornaConteudo libera a query
 		{
 			//Se voltar algo da query
 			printf(" LOG: Existe empresa com esse ID no banco de dados em checarIdContratante() OperacoesBanco-FuncoesGenericas.h\n");
@@ -709,7 +700,7 @@ char *obterIdContratanteDoBancoPorUsuario(Usuario *usuario)
 bool produtoVencido(char *idProduto, Usuario *usuario)
 {
 
-	if (!conexaoAtiva())
+	if (!usuario_conexaoAtiva(usuario))
 	{
 		printf(" Warning: Conexão inativa detectada em OperacoesBanco-FuncoesGenericas.h produtoVencido()\n");
 		return true;
@@ -747,7 +738,7 @@ bool produtoVencido(char *idProduto, Usuario *usuario)
 		return true;
 	}
 
-	if(!executaQuery(query))
+	if(!executaQuery(usuario, query))
 	{
 		printf(" Warning: Houveram erros ao executar a query desejada |%s| em OperacoesBanco-FuncoesGenericas.h produtoVencido() wsd456ngh\n", query);
 		free(query);
@@ -755,7 +746,7 @@ bool produtoVencido(char *idProduto, Usuario *usuario)
 		return true;
 	}
 
-	MYSQL_RES *resultado = mysql_store_result(conexao);
+	MYSQL_RES *resultado = mysql_store_result(usuario->conexao);
 	
 	if(resultado == NULL)
 	{
@@ -827,14 +818,14 @@ bool produtoVencido(char *idProduto, Usuario *usuario)
  * @param  *query: query a ser executada no banco de dados
  * @retval retorna direto ao usuario, um ponteiro para caracter não estático (strdup(algumaCoisa))
  */
-char *retornaInformacoesObtidasNaQuery(char *query)
+char *retornaInformacoesObtidasNaQuery(Usuario *usuario, char *query)
 {
 	if(query == NULL)
 	{
 		printf(" ERRO: query nula em retornaInformacoesObtidasNaQuery() em OperacoesBanco-FuncoesGenericas.h\n");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
-	if (!conexaoAtiva())
+	if (!usuario_conexaoAtiva(usuario))
 	{
 		return RETORNO_ERRO_INTERNO_BANCO_STR_DINAMICA;
 	}
@@ -843,13 +834,13 @@ char *retornaInformacoesObtidasNaQuery(char *query)
 	int tentativas = 0;
 	do
 	{
-		if(mysql_query(conexao, query))
+		if(mysql_query(usuario->conexao, query))
 		{
-			if( mysql_errno(conexao) == ERRO_CONEXAO_ENCERRADA_MYSQL)
+			if( mysql_errno(usuario->conexao) == ERRO_CONEXAO_ENCERRADA_MYSQL)
 			{
 				printf(" ERRO: Conexão com o banco de dados encerrada detectada em OperacoesBanco-FuncoesGenericas.h obterRetornoUnicoDaQuery() artb9vcn\n");
-				conexao = NULL;
-				conectarBanco();
+				usuario->conexao = NULL;
+				usuario_conectarBanco(usuario);
 				if( tentativas > 2 )
 				{
 					tentarDenovo = false;
@@ -861,12 +852,12 @@ char *retornaInformacoesObtidasNaQuery(char *query)
 				tentativas = tentativas + 1;
 			}
 			printf(" ERRO: Falha ao executar query em retornaInformacoesObtidasNaQuery() OperacoesBanco-FuncoesGenericas.h sakdjh\n");
-			printf(" ERRO MYSQL nº%d = \t|%s|\n", mysql_errno(conexao) ,mysql_error(conexao));
+			printf(" ERRO MYSQL nº%d = \t|%s|\n", mysql_errno(usuario->conexao) ,mysql_error(usuario->conexao));
 			return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 		}
 	}while(tentarDenovo);
 	
-	MYSQL_RES *resultado = mysql_store_result(conexao);
+	MYSQL_RES *resultado = mysql_store_result(usuario->conexao);
 	if(resultado == NULL)// Se não houver consulta
 	{
 		printf(" Warning: Consulta não realizada em OperacoesBanco-FuncoesGenericas.h retornaInformacoesObtidasNaQuery()\n");
@@ -981,7 +972,7 @@ char *retornaInformacoesObtidasNaQuery(char *query)
  * @param  numeroIteracoes: 
  * @retval retorna direto ao usuario (char *)
  */
-char *retornaNIteracoesDaQuery(char *query, int numeroIteracoes)
+char *retornaNIteracoesDaQuery(Usuario *usuario, char *query, int numeroIteracoes)
 {
 	if (query == NULL)
 	{
@@ -993,13 +984,13 @@ char *retornaNIteracoesDaQuery(char *query, int numeroIteracoes)
 		printf(" Warning: numeroIteracoes invalido detectado em OperacoesBanco-FuncoesGenericas.h retornaNIteracoesDaQuery()\n");
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
-	if (!conexaoAtiva())
+	if (!usuario_conexaoAtiva(usuario))
 	{
 		printf(" Warning: conexao inativa detectada em OperacoesBanco-FuncoesGenericas.h retornaNIteracoesDaQuery()\n");
 		return RETORNO_ERRO_INTERNO_BANCO_STR_DINAMICA;
 	}
 
-	if (!executaQuery(query))
+	if (!executaQuery(usuario, query))
 	{
 		free(query);
 		query = NULL;
@@ -1009,7 +1000,7 @@ char *retornaNIteracoesDaQuery(char *query, int numeroIteracoes)
 	free(query);
 	query = NULL;
 
-	MYSQL_RES *resultado = mysql_store_result(conexao);
+	MYSQL_RES *resultado = mysql_store_result(usuario->conexao);
 	if (resultado == NULL)
 	{
 		printf(" Warning: Consulta não realizada em OperacoesBanco-FuncoesGenericas.h retornaNIteracoesDaQuery()\n");
@@ -1091,7 +1082,7 @@ char *retornaNIteracoesDaQuery(char *query, int numeroIteracoes)
  * @param  *pagina: "1" == LIMIT 1, 10;  "2" == LIMIT 11, 20
  * @retval informações concatenadas direto pro usuario
  */
-char *retornaPaginado(char *query, char *pagina)
+char *retornaPaginado(Usuario *usuario, char *query, char *pagina)
 {
 	if (query == NULL)
 	{
@@ -1147,7 +1138,7 @@ char *retornaPaginado(char *query, char *pagina)
 	x = NULL;
 	query = NULL;
 
-	return retornaNIteracoesDaQuery(novaQuery, 10);
+	return retornaNIteracoesDaQuery(usuario, novaQuery, 10);
 }
 
 /** 
@@ -1157,9 +1148,9 @@ char *retornaPaginado(char *query, char *pagina)
  * @param  *nomeEstado: Nome do estado no banco de dados (SP, GO...)
  * @retval true, caso cidade exista no banco de dados, false caso contrário
  */
-bool cidadeExisteNoBanco(char *nomeCidade, char *nomeEstado)
+bool cidadeExisteNoBanco(Usuario *usuario, char *nomeCidade, char *nomeEstado)
 {
-	if (!conexaoAtiva())
+	if (!usuario_conexaoAtiva(usuario))
 	{
 		geraLog(ERRO, "Conexão perdida com o banco de dados");
 		return false;
@@ -1187,7 +1178,7 @@ bool cidadeExisteNoBanco(char *nomeCidade, char *nomeEstado)
 
 	printf(" DEBUG: Query formatada = |%s|\n", query);
 
-	char *retorno = obterRetornoUnicoDaQuery(query);
+	char *retorno = obterRetornoUnicoDaQuery(usuario, query);
 	if (retorno == NULL)
 	{
 		geraLog(ERRO, "Cidade não existe no banco de dados");

@@ -74,7 +74,7 @@ char *comandoRoot(Usuario *usuario)
 
 			snprintf(query, tamanho, "SELECT count(*) as num_reg FROM %s;", token);
 
-			char *retorno = obterRetornoUnicoDaQuery(query);
+			char *retorno = obterRetornoUnicoDaQuery(usuario, query);
 			if (retorno == NULL)
 			{
 				return strdup("ERRO: Query não retornou nada...");
@@ -134,7 +134,7 @@ char *comandoRoot(Usuario *usuario)
 		}
 		else if( strcmp(token, "banco") == 0 )
 		{
- 			if( !executaQuery("DROP DATABASE teste;") )
+ 			if( !executaQuery(usuario, "DROP DATABASE teste;") )
 			{
 				return strdup("ERRO: Falha ao resetar o banco de dados, não foi possível executar \"DROP DATABASE\".");
 			}

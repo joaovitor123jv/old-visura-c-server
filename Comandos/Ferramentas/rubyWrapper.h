@@ -2,7 +2,7 @@
 #include<string.h>
 // #include <ruby.h>
 #include"../../Bibliotecas/AdaptadorDeString/AdaptadorDeString.h"
-#include"../../Usuario.h"
+#include "../../Bibliotecas/Usuario.h"
 #include "../Comandos.h"
 #include "../../Bibliotecas/TCPServer/TCPServer.h"
 

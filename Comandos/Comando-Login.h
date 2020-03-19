@@ -5,7 +5,7 @@
 #include "../Bibliotecas/AdaptadorDeString/AdaptadorDeString.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
 #include "../OperacoesBanco/OperacoesBanco-FuncoesGenericas.h"
-#include "../Usuario.h"
+#include "../Bibliotecas/Usuario.h"
 
 /*bool comandoLogin(Usuario *usuario)
 {

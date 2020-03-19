@@ -7,7 +7,9 @@
 		"rubywrapper.h": "c",
 		"tcpserver.h": "c",
 		"stdio.h": "c",
-		"comando-remover.h": "c"
+		"comando-remover.h": "c",
+		"comando-root.h": "c",
+		"comando-login.h": "c"
 	},
 	"C_Cpp.intelliSenseEngineFallback": "Disabled"
 }

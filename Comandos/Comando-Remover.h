@@ -3,7 +3,7 @@
 #include<string.h>
 #include<unistd.h>
 #include "Comandos.h"
-#include "../Usuario.h"
+#include "../Bibliotecas/Usuario.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
 
 #ifndef CODIGO_COMANDO_REMOVER
@@ -44,13 +44,13 @@ bool comandoRemover(Usuario *usuario)/* APP 5 algumaCoisa */
 
 bool deletarProduto(Usuario *usuario, char *idProduto)
 {
-	if (!conexaoAtiva())
+	if (!usuario_conexaoAtiva(usuario))
 	{
 		geraLog(ERRO, "Conexao inativa com o banco de dados detectada");
 		return false;
 	}
 
-	if (!checarIdProduto(idProduto))
+	if (!checarIdProduto(usuario, idProduto))
 	{
 		geraLog(WARNING, "Produto não existe na base de dados");
 		return false;
@@ -72,7 +72,7 @@ bool deletarProduto(Usuario *usuario, char *idProduto)
 		geraLog(WARNING, "Falha ao formatar query aoighr");
 		return false;
 	}
-	if (!executaQuery(query))
+	if (!executaQuery(usuario, query))
 	{
 		geraLog(WARNING, "Falha ao executar query");
 		return false;
@@ -92,7 +92,7 @@ bool deletarProduto(Usuario *usuario, char *idProduto)
 		geraLog(WARNING, "Falha ao formatar query dakjhbt");
 		return false;
 	}
-	if (!executaQuery(query))
+	if (!executaQuery(usuario, query))
 	{
 		geraLog(WARNING, "Falha ao executar query");
 		return false;
@@ -111,7 +111,7 @@ bool deletarProduto(Usuario *usuario, char *idProduto)
 		geraLog(WARNING, "Falha ao formatar query tn654");
 		return false;
 	}
-	if (!executaQuery(query))
+	if (!executaQuery(usuario, query))
 	{
 		geraLog(WARNING, "Falha ao executar query");
 		free(query);

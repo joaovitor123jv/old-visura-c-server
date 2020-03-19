@@ -1,8 +1,6 @@
 #include "AdaptadorDeString.h"
 #include "../../Comandos/Comandos.h"
 
-
-
 #ifndef _TESTAR_SEM_FILA_
 char *padronizarString(char *original)
 {

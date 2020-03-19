@@ -8,7 +8,7 @@
 #include <mysql/mysql.h>
 MYSQL *conexao;
 
-#include "../Usuario.h"
+#include "../Bibliotecas/Usuario.h"
 #include "../OperacoesBanco/OperacoesBanco.h"
 #include "Comando-Login.h"
 #include "Comando-Adicao.h"

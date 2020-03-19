@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../Comandos/Comandos.h"
-#include "../Usuario.h"
+#include "../Bibliotecas/Usuario.h"
 #include "OperacoesBanco-FuncoesGenericas.h"
 #include <mysql/mysql.h>
 
@@ -356,7 +356,7 @@ bool addVisualizacoesAoBanco(char *id, char *quantidade, Usuario *usuario)// APP
 //                        return false;
 //                    }
 
-					if( !executaQuery(query) )
+					if( !executaQuery(usuario, query) )
 					{
 						geraLog(ERRO, "Falha ao executar query no banco de dados");
 						free( query );
@@ -1071,5 +1071,5 @@ char *obterQuantidadeDeVisualizacoesDoProdutoNaCidadeDoBanco(Usuario *usuario, c
         geraLog(ERRO, "Falha ao formatar query");
         return RETORNO_ERRO_INTERNO_STR_DINAMICA;
     }
-    return retornaUnicoRetornoDaQuery(query);
+    return retornaUnicoRetornoDaQuery(usuario, query);
 }

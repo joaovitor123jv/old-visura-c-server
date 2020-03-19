@@ -310,7 +310,7 @@ bool addUsuarioAnonimo(Usuario *usuario)// APP 2 1 2 asdkhasdjkas
 				if(senha != NULL)
 				{
 					printf(" LOG: Solicitando adicao de usuario à base de dados Comando-Adicao.h addUsuarioAnonimo()\n");
-					if(addUsuarioAnonimoAoBanco(email))//SUCESSO usuario criado (manda usuario para adição direta no banco)
+					if(addUsuarioAnonimoAoBanco(usuario, email))//SUCESSO usuario criado (manda usuario para adição direta no banco)
 					{
 						printf(" LOG: Usuario cadastrado com sucesso Comando-Adicao.h addUsuarioAnonimo()\n");
 						free( email );
@@ -664,7 +664,7 @@ bool addVisualizacao(Usuario *usuario)
 		return false;
 	}
 
-	if(!checarIdProduto(id))
+	if(!checarIdProduto(usuario, id))
 	{
 		geraLog(ERRO, "Produto não existe na base de dados");
 		free( id );
@@ -784,7 +784,7 @@ bool addCidade(Usuario *usuario)/* APP 2 { */
 		return false;
 	}
 
-	if(!addCidadeAoBanco(nomeDoEstado, nomeCidade))
+	if(!addCidadeAoBanco(usuario, nomeDoEstado, nomeCidade))
 	{
 		printf(" Warning: Falha ao adicionar cidade ao banco de dados Comando-Adicao.h addCidade()\n");
 		free( nomeCidade );
@@ -850,7 +850,7 @@ bool addLocalizacao(Usuario *usuario)/* APP 2 l0 */
 	if (token == NULL)// Informando idCidade e CEP
 	{
 		printf(" LOG: Cliente só informou idCidade e CEP em Comando-Adicao.h addLocalizacao() aiuhgu tsdf\n");
-		if (addLocalizacaoAoBanco(idCidade, cep, NULL, NULL, NULL, NULL))
+		if (addLocalizacaoAoBanco(usuario, idCidade, cep, NULL, NULL, NULL, NULL))
 		{
 			printf(" LOG: localizacao adicionada ao banco de dados com sucesso em Comando-Adicao.h addLocalizacao() ekjhgbdsf\n");
 			free( idCidade );
@@ -896,7 +896,7 @@ bool addLocalizacao(Usuario *usuario)/* APP 2 l0 */
 		if (token == NULL)// Informando idCidade, CEP e bairro
 		{
 			printf(" LOG: Cliente informou idCidade cep e bairro em Comando-Adicao.h addLocalizacao() ivubursfth\n");
-			if (addLocalizacaoAoBanco(idCidade, cep, bairro, NULL, NULL, NULL))
+			if (addLocalizacaoAoBanco(usuario, idCidade, cep, bairro, NULL, NULL, NULL))
 			{
 				printf(" LOG: localizacao adicionada ao banco de dados com sucesso em Comando-Adicao.h addLocalizacao() ekjhgbdsf\n");
 				free( idCidade );
@@ -950,7 +950,7 @@ bool addLocalizacao(Usuario *usuario)/* APP 2 l0 */
 			if (token == NULL)// Se informar idCidade, cep, bairro e rua
 			{
 				printf(" LOG: Cliente informou idCidade cep, bairro e rua em Comando-Adicao.h addLocalizacao() askbvjiuisdfg\n");
-				if (addLocalizacaoAoBanco(idCidade, cep, bairro, rua, NULL, NULL))
+				if (addLocalizacaoAoBanco(usuario, idCidade, cep, bairro, rua, NULL, NULL))
 				{
 					printf(" LOG: Localizacao adicionada ao banco de dados com sucesso em Comando-Adicao.h addLocalizacao() sauvgbuirvsdf\n");
 					free( idCidade );
@@ -1012,7 +1012,7 @@ bool addLocalizacao(Usuario *usuario)/* APP 2 l0 */
 				if (token == NULL)// Se informar idCidade, cep, bairro, rua e numero
 				{
 					printf(" LOG: Cliente informou idCidade, cep, bairro, rua e numero em Comando-Adicao.h addLocalizacao() kjubrui9dfjt\n");
-					if (addLocalizacaoAoBanco(idCidade, cep, bairro, rua, numero, NULL))
+					if (addLocalizacaoAoBanco(usuario, idCidade, cep, bairro, rua, numero, NULL))
 					{
 						printf(" LOG: Localizacao adicionada com sucesso ao banco de dados em Comando-Adicao.h addLocalizacao() askjbvruyiasxfrgb\n");
 						free( idCidade );
@@ -1078,7 +1078,7 @@ bool addLocalizacao(Usuario *usuario)/* APP 2 l0 */
 						return false;
 					}
 
-					if (addLocalizacaoAoBanco(idCidade, cep, bairro, rua, numero, complemento))
+					if (addLocalizacaoAoBanco(usuario, idCidade, cep, bairro, rua, numero, complemento))
 					{
 						printf(" LOG: Localizacao adicionada com sucesso ao banco de dados em Comando-Adicao.h addLocalizacao() askjbvru8sd784sdf\n");
 						free( idCidade );
@@ -1378,7 +1378,7 @@ bool addContratante(Usuario *usuario)// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cn
 	}
 	else
 	{
-		if(addContratanteAoBanco(nome, cnpj, plano, email, NULL, idLocalizacao, senha))// Se der tudo certo ao tentar adicionar contratante ao banco de dados
+		if(addContratanteAoBanco(usuario, nome, cnpj, plano, email, NULL, idLocalizacao, senha))// Se der tudo certo ao tentar adicionar contratante ao banco de dados
 		{
 			printf(" LOG: Contratante adicionado com sucesso ao banco de dados em addContratante() Comando-Adicao.h qasdjiwuygh48sd987\n");
 			free(cnpj);
@@ -1452,7 +1452,7 @@ bool addContratante(Usuario *usuario)// APP 2C $C CHAVE_DE_SEGURANCA_PHP nome cn
 		return false;
 	}
 
-	if(addContratanteAoBanco(nome, cnpj, plano, email, telefone, idLocalizacao, senha))// Se der tudo certo ao tentar adicionar contratante ao banco de dados
+	if(addContratanteAoBanco(usuario, nome, cnpj, plano, email, telefone, idLocalizacao, senha))// Se der tudo certo ao tentar adicionar contratante ao banco de dados
 	{
 		printf(" LOG: Contratante adicionado com sucesso ao banco de dados em addContratante() Comando-Adicao.h qkcnsjbwodcv\n");
 		free(cnpj);
@@ -1687,7 +1687,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 		if (token == NULL)// Se o cliente não informar categoria de produto
 		{
 			printf(" LOG: Usuario nao informou Categoria de produto em Comando-Adicao.h addProduto()\n");
-			if ( addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, NULL, tipoProduto, NULL) )
+			if ( addProdutoAoBanco(usuario, idContratante, idProduto, duracao, nomeProduto, NULL, tipoProduto, NULL) )
 			{
 				printf(" LOG: Produto adicionado ao banco de dados com sucesso em Comando-Adicao.h addProduto() asdjhfsf\n");
 				free( idProduto );
@@ -1758,7 +1758,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 			if (token == NULL)
 			{
 				printf(" LOG: Cliente não está informando descricao de ṕroduto em Comando-Adicao.h addProduto() sakveuaisd\n");
-				if (addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, NULL, tipoProduto, categoria))
+				if (addProdutoAoBanco(usuario, idContratante, idProduto, duracao, nomeProduto, NULL, tipoProduto, categoria))
 				{
 					printf(" LOG: Produto adicionado ao banco de dados com sucesso em Comando-Adicao.h addProduto() asvber98as7d3\n");
 					free( idProduto );
@@ -1830,7 +1830,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 					categoria = NULL;
 					return false;
 				}
-				if (addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, descricao, tipoProduto, categoria))
+				if (addProdutoAoBanco(usuario, idContratante, idProduto, duracao, nomeProduto, descricao, tipoProduto, categoria))
 				{
 					printf(" LOG: Produto adicionado ao banco de dados com sucesso em Comando-Adicao.h addProduto() asiurbhuiasd\n");
 					free( idProduto );
@@ -2078,7 +2078,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 		token = usuario_getNextToken(usuario);
 		if(token == NULL)
 		{
-			if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, NULL, tipoProduto, NULL))//TODO Adicionar descrição de produto
+			if(addProdutoAoBanco(usuario, idContratante, idProduto, duracao, nomeProduto, NULL, tipoProduto, NULL))//TODO Adicionar descrição de produto
 			{
 				printf(" LOG: Produto adicionado com sucesso ao banco de dados em addProdutoAoBanco() Comando-Adicao.h\n");
 				free( idContratante );
@@ -2146,7 +2146,7 @@ bool addProduto(Usuario *usuario)//DONE   "APP 2 + "
 				return false;
 			}
 
-			if(addProdutoAoBanco(idContratante, idProduto, duracao, nomeProduto, descricao, tipoProduto, NULL))
+			if(addProdutoAoBanco(usuario, idContratante, idProduto, duracao, nomeProduto, descricao, tipoProduto, NULL))
 			{
 				printf(" LOG: Produto adicionado com sucesso ao banco de dados em addProdutoAoBanco() Comando-Adicao.h\n");
 				free( idContratante );

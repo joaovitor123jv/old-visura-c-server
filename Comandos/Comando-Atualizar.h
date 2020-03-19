@@ -114,7 +114,7 @@ char *atualizarQuantidadeDeHabitantesDaCidade(Usuario *usuario)// APP 3 qC nomeC
 		return RETORNO_ERRO_INTERNO_STR_DINAMICA;
 	}
 
-	if (!cidadeExisteNoBanco(nomeDaCidade, nomeDoEstado))
+	if (!cidadeExisteNoBanco(usuario, nomeDaCidade, nomeDoEstado))
 	{
 		geraLog(WARNING, "Cidade não existe no banco de dados");
 		return RETORNO_ERRO_COMANDO_INSUFICIENTE_STR_DINAMICA;

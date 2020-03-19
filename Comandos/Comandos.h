@@ -304,4 +304,27 @@
 #define SCRIPT_DE_ATUALIZACAO_DE_QUANTIDADE_DE_HABITANTES_DE_CIDADE "Comandos/Ferramentas/obtemQuantidadeDeHabitantesDoIBGE.rb"
 
 
+
+
+
+
+/* Coisas do Banco de Dados */
+
+
+#define DATABASE_HOST "127.0.0.1"//TESTES
+// #define DATABASE_HOST "35.186.190.243"//GOOGLE CLOUD
+#define DATABASE_USER "interface"
+#define DATABASE_PASSWORD "essaSenhaEsoPraInteFaCeSaBeRPorQuESiM"
+#define DATABASE_SCHEMA "teste"
+#define DATABASE_PORT 0
+#define DATABASE_DEFAULT_SOCKET NULL
+#define DATABASE_DEFAULT_FLAGS 0
+
+
+
+
+
+
+
+
 #endif //__COMANDOS__
